@@ -148,9 +148,9 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-00-T04",
     milestone: "FG-00",
-    status: "blocked",
+    status: "done",
     title: "Create remote GitHub repository and push main",
-    exitProof: "origin remote exists and main is pushed",
+    exitProof: "origin points to https://github.com/AC-21/ocean.git and main tracks origin/main",
   },
   {
     id: "FG-01-T01",

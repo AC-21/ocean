@@ -34,7 +34,7 @@ remote is created, seed these as GitHub milestones and issues.
 | FG-00-T01 | FG-00 | Done | repo | Local Git repo initialized with artifact ignores |
 | FG-00-T02 | FG-00 | Done | architecture | Fluid-grid remap doc committed locally |
 | FG-00-T03 | FG-00 | Done | tracking | Milestone, task, gate, and issue-template tracking exists |
-| FG-00-T04 | FG-00 | Blocked | github | Remote GitHub repo created and local main pushed |
+| FG-00-T04 | FG-00 | Done | github | Remote `origin` points to `https://github.com/AC-21/ocean.git`; local `main` pushed and tracks `origin/main` |
 | FG-01-T01 | FG-01 | Planned | capability | Detect `navigator.gpu`, adapter name, feature limits, and device creation errors |
 | FG-01-T02 | FG-01 | Planned | architecture | Add `FluidBackend` abstraction with WebGPU and deterministic CPU implementations |
 | FG-01-T03 | FG-01 | Planned | diagnostics | Show backend, adapter, tier, grid size, and fallback reason in-app |
@@ -64,9 +64,11 @@ remote is created, seed these as GitHub milestones and issues.
 - `calibration`
 - `blocked`
 
-## Current Blocker
+## Remote Status
 
-GitHub push may be blocked because local `gh auth status` reports invalid
-tokens for the configured accounts. The provided remote is
-`https://github.com/AC-21/ocean.git`. Re-authenticate with `gh auth login -h
-github.com` if `git push -u origin main` cannot authenticate.
+Remote `origin` is configured as `https://github.com/AC-21/ocean.git`, and
+local `main` tracks `origin/main`.
+
+The `gh` CLI still reports invalid account tokens, so use Git credential-backed
+`git push` or re-authenticate with `gh auth login -h github.com` before using
+`gh issue`, `gh pr`, or `gh api` commands locally.

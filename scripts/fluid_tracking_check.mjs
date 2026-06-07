@@ -56,8 +56,8 @@ for (const phrase of requiredRemapPhrases) {
   if (!normalizedRemap.includes(phrase.toLowerCase())) errors.push(`docs/FLUID_GRID_REMAP.md is missing required phrase: ${phrase}`);
 }
 
-if (!tracking.includes("FG-00-T04") || !tracking.includes("Blocked")) {
-  errors.push("docs/TRACKING.md must record the GitHub remote creation blocker");
+if (!tracking.includes("FG-00-T04") || !tracking.includes("origin/main")) {
+  errors.push("docs/TRACKING.md must record that the GitHub remote tracks origin/main");
 }
 
 if (!gateTemplate.includes("Production water path does not use Canvas 2D")) {

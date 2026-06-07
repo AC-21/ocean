@@ -1,21 +1,19 @@
 # GitHub Setup
 
-The local repository has been initialized. The GitHub remote provided by the
-user is:
+The local repository has been initialized and pushed. The GitHub remote provided
+by the user is:
 
 ```text
 https://github.com/AC-21/ocean.git
 ```
 
-Pushing from this machine may still need GitHub authentication because
-`gh auth status` reports invalid GitHub tokens.
+Local `main` tracks `origin/main`.
 
-After re-authenticating:
+If a future local `gh` command is needed, re-authenticate first because
+`gh auth status` reports invalid GitHub tokens:
 
 ```sh
 gh auth login -h github.com
-git remote add origin https://github.com/AC-21/ocean.git
-git push -u origin main
 ```
 
 Seed the initial tracking issues from `docs/TRACKING.md`. Suggested first issue
@@ -32,4 +30,4 @@ gh issue create --title "FG-06: Calibration and near-realism validation" --label
 ```
 
 GitHub milestones can be created from the same FG-00 through FG-06 names in the
-web UI, or through the GitHub API after auth is fixed.
+web UI, or through the GitHub API after local `gh` auth is fixed.
