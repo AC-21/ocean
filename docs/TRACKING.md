@@ -64,6 +64,19 @@ remote is created, seed these as GitHub milestones and issues.
 - `calibration`
 - `blocked`
 
+## GitHub Issue Map
+
+| ID | Issue |
+| --- | --- |
+| FG-00 | https://github.com/AC-21/ocean/issues/2 |
+| FG-01 | https://github.com/AC-21/ocean/issues/3 |
+| FG-02 | https://github.com/AC-21/ocean/issues/4 |
+| FG-03 | https://github.com/AC-21/ocean/issues/5 |
+| FG-04 | https://github.com/AC-21/ocean/issues/6 |
+| FG-05 | https://github.com/AC-21/ocean/issues/7 |
+| FG-06 | https://github.com/AC-21/ocean/issues/8 |
+| SEC-00 | https://github.com/AC-21/ocean/issues/9 |
+
 ## Remote Status
 
 Remote `origin` is configured as `https://github.com/AC-21/ocean.git`, and
