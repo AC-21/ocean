@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
+import {
+  createFluidWaterRenderer,
+  legacyCanvasWaterTelemetry,
+  type FluidWaterRenderer,
+  type FluidWaterRenderInput,
+} from "./fluid/fluidWaterRenderer";
 import { detectFluidCapability, pendingFluidCapabilityReport, type FluidCapabilityReport } from "./fluid/webgpuCapability";
 import {
   characteristicLengthM,
@@ -57,6 +63,9 @@ export default function OceanPhysicsApp() {
   const simulationRef = useRef<SimulationState>(createSimulation(spec, dropHeightM));
   const [snapshot, setSnapshot] = useState<SimulationState>(simulationRef.current);
   const [fluidCapability, setFluidCapability] = useState<FluidCapabilityReport>(() => pendingFluidCapabilityReport());
+  const [waterRenderMode, setWaterRenderMode] = useState<"fallback" | "initializing" | "webgpu">("initializing");
+  const waterRendererRef = useRef<FluidWaterRenderer | null>(null);
+  const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
 
   specRef.current = spec;
   settingsRef.current = settings;
@@ -75,6 +84,41 @@ export default function OceanPhysicsApp() {
       delete window.__runFluidGridBenchmark;
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const canvas = canvasRef.current;
+    if (!canvas || fluidCapability.status === "checking") return;
+    waterRendererRef.current?.destroy();
+    waterRendererRef.current = null;
+    if (fluidCapability.status !== "webgpu-ready") {
+      waterFallbackReasonRef.current = fluidCapability.fallbackReason ?? "WebGPU capability report selected CPU fallback.";
+      setWaterRenderMode("fallback");
+      return;
+    }
+
+    setWaterRenderMode("initializing");
+    createFluidWaterRenderer(canvas, fluidCapability.selectedTier)
+      .then((renderer) => {
+        if (cancelled) {
+          renderer.destroy();
+          return;
+        }
+        waterRendererRef.current = renderer;
+        window.__fluidWaterRenderStats = renderer.stats();
+        setWaterRenderMode("webgpu");
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        waterFallbackReasonRef.current = error instanceof Error ? error.message : String(error);
+        legacyCanvasWaterTelemetry(canvas, waterFallbackReasonRef.current);
+        setWaterRenderMode("fallback");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fluidCapability.selectedTier, fluidCapability.status, fluidCapability.fallbackReason]);
 
   const resetSimulation = useCallback(() => {
     const next = createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg));
@@ -115,7 +159,12 @@ export default function OceanPhysicsApp() {
 
       const canvas = canvasRef.current;
       if (canvas) {
-        renderOcean(canvas, current, specRef.current, settingsRef.current, dropHeightM);
+        if (waterRendererRef.current && waterRenderMode === "webgpu") {
+          window.__fluidWaterRenderStats = waterRendererRef.current.render(fluidWaterInputFor(canvas, current, specRef.current, settingsRef.current, dropHeightM));
+        } else if (waterRenderMode === "fallback") {
+          legacyCanvasWaterTelemetry(canvas, waterFallbackReasonRef.current);
+          renderOcean(canvas, current, specRef.current, settingsRef.current, dropHeightM);
+        }
       }
       const chart = chartRef.current;
       if (chart) {
@@ -130,7 +179,7 @@ export default function OceanPhysicsApp() {
 
     animationFrame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [dropHeightM, paused, running, timeScale]);
+  }, [dropHeightM, paused, running, timeScale, waterRenderMode]);
 
   const diagnostics = useMemo(() => diagnosticsFor(snapshot, spec, settings), [settings, snapshot, spec]);
   const prediction = useMemo(() => predictFloatOutcome(spec, settings), [settings, spec]);
@@ -358,6 +407,7 @@ export default function OceanPhysicsApp() {
         data-fluid-backend={fluidCapability.backend}
         data-fluid-capability={fluidCapability.status}
         data-fluid-tier={fluidCapability.selectedTier}
+        data-water-render-mode={waterRenderMode}
       >
         <div className="stage-toolbar">
           <div>
@@ -405,6 +455,7 @@ export default function OceanPhysicsApp() {
             <Metric label="Grid mem" value={formatBytes(fluidCapability.grid.estimatedBytes)} />
             <Metric label="Adapter" value={compactText(fluidCapability.adapterName ?? "-", 30)} />
             <Metric label="Storage lim" value={formatOptionalBytes(fluidCapability.limits.maxStorageBufferBindingSize)} />
+            <Metric label="Renderer" value={waterRenderMode === "webgpu" ? "WebGPU grid" : waterRenderMode === "fallback" ? "Diagnostic 2D" : "Starting"} />
           </div>
         </div>
 
@@ -691,6 +742,40 @@ function formatOptionalBytes(bytes: number | null) {
 
 function compactText(value: string, maxLength: number) {
   return value.length <= maxLength ? value : `${value.slice(0, Math.max(0, maxLength - 1))}...`;
+}
+
+function fluidWaterInputFor(
+  canvas: HTMLCanvasElement,
+  state: SimulationState,
+  spec: ObjectSpec,
+  settings: OceanSettings,
+  dropHeightM: number
+): FluidWaterRenderInput {
+  const rect = canvas.getBoundingClientRect();
+  const objectHeight = objectHeightM(spec);
+  const aboveM = Math.max(dropHeightM + objectHeight + 1.2, 5);
+  const belowM = settings.waterDepthM + 1.5;
+  const scale = Math.min(rect.width / 26, rect.height / (aboveM + belowM));
+  const centerX = rect.width * 0.5;
+  const surfaceBaseY = Math.max(90, Math.min(rect.height * 0.48, 28 + aboveM * scale));
+  const diagnostics = diagnosticsFor(state, spec, settings);
+  const impactStrength =
+    state.impact === null ? 0 : clamp(1 - Math.max(0, state.timeS - state.impact.atS) / Math.max(0.1, state.impact.cavityCollapseTimeS), 0, 1);
+  return {
+    currentSpeedMps: settings.currentSpeedMps,
+    impactStrength,
+    objectAngleRad: state.object.angleRad,
+    objectCenterXPx: centerX + state.object.xM * scale,
+    objectCenterYPx: surfaceBaseY - state.object.centerYM * scale,
+    objectHalfHeightPx: Math.max(3, objectHeightM(spec) * scale * 0.5),
+    objectHalfWidthPx: Math.max(3, objectWidthM(spec) * scale * 0.5),
+    shape: spec.shape,
+    submergedFraction: diagnostics.submergedFraction,
+    surfaceYPx: surfaceBaseY,
+    timeS: state.timeS,
+    waterDepthM: settings.waterDepthM,
+    waveHeightM: settings.waveHeightM,
+  };
 }
 
 function renderOcean(canvas: HTMLCanvasElement, state: SimulationState, spec: ObjectSpec, settings: OceanSettings, dropHeightM: number) {

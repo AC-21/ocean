@@ -100,7 +100,7 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-03",
     blocks: "FG-03",
-    evidence: "render probe plus performance report",
+    evidence: "npm run fluid:render and docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
     passBar: "WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path",
   },
   {
@@ -197,9 +197,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-03-T01",
     milestone: "FG-03",
-    status: "planned",
+    status: "done",
     title: "Replace primary water rendering with WebGPU shading",
-    exitProof: "render probe proves WebGPU water is primary and nonblank",
+    exitProof: "npm run fluid:render proves webgpu-grid-primary-v1 with webgpu context and nonblank/varied pixels",
+  },
+  {
+    id: "FG-03-T02",
+    milestone: "FG-03",
+    status: "done",
+    title: "Keep legacy Canvas 2D diagnostic-only",
+    exitProof: "OceanPhysicsApp calls legacy Canvas rendering only when WebGPU renderer setup reports an explicit fallback",
+  },
+  {
+    id: "FG-03-T03",
+    milestone: "FG-03",
+    status: "done",
+    title: "Add WebGPU render probe",
+    exitProof: "npm run fluid:render rejects legacy Canvas as primary and checks nonblank/varied screenshot pixels",
   },
   {
     id: "FG-04-T01",

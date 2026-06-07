@@ -87,6 +87,23 @@ Latest grid evidence:
   and impulse.
 - Gate: passed.
 
+FG-03 is complete as of 2026-06-07. `npm run fluid:render` launched the local
+Electron app, waited for WebGPU water frames, captured the stage canvas, decoded
+the screenshot pixels, and wrote `reports/fluid-render-probe-latest.json`. A
+committed snapshot is stored at
+`docs/evidence/FG-03-fluid-render-probe-2026-06-07.json`.
+
+Latest render evidence:
+
+- Renderer: `webgpu-grid-primary-v1`.
+- Canvas context: `webgpu`.
+- Grid: `512 x 288`, tier `high`.
+- Frames observed: `54`.
+- Pixel probe: `nonblank/varied`, `22` color buckets, average luma `122.86`.
+- Legacy Canvas 2D: not the primary renderer; it remains diagnostic fallback
+  only.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-06-07T20:09:10.926Z",
+  "gate": "G-FG-03",
+  "pass": true,
+  "pixelProbe": {
+    "averageLuma": 122.8569303756689,
+    "colorBuckets": 22,
+    "height": 1412,
+    "opaqueSamples": 2795,
+    "samples": 2795,
+    "status": "nonblank",
+    "variety": "varied",
+    "width": 1364
+  },
+  "telemetry": {
+    "frames": 54,
+    "grid": "512x288",
+    "renderer": "webgpu-grid-primary-v1",
+    "status": "rendered",
+    "tier": "high",
+    "waterContext": "webgpu"
+  }
+}

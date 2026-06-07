@@ -10,7 +10,7 @@ and GitHub issue mapping.
 | FG-00 | Repository and tracking foundation | Done | G-FG-00 |
 | FG-01 | WebGPU capability shell | Done | G-FG-01 |
 | FG-02 | GPU grid allocation and stepping | Done | G-FG-02 |
-| FG-03 | Grid-backed water rendering | Planned | G-FG-03 |
+| FG-03 | Grid-backed water rendering | Done | G-FG-03 |
 | FG-04 | Two-way rigid-body/fluid coupling | Planned | G-FG-04 |
 | FG-05 | Splash, foam, and spray from grid state | Planned | G-FG-05 |
 | FG-06 | Calibration and near-realism validation | Planned | G-FG-06 |
@@ -22,7 +22,7 @@ and GitHub issue mapping.
 | G-FG-00 | FG-00 | `npm run fluid:tracking` | docs, issue templates, and code contract agree on milestones and gates |
 | G-FG-01 | FG-01 | `npm run fluid:capability`; `docs/evidence/FG-01-fluid-capability-2026-06-07.json` | adapter/device limits captured; unsupported hardware has intentional fallback |
 | G-FG-02 | FG-02 | `npm run fluid:grid`; `docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json` | standard grid steps inside frame budget with stable CFL and no full-grid readback |
-| G-FG-03 | FG-03 | render probe plus performance report | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
+| G-FG-03 | FG-03 | `npm run fluid:render`; `docs/evidence/FG-03-fluid-render-probe-2026-06-07.json` | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
 | G-FG-04 | FG-04 | drop-regression report | object entry, buoyancy, slam, drag, and float/sink state use grid-backed coupling |
 | G-FG-05 | FG-05 | splash-regression report | splash crown, foam, spray, and secondary impacts are driven by local grid energy |
 | G-FG-06 | FG-06 | calibration packet | reference cases match accepted error bounds for impact speed, splash height, damping, and float duration |
@@ -41,9 +41,9 @@ and GitHub issue mapping.
 | FG-02-T01 | FG-02 | Done | compute | WebGPU benchmark allocates height, height scratch, velocity, foam, obstacle, depth, and impulse buffers |
 | FG-02-T02 | FG-02 | Done | compute | `fluidGridStepShader` runs fixed-substep propagation, damping, depth, obstacle, impulse, and foam passes |
 | FG-02-T03 | FG-02 | Done | verification | `npm run fluid:grid` passes standard and high tiers with CFL `0.566`, no per-frame full-grid readback, and committed evidence |
-| FG-03-T01 | FG-03 | Planned | renderer | Replace primary water renderer with WebGPU texture/mesh shading |
-| FG-03-T02 | FG-03 | Planned | renderer | Keep legacy Canvas 2D behind explicit diagnostic mode only |
-| FG-03-T03 | FG-03 | Planned | verification | Add nonblank/varied WebGPU render probe and no-primary-canvas assertion |
+| FG-03-T01 | FG-03 | Done | renderer | `.ocean-canvas` uses primary renderer `webgpu-grid-primary-v1` with context `webgpu` |
+| FG-03-T02 | FG-03 | Done | renderer | Legacy Canvas 2D rendering is only reached after explicit WebGPU fallback telemetry |
+| FG-03-T03 | FG-03 | Done | verification | `npm run fluid:render` proves nonblank/varied WebGPU pixels and rejects the legacy Canvas renderer as primary |
 | FG-04-T01 | FG-04 | Planned | physics | Write object footprints and displacement impulses into the grid |
 | FG-04-T02 | FG-04 | Planned | physics | Read bounded local grid samples into buoyancy, slam, drag, lift, and float logic |
 | FG-04-T03 | FG-04 | Planned | verification | Compare CPU reference and GPU coupling on canonical drop cases |

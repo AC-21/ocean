@@ -8,6 +8,7 @@ const requiredFiles = [
   "docs/GITHUB_SETUP.md",
   "docs/evidence/FG-01-fluid-capability-2026-06-07.json",
   "docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json",
+  "docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -31,6 +32,7 @@ const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
+const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -74,6 +76,10 @@ if (!fg01Evidence.includes("\"status\": \"webgpu-ready\"") || !fg01Evidence.incl
 
 if (!fg02Evidence.includes("\"gate\": \"G-FG-02\"") || !fg02Evidence.includes("\"pass\": true") || !fg02Evidence.includes("\"noFullGridReadbackPerFrame\": true")) {
   errors.push("FG-02 evidence must record a passing grid benchmark without per-frame full-grid readback");
+}
+
+if (!fg03Evidence.includes("\"gate\": \"G-FG-03\"") || !fg03Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") || !fg03Evidence.includes("\"waterContext\": \"webgpu\"")) {
+  errors.push("FG-03 evidence must record WebGPU grid renderer telemetry");
 }
 
 if (errors.length > 0) {

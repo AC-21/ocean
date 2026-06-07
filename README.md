@@ -35,6 +35,12 @@ Run the WebGPU grid allocation and compute-step benchmark:
 npm run fluid:grid
 ```
 
+Run the WebGPU grid-backed render probe:
+
+```sh
+npm run fluid:render
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
