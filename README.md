@@ -29,6 +29,12 @@ Run the local Electron WebGPU capability gate:
 npm run fluid:capability
 ```
 
+Run the WebGPU grid allocation and compute-step benchmark:
+
+```sh
+npm run fluid:grid
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic

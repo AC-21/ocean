@@ -70,6 +70,23 @@ Latest evidence:
 - Compute invocation limit: `256`.
 - Fallback: none.
 
+FG-02 is complete as of 2026-06-07. `npm run fluid:grid` launched the local
+Electron app, allocated WebGPU storage buffers, ran the WGSL compute stepper,
+and wrote `reports/fluid-grid-benchmark-latest.json`. A committed snapshot is
+stored at `docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json`.
+
+Latest grid evidence:
+
+- Standard grid: `256 x 144`, seven storage buffers, `120` compute steps,
+  `0.6008 ms/step`, CFL `0.566`, max height `0.00393 m`, no full-grid readback
+  per frame.
+- High grid: `512 x 288`, seven storage buffers, `80` compute steps,
+  `0.0462 ms/step`, CFL `0.566`, max height `0.01284 m`, no full-grid readback
+  per frame.
+- Allocated fields: height, height scratch, velocity, foam, obstacle, depth,
+  and impulse.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

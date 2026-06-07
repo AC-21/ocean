@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
 import { detectFluidCapability, pendingFluidCapabilityReport, type FluidCapabilityReport } from "./fluid/webgpuCapability";
 import {
   characteristicLengthM,
@@ -62,6 +63,7 @@ export default function OceanPhysicsApp() {
 
   useEffect(() => {
     let cancelled = false;
+    window.__runFluidGridBenchmark = runFluidGridBenchmark;
     window.__fluidGridCapabilityReport = fluidCapability;
     detectFluidCapability().then((report) => {
       if (cancelled) return;
@@ -70,6 +72,7 @@ export default function OceanPhysicsApp() {
     });
     return () => {
       cancelled = true;
+      delete window.__runFluidGridBenchmark;
     };
   }, []);
 

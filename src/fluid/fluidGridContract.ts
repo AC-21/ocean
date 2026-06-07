@@ -94,7 +94,7 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-02",
     blocks: "FG-02",
-    evidence: "GPU grid benchmark report",
+    evidence: "npm run fluid:grid and docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json",
     passBar: "standard grid steps inside frame budget with stable CFL and no full-grid readback",
   },
   {
@@ -176,9 +176,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-02-T01",
     milestone: "FG-02",
-    status: "planned",
+    status: "done",
     title: "Allocate GPU height, velocity, foam, obstacle, depth, and impulse buffers",
-    exitProof: "GPU grid benchmark reports allocated tiers and memory budget",
+    exitProof: "npm run fluid:grid allocates height, height scratch, velocity, foam, obstacle, depth, and impulse buffers",
+  },
+  {
+    id: "FG-02-T02",
+    milestone: "FG-02",
+    status: "done",
+    title: "Implement fixed-substep compute passes",
+    exitProof: "fluidGridStepShader runs propagation, damping, depth, obstacle, impulse, and foam updates",
+  },
+  {
+    id: "FG-02-T03",
+    milestone: "FG-02",
+    status: "done",
+    title: "Add CFL, energy, and frame-budget grid checks",
+    exitProof: "npm run fluid:grid passes standard and high tiers with CFL 0.566 and no per-frame full-grid readback",
   },
   {
     id: "FG-03-T01",
