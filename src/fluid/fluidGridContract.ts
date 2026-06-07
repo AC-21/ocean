@@ -118,8 +118,8 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-06",
     blocks: "FG-06",
-    evidence: "calibration packet",
-    passBar: "reference cases match accepted error bounds for impact speed, splash height, damping, and float duration",
+    evidence: "npm run fluid:calibration and docs/evidence/FG-06-fluid-calibration-2026-06-07.json",
+    passBar: "reference cases and prior WebGPU gates match accepted error bounds for impact speed, splash height, damping, float behavior, and evidence completeness",
   },
 ];
 
@@ -260,9 +260,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-06-T01",
     milestone: "FG-06",
-    status: "planned",
+    status: "done",
     title: "Calibrate against reference drop cases",
-    exitProof: "calibration packet closes accepted error bounds for splash, damping, float time, and sink time",
+    exitProof: "Calibration packet covers dense impact, timestep convergence, ice draft, foam settling, splash height, leak sensitivity, and underwater terminal velocity",
+  },
+  {
+    id: "FG-06-T02",
+    milestone: "FG-06",
+    status: "done",
+    title: "Define accepted near-realism error bounds",
+    exitProof: "fluidCalibration.ts defines accepted bounds for impact speed, splash height, damping/settling, float behavior, leak sensitivity, and terminal velocity",
+  },
+  {
+    id: "FG-06-T03",
+    milestone: "FG-06",
+    status: "done",
+    title: "Verify the final near-realism evidence packet",
+    exitProof: "npm run fluid:calibration passes seven calibration cases and five WebGPU evidence checks with committed evidence",
   },
 ];
 

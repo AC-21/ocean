@@ -144,6 +144,29 @@ Latest splash evidence:
 - Full-grid readback: none per frame.
 - Gate: passed.
 
+FG-06 is complete as of 2026-06-07. `npm run fluid:calibration` ran the final
+near-realism calibration packet and wrote `reports/fluid-calibration-latest.json`.
+A committed snapshot is stored at
+`docs/evidence/FG-06-fluid-calibration-2026-06-07.json`.
+
+Latest calibration evidence:
+
+- Calibration cases: `7`, all passed.
+- Prior WebGPU evidence checks: `5`, all passed.
+- Dense-object impact: concrete cube from `8 m` entered at `12.1641 m/s`,
+  inside the `sqrt(2gh)` free-fall bound.
+- Timestep convergence: coarse/fine impact-speed delta `0.0782 m/s`; impact
+  time delta `0.0066 s`.
+- Static draft: fresh-water ice submerged fraction `0.8946`, matching density
+  ratio.
+- Float settling: foam block settled with draft error `0.0109 m` and buoyancy
+  error `0.0174`.
+- Splash height: high-Weber concrete impact produced `2.0805 m`, inside the
+  accepted ballistic-head band.
+- Waterlogging sensitivity: larger leak sink-time ratio `0.2233`.
+- Underwater terminal velocity: concrete cube `4.0067 m/s`.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

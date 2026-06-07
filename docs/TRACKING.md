@@ -13,7 +13,7 @@ and GitHub issue mapping.
 | FG-03 | Grid-backed water rendering | Done | G-FG-03 |
 | FG-04 | Two-way rigid-body/fluid coupling | Done | G-FG-04 |
 | FG-05 | Splash, foam, and spray from grid state | Done | G-FG-05 |
-| FG-06 | Calibration and near-realism validation | Planned | G-FG-06 |
+| FG-06 | Calibration and near-realism validation | Done | G-FG-06 |
 
 ## Gates
 
@@ -25,7 +25,7 @@ and GitHub issue mapping.
 | G-FG-03 | FG-03 | `npm run fluid:render`; `docs/evidence/FG-03-fluid-render-probe-2026-06-07.json` | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
 | G-FG-04 | FG-04 | `npm run fluid:coupling`; `docs/evidence/FG-04-fluid-coupling-2026-06-07.json` | object entry writes footprint, depth impedance, and displacement impulses to the WebGPU grid; the next physics step consumes bounded grid force deltas |
 | G-FG-05 | FG-05 | `npm run fluid:splash`; `docs/evidence/FG-05-fluid-splash-2026-06-07.json` | splash crown, foam, spray, and secondary impacts are driven by bounded local WebGPU grid energy |
-| G-FG-06 | FG-06 | calibration packet | reference cases match accepted error bounds for impact speed, splash height, damping, and float duration |
+| G-FG-06 | FG-06 | `npm run fluid:calibration`; `docs/evidence/FG-06-fluid-calibration-2026-06-07.json` | reference cases and prior WebGPU gates match accepted error bounds for impact speed, splash height, damping, float behavior, and evidence completeness |
 
 ## Tasks
 
@@ -50,9 +50,9 @@ and GitHub issue mapping.
 | FG-05-T01 | FG-05 | Done | physics | `gridSplashCouplingFor` derives foam, spray, crown height, entrained air, and breakup from local grid energy plus Weber/Froude impact state |
 | FG-05-T02 | FG-05 | Done | physics | WebGPU renderer writes foam and secondary reentry impulse samples back into bounded local grid rows |
 | FG-05-T03 | FG-05 | Done | verification | `npm run fluid:splash` verifies grid-splash-v1 with 4325 foam cells, 198 spray droplets, 1.553 m crown, and droplet reentry energy |
-| FG-06-T01 | FG-06 | Planned | calibration | Collect reference drop footage and material/shape cases |
-| FG-06-T02 | FG-06 | Planned | calibration | Define accepted error bounds for splash, damping, float time, and sink time |
-| FG-06-T03 | FG-06 | Planned | release | Close near-realism gate only with current reports and recorded evidence |
+| FG-06-T01 | FG-06 | Done | calibration | Calibration packet covers dense impact, timestep convergence, ice draft, foam settling, splash height, leak sensitivity, and underwater terminal velocity |
+| FG-06-T02 | FG-06 | Done | calibration | `fluidCalibration.ts` defines accepted error bounds for impact speed, splash height, damping/settling, float behavior, leak sensitivity, and terminal velocity |
+| FG-06-T03 | FG-06 | Done | release | `npm run fluid:calibration` passes 7 calibration cases and 5 WebGPU evidence checks with committed evidence |
 
 ## GitHub Labels
 

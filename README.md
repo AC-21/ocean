@@ -53,6 +53,12 @@ Run the WebGPU splash/foam/spray gate:
 npm run fluid:splash
 ```
 
+Run the near-realism calibration gate:
+
+```sh
+npm run fluid:calibration
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -178,6 +184,9 @@ Current validation checks include:
   impulse, and finite force-feedback diagnostics for a concrete-cube drop.
 - WebGPU grid-splash coupling with bounded foam samples, spray count, crown
   height, and secondary droplet reentry energy for a concrete-cube drop.
+- Near-realism calibration covering impact speed, timestep convergence,
+  hydrostatic draft, float settling, splash-height band, leak sensitivity, and
+  underwater terminal velocity.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

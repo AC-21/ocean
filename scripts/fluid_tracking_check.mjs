@@ -11,6 +11,7 @@ const requiredFiles = [
   "docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
   "docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
   "docs/evidence/FG-05-fluid-splash-2026-06-07.json",
+  "docs/evidence/FG-06-fluid-calibration-2026-06-07.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -37,6 +38,7 @@ const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
 const fg04Evidence = files.get("docs/evidence/FG-04-fluid-coupling-2026-06-07.json") ?? "";
 const fg05Evidence = files.get("docs/evidence/FG-05-fluid-splash-2026-06-07.json") ?? "";
+const fg06Evidence = files.get("docs/evidence/FG-06-fluid-calibration-2026-06-07.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -103,6 +105,18 @@ if (
   !fg05Evidence.includes("\"accumulatedReentryEnergyJ\"")
 ) {
   errors.push("FG-05 evidence must record bounded WebGPU grid-splash telemetry with secondary reentry coupling");
+}
+
+if (
+  !fg06Evidence.includes("\"gate\": \"G-FG-06\"") ||
+  !fg06Evidence.includes("\"pass\": true") ||
+  !fg06Evidence.includes("\"impact-speed-concrete-8m\"") ||
+  !fg06Evidence.includes("\"foam-block-settling-draft\"") ||
+  !fg06Evidence.includes("\"high-weber-splash-height-band\"") ||
+  !fg06Evidence.includes("\"failedCases\": []") ||
+  !fg06Evidence.includes("\"failedEvidence\": []")
+) {
+  errors.push("FG-06 evidence must record passing calibration cases and complete WebGPU evidence checks");
 }
 
 if (errors.length > 0) {

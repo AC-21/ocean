@@ -1,0 +1,163 @@
+{
+  "acceptedErrorBounds": {
+    "draft": "Static hydrostatic draft must be within 3.5 percentage points of density-ratio displacement.",
+    "floatSettling": "Dropped floating body must settle within 5.5 cm draft error and 8% buoyancy error.",
+    "impactSpeed": "Compact dense body from 8 m must enter within 12% below vacuum free-fall and never exceed it.",
+    "numericalConvergence": "Impact speed must change by <= 0.12 m/s and impact time by <= 0.02 s between coarse and fine steps.",
+    "splashHeight": "High-Weber splash crown must stay inside a conservative ballistic-head band.",
+    "terminalVelocity": "Dense underwater body terminal speed must remain finite and in the 1-8 m/s engineering range.",
+    "waterlogging": "A larger leak must reduce predicted sink time by at least 45%."
+  },
+  "cases": [
+    {
+      "actual": 12.164074551941793,
+      "category": "analytic",
+      "expected": [
+        11.023081064747732,
+        12.526228482667877
+      ],
+      "id": "impact-speed-concrete-8m",
+      "metric": "water entry speed compared with vacuum free-fall",
+      "pass": true,
+      "tolerance": "-12% / +0% versus sqrt(2gh)",
+      "unit": "m/s"
+    },
+    {
+      "actual": 0.07821698867224924,
+      "category": "numerical-stability",
+      "expected": [
+        0,
+        0.12
+      ],
+      "id": "impact-timestep-convergence",
+      "metric": "impact speed delta; time delta 0.0066 s",
+      "pass": true,
+      "tolerance": "<=0.12 m/s speed and <=0.02 s time",
+      "unit": "m/s"
+    },
+    {
+      "actual": 0.894634146341463,
+      "category": "analytic",
+      "expected": 0.8946341463414634,
+      "id": "ice-static-draft",
+      "metric": "submerged fraction equals density ratio",
+      "pass": true,
+      "tolerance": "+/-0.035 fraction",
+      "unit": "fraction"
+    },
+    {
+      "actual": 0.010863387494595977,
+      "category": "analytic",
+      "expected": [
+        0,
+        0.055
+      ],
+      "id": "foam-block-settling-draft",
+      "metric": "settled draft error; buoyancy error 0.0174",
+      "pass": true,
+      "tolerance": "<=0.055 m draft and <=8% buoyancy error",
+      "unit": "m"
+    },
+    {
+      "actual": 2.0805356807438717,
+      "category": "empirical-band",
+      "expected": [
+        0.8085690604573332,
+        3.514758255264296
+      ],
+      "id": "high-weber-splash-height-band",
+      "metric": "splash height for Weber 1495862 and Froude 4.58",
+      "pass": true,
+      "tolerance": "inside 4.5%-19% ballistic-head band plus object-size allowance",
+      "unit": "m"
+    },
+    {
+      "actual": 0.2232846141029004,
+      "category": "qualitative-physics",
+      "expected": [
+        0,
+        0.55
+      ],
+      "id": "waterlogging-leak-sensitivity",
+      "metric": "large leak sink-time ratio (6756.3s / 30258.7s)",
+      "pass": true,
+      "tolerance": "larger leak sinks in <55% of small-leak time",
+      "unit": "ratio"
+    },
+    {
+      "actual": 4.006729250768309,
+      "category": "empirical-band",
+      "expected": [
+        1,
+        8
+      ],
+      "id": "concrete-underwater-terminal-velocity",
+      "metric": "finite dense-body underwater terminal speed",
+      "pass": true,
+      "tolerance": "engineering bound 1-8 m/s for compact dense body in water",
+      "unit": "m/s"
+    }
+  ],
+  "evidenceChecks": [
+    {
+      "artifact": "docs/evidence/FG-01-fluid-capability-2026-06-07.json",
+      "id": "FG-01",
+      "pass": true,
+      "requiredMarkers": [
+        "\"status\": \"webgpu-ready\"",
+        "\"selectedTier\": \"high\""
+      ]
+    },
+    {
+      "artifact": "docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json",
+      "id": "FG-02",
+      "pass": true,
+      "requiredMarkers": [
+        "\"gate\": \"G-FG-02\"",
+        "\"pass\": true",
+        "\"noFullGridReadbackPerFrame\": true"
+      ]
+    },
+    {
+      "artifact": "docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
+      "id": "FG-03",
+      "pass": true,
+      "requiredMarkers": [
+        "\"gate\": \"G-FG-03\"",
+        "\"renderer\": \"webgpu-grid-primary-v1\"",
+        "\"waterContext\": \"webgpu\""
+      ]
+    },
+    {
+      "artifact": "docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
+      "id": "FG-04",
+      "pass": true,
+      "requiredMarkers": [
+        "\"gate\": \"G-FG-04\"",
+        "\"coupling\": \"object-grid-v1\"",
+        "\"boundedDiagnostics\": true"
+      ]
+    },
+    {
+      "artifact": "docs/evidence/FG-05-fluid-splash-2026-06-07.json",
+      "id": "FG-05",
+      "pass": true,
+      "requiredMarkers": [
+        "\"gate\": \"G-FG-05\"",
+        "\"splash\": \"grid-splash-v1\"",
+        "\"boundedDiagnostics\": true",
+        "\"accumulatedReentryEnergyJ\""
+      ]
+    }
+  ],
+  "gate": "G-FG-06",
+  "generatedAt": "2026-06-07T20:42:43.097Z",
+  "pass": true,
+  "summary": {
+    "caseCount": 7,
+    "evidenceCount": 5,
+    "failedCases": [],
+    "failedEvidence": [],
+    "maximumRelativeError": 4.963919739327309e-16
+  }
+}
