@@ -1,0 +1,57 @@
+{
+  "adapterInfo": "apple / metal-3",
+  "adapterName": "apple / metal-3",
+  "backend": "webgpu-compute",
+  "fallbackReason": null,
+  "features": [
+    "bgra8unorm-storage",
+    "clip-distances",
+    "core-features-and-limits",
+    "depth-clip-control",
+    "depth32float-stencil8",
+    "dual-source-blending",
+    "float32-blendable",
+    "float32-filterable",
+    "indirect-first-instance",
+    "primitive-index",
+    "rg11b10ufloat-renderable",
+    "shader-f16",
+    "subgroups",
+    "texture-component-swizzle",
+    "texture-compression-astc",
+    "texture-compression-astc-sliced-3d",
+    "texture-compression-bc",
+    "texture-compression-bc-sliced-3d",
+    "texture-compression-etc2",
+    "texture-formats-tier1",
+    "texture-formats-tier2",
+    "timestamp-query"
+  ],
+  "forbiddenProductionRenderers": [
+    "canvas-2d",
+    "per-pixel-cpu-water-draw",
+    "visual-only-water"
+  ],
+  "generatedAt": "2026-06-07T19:51:23.844Z",
+  "grid": {
+    "cellsX": 512,
+    "cellsY": 288,
+    "estimatedBytes": 4718592,
+    "tier": "high"
+  },
+  "limits": {
+    "maxBufferSize": 268435456,
+    "maxComputeInvocationsPerWorkgroup": 256,
+    "maxComputeWorkgroupSizeX": 256,
+    "maxComputeWorkgroupSizeY": 256,
+    "maxComputeWorkgroupsPerDimension": 65535,
+    "maxStorageBufferBindingSize": 134217728
+  },
+  "requiredBrowserApis": [
+    "navigator.gpu",
+    "GPUDevice",
+    "GPUComputePassEncoder"
+  ],
+  "selectedTier": "high",
+  "status": "webgpu-ready"
+}

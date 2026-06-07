@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { detectFluidCapability, pendingFluidCapabilityReport, type FluidCapabilityReport } from "./fluid/webgpuCapability";
 import {
   characteristicLengthM,
   cloneObjectSpec,
@@ -54,9 +55,23 @@ export default function OceanPhysicsApp() {
   const settingsRef = useRef(settings);
   const simulationRef = useRef<SimulationState>(createSimulation(spec, dropHeightM));
   const [snapshot, setSnapshot] = useState<SimulationState>(simulationRef.current);
+  const [fluidCapability, setFluidCapability] = useState<FluidCapabilityReport>(() => pendingFluidCapabilityReport());
 
   specRef.current = spec;
   settingsRef.current = settings;
+
+  useEffect(() => {
+    let cancelled = false;
+    window.__fluidGridCapabilityReport = fluidCapability;
+    detectFluidCapability().then((report) => {
+      if (cancelled) return;
+      window.__fluidGridCapabilityReport = report;
+      setFluidCapability(report);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const resetSimulation = useCallback(() => {
     const next = createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg));
@@ -334,7 +349,13 @@ export default function OceanPhysicsApp() {
         </div>
       </section>
 
-      <section className="simulation-stage" aria-label="Ocean simulation">
+      <section
+        aria-label="Ocean simulation"
+        className="simulation-stage"
+        data-fluid-backend={fluidCapability.backend}
+        data-fluid-capability={fluidCapability.status}
+        data-fluid-tier={fluidCapability.selectedTier}
+      >
         <div className="stage-toolbar">
           <div>
             <p className="eyebrow">Live State</p>
@@ -368,6 +389,20 @@ export default function OceanPhysicsApp() {
           <span>Float Result</span>
           <strong>{floatResultText(snapshot, prediction.secondsUntilSink)}</strong>
           <em>{prediction.outcome === "floats-indefinitely" ? "Stable density below water" : prediction.outcome === "sinks-immediately" ? "Density exceeds displaced water" : "Water ingress crosses neutral buoyancy"}</em>
+        </div>
+
+        <div className="readout-block">
+          <span>Fluid Backend</span>
+          <strong>{fluidCapabilityTitle(fluidCapability)}</strong>
+          <em>{fluidCapability.fallbackReason ?? `${fluidCapability.selectedTier} grid selected from WebGPU adapter limits`}</em>
+          <div className="small-grid">
+            <Metric label="Backend" value={fluidCapability.backend} />
+            <Metric label="Tier" value={fluidCapability.selectedTier} tone={fluidCapability.status === "webgpu-ready" ? "positive" : undefined} />
+            <Metric label="Grid" value={`${fluidCapability.grid.cellsX} x ${fluidCapability.grid.cellsY}`} />
+            <Metric label="Grid mem" value={formatBytes(fluidCapability.grid.estimatedBytes)} />
+            <Metric label="Adapter" value={compactText(fluidCapability.adapterName ?? "-", 30)} />
+            <Metric label="Storage lim" value={formatOptionalBytes(fluidCapability.limits.maxStorageBufferBindingSize)} />
+          </div>
         </div>
 
         <div className="metrics-grid">
@@ -633,6 +668,26 @@ function Metric({ label, tone, value }: { label: string; tone?: "negative" | "po
       <strong>{value}</strong>
     </div>
   );
+}
+
+function fluidCapabilityTitle(report: FluidCapabilityReport) {
+  if (report.status === "checking") return "Checking GPU";
+  if (report.status === "webgpu-ready") return "WebGPU compute ready";
+  return "CPU reference fallback";
+}
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatOptionalBytes(bytes: number | null) {
+  return bytes === null ? "-" : formatBytes(bytes);
+}
+
+function compactText(value: string, maxLength: number) {
+  return value.length <= maxLength ? value : `${value.slice(0, Math.max(0, maxLength - 1))}...`;
 }
 
 function renderOcean(canvas: HTMLCanvasElement, state: SimulationState, spec: ObjectSpec, settings: OceanSettings, dropHeightM: number) {

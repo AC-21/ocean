@@ -88,7 +88,7 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-01",
     blocks: "FG-01",
-    evidence: "WebGPU capability report artifact",
+    evidence: "npm run fluid:capability and docs/evidence/FG-01-fluid-capability-2026-06-07.json",
     passBar: "adapter/device limits captured; unsupported hardware has intentional fallback",
   },
   {
@@ -155,9 +155,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-01-T01",
     milestone: "FG-01",
-    status: "planned",
+    status: "done",
     title: "Detect WebGPU adapter and device limits",
-    exitProof: "capability report records navigator.gpu, adapter, features, limits, and fallback reason",
+    exitProof: "npm run fluid:capability records webgpu-ready, apple / metal-3, high tier, features, and limits",
+  },
+  {
+    id: "FG-01-T02",
+    milestone: "FG-01",
+    status: "done",
+    title: "Add FluidBackend abstraction",
+    exitProof: "src/fluid/fluidBackend.ts defines WebGPU production, deterministic CPU reference, and legacy Canvas diagnostic backends",
+  },
+  {
+    id: "FG-01-T03",
+    milestone: "FG-01",
+    status: "done",
+    title: "Expose fluid capability diagnostics in the app",
+    exitProof: "OceanPhysicsApp exposes backend, status, tier, grid size, adapter, storage limit, and fallback reason",
   },
   {
     id: "FG-02-T01",

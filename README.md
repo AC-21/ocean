@@ -23,6 +23,12 @@ Run the tracking gate:
 npm run fluid:tracking
 ```
 
+Run the local Electron WebGPU capability gate:
+
+```sh
+npm run fluid:capability
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic

@@ -52,6 +52,24 @@ Forbidden for production:
 - Full-grid GPU readback every frame.
 - Visual-only waves that do not feed buoyancy, slam, drag, and splash coupling.
 
+## Current Capability Evidence
+
+FG-01 is complete as of 2026-06-07. `npm run fluid:capability` launched the
+local Electron app and wrote `reports/fluid-capability-latest.json`. A committed
+snapshot is stored at `docs/evidence/FG-01-fluid-capability-2026-06-07.json`.
+
+Latest evidence:
+
+- Status: `webgpu-ready`.
+- Backend: `webgpu-compute`.
+- Adapter: `apple / metal-3`.
+- Selected tier: `high`, `512 x 288`.
+- Estimated grid memory: `4,718,592` bytes for the shell's eight-buffer grid
+  budget.
+- Storage-buffer binding limit: `134,217,728` bytes.
+- Compute invocation limit: `256`.
+- Fallback: none.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

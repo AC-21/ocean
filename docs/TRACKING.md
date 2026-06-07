@@ -1,14 +1,14 @@
 # Fluid Remap Tracking
 
-This file is the local source of truth until the GitHub remote exists. When the
-remote is created, seed these as GitHub milestones and issues.
+This file is the local source of truth for fluid-grid milestones, tasks, gates,
+and GitHub issue mapping.
 
 ## Milestones
 
 | ID | Milestone | Status | Exit Gate |
 | --- | --- | --- | --- |
-| FG-00 | Repository and tracking foundation | In progress | G-FG-00 |
-| FG-01 | WebGPU capability shell | Planned | G-FG-01 |
+| FG-00 | Repository and tracking foundation | Done | G-FG-00 |
+| FG-01 | WebGPU capability shell | Done | G-FG-01 |
 | FG-02 | GPU grid allocation and stepping | Planned | G-FG-02 |
 | FG-03 | Grid-backed water rendering | Planned | G-FG-03 |
 | FG-04 | Two-way rigid-body/fluid coupling | Planned | G-FG-04 |
@@ -20,7 +20,7 @@ remote is created, seed these as GitHub milestones and issues.
 | Gate | Blocks | Command or Evidence | Pass Bar |
 | --- | --- | --- | --- |
 | G-FG-00 | FG-00 | `npm run fluid:tracking` | docs, issue templates, and code contract agree on milestones and gates |
-| G-FG-01 | FG-01 | WebGPU capability report artifact | adapter/device limits captured; unsupported hardware has intentional fallback |
+| G-FG-01 | FG-01 | `npm run fluid:capability`; `docs/evidence/FG-01-fluid-capability-2026-06-07.json` | adapter/device limits captured; unsupported hardware has intentional fallback |
 | G-FG-02 | FG-02 | GPU grid benchmark report | standard grid steps inside frame budget with stable CFL and no full-grid readback |
 | G-FG-03 | FG-03 | render probe plus performance report | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
 | G-FG-04 | FG-04 | drop-regression report | object entry, buoyancy, slam, drag, and float/sink state use grid-backed coupling |
@@ -35,9 +35,9 @@ remote is created, seed these as GitHub milestones and issues.
 | FG-00-T02 | FG-00 | Done | architecture | Fluid-grid remap doc committed locally |
 | FG-00-T03 | FG-00 | Done | tracking | Milestone, task, gate, and issue-template tracking exists |
 | FG-00-T04 | FG-00 | Done | github | Remote `origin` points to `https://github.com/AC-21/ocean.git`; local `main` pushed and tracks `origin/main` |
-| FG-01-T01 | FG-01 | Planned | capability | Detect `navigator.gpu`, adapter name, feature limits, and device creation errors |
-| FG-01-T02 | FG-01 | Planned | architecture | Add `FluidBackend` abstraction with WebGPU and deterministic CPU implementations |
-| FG-01-T03 | FG-01 | Planned | diagnostics | Show backend, adapter, tier, grid size, and fallback reason in-app |
+| FG-01-T01 | FG-01 | Done | capability | `npm run fluid:capability` reports `webgpu-ready`, adapter `apple / metal-3`, high tier, features, and limits |
+| FG-01-T02 | FG-01 | Done | architecture | `src/fluid/fluidBackend.ts` defines WebGPU production, CPU reference, and Canvas diagnostic backends |
+| FG-01-T03 | FG-01 | Done | diagnostics | `OceanPhysicsApp` exposes backend, status, tier, grid size, adapter, storage limit, and fallback reason |
 | FG-02-T01 | FG-02 | Planned | compute | Allocate height, velocity, foam, obstacle, depth, and impulse buffers |
 | FG-02-T02 | FG-02 | Planned | compute | Implement fixed-substep advection/propagation/damping compute passes |
 | FG-02-T03 | FG-02 | Planned | verification | Add CFL, energy, and frame-budget checks for low/standard/high tiers |

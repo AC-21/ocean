@@ -25,6 +25,7 @@
     "assets:sync": "node scripts/asset_pipeline.mjs sync",
     "assets:verify": "node scripts/asset_pipeline.mjs verify",
     "browser:smoke": "node scripts/browser_smoke.mjs",
+    "fluid:capability": "npm run build && node scripts/fluid_capability_report.mjs",
     "fluid:tracking": "node scripts/fluid_tracking_check.mjs",
     "balance:snapshot": "node scripts/balance_snapshot.mjs",
     "ocean:benchmark": "node scripts/ocean_benchmark.mjs",

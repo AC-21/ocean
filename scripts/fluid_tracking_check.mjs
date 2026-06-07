@@ -6,6 +6,7 @@ const requiredFiles = [
   "docs/FLUID_GRID_REMAP.md",
   "docs/TRACKING.md",
   "docs/GITHUB_SETUP.md",
+  "docs/evidence/FG-01-fluid-capability-2026-06-07.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -27,6 +28,7 @@ const files = new Map(requiredFiles.map((filePath) => [filePath, readRequired(fi
 const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
+const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -62,6 +64,10 @@ if (!tracking.includes("FG-00-T04") || !tracking.includes("origin/main")) {
 
 if (!gateTemplate.includes("Production water path does not use Canvas 2D")) {
   errors.push("fluid_grid_gate.yml must preserve the no-primary-Canvas invariant");
+}
+
+if (!fg01Evidence.includes("\"status\": \"webgpu-ready\"") || !fg01Evidence.includes("\"selectedTier\": \"high\"")) {
+  errors.push("FG-01 evidence must record a WebGPU-ready high-tier report");
 }
 
 if (errors.length > 0) {
