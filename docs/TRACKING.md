@@ -11,7 +11,7 @@ and GitHub issue mapping.
 | FG-01 | WebGPU capability shell | Done | G-FG-01 |
 | FG-02 | GPU grid allocation and stepping | Done | G-FG-02 |
 | FG-03 | Grid-backed water rendering | Done | G-FG-03 |
-| FG-04 | Two-way rigid-body/fluid coupling | Planned | G-FG-04 |
+| FG-04 | Two-way rigid-body/fluid coupling | Done | G-FG-04 |
 | FG-05 | Splash, foam, and spray from grid state | Planned | G-FG-05 |
 | FG-06 | Calibration and near-realism validation | Planned | G-FG-06 |
 
@@ -23,7 +23,7 @@ and GitHub issue mapping.
 | G-FG-01 | FG-01 | `npm run fluid:capability`; `docs/evidence/FG-01-fluid-capability-2026-06-07.json` | adapter/device limits captured; unsupported hardware has intentional fallback |
 | G-FG-02 | FG-02 | `npm run fluid:grid`; `docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json` | standard grid steps inside frame budget with stable CFL and no full-grid readback |
 | G-FG-03 | FG-03 | `npm run fluid:render`; `docs/evidence/FG-03-fluid-render-probe-2026-06-07.json` | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
-| G-FG-04 | FG-04 | drop-regression report | object entry, buoyancy, slam, drag, and float/sink state use grid-backed coupling |
+| G-FG-04 | FG-04 | `npm run fluid:coupling`; `docs/evidence/FG-04-fluid-coupling-2026-06-07.json` | object entry writes footprint, depth impedance, and displacement impulses to the WebGPU grid; the next physics step consumes bounded grid force deltas |
 | G-FG-05 | FG-05 | splash-regression report | splash crown, foam, spray, and secondary impacts are driven by local grid energy |
 | G-FG-06 | FG-06 | calibration packet | reference cases match accepted error bounds for impact speed, splash height, damping, and float duration |
 
@@ -44,9 +44,9 @@ and GitHub issue mapping.
 | FG-03-T01 | FG-03 | Done | renderer | `.ocean-canvas` uses primary renderer `webgpu-grid-primary-v1` with context `webgpu` |
 | FG-03-T02 | FG-03 | Done | renderer | Legacy Canvas 2D rendering is only reached after explicit WebGPU fallback telemetry |
 | FG-03-T03 | FG-03 | Done | verification | `npm run fluid:render` proves nonblank/varied WebGPU pixels and rejects the legacy Canvas renderer as primary |
-| FG-04-T01 | FG-04 | Planned | physics | Write object footprints and displacement impulses into the grid |
-| FG-04-T02 | FG-04 | Planned | physics | Read bounded local grid samples into buoyancy, slam, drag, lift, and float logic |
-| FG-04-T03 | FG-04 | Planned | verification | Compare CPU reference and GPU coupling on canonical drop cases |
+| FG-04-T01 | FG-04 | Done | physics | `FluidWaterRenderer` writes active object footprints, depth impedance, and displacement impulses into bounded WebGPU grid rows |
+| FG-04-T02 | FG-04 | Done | physics | `stepSimulation` consumes the latest bounded grid coupling force deltas for vertical and horizontal rigid-body motion |
+| FG-04-T03 | FG-04 | Done | verification | `npm run fluid:coupling` verifies a concrete cube drop with 141 bounded samples, nonzero impulse, and finite force deltas |
 | FG-05-T01 | FG-05 | Planned | physics | Generate foam/spray from Weber, Froude, energy, and grid-gradient state |
 | FG-05-T02 | FG-05 | Planned | physics | Feed droplet reentry and entrained-air effects back into the grid |
 | FG-05-T03 | FG-05 | Planned | verification | Validate splash crown, spray mass, and secondary impacts against references |

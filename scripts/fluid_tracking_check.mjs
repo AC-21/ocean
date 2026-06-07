@@ -9,6 +9,7 @@ const requiredFiles = [
   "docs/evidence/FG-01-fluid-capability-2026-06-07.json",
   "docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json",
   "docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
+  "docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -33,6 +34,7 @@ const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
+const fg04Evidence = files.get("docs/evidence/FG-04-fluid-coupling-2026-06-07.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -80,6 +82,15 @@ if (!fg02Evidence.includes("\"gate\": \"G-FG-02\"") || !fg02Evidence.includes("\
 
 if (!fg03Evidence.includes("\"gate\": \"G-FG-03\"") || !fg03Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") || !fg03Evidence.includes("\"waterContext\": \"webgpu\"")) {
   errors.push("FG-03 evidence must record WebGPU grid renderer telemetry");
+}
+
+if (
+  !fg04Evidence.includes("\"gate\": \"G-FG-04\"") ||
+  !fg04Evidence.includes("\"coupling\": \"object-grid-v1\"") ||
+  !fg04Evidence.includes("\"boundedDiagnostics\": true") ||
+  !fg04Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-04 evidence must record bounded WebGPU object-grid coupling telemetry without per-frame full-grid readback");
 }
 
 if (errors.length > 0) {

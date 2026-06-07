@@ -27,6 +27,7 @@ import {
   resolvedSurfaceElevationAt,
   startDrop,
   stepSimulation,
+  type GridFluidCouplingForces,
   type ObjectSpec,
   type OceanSettings,
   type ShapeKind,
@@ -66,6 +67,7 @@ export default function OceanPhysicsApp() {
   const [waterRenderMode, setWaterRenderMode] = useState<"fallback" | "initializing" | "webgpu">("initializing");
   const waterRendererRef = useRef<FluidWaterRenderer | null>(null);
   const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
+  const gridCouplingRef = useRef<GridFluidCouplingForces | null>(null);
 
   specRef.current = spec;
   settingsRef.current = settings;
@@ -123,6 +125,7 @@ export default function OceanPhysicsApp() {
   const resetSimulation = useCallback(() => {
     const next = createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg));
     simulationRef.current = next;
+    gridCouplingRef.current = null;
     setSnapshot(next);
     setRunning(false);
     setPaused(false);
@@ -148,7 +151,7 @@ export default function OceanPhysicsApp() {
         const substeps = Math.max(1, Math.ceil(simulatedDt / 0.018));
         const stepDt = simulatedDt / substeps;
         for (let index = 0; index < substeps; index += 1) {
-          current = stepSimulation(current, specRef.current, settingsRef.current, stepDt);
+          current = stepSimulation(current, specRef.current, settingsRef.current, stepDt, gridCouplingRef.current);
           if (current.phase === "sank") break;
         }
         simulationRef.current = current;
@@ -160,8 +163,20 @@ export default function OceanPhysicsApp() {
       const canvas = canvasRef.current;
       if (canvas) {
         if (waterRendererRef.current && waterRenderMode === "webgpu") {
-          window.__fluidWaterRenderStats = waterRendererRef.current.render(fluidWaterInputFor(canvas, current, specRef.current, settingsRef.current, dropHeightM));
+          const stats = waterRendererRef.current.render(fluidWaterInputFor(canvas, current, specRef.current, settingsRef.current, dropHeightM));
+          window.__fluidWaterRenderStats = stats;
+          gridCouplingRef.current =
+            stats.lastCoupling?.active === true
+              ? {
+                  active: true,
+                  gridVelocityMps: stats.lastCoupling.gridVelocityMps,
+                  horizontalForceDeltaN: stats.lastCoupling.horizontalForceDeltaN,
+                  sampleTimeS: stats.lastCoupling.sampleTimeS,
+                  verticalForceDeltaN: stats.lastCoupling.verticalForceDeltaN,
+                }
+              : null;
         } else if (waterRenderMode === "fallback") {
+          gridCouplingRef.current = null;
           legacyCanvasWaterTelemetry(canvas, waterFallbackReasonRef.current);
           renderOcean(canvas, current, specRef.current, settingsRef.current, dropHeightM);
         }
@@ -198,6 +213,7 @@ export default function OceanPhysicsApp() {
   const launchDrop = () => {
     const next = startDrop(createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg)));
     simulationRef.current = next;
+    gridCouplingRef.current = null;
     setSnapshot(next);
     setRunning(true);
     setPaused(false);
@@ -753,6 +769,8 @@ function fluidWaterInputFor(
 ): FluidWaterRenderInput {
   const rect = canvas.getBoundingClientRect();
   const objectHeight = objectHeightM(spec);
+  const objectWidth = objectWidthM(spec);
+  const objectDepth = objectDepthM(spec);
   const aboveM = Math.max(dropHeightM + objectHeight + 1.2, 5);
   const belowM = settings.waterDepthM + 1.5;
   const scale = Math.min(rect.width / 26, rect.height / (aboveM + belowM));
@@ -762,17 +780,33 @@ function fluidWaterInputFor(
   const impactStrength =
     state.impact === null ? 0 : clamp(1 - Math.max(0, state.timeS - state.impact.atS) / Math.max(0.1, state.impact.cavityCollapseTimeS), 0, 1);
   return {
+    buoyancyN: diagnostics.buoyancyN,
     currentSpeedMps: settings.currentSpeedMps,
+    displacedVolumeM3: diagnostics.displacedVolumeM3,
+    displacedVolumeRateM3ps: state.lastDisplacedVolumeRateM3ps,
+    dragForceXN: diagnostics.hydrodynamicDragForceXN,
+    dragForceYN: diagnostics.hydrodynamicDragForceYN,
+    gravityMps2: settings.gravity,
     impactStrength,
+    massKg: diagnostics.massKg,
+    netForceN: diagnostics.netForceN,
     objectAngleRad: state.object.angleRad,
     objectCenterXPx: centerX + state.object.xM * scale,
     objectCenterYPx: surfaceBaseY - state.object.centerYM * scale,
-    objectHalfHeightPx: Math.max(3, objectHeightM(spec) * scale * 0.5),
-    objectHalfWidthPx: Math.max(3, objectWidthM(spec) * scale * 0.5),
+    objectDepthM: objectDepth,
+    objectHalfHeightPx: Math.max(3, objectHeight * scale * 0.5),
+    objectHalfWidthPx: Math.max(3, objectWidth * scale * 0.5),
+    objectHeightM: objectHeight,
+    objectVxMps: state.object.vxMps,
+    objectVyMps: state.object.vyMps,
+    objectWidthM: objectWidth,
+    scalePxPerM: scale,
     shape: spec.shape,
+    slamForceN: state.lastWaterEntrySlamN,
     submergedFraction: diagnostics.submergedFraction,
     surfaceYPx: surfaceBaseY,
     timeS: state.timeS,
+    waterDensityKgM3: settings.waterDensityKgM3,
     waterDepthM: settings.waterDepthM,
     waveHeightM: settings.waveHeightM,
   };

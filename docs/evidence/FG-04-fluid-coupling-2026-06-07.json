@@ -1,0 +1,55 @@
+{
+  "generatedAt": "2026-06-07T20:23:30.314Z",
+  "gate": "G-FG-04",
+  "noFullGridReadbackPerFrame": true,
+  "pass": true,
+  "stats": {
+    "context": "webgpu",
+    "frameCount": 173,
+    "gridCellsX": 512,
+    "gridCellsY": 288,
+    "lastCoupling": {
+      "active": true,
+      "appliedImpulseNs": 5.4516310065761235,
+      "boundedDiagnostics": true,
+      "bounds": {
+        "xStart": 224,
+        "xEnd": 240,
+        "yStart": 134,
+        "yEnd": 146
+      },
+      "buoyancyDeltaN": 0.05647199837791449,
+      "coupling": "object-grid-v1",
+      "dragDeltaN": 0.16181165813103446,
+      "footprintAreaM2": 0.3525000000000001,
+      "footprintCells": 141,
+      "forceDeltaN": 2373.4473387531334,
+      "gridSampleCount": 141,
+      "gridVelocityMps": 0.6063997064004656,
+      "horizontalForceDeltaN": 0.16181165813103446,
+      "impulseCells": 141,
+      "impulseMagnitude": 0.6382397275991559,
+      "liftDeltaN": 11.456534906230313,
+      "sampleTimeS": 1.324800000005962,
+      "slamDeltaN": 2361.934331848525,
+      "surfaceOffsetM": 0.2758948838737002,
+      "verticalForceDeltaN": 2373.4473387531334
+    },
+    "renderer": "webgpu-grid-primary-v1",
+    "tier": "high"
+  },
+  "telemetry": {
+    "coupling": "object-grid-v1",
+    "couplingActive": true,
+    "couplingCells": 141,
+    "couplingForceN": 2373,
+    "couplingImpulse": 0.63824,
+    "couplingSamples": 141,
+    "frames": 173,
+    "grid": "512x288",
+    "renderer": "webgpu-grid-primary-v1",
+    "status": "rendered",
+    "tier": "high",
+    "waterContext": "webgpu"
+  }
+}

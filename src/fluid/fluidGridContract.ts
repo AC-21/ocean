@@ -106,8 +106,8 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-04",
     blocks: "FG-04",
-    evidence: "drop-regression report",
-    passBar: "object entry, buoyancy, slam, drag, and float/sink state use grid-backed coupling",
+    evidence: "npm run fluid:coupling and docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
+    passBar: "object entries write footprints, depth impedance, and displacement impulses to the WebGPU grid and feed bounded force deltas into rigid-body motion",
   },
   {
     id: "G-FG-05",
@@ -218,9 +218,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-04-T01",
     milestone: "FG-04",
-    status: "planned",
-    title: "Couple rigid bodies to the fluid grid",
-    exitProof: "drop-regression report proves grid-backed buoyancy, slam, drag, and float/sink behavior",
+    status: "done",
+    title: "Write object footprints and displacement impulses into the grid",
+    exitProof: "FluidWaterRenderer writes bounded object footprints, depth impedance, and displacement impulse rows into WebGPU storage buffers",
+  },
+  {
+    id: "FG-04-T02",
+    milestone: "FG-04",
+    status: "done",
+    title: "Feed bounded grid coupling forces into rigid-body motion",
+    exitProof: "stepSimulation accepts the latest active object-grid coupling summary and consumes vertical and horizontal force deltas",
+  },
+  {
+    id: "FG-04-T03",
+    milestone: "FG-04",
+    status: "done",
+    title: "Verify canonical drop coupling in Electron",
+    exitProof: "npm run fluid:coupling passes with active object-grid-v1 coupling, bounded samples, nonzero impulse, and finite force deltas",
   },
   {
     id: "FG-05-T01",

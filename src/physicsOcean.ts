@@ -143,6 +143,14 @@ export type SimulationState = {
   lastSeabedPenetrationM: number;
 };
 
+export type GridFluidCouplingForces = {
+  active: boolean;
+  gridVelocityMps: number;
+  horizontalForceDeltaN: number;
+  sampleTimeS: number;
+  verticalForceDeltaN: number;
+};
+
 export type StepDiagnostics = {
   massKg: number;
   dryMassKg: number;
@@ -1205,12 +1213,19 @@ export function diagnosticsFor(state: SimulationState, spec: ObjectSpec, setting
   };
 }
 
-export function stepSimulation(state: SimulationState, spec: ObjectSpec, settings: OceanSettings, dtS: number): SimulationState {
+export function stepSimulation(
+  state: SimulationState,
+  spec: ObjectSpec,
+  settings: OceanSettings,
+  dtS: number,
+  gridCoupling?: GridFluidCouplingForces | null
+): SimulationState {
   if (state.phase === "ready" || state.phase === "sank") {
     return updateParticlesAndHistory(state, spec, settings, dtS);
   }
 
   const dt = clamp(dtS, 0, 0.04);
+  const activeGridCoupling = activeGridFluidCouplingFor(gridCoupling, state.timeS);
   const previousDiagnostics = diagnosticsFor(state, spec, settings);
   const previousSubmerged = previousDiagnostics.submergedFraction;
   const previousSurfaceY = previousDiagnostics.surfaceYM;
@@ -1317,7 +1332,16 @@ export function stepSimulation(state: SimulationState, spec: ObjectSpec, setting
     heaveHydrodynamics.forceCapN
   );
   const ayMps2 =
-    (buoyancyN + surfaceTension.forceN + dragN + next.heaveRadiationForceN + waveExcitation.forceYN + hydrodynamicLift.forceYN - weightN) /
+    (
+      buoyancyN +
+      surfaceTension.forceN +
+      dragN +
+      next.heaveRadiationForceN +
+      waveExcitation.forceYN +
+      hydrodynamicLift.forceYN +
+      activeGridCoupling.verticalForceDeltaN -
+      weightN
+    ) /
     Math.max(0.001, massKg + addedMassKg + wakeHydrodynamics.entrainedMassKg * 0.22);
 
   next.object.vyMps += ayMps2 * dt;
@@ -1419,7 +1443,10 @@ export function stepSimulation(state: SimulationState, spec: ObjectSpec, setting
   );
   const windPushN = 0.5 * settings.airDensityKgM3 * Math.max(0, settings.windSpeedMps) ** 2 * horizontalArea * 0.018 * (1 - postWettedSubmergedFraction);
   const horizontalAddedMassKg = spec.addedMassCoefficient * settings.waterDensityKgM3 * postWettedDisplaced;
-  next.object.vxMps += ((postHydrodynamicDrag.forceXN + postWaveExcitation.forceXN + postHydrodynamicLift.forceXN + windPushN) / Math.max(0.001, massKg + horizontalAddedMassKg * 0.2)) * dt;
+  next.object.vxMps +=
+    ((postHydrodynamicDrag.forceXN + postWaveExcitation.forceXN + postHydrodynamicLift.forceXN + windPushN + activeGridCoupling.horizontalForceDeltaN) /
+      Math.max(0.001, massKg + horizontalAddedMassKg * 0.2)) *
+    dt;
   next.object.xM = clamp(next.object.xM + next.object.vxMps * dt, -14, 14);
 
   const rotationDiagnostics = diagnosticsFor(next, spec, settings);
@@ -3354,6 +3381,30 @@ function foldEquilibriumAngle(angleRad: number): number {
 
 function lerp(start: number, end: number, t: number): number {
   return start + (end - start) * t;
+}
+
+function activeGridFluidCouplingFor(coupling: GridFluidCouplingForces | null | undefined, timeS: number): GridFluidCouplingForces {
+  if (!coupling?.active || Math.abs(timeS - coupling.sampleTimeS) > 0.18) {
+    return {
+      active: false,
+      gridVelocityMps: 0,
+      horizontalForceDeltaN: 0,
+      sampleTimeS: timeS,
+      verticalForceDeltaN: 0,
+    };
+  }
+
+  return {
+    active: true,
+    gridVelocityMps: finiteClamp(coupling.gridVelocityMps, -12, 12),
+    horizontalForceDeltaN: finiteClamp(coupling.horizontalForceDeltaN, -1_000_000, 1_000_000),
+    sampleTimeS: coupling.sampleTimeS,
+    verticalForceDeltaN: finiteClamp(coupling.verticalForceDeltaN, -1_000_000, 1_000_000),
+  };
+}
+
+function finiteClamp(value: number, min: number, max: number): number {
+  return Number.isFinite(value) ? clamp(value, min, max) : 0;
 }
 
 function clamp(value: number, min: number, max: number): number {

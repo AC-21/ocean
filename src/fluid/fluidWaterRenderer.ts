@@ -1,20 +1,43 @@
 import { createFluidGridStepPlan, fluidGridStepShader, type FluidGridStepPlan } from "./fluidGridGpu";
+import {
+  gridObjectCouplingFor,
+  type FluidGridObjectCoupling,
+  type FluidGridObjectCouplingBounds,
+  type FluidGridObjectCouplingSample,
+  type FluidGridObjectCouplingSummary,
+} from "./fluidGridCoupling";
 import type { FluidGridTierId } from "./fluidGridContract";
 
 export type FluidWaterShape = "box" | "horizontalCylinder" | "sphere" | "verticalCylinder";
 
 export type FluidWaterRenderInput = {
+  buoyancyN: number;
   currentSpeedMps: number;
+  displacedVolumeM3: number;
+  displacedVolumeRateM3ps: number;
+  dragForceXN: number;
+  dragForceYN: number;
+  gravityMps2: number;
   impactStrength: number;
+  massKg: number;
+  netForceN: number;
   objectAngleRad: number;
   objectCenterXPx: number;
   objectCenterYPx: number;
+  objectDepthM: number;
   objectHalfHeightPx: number;
   objectHalfWidthPx: number;
+  objectHeightM: number;
+  objectVxMps: number;
+  objectVyMps: number;
+  objectWidthM: number;
+  scalePxPerM: number;
   shape: FluidWaterShape;
+  slamForceN: number;
   submergedFraction: number;
   surfaceYPx: number;
   timeS: number;
+  waterDensityKgM3: number;
   waterDepthM: number;
   waveHeightM: number;
 };
@@ -24,6 +47,7 @@ export type FluidWaterRenderStats = {
   frameCount: number;
   gridCellsX: number;
   gridCellsY: number;
+  lastCoupling: FluidGridObjectCouplingSummary | null;
   renderer: "webgpu-grid-primary-v1";
   tier: FluidGridTierId;
 };
@@ -113,9 +137,14 @@ export class FluidWaterRenderer {
   private readonly computeBindA: unknown;
   private readonly computeBindB: unknown;
   private readonly computePipeline: unknown;
+  private readonly baseDepth: Float32Array;
+  private readonly baseObstacle: Float32Array;
+  private readonly depth: BufferLike;
   private readonly height: BufferLike;
   private readonly heightScratch: BufferLike;
   private readonly foam: BufferLike;
+  private readonly impulse: BufferLike;
+  private readonly obstacle: BufferLike;
   private readonly plan: FluidGridStepPlan;
   private readonly renderBindA: unknown;
   private readonly renderBindB: unknown;
@@ -124,6 +153,8 @@ export class FluidWaterRenderer {
   private readonly stepUniform: BufferLike;
   private destroyed = false;
   private frameCount = 0;
+  private lastCoupling: FluidGridObjectCouplingSummary | null = null;
+  private lastCouplingBounds: FluidGridObjectCouplingBounds | null = null;
   private stepIndex = 0;
 
   constructor(
@@ -139,9 +170,11 @@ export class FluidWaterRenderer {
     this.heightScratch = this.storageBuffer(seeded.heightScratch);
     const velocity = this.storageBuffer(seeded.velocity);
     this.foam = this.storageBuffer(seeded.foam);
-    const obstacle = this.storageBuffer(seeded.obstacle);
-    const depth = this.storageBuffer(seeded.depth);
-    const impulse = this.storageBuffer(seeded.impulse);
+    this.baseObstacle = seeded.obstacle.slice();
+    this.baseDepth = seeded.depth.slice();
+    this.obstacle = this.storageBuffer(seeded.obstacle);
+    this.depth = this.storageBuffer(seeded.depth);
+    this.impulse = this.storageBuffer(seeded.impulse);
     this.stepUniform = this.uniformBuffer(stepUniformValues(this.plan));
     this.renderUniform = this.uniformBuffer(new Float32Array(24));
 
@@ -166,11 +199,11 @@ export class FluidWaterRenderer {
     });
     this.computeBindA = this.device.createBindGroup({
       layout: computeLayout,
-      entries: bindEntries(this.height, this.heightScratch, velocity, this.foam, obstacle, depth, impulse, this.stepUniform),
+      entries: bindEntries(this.height, this.heightScratch, velocity, this.foam, this.obstacle, this.depth, this.impulse, this.stepUniform),
     });
     this.computeBindB = this.device.createBindGroup({
       layout: computeLayout,
-      entries: bindEntries(this.heightScratch, this.height, velocity, this.foam, obstacle, depth, impulse, this.stepUniform),
+      entries: bindEntries(this.heightScratch, this.height, velocity, this.foam, this.obstacle, this.depth, this.impulse, this.stepUniform),
     });
 
     const renderLayout = this.device.createBindGroupLayout({
@@ -221,6 +254,7 @@ export class FluidWaterRenderer {
       format: this.format,
       usage: textureUsageRenderAttachment,
     });
+    this.writeObjectCoupling(input, size);
     this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size));
     const encoder = this.device.createCommandEncoder();
     const computePass = encoder.beginComputePass();
@@ -256,6 +290,7 @@ export class FluidWaterRenderer {
       frameCount: this.frameCount,
       gridCellsX: this.plan.cellsX,
       gridCellsY: this.plan.cellsY,
+      lastCoupling: this.lastCoupling,
       renderer: "webgpu-grid-primary-v1",
       tier: this.plan.tier,
     };
@@ -287,14 +322,85 @@ export class FluidWaterRenderer {
     return buffer;
   }
 
+  private writeObjectCoupling(input: FluidWaterRenderInput, size: { ratio: number; width: number; height: number }) {
+    if (this.lastCouplingBounds) {
+      this.restoreBaseRows(this.lastCouplingBounds);
+      this.lastCouplingBounds = null;
+    }
+
+    const coupling = gridObjectCouplingFor({
+      ...input,
+      canvasHeightPx: size.height / size.ratio,
+      canvasWidthPx: size.width / size.ratio,
+      plan: this.plan,
+    });
+    this.lastCoupling = coupling.summary;
+    if (!coupling.summary.active || coupling.samples.length === 0) return;
+
+    this.writeCouplingRows(coupling);
+    this.lastCouplingBounds = coupling.summary.bounds;
+  }
+
+  private restoreBaseRows(bounds: FluidGridObjectCouplingBounds) {
+    for (let y = bounds.yStart; y <= bounds.yEnd; y += 1) {
+      const start = y * this.plan.cellsX + bounds.xStart;
+      const end = y * this.plan.cellsX + bounds.xEnd + 1;
+      const offset = start * bytesPerValue;
+      this.device.queue.writeBuffer(this.depth, offset, this.baseDepth.subarray(start, end));
+      this.device.queue.writeBuffer(this.obstacle, offset, this.baseObstacle.subarray(start, end));
+    }
+  }
+
+  private writeCouplingRows(coupling: FluidGridObjectCoupling) {
+    const rows = samplesByRow(coupling.samples);
+    const bounds = coupling.summary.bounds;
+    const width = bounds.xEnd - bounds.xStart + 1;
+    for (let y = bounds.yStart; y <= bounds.yEnd; y += 1) {
+      const start = y * this.plan.cellsX + bounds.xStart;
+      const end = start + width;
+      const offset = start * bytesPerValue;
+      const depthRow = new Float32Array(this.baseDepth.subarray(start, end));
+      const obstacleRow = new Float32Array(this.baseObstacle.subarray(start, end));
+      const impulseRow = new Float32Array(width);
+
+      for (const sample of rows.get(y) ?? []) {
+        const column = sample.x - bounds.xStart;
+        depthRow[column] = Math.min(depthRow[column], this.baseDepth[start + column] * sample.depthScale);
+        obstacleRow[column] = Math.max(obstacleRow[column], sample.obstacle);
+        impulseRow[column] = sample.impulseMps;
+      }
+
+      this.device.queue.writeBuffer(this.depth, offset, depthRow);
+      this.device.queue.writeBuffer(this.obstacle, offset, obstacleRow);
+      this.device.queue.writeBuffer(this.impulse, offset, impulseRow);
+    }
+  }
+
   private setCanvasTelemetry(status: "ready" | "rendered") {
+    const coupling = this.lastCoupling;
     this.canvas.dataset.waterRenderer = "webgpu-grid-primary-v1";
     this.canvas.dataset.waterContext = "webgpu";
     this.canvas.dataset.waterGrid = `${this.plan.cellsX}x${this.plan.cellsY}`;
     this.canvas.dataset.waterTier = this.plan.tier;
     this.canvas.dataset.waterFrames = String(this.frameCount);
     this.canvas.dataset.waterStatus = status;
+    this.canvas.dataset.waterCoupling = coupling?.coupling ?? "object-grid-v1";
+    this.canvas.dataset.waterCouplingActive = String(coupling?.active ?? false);
+    this.canvas.dataset.waterCouplingCells = String(coupling?.footprintCells ?? 0);
+    this.canvas.dataset.waterCouplingForce = String(Math.round(coupling?.forceDeltaN ?? 0));
+    this.canvas.dataset.waterCouplingImpulse = String(Number((coupling?.impulseMagnitude ?? 0).toFixed(6)));
+    this.canvas.dataset.waterCouplingSamples = String(coupling?.gridSampleCount ?? 0);
   }
+}
+
+function samplesByRow(samples: FluidGridObjectCouplingSample[]): Map<number, FluidGridObjectCouplingSample[]> {
+  const rows = new Map<number, FluidGridObjectCouplingSample[]>();
+  for (const sample of samples) {
+    const row = rows.get(sample.y);
+    if (row) row.push(sample);
+    else rows.set(sample.y, [sample]);
+  }
+  return rows;
 }
 
 export function legacyCanvasWaterTelemetry(canvas: HTMLCanvasElement, reason: string) {

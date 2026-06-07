@@ -104,6 +104,25 @@ Latest render evidence:
   only.
 - Gate: passed.
 
+FG-04 is complete as of 2026-06-07. `npm run fluid:coupling` launched the local
+Electron app, dropped the concrete cube, waited for active WebGPU object-grid
+coupling, and wrote `reports/fluid-coupling-latest.json`. A committed snapshot
+is stored at `docs/evidence/FG-04-fluid-coupling-2026-06-07.json`.
+
+Latest coupling evidence:
+
+- Renderer: `webgpu-grid-primary-v1`.
+- Canvas context: `webgpu`.
+- Grid: `512 x 288`, tier `high`.
+- Coupling: `object-grid-v1`, active during the drop.
+- Footprint: `141` bounded local grid samples.
+- Displacement impulse: `0.63824` from canvas telemetry,
+  `0.6382397275991559` from renderer stats.
+- Force feedback: finite vertical force delta `2373.45 N` and horizontal force
+  delta `0.16 N` consumed by the next rigid-body physics step.
+- Full-grid readback: none per frame.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
