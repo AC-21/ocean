@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Harborline identity token style sheet</title>
+  <desc id="desc">Minimal maritime identity token references for captain, faction, crew, contract giver, and encounter roles.</desc>
+  <rect width="1200" height="520" fill="#e8f0ed"/>
+  <rect x="56" y="54" width="1088" height="412" rx="8" fill="#f7faf8" stroke="#cad8d2"/>
+  <text x="94" y="112" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="28" font-weight="700">Harborline Identity Tokens</text>
+  <text x="94" y="148" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="17">Restrained maritime marks for dense panels: one cue, one palette, readable initials.</text>
+
+  <g transform="translate(98 205)">
+    <circle cx="72" cy="72" r="66" fill="#2f6f7b" stroke="#93d4dc" stroke-width="5"/>
+    <path d="M38 87 C52 67 64 50 74 26 C91 55 99 72 110 95 C87 84 63 83 38 87 Z" fill="#f5ead4" opacity="0.92"/>
+    <circle cx="72" cy="72" r="24" fill="#244f59" opacity="0.9"/>
+    <text x="72" y="83" text-anchor="middle" fill="#eaf7f6" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="26" font-weight="800">HC</text>
+    <text x="72" y="174" text-anchor="middle" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="18" font-weight="700">Captain</text>
+    <text x="72" y="200" text-anchor="middle" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="14">storm glass</text>
+  </g>
+
+  <g transform="translate(318 205)">
+    <circle cx="72" cy="72" r="66" fill="#367c9a" stroke="#93d4dc" stroke-width="5"/>
+    <rect x="37" y="39" width="70" height="66" rx="8" fill="#dbe9e7" opacity="0.94"/>
+    <path d="M52 57 H93 M52 73 H93 M52 89 H79" stroke="#367c9a" stroke-width="5" stroke-linecap="round"/>
+    <text x="72" y="134" text-anchor="middle" fill="#f7faf8" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="21" font-weight="800">CB</text>
+    <text x="72" y="174" text-anchor="middle" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="18" font-weight="700">Faction</text>
+    <text x="72" y="200" text-anchor="middle" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="14">ledger seal</text>
+  </g>
+
+  <g transform="translate(538 205)">
+    <rect x="10" y="10" width="124" height="124" rx="8" fill="#4f8f73" stroke="#9fe2b2" stroke-width="5"/>
+    <circle cx="72" cy="56" r="28" fill="#f2cf79"/>
+    <path d="M38 112 C42 83 57 73 72 73 C88 73 103 83 107 112 Z" fill="#2f5d51"/>
+    <path d="M50 42 L94 70" stroke="#244f59" stroke-width="6" stroke-linecap="round"/>
+    <text x="72" y="174" text-anchor="middle" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="18" font-weight="700">Crew</text>
+    <text x="72" y="200" text-anchor="middle" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="14">tool cue</text>
+  </g>
+
+  <g transform="translate(758 205)">
+    <path d="M24 24 H120 L105 132 H9 Z" fill="#f5ead4" stroke="#c8503e" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="48" cy="62" r="18" fill="#c8503e"/>
+    <path d="M76 55 H101 M73 76 H98 M36 103 H93" stroke="#8e4b43" stroke-width="5" stroke-linecap="round"/>
+    <text x="72" y="174" text-anchor="middle" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="18" font-weight="700">Giver</text>
+    <text x="72" y="200" text-anchor="middle" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="14">sealed writ</text>
+  </g>
+
+  <g transform="translate(978 205)">
+    <circle cx="72" cy="72" r="66" fill="#58767d" stroke="#93d4dc" stroke-width="5"/>
+    <path d="M35 88 C51 64 67 58 84 74 C96 86 105 88 115 82 C101 104 82 111 60 99 C49 93 41 91 35 88 Z" fill="#d7e4df"/>
+    <path d="M43 52 H101" stroke="#f5ead4" stroke-width="7" stroke-linecap="round"/>
+    <text x="72" y="134" text-anchor="middle" fill="#f7faf8" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="21" font-weight="800">SW</text>
+    <text x="72" y="174" text-anchor="middle" fill="#263737" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="18" font-weight="700">Encounter</text>
+    <text x="72" y="200" text-anchor="middle" fill="#60706f" font-family="Inter, Avenir, Helvetica, Arial, sans-serif" font-size="14">sea watch</text>
+  </g>
+</svg>

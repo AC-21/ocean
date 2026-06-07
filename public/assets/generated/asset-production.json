@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "styleVersion": "harborline-art-v1",
+  "updatedAt": "2026-06-07",
+  "styleContract": {
+    "profile": "src/game/artDirection.ts",
+    "artBible": "ART_DIRECTION.md",
+    "negativeRuleIds": [
+      "no-fantasy-parchment",
+      "no-toy-color",
+      "no-pirate-cosplay",
+      "no-baked-integration",
+      "no-text-artifacts",
+      "no-one-note-ui"
+    ]
+  },
+  "assets": {
+    "background:ocean-map": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ocean",
+      "approvedExampleIds": ["realistic-teal-ocean", "isometric-map-composition"],
+      "qaGateIds": ["ocean-integration", "generation-hygiene"],
+      "processing": "background_jpeg_no_alpha",
+      "roleBrief": "Realistic teal-gray ocean foundation for the strategic route map.",
+      "promptRef": "scripts/generate_gemini_assets.mjs:ocean-map"
+    },
+    "fallback_ship:merchant-boat": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Runtime fallback merchant sprite with the same isometric camera and crisp transparent output as ship art.",
+      "promptRef": "scripts/generate_gemini_assets.mjs:merchant-boat"
+    },
+    "ship:coastal_sloop": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Compact starter craft: nimble, narrow, cheap, and a little fragile.",
+      "gameplayRole": "Starter route learner",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-coastal-sloop"
+    },
+    "ship:ledger_brig": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Balanced trader with two sails, strapped deck cargo, and reliable mid-game mass.",
+      "gameplayRole": "Flexible mid-game trader",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-ledger-brig"
+    },
+    "ship:clipper_kite": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Fast route hunter with a long narrow hull, angled sails, and minimal cargo clutter.",
+      "gameplayRole": "Speed and tailwind specialist",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-clipper-kite"
+    },
+    "ship:harbor_cutter": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Compact two-sail customs cutter with a small hold, sharp papers, patrol guns, and fast boarding silhouette.",
+      "gameplayRole": "Patrol, customs, and pirate-deterrence hull",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-harbor-cutter"
+    },
+    "ship:iron_barge": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Broad armored cargo slab with reinforced hull, cannon ports, and durable slow mass.",
+      "gameplayRole": "Defensive heavy trader",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-iron-barge"
+    },
+    "ship:league_carrier": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ships",
+      "approvedExampleIds": ["isometric-ship-port-sheet"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Wide triple-hatch cargo carrier with huge holds, slow turns, and only light defensive armament.",
+      "gameplayRole": "Heavy Cargo profit engine",
+      "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-league-carrier"
+    },
+    "port:grayhaven": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Fog-bank finance harbor with counting house, lighthouse, pale docks, and Charter seriousness.",
+      "identity": "Counting House",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-grayhaven"
+    },
+    "port:saffron": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Warm spice quay with terracotta market edge, baskets, awnings, and fast price motion.",
+      "identity": "Spice Rush",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-saffron"
+    },
+    "port:glassport": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Cool angular contract port with glass warehouses, exact docks, and blue crate geometry.",
+      "identity": "Contract Exchange",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-glassport"
+    },
+    "port:stormhook": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Compact hard-water fort with dark stone, cannon battery, rugged rocks, and route danger.",
+      "identity": "Hard-Water Arsenal",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-stormhook"
+    },
+    "port:orchid": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Refined luxury roadstead with pavilion, orchid grove, violet cue, and silk-buyer calm.",
+      "identity": "Luxury Roadstead",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-orchid"
+    },
+    "port:lowmarket": {
+      "status": "production_candidate",
+      "source": "gemini",
+      "artFamily": "ports",
+      "approvedExampleIds": ["isometric-ship-port-sheet", "isometric-map-composition"],
+      "qaGateIds": ["thumbnail-read", "ocean-integration", "gameplay-silhouette", "generation-hygiene"],
+      "processing": "chroma_key_to_transparent_png",
+      "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+      "roleBrief": "Labor wharf with low warehouses, stacked cargo, scales, work lamps, and bulk-dock grit.",
+      "identity": "Labor Wharf",
+      "promptRef": "scripts/generate_gemini_assets.mjs:port-lowmarket"
+    }
+  }
+}

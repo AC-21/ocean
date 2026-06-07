@@ -1,0 +1,37 @@
+name: Fluid grid gate
+description: Track a milestone gate for the WebGPU fluid-grid remap.
+title: "G-FG-XX: "
+labels:
+  - fluid-grid
+  - gate
+body:
+  - type: input
+    id: blocks
+    attributes:
+      label: Blocks
+      placeholder: FG-03
+    validations:
+      required: true
+  - type: textarea
+    id: pass-bar
+    attributes:
+      label: Pass bar
+      description: What must be true before this gate closes?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+      description: Commands, reports, runtime probes, reference footage, or artifact paths.
+    validations:
+      required: true
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Invariants
+      options:
+        - label: Production water path does not use Canvas 2D.
+        - label: Performance evidence is current.
+        - label: Physics evidence covers object drop, splash, and float/sink behavior where relevant.
+        - label: Fallback behavior is intentional and visible in diagnostics.

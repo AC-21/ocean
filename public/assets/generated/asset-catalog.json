@@ -1,0 +1,1871 @@
+{
+  "schemaVersion": 1,
+  "styleVersion": "harborline-art-v1",
+  "source": {
+    "artDirection": "ART_DIRECTION.md",
+    "artDirectionProfile": "src/game/artDirection.ts",
+    "productionMetadata": "assets/generated/asset-production.json",
+    "runtimeManifest": "src/game/assets.ts",
+    "gameData": "src/game/data.ts"
+  },
+  "styleContract": {
+    "profile": "src/game/artDirection.ts",
+    "artBible": "ART_DIRECTION.md",
+    "negativeRuleIds": [
+      "no-fantasy-parchment",
+      "no-toy-color",
+      "no-pirate-cosplay",
+      "no-baked-integration",
+      "no-text-artifacts",
+      "no-one-note-ui"
+    ],
+    "requiredFamilies": [
+      "ships",
+      "ports",
+      "islands",
+      "ocean",
+      "identity_tokens"
+    ]
+  },
+  "counts": {
+    "backgrounds": 1,
+    "fallbackShips": 1,
+    "ships": 6,
+    "ports": 6,
+    "total": 14
+  },
+  "assets": [
+    {
+      "kind": "background",
+      "id": "ocean-map",
+      "name": "Ocean Map",
+      "slug": "ocean-map",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ocean",
+        "approvedExampleIds": [
+          "realistic-teal-ocean",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "ocean-integration",
+          "generation-hygiene"
+        ],
+        "processing": "background_jpeg_no_alpha",
+        "roleBrief": "Realistic teal-gray ocean foundation for the strategic route map.",
+        "promptRef": "scripts/generate_gemini_assets.mjs:ocean-map"
+      },
+      "style": {
+        "family": "ocean",
+        "briefRef": "generationBriefs.ocean",
+        "camera": "clean strategy-map angle that leaves open center water for route lines and sprites",
+        "approvedExamples": [
+          {
+            "id": "realistic-teal-ocean",
+            "sourcePath": "assets/concepts/03-realistic-ocean-with-minimal-islands.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ocean-map.jpg",
+          "exists": true,
+          "bytes": 564509,
+          "sha256": "2f2ec1008c0353705f6c539d898d8c776fabf9258cb1a28054145bab513c9a1d",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1376,
+          "hasAlpha": false
+        },
+        "runtime": {
+          "path": "assets/generated/backgrounds/ocean-map.jpg",
+          "exists": true,
+          "bytes": 564509,
+          "sha256": "2f2ec1008c0353705f6c539d898d8c776fabf9258cb1a28054145bab513c9a1d",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1376,
+          "hasAlpha": false
+        },
+        "publicRuntime": {
+          "path": "public/assets/generated/backgrounds/ocean-map.jpg",
+          "exists": true,
+          "bytes": 564509,
+          "sha256": "2f2ec1008c0353705f6c539d898d8c776fabf9258cb1a28054145bab513c9a1d",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1376,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "fallback_ship",
+      "id": "merchant-boat",
+      "name": "Merchant Boat",
+      "slug": "merchant-boat",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Runtime fallback merchant sprite with the same isometric camera and crisp transparent output as ship art.",
+        "promptRef": "scripts/generate_gemini_assets.mjs:merchant-boat"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/merchant-boat.jpg",
+          "exists": true,
+          "bytes": 337258,
+          "sha256": "8f4b62915e990f4849d912436c7229d8ff3c405298787ef27356e138e3d4b2b5",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/merchant-boat.png",
+          "exists": true,
+          "bytes": 284738,
+          "sha256": "557b7a6b00012be54c04efa74609e08fe090d2f3b5a0536cf5ec4945464c9dbf",
+          "format": "png",
+          "width": 449,
+          "height": 592,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/merchant-boat-clean.png",
+          "exists": true,
+          "bytes": 285049,
+          "sha256": "1b1947fa134498a63efb7f9e0e3ed9ca3507044e2cce3db49bb30fcac9428235",
+          "format": "png",
+          "width": 449,
+          "height": 592,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/merchant-boat-preview.png",
+          "exists": true,
+          "bytes": 40221,
+          "sha256": "82de40cd69b6dee37f56bf96fd825d1b23a5723a05c61128836df1eda204d588",
+          "format": "png",
+          "width": 182,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/merchant-boat-clean.png",
+          "exists": true,
+          "bytes": 285049,
+          "sha256": "1b1947fa134498a63efb7f9e0e3ed9ca3507044e2cce3db49bb30fcac9428235",
+          "format": "png",
+          "width": 449,
+          "height": 592,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/merchant-boat-preview.png",
+          "exists": true,
+          "bytes": 40221,
+          "sha256": "82de40cd69b6dee37f56bf96fd825d1b23a5723a05c61128836df1eda204d588",
+          "format": "png",
+          "width": 182,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "coastal_sloop",
+      "name": "Coastal Sloop",
+      "slug": "ship-coastal-sloop",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Compact starter craft: nimble, narrow, cheap, and a little fragile.",
+        "gameplayRole": "Starter route learner",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-coastal-sloop"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-coastal-sloop.jpg",
+          "exists": true,
+          "bytes": 432754,
+          "sha256": "8e22d4b99b0222d6afe2d1c4f4096f5733586daf89c3f0def1e2560b6db56439",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-coastal-sloop.png",
+          "exists": true,
+          "bytes": 343224,
+          "sha256": "31ed4a0891b2aba309116180f6512565e08598c482eb5a6741d06cde8cddddf8",
+          "format": "png",
+          "width": 457,
+          "height": 599,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-coastal-sloop-clean.png",
+          "exists": true,
+          "bytes": 343180,
+          "sha256": "19728c8589e8b0f90642b7bdd6d3961e9e7147f7aead1f2c5729ba9fee97f87b",
+          "format": "png",
+          "width": 457,
+          "height": 599,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-coastal-sloop-preview.png",
+          "exists": true,
+          "bytes": 46485,
+          "sha256": "a32f8812c6dfd94827a8f17f27d7a73925a46f09fca26ca4169ede9a68b10edc",
+          "format": "png",
+          "width": 183,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-coastal-sloop-clean.png",
+          "exists": true,
+          "bytes": 343180,
+          "sha256": "19728c8589e8b0f90642b7bdd6d3961e9e7147f7aead1f2c5729ba9fee97f87b",
+          "format": "png",
+          "width": 457,
+          "height": 599,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-coastal-sloop-preview.png",
+          "exists": true,
+          "bytes": 46485,
+          "sha256": "a32f8812c6dfd94827a8f17f27d7a73925a46f09fca26ca4169ede9a68b10edc",
+          "format": "png",
+          "width": 183,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "ledger_brig",
+      "name": "Ledger Brig",
+      "slug": "ship-ledger-brig",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Balanced trader with two sails, strapped deck cargo, and reliable mid-game mass.",
+        "gameplayRole": "Flexible mid-game trader",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-ledger-brig"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-ledger-brig.jpg",
+          "exists": true,
+          "bytes": 486065,
+          "sha256": "f5244eb857ae20723a21578ef4b26f873892303a09e0cc9f3cc1f1b0768530a5",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-ledger-brig.png",
+          "exists": true,
+          "bytes": 489069,
+          "sha256": "6f3195b223321c5b2b26a8dbbc80ef77afe2acb77fe021d6c89cca9d24214a9a",
+          "format": "png",
+          "width": 530,
+          "height": 612,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-ledger-brig-clean.png",
+          "exists": true,
+          "bytes": 488829,
+          "sha256": "0202e5cba9894caf1d022723949d723ebbcb0196f33dfd107ea7bbe553cc119d",
+          "format": "png",
+          "width": 530,
+          "height": 612,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-ledger-brig-preview.png",
+          "exists": true,
+          "bytes": 65209,
+          "sha256": "4248255ecd8d9cc3d5da4c47be7bf2353502b9aff47d0b87f9f72bb92dad441a",
+          "format": "png",
+          "width": 208,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-ledger-brig-clean.png",
+          "exists": true,
+          "bytes": 488829,
+          "sha256": "0202e5cba9894caf1d022723949d723ebbcb0196f33dfd107ea7bbe553cc119d",
+          "format": "png",
+          "width": 530,
+          "height": 612,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-ledger-brig-preview.png",
+          "exists": true,
+          "bytes": 65209,
+          "sha256": "4248255ecd8d9cc3d5da4c47be7bf2353502b9aff47d0b87f9f72bb92dad441a",
+          "format": "png",
+          "width": 208,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "clipper_kite",
+      "name": "Clipper Kite",
+      "slug": "ship-clipper-kite",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Fast route hunter with a long narrow hull, angled sails, and minimal cargo clutter.",
+        "gameplayRole": "Speed and tailwind specialist",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-clipper-kite"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-clipper-kite.jpg",
+          "exists": true,
+          "bytes": 464287,
+          "sha256": "d0af1e39e5b4055a6d0e831d4223badfa7b47e78f59bd89f06dce94df9eb53ac",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-clipper-kite.png",
+          "exists": true,
+          "bytes": 483551,
+          "sha256": "f33017a52f518aadda734941d55e1a55db529de0a593c742e140607f7c66e3b1",
+          "format": "png",
+          "width": 695,
+          "height": 601,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-clipper-kite-clean.png",
+          "exists": true,
+          "bytes": 483585,
+          "sha256": "0290067a14d4a872622ba08f7a4a26512382c7eebe89ed7abe8bf9b02c281ad5",
+          "format": "png",
+          "width": 695,
+          "height": 601,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-clipper-kite-preview.png",
+          "exists": true,
+          "bytes": 49173,
+          "sha256": "d3f3ede2ca936d08cfdb6e03685877fbdb65ba2d46a37e1d319270caa1e4829e",
+          "format": "png",
+          "width": 278,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-clipper-kite-clean.png",
+          "exists": true,
+          "bytes": 483585,
+          "sha256": "0290067a14d4a872622ba08f7a4a26512382c7eebe89ed7abe8bf9b02c281ad5",
+          "format": "png",
+          "width": 695,
+          "height": 601,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-clipper-kite-preview.png",
+          "exists": true,
+          "bytes": 49173,
+          "sha256": "d3f3ede2ca936d08cfdb6e03685877fbdb65ba2d46a37e1d319270caa1e4829e",
+          "format": "png",
+          "width": 278,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "harbor_cutter",
+      "name": "Harbor Cutter",
+      "slug": "ship-harbor-cutter",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Compact two-sail customs cutter with a small hold, sharp papers, patrol guns, and fast boarding silhouette.",
+        "gameplayRole": "Patrol, customs, and pirate-deterrence hull",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-harbor-cutter"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-harbor-cutter.jpg",
+          "exists": true,
+          "bytes": 311747,
+          "sha256": "e02401d0f4baa6e033e23131b3c287740a4435c987a26addd9f3298916e3fc1d",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-harbor-cutter.png",
+          "exists": true,
+          "bytes": 342147,
+          "sha256": "73701dba4aad2728cb44df6428d8cb1d97631a725fdbde54289ca1f6dadf2a06",
+          "format": "png",
+          "width": 516,
+          "height": 535,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-harbor-cutter-clean.png",
+          "exists": true,
+          "bytes": 342147,
+          "sha256": "73701dba4aad2728cb44df6428d8cb1d97631a725fdbde54289ca1f6dadf2a06",
+          "format": "png",
+          "width": 516,
+          "height": 535,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-harbor-cutter-preview.png",
+          "exists": true,
+          "bytes": 77585,
+          "sha256": "8e3f75034347f2642b7714c4bd20498b41761d693b2cf5e54f1b8489cc4635db",
+          "format": "png",
+          "width": 231,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-harbor-cutter-clean.png",
+          "exists": true,
+          "bytes": 342147,
+          "sha256": "73701dba4aad2728cb44df6428d8cb1d97631a725fdbde54289ca1f6dadf2a06",
+          "format": "png",
+          "width": 516,
+          "height": 535,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-harbor-cutter-preview.png",
+          "exists": true,
+          "bytes": 77585,
+          "sha256": "8e3f75034347f2642b7714c4bd20498b41761d693b2cf5e54f1b8489cc4635db",
+          "format": "png",
+          "width": 231,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "iron_barge",
+      "name": "Iron Barge",
+      "slug": "ship-iron-barge",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Broad armored cargo slab with reinforced hull, cannon ports, and durable slow mass.",
+        "gameplayRole": "Defensive heavy trader",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-iron-barge"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-iron-barge.jpg",
+          "exists": true,
+          "bytes": 470007,
+          "sha256": "915370d1e70bd5e57557bb97fadcea42c71cafc0527c5eb73a6558cb02910f02",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-iron-barge.png",
+          "exists": true,
+          "bytes": 596357,
+          "sha256": "46e6f665c79a188db64630553442b794118685a787005aec944f239cb5736a7a",
+          "format": "png",
+          "width": 609,
+          "height": 643,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-iron-barge-clean.png",
+          "exists": true,
+          "bytes": 596401,
+          "sha256": "2ff636c41b7e9acdb9bce37771318672eb907e084a9abbe161e77ae8eea45e30",
+          "format": "png",
+          "width": 609,
+          "height": 643,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-iron-barge-preview.png",
+          "exists": true,
+          "bytes": 75348,
+          "sha256": "932760839fd9984469f8928f015831513513a1b292903bfbe73b6de30e2dbcca",
+          "format": "png",
+          "width": 227,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-iron-barge-clean.png",
+          "exists": true,
+          "bytes": 596401,
+          "sha256": "2ff636c41b7e9acdb9bce37771318672eb907e084a9abbe161e77ae8eea45e30",
+          "format": "png",
+          "width": 609,
+          "height": 643,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-iron-barge-preview.png",
+          "exists": true,
+          "bytes": 75348,
+          "sha256": "932760839fd9984469f8928f015831513513a1b292903bfbe73b6de30e2dbcca",
+          "format": "png",
+          "width": 227,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "ship",
+      "id": "league_carrier",
+      "name": "League Carrier",
+      "slug": "ship-league-carrier",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ships",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Wide triple-hatch cargo carrier with huge holds, slow turns, and only light defensive armament.",
+        "gameplayRole": "Heavy Cargo profit engine",
+        "promptRef": "scripts/generate_gemini_ship_assets.mjs:ship-league-carrier"
+      },
+      "style": {
+        "family": "ships",
+        "briefRef": "generationBriefs.ships",
+        "camera": "isometric three-quarter top-down with deck, sails, hull, cargo, and stern anchor visible",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/ship-league-carrier.jpg",
+          "exists": true,
+          "bytes": 623713,
+          "sha256": "7cf7bdce864f169b0f29c9d2dc52caa93cfd6fcb3c48ef9e5ecda879b8954ba9",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/ship-league-carrier.png",
+          "exists": true,
+          "bytes": 1106981,
+          "sha256": "cadf8841f6656ecf15d7fad914d670201ee04ac933e3c339b50a40d958b56495",
+          "format": "png",
+          "width": 1029,
+          "height": 736,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/ship-league-carrier-clean.png",
+          "exists": true,
+          "bytes": 1107067,
+          "sha256": "2b5ba5679d80f1d4dc1be9d5985bedf7e657ef085a87453a39d55f77a5d250ed",
+          "format": "png",
+          "width": 1029,
+          "height": 736,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/ship-league-carrier-preview.png",
+          "exists": true,
+          "bytes": 92502,
+          "sha256": "5f1038a5ff8d013d3799fcce9db3c4f7980732a13aa1d8fe39bd7e57064c6f79",
+          "format": "png",
+          "width": 336,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/ship-league-carrier-clean.png",
+          "exists": true,
+          "bytes": 1107067,
+          "sha256": "2b5ba5679d80f1d4dc1be9d5985bedf7e657ef085a87453a39d55f77a5d250ed",
+          "format": "png",
+          "width": 1029,
+          "height": 736,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/ship-league-carrier-preview.png",
+          "exists": true,
+          "bytes": 92502,
+          "sha256": "5f1038a5ff8d013d3799fcce9db3c4f7980732a13aa1d8fe39bd7e57064c6f79",
+          "format": "png",
+          "width": 336,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "grayhaven",
+      "name": "Grayhaven",
+      "slug": "port-grayhaven",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Fog-bank finance harbor with counting house, lighthouse, pale docks, and Charter seriousness.",
+        "identity": "Counting House",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-grayhaven"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-grayhaven.jpg",
+          "exists": true,
+          "bytes": 513799,
+          "sha256": "fbb48bfc0dc06b66a0883b7db2a82c5c93f53cdd0467c72663e22863a5382b01",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-grayhaven.png",
+          "exists": true,
+          "bytes": 624745,
+          "sha256": "4c2c5397d0148ea8ab6ebeb13f3f6f5276c165e05e56d2c77c1fb65662f61213",
+          "format": "png",
+          "width": 844,
+          "height": 534,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-grayhaven-clean.png",
+          "exists": true,
+          "bytes": 624884,
+          "sha256": "98b5cd28edde30e5f754d2f92aacced11b2d89da7d9e1d000b5750db3b822651",
+          "format": "png",
+          "width": 844,
+          "height": 534,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-grayhaven-preview.png",
+          "exists": true,
+          "bytes": 96169,
+          "sha256": "77312b49a2551525d969ded6d3dd9b93e0f1b20561c228069a7403d778f3b5fe",
+          "format": "png",
+          "width": 360,
+          "height": 228,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-grayhaven-clean.png",
+          "exists": true,
+          "bytes": 624884,
+          "sha256": "98b5cd28edde30e5f754d2f92aacced11b2d89da7d9e1d000b5750db3b822651",
+          "format": "png",
+          "width": 844,
+          "height": 534,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-grayhaven-preview.png",
+          "exists": true,
+          "bytes": 96169,
+          "sha256": "77312b49a2551525d969ded6d3dd9b93e0f1b20561c228069a7403d778f3b5fe",
+          "format": "png",
+          "width": 360,
+          "height": 228,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "saffron",
+      "name": "Saffron Quay",
+      "slug": "port-saffron",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Warm spice quay with terracotta market edge, baskets, awnings, and fast price motion.",
+        "identity": "Spice Rush",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-saffron"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-saffron.jpg",
+          "exists": true,
+          "bytes": 427794,
+          "sha256": "c4b5f9c1981e17b6dd16bdd13c13d7c62364fd2b02ab99d3b8d3c9c6fd0e4b33",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-saffron.png",
+          "exists": true,
+          "bytes": 411254,
+          "sha256": "50edfd8a60090237e28726061927478b679cfbde7f8fe4933d3c20704344a9bb",
+          "format": "png",
+          "width": 627,
+          "height": 432,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-saffron-clean.png",
+          "exists": true,
+          "bytes": 411254,
+          "sha256": "6f07f541df32269663bf91e74635608e8f4553280a74be47591607ecd14688cd",
+          "format": "png",
+          "width": 627,
+          "height": 432,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-saffron-preview.png",
+          "exists": true,
+          "bytes": 124678,
+          "sha256": "e3ae1e544603d67409cfc2caf101147da53ed247ba26824830e5101c13d747d4",
+          "format": "png",
+          "width": 348,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-saffron-clean.png",
+          "exists": true,
+          "bytes": 411254,
+          "sha256": "6f07f541df32269663bf91e74635608e8f4553280a74be47591607ecd14688cd",
+          "format": "png",
+          "width": 627,
+          "height": 432,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-saffron-preview.png",
+          "exists": true,
+          "bytes": 124678,
+          "sha256": "e3ae1e544603d67409cfc2caf101147da53ed247ba26824830e5101c13d747d4",
+          "format": "png",
+          "width": 348,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "glassport",
+      "name": "Glassport",
+      "slug": "port-glassport",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Cool angular contract port with glass warehouses, exact docks, and blue crate geometry.",
+        "identity": "Contract Exchange",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-glassport"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-glassport.jpg",
+          "exists": true,
+          "bytes": 475080,
+          "sha256": "80bae6fd7d75e4a1a1cd0d317dab24f2700bade267d0ce97b2e05dce8ba365c7",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-glassport.png",
+          "exists": true,
+          "bytes": 662140,
+          "sha256": "3360f333502b41a7c73d913170ca603cb4da49e6e493db9d52eb671fa060faeb",
+          "format": "png",
+          "width": 808,
+          "height": 558,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-glassport-clean.png",
+          "exists": true,
+          "bytes": 661846,
+          "sha256": "5a8c074cedafedfadecb223dd17ff35e07a239ee3b41f5584afd10bd9e92211f",
+          "format": "png",
+          "width": 808,
+          "height": 558,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-glassport-preview.png",
+          "exists": true,
+          "bytes": 109619,
+          "sha256": "f2a8f89387811b0f5d534f3255c9ed34bb01289ab5765c0ec469dfa198b97bfb",
+          "format": "png",
+          "width": 348,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-glassport-clean.png",
+          "exists": true,
+          "bytes": 661846,
+          "sha256": "5a8c074cedafedfadecb223dd17ff35e07a239ee3b41f5584afd10bd9e92211f",
+          "format": "png",
+          "width": 808,
+          "height": 558,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-glassport-preview.png",
+          "exists": true,
+          "bytes": 109619,
+          "sha256": "f2a8f89387811b0f5d534f3255c9ed34bb01289ab5765c0ec469dfa198b97bfb",
+          "format": "png",
+          "width": 348,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "stormhook",
+      "name": "Stormhook",
+      "slug": "port-stormhook",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Compact hard-water fort with dark stone, cannon battery, rugged rocks, and route danger.",
+        "identity": "Hard-Water Arsenal",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-stormhook"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-stormhook.jpg",
+          "exists": true,
+          "bytes": 460122,
+          "sha256": "cc43007855d138bd1d7d5fe475908e2a6a2962611b59a7e72b892e0d933d46cd",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-stormhook.png",
+          "exists": true,
+          "bytes": 497487,
+          "sha256": "56565f8cec6edda9d47ca3167b2d214d67ba4def2bb7c57006032165035589f1",
+          "format": "png",
+          "width": 642,
+          "height": 565,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-stormhook-clean.png",
+          "exists": true,
+          "bytes": 497512,
+          "sha256": "1149ab4c9570eeb6c4ae82c4805886dc102b63ddf328dff1e81a973c75455ab5",
+          "format": "png",
+          "width": 642,
+          "height": 565,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-stormhook-preview.png",
+          "exists": true,
+          "bytes": 83706,
+          "sha256": "a9aec5a96ecc513e4ba66efaa8172dfbba3081c33c70e79a6f9204c84a10685c",
+          "format": "png",
+          "width": 273,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-stormhook-clean.png",
+          "exists": true,
+          "bytes": 497512,
+          "sha256": "1149ab4c9570eeb6c4ae82c4805886dc102b63ddf328dff1e81a973c75455ab5",
+          "format": "png",
+          "width": 642,
+          "height": 565,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-stormhook-preview.png",
+          "exists": true,
+          "bytes": 83706,
+          "sha256": "a9aec5a96ecc513e4ba66efaa8172dfbba3081c33c70e79a6f9204c84a10685c",
+          "format": "png",
+          "width": 273,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "orchid",
+      "name": "Orchid Roads",
+      "slug": "port-orchid",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Refined luxury roadstead with pavilion, orchid grove, violet cue, and silk-buyer calm.",
+        "identity": "Luxury Roadstead",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-orchid"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-orchid.jpg",
+          "exists": true,
+          "bytes": 457567,
+          "sha256": "b4a24108d3950aae1ecc4715d92a9a29abba368a881b26272b76ac3c488256a8",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-orchid.png",
+          "exists": true,
+          "bytes": 593678,
+          "sha256": "8858153f8f2254e73d06b9c8c8be3c94eb4774a8b5591812ae7024d076da1aa1",
+          "format": "png",
+          "width": 837,
+          "height": 588,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-orchid-clean.png",
+          "exists": true,
+          "bytes": 593994,
+          "sha256": "44ce8808f3b804d7686d2495cc8c50ff7f96352120027175eed9891cf904b52e",
+          "format": "png",
+          "width": 837,
+          "height": 588,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-orchid-preview.png",
+          "exists": true,
+          "bytes": 81026,
+          "sha256": "62b2159c9131765173b141a4eb75865317f50603f3ea9b58555e1053507aa28d",
+          "format": "png",
+          "width": 342,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-orchid-clean.png",
+          "exists": true,
+          "bytes": 593994,
+          "sha256": "44ce8808f3b804d7686d2495cc8c50ff7f96352120027175eed9891cf904b52e",
+          "format": "png",
+          "width": 837,
+          "height": 588,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-orchid-preview.png",
+          "exists": true,
+          "bytes": 81026,
+          "sha256": "62b2159c9131765173b141a4eb75865317f50603f3ea9b58555e1053507aa28d",
+          "format": "png",
+          "width": 342,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    },
+    {
+      "kind": "port",
+      "id": "lowmarket",
+      "name": "Lowmarket",
+      "slug": "port-lowmarket",
+      "production": {
+        "status": "production_candidate",
+        "source": "gemini",
+        "artFamily": "ports",
+        "approvedExampleIds": [
+          "isometric-ship-port-sheet",
+          "isometric-map-composition"
+        ],
+        "qaGateIds": [
+          "thumbnail-read",
+          "ocean-integration",
+          "gameplay-silhouette",
+          "generation-hygiene"
+        ],
+        "processing": "chroma_key_to_transparent_png",
+        "backgroundRemovalRef": "scripts/asset_pipeline.mjs:createCleanSprite",
+        "roleBrief": "Labor wharf with low warehouses, stacked cargo, scales, work lamps, and bulk-dock grit.",
+        "identity": "Labor Wharf",
+        "promptRef": "scripts/generate_gemini_assets.mjs:port-lowmarket"
+      },
+      "style": {
+        "family": "ports",
+        "briefRef": "generationBriefs.ports",
+        "camera": "isometric three-quarter top-down with clear water-facing dock orientation",
+        "approvedExamples": [
+          {
+            "id": "isometric-ship-port-sheet",
+            "sourcePath": "assets/concepts/02-boat-and-port-assets.jpg"
+          },
+          {
+            "id": "isometric-map-composition",
+            "sourcePath": "assets/concepts/01-isometric-ocean-map.jpg"
+          }
+        ],
+        "qualityGates": [
+          {
+            "id": "thumbnail-read",
+            "criteria": [
+              "Silhouette survives a 25% thumbnail test.",
+              "Primary role is recognizable before labels or stat text.",
+              "Edges stay clean against pale panels and dark ocean water."
+            ]
+          },
+          {
+            "id": "ocean-integration",
+            "criteria": [
+              "No baked water, foam, floor plane, reflection, or contact shadow on isolated assets.",
+              "Anchor point is consistent with the Pixi map and route/wake layer.",
+              "Water roughness, current, foam, and storm cues can be traced to the OceanField contract."
+            ]
+          },
+          {
+            "id": "gameplay-silhouette",
+            "criteria": [
+              "The asset has one dominant gameplay identity and at most a few secondary details.",
+              "Faction and role cues are visible without noisy decorative clutter.",
+              "The palette stays muted maritime with controlled warm accents."
+            ]
+          },
+          {
+            "id": "generation-hygiene",
+            "criteria": [
+              "Generated outputs avoid text, labels, logos, and watermarks.",
+              "Chroma-key outputs use a flat #ff00ff background with no magenta inside the subject.",
+              "Prompt references, source files, clean outputs, previews, and metadata stay cataloged."
+            ]
+          }
+        ]
+      },
+      "files": {
+        "raw": {
+          "path": "assets/generated/raw/port-lowmarket.jpg",
+          "exists": true,
+          "bytes": 635043,
+          "sha256": "bcf8ce46181ad529fa14aedd32e85ca891a65aee717a3297ae6e266f96b78243",
+          "format": "jpeg",
+          "height": 768,
+          "width": 1408,
+          "hasAlpha": false
+        },
+        "sprite": {
+          "path": "assets/generated/sprites/port-lowmarket.png",
+          "exists": true,
+          "bytes": 1084829,
+          "sha256": "bc03fcd4525654a75fcaf5c060747b8a765797a1981de2177fbebb634b97d6f7",
+          "format": "png",
+          "width": 982,
+          "height": 682,
+          "hasAlpha": true
+        },
+        "clean": {
+          "path": "assets/generated/sprites/port-lowmarket-clean.png",
+          "exists": true,
+          "bytes": 1084721,
+          "sha256": "d708a28349697e973fd2738ae248deb9b1ef2124c55de694a67dd67694f32fd5",
+          "format": "png",
+          "width": 982,
+          "height": 682,
+          "hasAlpha": true
+        },
+        "preview": {
+          "path": "assets/generated/previews/port-lowmarket-preview.png",
+          "exists": true,
+          "bytes": 116224,
+          "sha256": "7cdbc8fb02e7c5ec880083281a7bd5a2a3e19749612689413ebf00f398c3beb8",
+          "format": "png",
+          "width": 346,
+          "height": 240,
+          "hasAlpha": false
+        },
+        "publicClean": {
+          "path": "public/assets/generated/sprites/port-lowmarket-clean.png",
+          "exists": true,
+          "bytes": 1084721,
+          "sha256": "d708a28349697e973fd2738ae248deb9b1ef2124c55de694a67dd67694f32fd5",
+          "format": "png",
+          "width": 982,
+          "height": 682,
+          "hasAlpha": true
+        },
+        "publicPreview": {
+          "path": "public/assets/generated/previews/port-lowmarket-preview.png",
+          "exists": true,
+          "bytes": 116224,
+          "sha256": "7cdbc8fb02e7c5ec880083281a7bd5a2a3e19749612689413ebf00f398c3beb8",
+          "format": "png",
+          "width": 346,
+          "height": 240,
+          "hasAlpha": false
+        }
+      }
+    }
+  ]
+}

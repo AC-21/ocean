@@ -1,0 +1,26 @@
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+release/
+*.tsbuildinfo
+
+# Generated reports and local run artifacts
+reports/
+coverage/
+
+# Local environment and editor state
+.env
+.env.*
+.idea/
+.vscode/
+
+# Electron and Playwright transient files
+playwright-report/
+test-results/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

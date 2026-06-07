@@ -1,0 +1,483 @@
+:root {
+  color-scheme: light;
+  --ink: #121817;
+  --muted: #657470;
+  --panel: #f8f6ee;
+  --panel-strong: #ffffff;
+  --line: rgba(18, 24, 23, 0.14);
+  --line-dark: rgba(255, 255, 255, 0.13);
+  --sea-deep: #0d3543;
+  --sea: #2f899a;
+  --foam: #edfffc;
+  --amber: #d7a842;
+  --rust: #b44d3d;
+  --green: #358761;
+  --shadow: 0 18px 54px rgba(18, 24, 23, 0.2);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  overflow: hidden;
+  background: #dce8e4;
+  color: var(--ink);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+button:hover {
+  border-color: rgba(18, 24, 23, 0.32);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(215, 168, 66, 0.72);
+  outline-offset: 2px;
+}
+
+.ocean-lab {
+  display: grid;
+  grid-template-columns: minmax(276px, 330px) minmax(430px, 1fr) minmax(286px, 348px);
+  width: 100vw;
+  height: 100vh;
+  min-height: 680px;
+}
+
+.control-panel,
+.metrics-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(248, 246, 238, 0.96)),
+    var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.metrics-panel {
+  border-right: 0;
+  border-left: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, #17211f 0%, #101716 100%),
+    #101716;
+  color: #f7fbf8;
+}
+
+.brand-block {
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  color: #2e7780;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.metrics-panel .eyebrow {
+  color: #80d7d4;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.55rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.control-group,
+.readout-block,
+.chart-block {
+  display: grid;
+  gap: 11px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.metrics-panel .readout-block,
+.metrics-panel .chart-block {
+  border-color: var(--line-dark);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.section-title span,
+.readout-block > span,
+.metric span,
+.field span,
+.range-field span,
+.number-field span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.metrics-panel .section-title span,
+.metrics-panel .readout-block > span,
+.metrics-panel .metric span {
+  color: #9eb8b2;
+}
+
+.section-title strong {
+  overflow: hidden;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preset-grid {
+  display: grid;
+  gap: 7px;
+}
+
+.preset-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 38px;
+  padding: 7px 9px;
+  text-align: left;
+}
+
+.preset-button.active,
+.segmented button.active {
+  border-color: rgba(18, 24, 23, 0.42);
+  background: #18211f;
+  color: #ffffff;
+}
+
+.object-chip {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(18, 24, 23, 0.28);
+  border-radius: 50%;
+}
+
+.field,
+.range-field,
+.number-field {
+  display: grid;
+  gap: 6px;
+}
+
+.field select,
+.number-field input {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  padding: 7px 9px;
+  font-weight: 800;
+}
+
+.range-field > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.range-field strong {
+  color: var(--ink);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.range-field input {
+  width: 100%;
+  accent-color: var(--sea);
+}
+
+.dimension-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dimension-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.number-field div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.number-field small {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.segmented button {
+  min-width: 0;
+  padding: 0 7px;
+  font-size: 0.75rem;
+}
+
+.simulation-stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  overflow: hidden;
+  background: #b8d6d6;
+}
+
+.stage-toolbar,
+.stage-readout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: rgba(248, 246, 238, 0.83);
+  border-bottom: 1px solid rgba(18, 24, 23, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.stage-toolbar strong {
+  font-size: 1.18rem;
+}
+
+.sim-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.sim-actions button {
+  min-width: 76px;
+  padding: 0 13px;
+}
+
+.sim-actions .primary-action {
+  border-color: #111817;
+  background: #111817;
+  color: #ffffff;
+}
+
+.ocean-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stage-readout {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-top: 1px solid rgba(18, 24, 23, 0.14);
+  border-bottom: 0;
+}
+
+.metrics-grid,
+.small-grid,
+.timing-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metric {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  min-height: 48px;
+  padding: 9px;
+  border: 1px solid rgba(18, 24, 23, 0.12);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.metrics-panel .metric {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.metric strong {
+  overflow: hidden;
+  align-self: end;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metrics-panel .metric strong {
+  color: #ffffff;
+}
+
+.metric.positive strong {
+  color: #62c690;
+}
+
+.metric.negative strong {
+  color: #f07662;
+}
+
+.readout-block.large {
+  border-color: rgba(128, 215, 212, 0.34);
+  background:
+    linear-gradient(145deg, rgba(47, 137, 154, 0.3), rgba(215, 168, 66, 0.12)),
+    rgba(255, 255, 255, 0.055);
+}
+
+.readout-block.large strong {
+  font-size: clamp(1.4rem, 2vw, 2.1rem);
+  line-height: 1;
+}
+
+.readout-block em {
+  color: #abc0bb;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.chart-block canvas {
+  width: 100%;
+  height: 138px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+}
+
+.coefficients dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.coefficients div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.coefficients dt {
+  color: #9eb8b2;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.coefficients dd {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-align: right;
+}
+
+@media (max-width: 1120px) {
+  body {
+    overflow: auto;
+  }
+
+  .ocean-lab {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .control-panel,
+  .metrics-panel {
+    max-height: none;
+    overflow: visible;
+    border: 0;
+  }
+
+  .simulation-stage {
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 640px) {
+  .control-panel,
+  .metrics-panel {
+    padding: 12px;
+  }
+
+  .dimension-grid,
+  .dimension-grid.two,
+  .metrics-grid,
+  .small-grid,
+  .timing-list,
+  .stage-readout {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sim-actions {
+    justify-content: stretch;
+  }
+
+  .sim-actions button {
+    flex: 1 1 0;
+  }
+}
