@@ -6,6 +6,14 @@ import {
   type FluidGridObjectCouplingSample,
   type FluidGridObjectCouplingSummary,
 } from "./fluidGridCoupling";
+import {
+  gridSplashCouplingFor,
+  nextSplashMemory,
+  type FluidGridSplashCoupling,
+  type FluidGridSplashMemory,
+  type FluidGridSplashSample,
+  type FluidGridSplashSummary,
+} from "./fluidGridSplash";
 import type { FluidGridTierId } from "./fluidGridContract";
 
 export type FluidWaterShape = "box" | "horizontalCylinder" | "sphere" | "verticalCylinder";
@@ -17,6 +25,8 @@ export type FluidWaterRenderInput = {
   displacedVolumeRateM3ps: number;
   dragForceXN: number;
   dragForceYN: number;
+  ejectedWaterKg: number;
+  froudeNumber: number;
   gravityMps2: number;
   impactStrength: number;
   massKg: number;
@@ -34,11 +44,19 @@ export type FluidWaterRenderInput = {
   scalePxPerM: number;
   shape: FluidWaterShape;
   slamForceN: number;
+  sprayParticleCount: number;
+  sprayReentryCount: number;
+  sprayReentryEnergyJ: number;
+  sprayReentryMassKg: number;
+  splashEnergyJ: number;
+  splashHeightM: number;
   submergedFraction: number;
+  surfaceTensionNpm: number;
   surfaceYPx: number;
   timeS: number;
   waterDensityKgM3: number;
   waterDepthM: number;
+  weberNumber: number;
   waveHeightM: number;
 };
 
@@ -48,6 +66,7 @@ export type FluidWaterRenderStats = {
   gridCellsX: number;
   gridCellsY: number;
   lastCoupling: FluidGridObjectCouplingSummary | null;
+  lastSplash: FluidGridSplashSummary | null;
   renderer: "webgpu-grid-primary-v1";
   tier: FluidGridTierId;
 };
@@ -155,6 +174,8 @@ export class FluidWaterRenderer {
   private frameCount = 0;
   private lastCoupling: FluidGridObjectCouplingSummary | null = null;
   private lastCouplingBounds: FluidGridObjectCouplingBounds | null = null;
+  private lastSplash: FluidGridSplashSummary | null = null;
+  private splashMemory: FluidGridSplashMemory = { accumulatedReentryEnergyJ: 0, accumulatedReentryMassKg: 0, peakFoamEnergyJ: 0 };
   private stepIndex = 0;
 
   constructor(
@@ -176,7 +197,7 @@ export class FluidWaterRenderer {
     this.depth = this.storageBuffer(seeded.depth);
     this.impulse = this.storageBuffer(seeded.impulse);
     this.stepUniform = this.uniformBuffer(stepUniformValues(this.plan));
-    this.renderUniform = this.uniformBuffer(new Float32Array(24));
+    this.renderUniform = this.uniformBuffer(new Float32Array(32));
 
     const computeLayout = this.device.createBindGroupLayout({
       entries: [
@@ -255,7 +276,7 @@ export class FluidWaterRenderer {
       usage: textureUsageRenderAttachment,
     });
     this.writeObjectCoupling(input, size);
-    this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size));
+    this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size, this.lastSplash));
     const encoder = this.device.createCommandEncoder();
     const computePass = encoder.beginComputePass();
     computePass.setPipeline(this.computePipeline);
@@ -291,6 +312,7 @@ export class FluidWaterRenderer {
       gridCellsX: this.plan.cellsX,
       gridCellsY: this.plan.cellsY,
       lastCoupling: this.lastCoupling,
+      lastSplash: this.lastSplash,
       renderer: "webgpu-grid-primary-v1",
       tier: this.plan.tier,
     };
@@ -335,10 +357,18 @@ export class FluidWaterRenderer {
       plan: this.plan,
     });
     this.lastCoupling = coupling.summary;
-    if (!coupling.summary.active || coupling.samples.length === 0) return;
+    const splash = gridSplashCouplingFor(
+      splashInputFor(input, this.plan),
+      coupling.summary,
+      coupling.samples,
+      this.splashMemory
+    );
+    this.lastSplash = splash.summary;
+    this.splashMemory = nextSplashMemory(this.splashMemory, splash.summary);
+    if ((!coupling.summary.active || coupling.samples.length === 0) && (!splash.summary.active || splash.samples.length === 0)) return;
 
-    this.writeCouplingRows(coupling);
-    this.lastCouplingBounds = coupling.summary.bounds;
+    this.writeCouplingAndSplashRows(coupling, splash);
+    this.lastCouplingBounds = coupling.summary.active ? coupling.summary.bounds : null;
   }
 
   private restoreBaseRows(bounds: FluidGridObjectCouplingBounds) {
@@ -351,26 +381,35 @@ export class FluidWaterRenderer {
     }
   }
 
-  private writeCouplingRows(coupling: FluidGridObjectCoupling) {
-    const rows = samplesByRow(coupling.samples);
-    const bounds = coupling.summary.bounds;
+  private writeCouplingAndSplashRows(coupling: FluidGridObjectCoupling, splash: FluidGridSplashCoupling) {
+    const couplingRows = couplingSamplesByRow(coupling.samples);
+    const splashRows = splashSamplesByRow(splash.samples);
+    const bounds = unionBounds(coupling.summary.active ? coupling.summary.bounds : null, splash.summary.active ? splash.summary.bounds : null);
+    if (!bounds) return;
     const width = bounds.xEnd - bounds.xStart + 1;
     for (let y = bounds.yStart; y <= bounds.yEnd; y += 1) {
       const start = y * this.plan.cellsX + bounds.xStart;
       const end = start + width;
       const offset = start * bytesPerValue;
       const depthRow = new Float32Array(this.baseDepth.subarray(start, end));
+      const foamRow = new Float32Array(width);
       const obstacleRow = new Float32Array(this.baseObstacle.subarray(start, end));
       const impulseRow = new Float32Array(width);
 
-      for (const sample of rows.get(y) ?? []) {
+      for (const sample of couplingRows.get(y) ?? []) {
         const column = sample.x - bounds.xStart;
         depthRow[column] = Math.min(depthRow[column], this.baseDepth[start + column] * sample.depthScale);
         obstacleRow[column] = Math.max(obstacleRow[column], sample.obstacle);
-        impulseRow[column] = sample.impulseMps;
+        impulseRow[column] = Math.max(impulseRow[column], sample.impulseMps);
+      }
+      for (const sample of splashRows.get(y) ?? []) {
+        const column = sample.x - bounds.xStart;
+        foamRow[column] = Math.max(foamRow[column], sample.foam);
+        impulseRow[column] = Math.max(impulseRow[column], sample.impulseMps);
       }
 
       this.device.queue.writeBuffer(this.depth, offset, depthRow);
+      this.device.queue.writeBuffer(this.foam, offset, foamRow);
       this.device.queue.writeBuffer(this.obstacle, offset, obstacleRow);
       this.device.queue.writeBuffer(this.impulse, offset, impulseRow);
     }
@@ -378,6 +417,7 @@ export class FluidWaterRenderer {
 
   private setCanvasTelemetry(status: "ready" | "rendered") {
     const coupling = this.lastCoupling;
+    const splash = this.lastSplash;
     this.canvas.dataset.waterRenderer = "webgpu-grid-primary-v1";
     this.canvas.dataset.waterContext = "webgpu";
     this.canvas.dataset.waterGrid = `${this.plan.cellsX}x${this.plan.cellsY}`;
@@ -390,10 +430,18 @@ export class FluidWaterRenderer {
     this.canvas.dataset.waterCouplingForce = String(Math.round(coupling?.forceDeltaN ?? 0));
     this.canvas.dataset.waterCouplingImpulse = String(Number((coupling?.impulseMagnitude ?? 0).toFixed(6)));
     this.canvas.dataset.waterCouplingSamples = String(coupling?.gridSampleCount ?? 0);
+    this.canvas.dataset.waterSplash = splash?.coupling ?? "grid-splash-v1";
+    this.canvas.dataset.waterSplashActive = String(splash?.active ?? false);
+    this.canvas.dataset.waterSplashCrown = String(Number((splash?.crownHeightM ?? 0).toFixed(4)));
+    this.canvas.dataset.waterSplashFoamCells = String(splash?.foamCells ?? 0);
+    this.canvas.dataset.waterSplashFoamEnergy = String(Number((splash?.foamEnergyJ ?? 0).toFixed(4)));
+    this.canvas.dataset.waterSplashGridEnergy = String(Number((splash?.gridEnergyJ ?? 0).toFixed(4)));
+    this.canvas.dataset.waterSplashReentryEnergy = String(Number((splash?.accumulatedReentryEnergyJ ?? 0).toFixed(6)));
+    this.canvas.dataset.waterSplashSpray = String(splash?.sprayDropletCount ?? 0);
   }
 }
 
-function samplesByRow(samples: FluidGridObjectCouplingSample[]): Map<number, FluidGridObjectCouplingSample[]> {
+function couplingSamplesByRow(samples: FluidGridObjectCouplingSample[]): Map<number, FluidGridObjectCouplingSample[]> {
   const rows = new Map<number, FluidGridObjectCouplingSample[]>();
   for (const sample of samples) {
     const row = rows.get(sample.y);
@@ -401,6 +449,27 @@ function samplesByRow(samples: FluidGridObjectCouplingSample[]): Map<number, Flu
     else rows.set(sample.y, [sample]);
   }
   return rows;
+}
+
+function splashSamplesByRow(samples: FluidGridSplashSample[]): Map<number, FluidGridSplashSample[]> {
+  const rows = new Map<number, FluidGridSplashSample[]>();
+  for (const sample of samples) {
+    const row = rows.get(sample.y);
+    if (row) row.push(sample);
+    else rows.set(sample.y, [sample]);
+  }
+  return rows;
+}
+
+function unionBounds(left: FluidGridObjectCouplingBounds | null, right: FluidGridObjectCouplingBounds | null): FluidGridObjectCouplingBounds | null {
+  if (!left) return right;
+  if (!right) return left;
+  return {
+    xStart: Math.min(left.xStart, right.xStart),
+    xEnd: Math.max(left.xEnd, right.xEnd),
+    yStart: Math.min(left.yStart, right.yStart),
+    yEnd: Math.max(left.yEnd, right.yEnd),
+  };
 }
 
 export function legacyCanvasWaterTelemetry(canvas: HTMLCanvasElement, reason: string) {
@@ -418,6 +487,8 @@ struct RenderParams {
   water0: vec4<f32>,
   grid0: vec4<f32>,
   grid1: vec4<f32>,
+  splash0: vec4<f32>,
+  splash1: vec4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> params: RenderParams;
@@ -461,16 +532,17 @@ fn fragmentMain(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32
     gridHeightM * params.grid0.z -
     sin(uv.x * 24.0 + time * (1.4 + current * 0.25)) * waveHeight * params.grid0.z * 0.055 -
     sin(uv.x * 55.0 - time * 1.9) * waveHeight * params.grid0.z * 0.018;
+  let sprayColor = sprayAt(position.xy, surface);
 
   let objectColor = objectAt(position.xy, surface);
   if (objectColor.a > 0.0 && position.y < surface + 8.0) {
-    return objectColor;
+    return vec4(mix(objectColor.rgb, sprayColor.rgb, sprayColor.a * 0.38), objectColor.a);
   }
 
   if (position.y < surface) {
     let sky = mix(vec3<f32>(0.82, 0.91, 0.92), vec3<f32>(0.94, 0.87, 0.72), uv.y);
     let glare = smoothstep(0.17, 0.0, distance(uv, vec2<f32>(0.72, 0.18))) * 0.22;
-    return vec4<f32>(sky + glare, 1.0);
+    return vec4<f32>(mix(sky + glare, sprayColor.rgb, sprayColor.a), 1.0);
   }
 
   let depth = clamp((position.y - surface) / max(1.0, height - surface), 0.0, 1.0);
@@ -486,8 +558,39 @@ fn fragmentMain(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32
   if (objectColor.a > 0.0) {
     color = mix(color, objectColor.rgb, objectColor.a * 0.58);
   }
+  color = mix(color, sprayColor.rgb, sprayColor.a * 0.52);
 
   return vec4<f32>(clamp(color, vec3<f32>(0.0), vec3<f32>(1.0)), 1.0);
+}
+
+fn sprayAt(pixel: vec2<f32>, surface: f32) -> vec4<f32> {
+  let intensity = clamp(params.splash1.x, 0.0, 1.0);
+  if (intensity <= 0.001) {
+    return vec4<f32>(0.0);
+  }
+  let center = vec2<f32>(params.splash0.x, surface);
+  let radius = max(params.splash0.z, 1.0);
+  let crownHeight = max(params.splash0.w, 1.0);
+  let age = params.splash1.y;
+  let dropletDensity = clamp(params.splash1.z, 0.0, 1.0);
+  let reentry = clamp(params.splash1.w, 0.0, 1.0);
+  let local = pixel - center;
+  let x = abs(local.x) / radius;
+  let crownY = -crownHeight * max(0.0, 1.0 - x * x) + sin(x * 18.0 + age * 10.0) * 3.0;
+  let crown = smoothstep(1.18, 0.0, x) * smoothstep(18.0, 0.0, abs(local.y - crownY));
+  let verticalBand = smoothstep(-crownHeight * 1.28, -4.0, local.y) * (1.0 - smoothstep(12.0, 36.0, local.y));
+  let plume = smoothstep(1.34, 0.0, x) * verticalBand;
+  let cell = floor((pixel + vec2<f32>(age * 31.0, -age * 46.0)) * 0.085);
+  let dropletNoise = hash2(cell);
+  let droplet = step(1.0 - dropletDensity * intensity * 0.34, dropletNoise) * plume;
+  let reentryMist = reentry * smoothstep(1.15, 0.0, x) * smoothstep(26.0, 0.0, abs(local.y - 4.0));
+  let alpha = clamp((crown * 0.78 + plume * 0.16 + droplet * 0.58 + reentryMist * 0.34) * intensity, 0.0, 0.88);
+  let color = mix(vec3<f32>(0.76, 0.94, 0.92), vec3<f32>(0.94, 1.0, 0.98), clamp(crown + droplet, 0.0, 1.0));
+  return vec4<f32>(color, alpha);
+}
+
+fn hash2(cell: vec2<f32>) -> f32 {
+  return fract(sin(dot(cell, vec2<f32>(127.1, 311.7))) * 43758.5453123);
 }
 
 fn objectAt(pixel: vec2<f32>, surface: f32) -> vec4<f32> {
@@ -571,8 +674,17 @@ function stepUniformValues(plan: FluidGridStepPlan): Float32Array {
   return new Float32Array([plan.cellsX, plan.cellsY, plan.dtS, 0.994, plan.waveSpeedMps, plan.cellSizeM, 12, 0.992]);
 }
 
-function renderUniformValues(input: FluidWaterRenderInput, plan: FluidGridStepPlan, size: { ratio: number; width: number; height: number }): Float32Array {
+function renderUniformValues(
+  input: FluidWaterRenderInput,
+  plan: FluidGridStepPlan,
+  size: { ratio: number; width: number; height: number },
+  splash: FluidGridSplashSummary | null
+): Float32Array {
   const ratio = size.ratio;
+  const splashIntensity = clamp((splash?.foamInjection ?? 0) * 0.82 + input.impactStrength * 0.34, 0, 1);
+  const splashAgeS = splash?.active ? Math.max(0, input.timeS - splash.sampleTimeS) + (1 - input.impactStrength) * 0.55 : 0;
+  const splashRadiusPx = Math.max(0, (splash?.crownRadiusM ?? 0) * input.scalePxPerM * ratio);
+  const splashHeightPx = Math.max(0, (splash?.crownHeightM ?? 0) * input.scalePxPerM * ratio);
   return new Float32Array([
     size.width,
     size.height,
@@ -598,7 +710,38 @@ function renderUniformValues(input: FluidWaterRenderInput, plan: FluidGridStepPl
     plan.cfl,
     plan.estimatedStorageBytes,
     0,
+    input.objectCenterXPx * ratio,
+    input.surfaceYPx * ratio,
+    splashRadiusPx,
+    splashHeightPx,
+    splashIntensity,
+    splashAgeS,
+    clamp((splash?.sprayDropletCount ?? 0) / 280, 0, 1),
+    clamp((splash?.accumulatedReentryEnergyJ ?? 0) / 80, 0, 1),
   ]);
+}
+
+function splashInputFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan) {
+  return {
+    currentSpeedMps: input.currentSpeedMps,
+    ejectedWaterKg: input.ejectedWaterKg,
+    froudeNumber: input.froudeNumber,
+    gravityMps2: input.gravityMps2,
+    impactStrength: input.impactStrength,
+    objectVxMps: input.objectVxMps,
+    objectVyMps: input.objectVyMps,
+    plan,
+    sprayParticleCount: input.sprayParticleCount,
+    sprayReentryCount: input.sprayReentryCount,
+    sprayReentryEnergyJ: input.sprayReentryEnergyJ,
+    sprayReentryMassKg: input.sprayReentryMassKg,
+    splashEnergyJ: input.splashEnergyJ,
+    splashHeightM: input.splashHeightM,
+    surfaceTensionNpm: input.surfaceTensionNpm,
+    timeS: input.timeS,
+    waterDensityKgM3: input.waterDensityKgM3,
+    weberNumber: input.weberNumber,
+  };
 }
 
 function shapeCode(shape: FluidWaterShape) {
@@ -612,6 +755,10 @@ function shapeCode(shape: FluidWaterShape) {
     default:
       return 0;
   }
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, Number.isFinite(value) ? value : 0));
 }
 
 function storageBinding(binding: number, type: "read-only-storage" | "storage", visibility: number) {

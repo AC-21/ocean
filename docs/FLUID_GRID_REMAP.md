@@ -123,6 +123,27 @@ Latest coupling evidence:
 - Full-grid readback: none per frame.
 - Gate: passed.
 
+FG-05 is complete as of 2026-06-07. `npm run fluid:splash` launched the local
+Electron app, dropped the concrete cube, waited for active WebGPU grid-splash
+coupling, then waited for droplet reentry energy to be coupled back into the
+grid. A committed snapshot is stored at
+`docs/evidence/FG-05-fluid-splash-2026-06-07.json`.
+
+Latest splash evidence:
+
+- Renderer: `webgpu-grid-primary-v1`.
+- Canvas context: `webgpu`.
+- Grid: `512 x 288`, tier `high`.
+- Coupling: `grid-splash-v1`, active during the drop.
+- Local grid energy: `8019.9816 J` from telemetry during active splash,
+  `8019.9815731786875 J` from renderer stats.
+- Foam: `4325` bounded local grid samples, `5774.3867 J` telemetry foam energy.
+- Spray: `198` droplets from telemetry, crown height `1.5532 m`.
+- Secondary reentry: accumulated reentry energy `0.009412 J` coupled back to
+  grid telemetry.
+- Full-grid readback: none per frame.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

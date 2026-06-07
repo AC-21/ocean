@@ -10,6 +10,7 @@ const requiredFiles = [
   "docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json",
   "docs/evidence/FG-03-fluid-render-probe-2026-06-07.json",
   "docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
+  "docs/evidence/FG-05-fluid-splash-2026-06-07.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -35,6 +36,7 @@ const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
 const fg04Evidence = files.get("docs/evidence/FG-04-fluid-coupling-2026-06-07.json") ?? "";
+const fg05Evidence = files.get("docs/evidence/FG-05-fluid-splash-2026-06-07.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -91,6 +93,16 @@ if (
   !fg04Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-04 evidence must record bounded WebGPU object-grid coupling telemetry without per-frame full-grid readback");
+}
+
+if (
+  !fg05Evidence.includes("\"gate\": \"G-FG-05\"") ||
+  !fg05Evidence.includes("\"splash\": \"grid-splash-v1\"") ||
+  !fg05Evidence.includes("\"boundedDiagnostics\": true") ||
+  !fg05Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg05Evidence.includes("\"accumulatedReentryEnergyJ\"")
+) {
+  errors.push("FG-05 evidence must record bounded WebGPU grid-splash telemetry with secondary reentry coupling");
 }
 
 if (errors.length > 0) {

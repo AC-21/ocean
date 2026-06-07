@@ -112,8 +112,8 @@ export const fluidGridGates: FluidGridGate[] = [
   {
     id: "G-FG-05",
     blocks: "FG-05",
-    evidence: "splash-regression report",
-    passBar: "splash crown, foam, spray, and secondary impacts are driven by local grid energy",
+    evidence: "npm run fluid:splash and docs/evidence/FG-05-fluid-splash-2026-06-07.json",
+    passBar: "splash crown, foam, spray, and secondary impacts are driven by bounded local WebGPU grid energy",
   },
   {
     id: "G-FG-06",
@@ -239,9 +239,23 @@ export const fluidGridTasks: FluidGridTask[] = [
   {
     id: "FG-05-T01",
     milestone: "FG-05",
-    status: "planned",
+    status: "done",
     title: "Drive splash, foam, and spray from local grid energy",
-    exitProof: "splash-regression report records crown, spray mass, foam, and secondary impact checks",
+    exitProof: "gridSplashCouplingFor derives foam, spray, crown height, entrained air, and breakup from local grid energy plus Weber/Froude impact state",
+  },
+  {
+    id: "FG-05-T02",
+    milestone: "FG-05",
+    status: "done",
+    title: "Feed droplet reentry back into the grid",
+    exitProof: "FluidWaterRenderer writes foam and secondary reentry impulse samples back into bounded local WebGPU grid rows",
+  },
+  {
+    id: "FG-05-T03",
+    milestone: "FG-05",
+    status: "done",
+    title: "Verify grid-driven splash coupling in Electron",
+    exitProof: "npm run fluid:splash passes with grid-splash-v1 foam cells, spray droplets, crown height, and accumulated droplet reentry energy",
   },
   {
     id: "FG-06-T01",

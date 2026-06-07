@@ -12,7 +12,7 @@ and GitHub issue mapping.
 | FG-02 | GPU grid allocation and stepping | Done | G-FG-02 |
 | FG-03 | Grid-backed water rendering | Done | G-FG-03 |
 | FG-04 | Two-way rigid-body/fluid coupling | Done | G-FG-04 |
-| FG-05 | Splash, foam, and spray from grid state | Planned | G-FG-05 |
+| FG-05 | Splash, foam, and spray from grid state | Done | G-FG-05 |
 | FG-06 | Calibration and near-realism validation | Planned | G-FG-06 |
 
 ## Gates
@@ -24,7 +24,7 @@ and GitHub issue mapping.
 | G-FG-02 | FG-02 | `npm run fluid:grid`; `docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json` | standard grid steps inside frame budget with stable CFL and no full-grid readback |
 | G-FG-03 | FG-03 | `npm run fluid:render`; `docs/evidence/FG-03-fluid-render-probe-2026-06-07.json` | WebGPU renderer is nonblank/varied and Canvas 2D is not the primary water path |
 | G-FG-04 | FG-04 | `npm run fluid:coupling`; `docs/evidence/FG-04-fluid-coupling-2026-06-07.json` | object entry writes footprint, depth impedance, and displacement impulses to the WebGPU grid; the next physics step consumes bounded grid force deltas |
-| G-FG-05 | FG-05 | splash-regression report | splash crown, foam, spray, and secondary impacts are driven by local grid energy |
+| G-FG-05 | FG-05 | `npm run fluid:splash`; `docs/evidence/FG-05-fluid-splash-2026-06-07.json` | splash crown, foam, spray, and secondary impacts are driven by bounded local WebGPU grid energy |
 | G-FG-06 | FG-06 | calibration packet | reference cases match accepted error bounds for impact speed, splash height, damping, and float duration |
 
 ## Tasks
@@ -47,9 +47,9 @@ and GitHub issue mapping.
 | FG-04-T01 | FG-04 | Done | physics | `FluidWaterRenderer` writes active object footprints, depth impedance, and displacement impulses into bounded WebGPU grid rows |
 | FG-04-T02 | FG-04 | Done | physics | `stepSimulation` consumes the latest bounded grid coupling force deltas for vertical and horizontal rigid-body motion |
 | FG-04-T03 | FG-04 | Done | verification | `npm run fluid:coupling` verifies a concrete cube drop with 141 bounded samples, nonzero impulse, and finite force deltas |
-| FG-05-T01 | FG-05 | Planned | physics | Generate foam/spray from Weber, Froude, energy, and grid-gradient state |
-| FG-05-T02 | FG-05 | Planned | physics | Feed droplet reentry and entrained-air effects back into the grid |
-| FG-05-T03 | FG-05 | Planned | verification | Validate splash crown, spray mass, and secondary impacts against references |
+| FG-05-T01 | FG-05 | Done | physics | `gridSplashCouplingFor` derives foam, spray, crown height, entrained air, and breakup from local grid energy plus Weber/Froude impact state |
+| FG-05-T02 | FG-05 | Done | physics | WebGPU renderer writes foam and secondary reentry impulse samples back into bounded local grid rows |
+| FG-05-T03 | FG-05 | Done | verification | `npm run fluid:splash` verifies grid-splash-v1 with 4325 foam cells, 198 spray droplets, 1.553 m crown, and droplet reentry energy |
 | FG-06-T01 | FG-06 | Planned | calibration | Collect reference drop footage and material/shape cases |
 | FG-06-T02 | FG-06 | Planned | calibration | Define accepted error bounds for splash, damping, float time, and sink time |
 | FG-06-T03 | FG-06 | Planned | release | Close near-realism gate only with current reports and recorded evidence |

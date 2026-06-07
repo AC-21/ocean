@@ -47,6 +47,12 @@ Run the WebGPU rigid-body/fluid coupling gate:
 npm run fluid:coupling
 ```
 
+Run the WebGPU splash/foam/spray gate:
+
+```sh
+npm run fluid:splash
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -67,8 +73,10 @@ depth-aware impact-wave propagation, directional oblique-entry wave asymmetry,
 mass-conserving free-surface pulses, seabed impact impulses, and frictional
 bottom contact. The WebGPU path now writes active object footprints, depth
 impedance, and displacement impulses into the fluid grid, then feeds bounded
-grid force deltas back into the next rigid-body physics step. Live diagnostics
-are calculated in `src/physicsOcean.ts` and rendered by the app.
+grid force deltas back into the next rigid-body physics step. It also derives
+foam, spray, crown height, entrained air, and secondary droplet reentry from
+local grid energy and Weber/Froude impact state. Live diagnostics are calculated
+in `src/physicsOcean.ts` and rendered by the app.
 
 ## Run
 
@@ -168,6 +176,8 @@ Current validation checks include:
 - Internal free-surface GM loss and slosh moment for partially flooded objects.
 - WebGPU object-grid coupling with bounded local samples, nonzero displacement
   impulse, and finite force-feedback diagnostics for a concrete-cube drop.
+- WebGPU grid-splash coupling with bounded foam samples, spray count, crown
+  height, and secondary droplet reentry energy for a concrete-cube drop.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,
