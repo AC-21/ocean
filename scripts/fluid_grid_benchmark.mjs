@@ -44,8 +44,12 @@ try {
   const capability = await page.evaluate(() => window.__fluidGridCapabilityReport ?? null);
   assert.equal(capability?.status, "webgpu-ready", "FG-02 requires a WebGPU-ready Electron runtime");
 
-  const standard = await page.evaluate(() => window.__runFluidGridBenchmark?.({ tier: "standard", steps: 120, capability: window.__fluidGridCapabilityReport }));
-  const high = await page.evaluate(() => window.__runFluidGridBenchmark?.({ tier: "high", steps: 80, capability: window.__fluidGridCapabilityReport }));
+  const standard = await page.evaluate(() =>
+    window.__runFluidGridBenchmark?.({ tier: "standard", steps: 120, capability: window.__fluidGridCapabilityReport, requestGpuTimestamps: true })
+  );
+  const high = await page.evaluate(() =>
+    window.__runFluidGridBenchmark?.({ tier: "high", steps: 80, capability: window.__fluidGridCapabilityReport, requestGpuTimestamps: true })
+  );
   assert.ok(standard, "standard tier benchmark should return a report");
   assert.ok(high, "high tier benchmark should return a report");
   assert.equal(standard.pass, true, `standard grid benchmark failed: ${JSON.stringify(standard, null, 2)}`);
@@ -72,9 +76,18 @@ try {
   await mkdir(path.dirname(outPath), { recursive: true });
   await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Fluid grid benchmark written to ${outPath}`);
-  console.log(`- standard: ${standard.plan.cellsX}x${standard.plan.cellsY}, ${standard.stepTiming.averageStepMs.toFixed(4)} ms/step, CFL ${standard.plan.cfl.toFixed(3)}`);
-  console.log(`- high: ${high.plan.cellsX}x${high.plan.cellsY}, ${high.stepTiming.averageStepMs.toFixed(4)} ms/step, CFL ${high.plan.cfl.toFixed(3)}`);
+  console.log(
+    `- standard: ${standard.plan.cellsX}x${standard.plan.cellsY}, ${standard.stepTiming.averageStepMs.toFixed(4)} ms/step wall, ${formatGpuTiming(standard)}, CFL ${standard.plan.cfl.toFixed(3)}`
+  );
+  console.log(
+    `- high: ${high.plan.cellsX}x${high.plan.cellsY}, ${high.stepTiming.averageStepMs.toFixed(4)} ms/step wall, ${formatGpuTiming(high)}, CFL ${high.plan.cfl.toFixed(3)}`
+  );
 } finally {
   if (electronApp) await electronApp.close().catch(() => undefined);
   await rm(userDataPath, { force: true, recursive: true });
+}
+
+function formatGpuTiming(report) {
+  if (!report.gpuTiming?.timestampQueryEnabled || report.gpuTiming.averageStepMs === null) return "GPU timestamp unavailable";
+  return `${report.gpuTiming.averageStepMs.toFixed(4)} ms/step GPU`;
 }

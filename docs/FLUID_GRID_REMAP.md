@@ -167,6 +167,48 @@ Latest calibration evidence:
 - Underwater terminal velocity: concrete cube `4.0067 m/s`.
 - Gate: passed.
 
+FG-07 is complete as of 2026-06-08. It exists because smooth local performance is a
+separate proof from physics-formula coverage. The previous grid benchmark
+proved a compute pass can run quickly, but it did not prove that the packaged
+desktop app has stable frame pacing while the object, water renderer, coupling,
+React readouts, and WebGPU command submission all run together.
+
+Latest local calibration direction:
+
+- Command: `npm run fluid:local-calibrate`.
+- Packaged-app command: `npm run fluid:local-calibrate:packaged`.
+- Report: `reports/fluid-local-calibration-latest.json`.
+- Gate: `G-FG-07`.
+- Required evidence: WebGPU renderer telemetry, local adapter/device limits,
+  high-tier grid timing, timestamp-query GPU samples when the adapter exposes
+  `timestamp-query`, idle/drop frame-pacing summaries, and the runtime launch
+  mode (`electron-source` or `packaged-app`).
+- Frame-pacing thresholds: average FPS at least `55`, p95 frame time at most
+  `24 ms`, p99 frame time at most `36 ms`, dropped-frame ratio at most `6%`,
+  and duplicate water-frame ratio at most `12%`.
+- Latest packaged result: passed.
+- Runtime: `packaged-app`.
+- High-tier wall-clock grid timing: `0.0683 ms/step`.
+- High-tier WebGPU timestamp-query timing: `0.0244 ms/step` average,
+  `0.0271 ms` p95 across `120` samples.
+- Idle scenario: `120.0 FPS`, p95 `9.3 ms`, p99 `9.4 ms`, no dropped frames.
+- Concrete-cube drop scenario: `120.0 FPS`, p95 `9.3 ms`, p99 `9.4 ms`, no
+  dropped frames.
+- Evidence snapshot:
+  `docs/evidence/FG-07-local-calibration-2026-06-08.json`.
+- Status: passed as an automated packaged-app baseline. If the user still sees
+  choppiness by eye, the next gate must add manual/display-specific capture
+  evidence instead of assuming the automated run covers that path.
+
+Research notes:
+
+- WebGPU timestamp queries are the right local instrumentation when available:
+  MDN documents that timestamp queries write pass timing into a `GPUQuerySet`,
+  and the WebGPU spec defines `timestampWrites` for compute passes.
+- The graphics-fluid direction remains a hybrid real-time solver rather than
+  full offline CFD: grid-based water for broad surface state, plus local
+  particle/splash layers for high-energy impact detail.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -183,6 +225,8 @@ Latest calibration evidence:
    for grid cells, energy, CFL, and coupling impulses.
 7. Calibration: compare drop height, impact speed, splash crown height, float
    duration, and damping curves against reference footage or lab data.
+8. Local performance calibration: measure the real desktop app on the local GPU
+   before accepting any near-realism claim.
 
 ## Resolution Ladder
 
@@ -224,3 +268,5 @@ Near-realism is not a single visual check. It requires:
 - Diagnostics proving energy, mass/volume behavior, CFL stability, and adapter
   limits.
 - Calibration evidence against real drop footage or measured reference cases.
+- Local desktop frame-pacing evidence proving the simulator runs smoothly on the
+  user's machine at the selected tier.

@@ -12,14 +12,17 @@ const requiredFiles = [
   "docs/evidence/FG-04-fluid-coupling-2026-06-07.json",
   "docs/evidence/FG-05-fluid-splash-2026-06-07.json",
   "docs/evidence/FG-06-fluid-calibration-2026-06-07.json",
+  "docs/evidence/FG-07-local-calibration-2026-06-08.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
+  "package.json",
   "src/fluid/fluidGridContract.ts",
+  "src/fluid/fluidLocalCalibration.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -33,12 +36,15 @@ const files = new Map(requiredFiles.map((filePath) => [filePath, readRequired(fi
 const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
+const packageJson = files.get("package.json") ?? "";
+const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
 const fg04Evidence = files.get("docs/evidence/FG-04-fluid-coupling-2026-06-07.json") ?? "";
 const fg05Evidence = files.get("docs/evidence/FG-05-fluid-splash-2026-06-07.json") ?? "";
 const fg06Evidence = files.get("docs/evidence/FG-06-fluid-calibration-2026-06-07.json") ?? "";
+const fg07Evidence = files.get("docs/evidence/FG-07-local-calibration-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -117,6 +123,38 @@ if (
   !fg06Evidence.includes("\"failedEvidence\": []")
 ) {
   errors.push("FG-06 evidence must record passing calibration cases and complete WebGPU evidence checks");
+}
+
+if (!packageJson.includes("\"fluid:local-calibrate\"") || !packageJson.includes("\"fluid:local-calibrate:packaged\"")) {
+  errors.push("package.json must expose the FG-07 source and packaged local calibration commands");
+}
+
+if (!tracking.includes("FG-07-T03") || !tracking.includes("FG-07-local-calibration-2026-06-08.json") || !tracking.includes("fluid:local-calibrate:packaged")) {
+  errors.push("docs/TRACKING.md must record FG-07 local GPU/frame-pacing evidence");
+}
+
+const normalizedFg07Remap = remap.toLowerCase();
+if (
+  !normalizedFg07Remap.includes("webgpu timestamp queries") ||
+  !normalizedFg07Remap.includes("p95 frame time") ||
+  !normalizedFg07Remap.includes("local desktop frame-pacing") ||
+  !normalizedFg07Remap.includes("packaged-app")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must describe the FG-07 local GPU/frame-pacing calibration direction");
+}
+
+if (!localCalibration.includes("maxP95FrameMs") || !localCalibration.includes("duplicateWaterFrameRatio") || !localCalibration.includes("timestampQueryUsed")) {
+  errors.push("fluidLocalCalibration.ts must define local smoothness and GPU timestamp evidence fields");
+}
+
+if (
+  !fg07Evidence.includes("\"gate\": \"G-FG-07\"") ||
+  !fg07Evidence.includes("\"pass\": true") ||
+  !fg07Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg07Evidence.includes("\"timestampQueryUsed\": true") ||
+  !fg07Evidence.includes("\"stability\": \"smooth\"")
+) {
+  errors.push("FG-07 evidence must record a passing packaged-app local GPU/frame-pacing calibration");
 }
 
 if (errors.length > 0) {

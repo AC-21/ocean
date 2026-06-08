@@ -59,6 +59,18 @@ Run the near-realism calibration gate:
 npm run fluid:calibration
 ```
 
+Run the local desktop GPU/frame-pacing calibration gate:
+
+```sh
+npm run fluid:local-calibrate
+```
+
+Run the same gate against the packaged macOS app:
+
+```sh
+npm run fluid:local-calibrate:packaged
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -187,6 +199,7 @@ Current validation checks include:
 - Near-realism calibration covering impact speed, timestep convergence,
   hydrostatic draft, float settling, splash-height band, leak sensitivity, and
   underwater terminal velocity.
+- Local GPU/frame-pacing calibration for idle and concrete-drop desktop runs.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

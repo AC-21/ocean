@@ -26,6 +26,14 @@ export type FluidGridBenchmarkReport = {
   backend: "webgpu-compute";
   capability: Pick<FluidCapabilityReport, "adapterName" | "features" | "limits" | "status"> | null;
   generatedAt: string;
+  gpuTiming: {
+    averageStepMs: number | null;
+    maxStepMs: number | null;
+    minStepMs: number | null;
+    p95StepMs: number | null;
+    sampleCount: number;
+    timestampQueryEnabled: boolean;
+  };
   noFullGridReadbackPerFrame: boolean;
   pass: boolean;
   plan: FluidGridStepPlan;
@@ -54,6 +62,7 @@ export type FluidGridBenchmarkOptions = {
   maxAverageStepMs?: number;
   maxCfl?: number;
   minNonzeroHeightM?: number;
+  requestGpuTimestamps?: boolean;
   steps?: number;
   tier?: FluidGridTierId;
   waveSpeedMps?: number;
@@ -64,7 +73,8 @@ type GpuLike = {
 };
 
 type AdapterLike = {
-  requestDevice: () => Promise<DeviceLike>;
+  features?: Iterable<string>;
+  requestDevice: (descriptor?: { requiredFeatures?: string[] }) => Promise<DeviceLike>;
 };
 
 type DeviceLike = {
@@ -74,8 +84,10 @@ type DeviceLike = {
   createCommandEncoder: () => CommandEncoderLike;
   createComputePipeline: (descriptor: unknown) => unknown;
   createPipelineLayout: (descriptor: unknown) => unknown;
+  createQuerySet?: (descriptor: { count: number; type: "timestamp" }) => QuerySetLike;
   createShaderModule: (descriptor: { code: string }) => unknown;
   destroy?: () => void;
+  features?: Iterable<string>;
   queue: {
     onSubmittedWorkDone: () => Promise<void>;
     submit: (commandBuffers: unknown[]) => void;
@@ -90,10 +102,15 @@ type BufferLike = {
   unmap: () => void;
 };
 
+type QuerySetLike = {
+  destroy?: () => void;
+};
+
 type CommandEncoderLike = {
-  beginComputePass: () => ComputePassLike;
+  beginComputePass: (descriptor?: unknown) => ComputePassLike;
   copyBufferToBuffer: (source: BufferLike, sourceOffset: number, destination: BufferLike, destinationOffset: number, size: number) => void;
   finish: () => unknown;
+  resolveQuerySet?: (querySet: QuerySetLike, firstQuery: number, queryCount: number, destination: BufferLike, destinationOffset: number) => void;
 };
 
 type ComputePassLike = {
@@ -107,6 +124,7 @@ const usage = {
   copyDst: 0x0008,
   copySrc: 0x0004,
   mapRead: 0x0001,
+  queryResolve: 0x0200,
   storage: 0x0080,
   uniform: 0x0040,
 };
@@ -159,8 +177,15 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
   const adapter = await gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) throw new Error("WebGPU adapter is unavailable for fluid grid benchmark.");
 
-  const device = await adapter.requestDevice();
   const plan = createFluidGridStepPlan(options);
+  const adapterFeatures = new Set(iterableToStrings(adapter.features));
+  const wantsGpuTimestamps = options.requestGpuTimestamps === true && adapterFeatures.has("timestamp-query");
+  const device = await adapter.requestDevice(wantsGpuTimestamps ? { requiredFeatures: ["timestamp-query"] } : undefined);
+  const deviceFeatures = new Set(iterableToStrings(device.features));
+  const timestampQueryEnabled =
+    wantsGpuTimestamps &&
+    deviceFeatures.has("timestamp-query") &&
+    typeof device.createQuerySet === "function";
   const threshold = {
     maxAverageStepMs: options.maxAverageStepMs ?? 4,
     maxCfl: options.maxCfl ?? 0.7,
@@ -181,6 +206,10 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
     const readHeight = readBuffer(device, plan.bytesPerField, buffers);
     const readVelocity = readBuffer(device, plan.bytesPerField, buffers);
     const readFoam = readBuffer(device, plan.bytesPerField, buffers);
+    const timestampCount = timestampQueryEnabled ? plan.steps * 2 : 0;
+    const querySet = timestampQueryEnabled ? device.createQuerySet?.({ count: timestampCount, type: "timestamp" }) ?? null : null;
+    const timestampResolve = querySet ? queryResolveBuffer(device, timestampCount, buffers) : null;
+    const timestampRead = querySet ? readBuffer(device, timestampCount * 8, buffers) : null;
 
     const shader = device.createShaderModule({ code: fluidGridStepShader });
     const bindGroupLayout = device.createBindGroupLayout({
@@ -213,7 +242,17 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
 
     const encoder = device.createCommandEncoder();
     for (let step = 0; step < plan.steps; step += 1) {
-      const pass = encoder.beginComputePass();
+      const pass = encoder.beginComputePass(
+        querySet
+          ? {
+              timestampWrites: {
+                beginningOfPassWriteIndex: step * 2,
+                endOfPassWriteIndex: step * 2 + 1,
+                querySet,
+              },
+            }
+          : undefined
+      );
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, step % 2 === 0 ? bindA : bindB);
       pass.dispatchWorkgroups(plan.dispatchX, plan.dispatchY);
@@ -223,6 +262,10 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
     encoder.copyBufferToBuffer(finalHeight, 0, readHeight, 0, plan.bytesPerField);
     encoder.copyBufferToBuffer(velocity, 0, readVelocity, 0, plan.bytesPerField);
     encoder.copyBufferToBuffer(foam, 0, readFoam, 0, plan.bytesPerField);
+    if (querySet && timestampResolve && timestampRead && encoder.resolveQuerySet) {
+      encoder.resolveQuerySet(querySet, 0, timestampCount, timestampResolve, 0);
+      encoder.copyBufferToBuffer(timestampResolve, 0, timestampRead, 0, timestampCount * 8);
+    }
 
     const startedAt = performance.now();
     device.queue.submit([encoder.finish()]);
@@ -233,6 +276,9 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
       mappedFloat32(readVelocity, plan.cellCount),
       mappedFloat32(readFoam, plan.cellCount),
     ]);
+    const gpuTiming = timestampRead
+      ? summarizeGpuTimestampPairs(await mappedBigUint64(timestampRead, timestampCount))
+      : emptyGpuTiming(false);
     const summary = summarizeReadback(heightValues, velocityValues, foamValues);
     const averageStepMs = totalMs / Math.max(1, plan.steps);
     const pass = averageStepMs <= threshold.maxAverageStepMs && plan.cfl <= threshold.maxCfl && summary.maxAbsHeightM >= threshold.minNonzeroHeightM;
@@ -248,6 +294,7 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
           }
         : null,
       generatedAt,
+      gpuTiming,
       noFullGridReadbackPerFrame: true,
       pass,
       plan,
@@ -263,6 +310,7 @@ export async function runFluidGridBenchmark(options: FluidGridBenchmarkOptions =
     };
   } finally {
     for (const buffer of buffers) buffer.destroy?.();
+    // Query sets are tiny, but explicit destruction keeps benchmark runs tidy.
     device.destroy?.();
   }
 }
@@ -378,6 +426,15 @@ function readBuffer(device: DeviceLike, size: number, buffers: BufferLike[]): Bu
   return buffer;
 }
 
+function queryResolveBuffer(device: DeviceLike, queryCount: number, buffers: BufferLike[]): BufferLike {
+  const buffer = device.createBuffer({
+    size: queryCount * 8,
+    usage: usage.queryResolve | usage.copySrc,
+  });
+  buffers.push(buffer);
+  return buffer;
+}
+
 function uniformValues(plan: FluidGridStepPlan): Float32Array {
   return new Float32Array([plan.cellsX, plan.cellsY, plan.dtS, 0.992, plan.waveSpeedMps, plan.cellSizeM, 18, 0.988]);
 }
@@ -418,6 +475,52 @@ async function mappedFloat32(buffer: BufferLike, length: number): Promise<Float3
   return copy;
 }
 
+async function mappedBigUint64(buffer: BufferLike, length: number): Promise<BigUint64Array> {
+  await buffer.mapAsync(mapModeRead);
+  const copy = new BigUint64Array(buffer.getMappedRange()).slice(0, length);
+  buffer.unmap();
+  return copy;
+}
+
+function summarizeGpuTimestampPairs(values: BigUint64Array): FluidGridBenchmarkReport["gpuTiming"] {
+  const durationsMs: number[] = [];
+  for (let index = 0; index + 1 < values.length; index += 2) {
+    const start = values[index];
+    const end = values[index + 1];
+    if (end >= start) {
+      durationsMs.push(Number(end - start) / 1_000_000);
+    }
+  }
+  if (durationsMs.length === 0) return emptyGpuTiming(true);
+  durationsMs.sort((left, right) => left - right);
+  const total = durationsMs.reduce((sum, value) => sum + value, 0);
+  return {
+    averageStepMs: total / durationsMs.length,
+    maxStepMs: durationsMs[durationsMs.length - 1],
+    minStepMs: durationsMs[0],
+    p95StepMs: percentileSorted(durationsMs, 0.95),
+    sampleCount: durationsMs.length,
+    timestampQueryEnabled: true,
+  };
+}
+
+function emptyGpuTiming(timestampQueryEnabled: boolean): FluidGridBenchmarkReport["gpuTiming"] {
+  return {
+    averageStepMs: null,
+    maxStepMs: null,
+    minStepMs: null,
+    p95StepMs: null,
+    sampleCount: 0,
+    timestampQueryEnabled,
+  };
+}
+
+function percentileSorted(values: number[], percentile: number): number {
+  if (values.length === 0) return 0;
+  const index = Math.min(values.length - 1, Math.max(0, Math.ceil(values.length * percentile) - 1));
+  return values[index];
+}
+
 function summarizeReadback(height: Float32Array, velocity: Float32Array, foam: Float32Array) {
   let maxAbsHeightM = 0;
   let maxAbsVelocityMps = 0;
@@ -436,4 +539,9 @@ function summarizeReadback(height: Float32Array, velocity: Float32Array, foam: F
     maxAbsVelocityMps,
     meanAbsHeightM: totalAbsHeight / Math.max(1, height.length),
   };
+}
+
+function iterableToStrings(values: Iterable<unknown> | undefined): string[] {
+  if (!values) return [];
+  return Array.from(values).filter((value): value is string => typeof value === "string" && value.length > 0);
 }

@@ -14,6 +14,7 @@ and GitHub issue mapping.
 | FG-04 | Two-way rigid-body/fluid coupling | Done | G-FG-04 |
 | FG-05 | Splash, foam, and spray from grid state | Done | G-FG-05 |
 | FG-06 | Calibration and near-realism validation | Done | G-FG-06 |
+| FG-07 | Local GPU calibration and frame pacing | Done | G-FG-07 |
 
 ## Gates
 
@@ -26,6 +27,7 @@ and GitHub issue mapping.
 | G-FG-04 | FG-04 | `npm run fluid:coupling`; `docs/evidence/FG-04-fluid-coupling-2026-06-07.json` | object entry writes footprint, depth impedance, and displacement impulses to the WebGPU grid; the next physics step consumes bounded grid force deltas |
 | G-FG-05 | FG-05 | `npm run fluid:splash`; `docs/evidence/FG-05-fluid-splash-2026-06-07.json` | splash crown, foam, spray, and secondary impacts are driven by bounded local WebGPU grid energy |
 | G-FG-06 | FG-06 | `npm run fluid:calibration`; `docs/evidence/FG-06-fluid-calibration-2026-06-07.json` | reference cases and prior WebGPU gates match accepted error bounds for impact speed, splash height, damping, float behavior, and evidence completeness |
+| G-FG-07 | FG-07 | `npm run fluid:local-calibrate`; `npm run fluid:local-calibrate:packaged`; `docs/evidence/FG-07-local-calibration-2026-06-08.json` | local Electron and packaged desktop runs record WebGPU renderer telemetry, timestamp-query GPU grid timing, and smooth idle/drop frame pacing with bounded p95/p99 frame times |
 
 ## Tasks
 
@@ -53,6 +55,9 @@ and GitHub issue mapping.
 | FG-06-T01 | FG-06 | Done | calibration | Calibration packet covers dense impact, timestep convergence, ice draft, foam settling, splash height, leak sensitivity, and underwater terminal velocity |
 | FG-06-T02 | FG-06 | Done | calibration | `fluidCalibration.ts` defines accepted error bounds for impact speed, splash height, damping/settling, float behavior, leak sensitivity, and terminal velocity |
 | FG-06-T03 | FG-06 | Done | release | `npm run fluid:calibration` passes 7 calibration cases and 5 WebGPU evidence checks with committed evidence |
+| FG-07-T01 | FG-07 | Done | calibration | `fluidLocalCalibration.ts` defines local smoothness thresholds for p95/p99 frame time, dropped-frame ratio, duplicate water-frame ratio, and WebGPU renderer telemetry |
+| FG-07-T02 | FG-07 | Done | calibration | `npm run fluid:local-calibrate` and `npm run fluid:local-calibrate:packaged` launch the desktop app paths, sample idle/drop frame pacing, and write `reports/fluid-local-calibration-latest.json` |
+| FG-07-T03 | FG-07 | Done | performance | Packaged-app calibration passed with timestamp-query GPU samples, high-tier GPU p95 `0.0271 ms`, idle/drop p99 `9.4 ms`, and no dropped frames |
 
 ## GitHub Labels
 
@@ -75,6 +80,7 @@ and GitHub issue mapping.
 | FG-04 | https://github.com/AC-21/ocean/issues/6 |
 | FG-05 | https://github.com/AC-21/ocean/issues/7 |
 | FG-06 | https://github.com/AC-21/ocean/issues/8 |
+| FG-07 | https://github.com/AC-21/ocean/issues/10 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
