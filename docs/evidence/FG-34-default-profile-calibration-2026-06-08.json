@@ -1,0 +1,109 @@
+{
+  "generatedAt": "2026-06-08T20:22:37.581Z",
+  "install": {
+    "defaultUserDataPath": "/Users/sasha/Library/Application Support/Ocean Impact Lab",
+    "fileName": "fluid-calibration.v1.json",
+    "installedProfile": {
+      "appVersion": "0.1.0",
+      "capability": {
+        "adapterInfo": "apple / metal-3",
+        "backend": "webgpu-compute",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "fingerprint": "adapter:apple / metal-3|backend:webgpu-compute|features:bgra8unorm-storage,clip-distances,core-features-and-limits,depth-clip-control,depth32float-stencil8,dual-source-blending,float32-blendable,float32-filterable,indirect-first-instance,primitive-index,rg11b10ufloat-renderable,shader-f16,subgroups,texture-component-swizzle,texture-compression-astc,texture-compression-astc-sliced-3d,texture-compression-bc,texture-compression-bc-sliced-3d,texture-compression-etc2,texture-formats-tier1,texture-formats-tier2,timestamp-query|limits:maxBufferSize:268435456,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupsPerDimension:65535,maxStorageBufferBindingSize:134217728|status:webgpu-ready",
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready",
+        "sourceGate": "G-FG-01"
+      },
+      "generatedAt": "2026-06-08T20:22:34.329Z",
+      "pass": true,
+      "schema": "ocean-fluid-calibration-profile-v1",
+      "selectedTier": "ultra",
+      "source": {
+        "adaptiveGeneratedAt": "2026-06-08T04:53:50.864Z",
+        "adaptiveGate": "G-FG-23",
+        "selectedTier": "ultra"
+      },
+      "sourceGate": "G-FG-23",
+      "summary": {
+        "maxLiveP95FrameMs": 9.300000000000182,
+        "maxUltraGpuP95StepMs": 0.09025,
+        "maxUltraToHighGpuP95Ratio": 2.0687679083094554
+      }
+    },
+    "persistedRawBytes": 2376,
+    "preExistingProfileBytes": 0,
+    "storageBasePath": "/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game",
+    "verificationReadMatched": true
+  },
+  "launcher": {
+    "executablePath": "/Users/sasha/Desktop/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "resolvesToInstalledBundle": true,
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "runtimeProbe": {
+    "capabilitySelectedTier": "ultra",
+    "grid": "768x432",
+    "launchMode": "desktop-launcher",
+    "pixelProbe": {
+      "averageLuma": 125.77515477638447,
+      "colorBuckets": 23,
+      "status": "nonblank",
+      "variety": "varied"
+    },
+    "renderer": "webgpu-grid-primary-v1",
+    "selectedGrid": {
+      "cellsX": 768,
+      "cellsY": 432
+    },
+    "selectedTier": "ultra",
+    "selection": {
+      "calibratedTier": "ultra",
+      "mode": "calibrated-auto",
+      "preferredTier": "ultra",
+      "reason": "local calibration selected tier",
+      "requestedTier": "auto"
+    },
+    "waterContext": "webgpu",
+    "waterFrames": 81
+  },
+  "storage": {
+    "envCalibratedTierPresent": false,
+    "envRequestedTierPresent": false,
+    "installedTier": "ultra",
+    "readByMainProcess": true
+  },
+  "failures": [],
+  "gate": "G-FG-34",
+  "pass": true
+}

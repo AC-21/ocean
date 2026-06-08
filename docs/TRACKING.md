@@ -41,6 +41,7 @@ and GitHub issue mapping.
 | FG-31 | Live impact energy budget gate | Done | G-FG-31 |
 | FG-32 | Live surface recovery damping gate | Done | G-FG-32 |
 | FG-33 | Desktop launcher install reproducibility gate | Done | G-FG-33 |
+| FG-34 | Default-profile calibrated Desktop launch gate | Done | G-FG-34 |
 
 ## Gates
 
@@ -80,6 +81,7 @@ and GitHub issue mapping.
 | G-FG-31 | FG-31 | `npm run fluid:impact-energy-budget`; `docs/evidence/FG-31-impact-energy-budget-2026-06-08.json` | the ultra live concrete impact reports a source-traced, bounded energy budget across pressure impulse, splash grid energy, foam and potential energy, particle reentry, ejected mass, and WebGPU no-full-grid-readback telemetry |
 | G-FG-32 | FG-32 | `npm run fluid:surface-recovery`; `docs/evidence/FG-32-surface-recovery-2026-06-08.json` | the packaged ultra WebGPU renderer shows post-impact visible surface agitation, foam, and pressure-work recovery over a deep-water concrete drop while maintaining active pressure, particles, coupling, fixed-step pacing, and no full-grid readback |
 | G-FG-33 | FG-33 | `npm run fluid:desktop-launcher`; `docs/evidence/FG-33-desktop-launcher-2026-06-08.json` | the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile |
+| G-FG-34 | FG-34 | `npm run fluid:default-profile-calibration`; `docs/evidence/FG-34-default-profile-calibration-2026-06-08.json` | the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live `768 x 432` WebGPU renderer |
 
 ## Tasks
 
@@ -188,6 +190,9 @@ and GitHub issue mapping.
 | FG-33-T01 | FG-33 | Done | release | `fluidDesktopLauncher.ts` requires an install root outside the workspace, a Desktop symlink that resolves to the app bundle, codesign verification, clean signing-relevant xattrs, and nonblank WebGPU render evidence |
 | FG-33-T02 | FG-33 | Done | verification | `fluidDesktopLauncher.report.ts` packages to `~/Applications/Ocean Impact Lab Builds`, verifies `/Users/sasha/Desktop/Ocean Impact Lab.app`, and runs `fluid_render_probe.mjs` through that exact launcher executable with default user data |
 | FG-33-T03 | FG-33 | Done | release | `npm run fluid:desktop-launcher` passes with a signed app bundle, clean Desktop symlink target, nonblank/varied WebGPU pixels, and committed FG-33 evidence |
+| FG-34-T01 | FG-34 | Done | calibration | `fluidDefaultProfileCalibration.ts` requires real Ocean Impact Lab default storage, a valid FG-23 calibration profile, no fluid-tier environment overrides, calibrated-auto ultra selection, and nonblank WebGPU pixels |
+| FG-34-T02 | FG-34 | Done | storage | `fluidDefaultProfileCalibration.report.ts` writes `fluid-calibration.v1.json` into `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game` and verifies the profile round-trip |
+| FG-34-T03 | FG-34 | Done | verification | `npm run fluid:default-profile-calibration` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier env overrides and proves calibrated-auto ultra on the `768 x 432` WebGPU renderer |
 
 ## GitHub Labels
 
@@ -237,6 +242,7 @@ and GitHub issue mapping.
 | FG-31 | https://github.com/AC-21/ocean/issues/34 |
 | FG-32 | https://github.com/AC-21/ocean/issues/35 |
 | FG-33 | https://github.com/AC-21/ocean/issues/36 |
+| FG-34 | https://github.com/AC-21/ocean/issues/37 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

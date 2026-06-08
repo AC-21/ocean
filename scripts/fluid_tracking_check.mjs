@@ -39,6 +39,7 @@ const requiredFiles = [
   "docs/evidence/FG-31-impact-energy-budget-2026-06-08.json",
   "docs/evidence/FG-32-surface-recovery-2026-06-08.json",
   "docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
+  "docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -91,6 +92,9 @@ const requiredFiles = [
   "src/fluid/fluidDesktopLauncher.ts",
   "src/fluid/fluidDesktopLauncher.report.ts",
   "src/fluid/fluidDesktopLauncher.test.ts",
+  "src/fluid/fluidDefaultProfileCalibration.ts",
+  "src/fluid/fluidDefaultProfileCalibration.report.ts",
+  "src/fluid/fluidDefaultProfileCalibration.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -112,8 +116,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -175,6 +179,9 @@ const surfaceRecoveryTest = files.get("src/fluid/fluidSurfaceRecovery.test.ts") 
 const desktopLauncher = files.get("src/fluid/fluidDesktopLauncher.ts") ?? "";
 const desktopLauncherReport = files.get("src/fluid/fluidDesktopLauncher.report.ts") ?? "";
 const desktopLauncherTest = files.get("src/fluid/fluidDesktopLauncher.test.ts") ?? "";
+const defaultProfileCalibration = files.get("src/fluid/fluidDefaultProfileCalibration.ts") ?? "";
+const defaultProfileCalibrationReport = files.get("src/fluid/fluidDefaultProfileCalibration.report.ts") ?? "";
+const defaultProfileCalibrationTest = files.get("src/fluid/fluidDefaultProfileCalibration.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -227,6 +234,7 @@ const fg30Evidence = files.get("docs/evidence/FG-30-package-reproducibility-2026
 const fg31Evidence = files.get("docs/evidence/FG-31-impact-energy-budget-2026-06-08.json") ?? "";
 const fg32Evidence = files.get("docs/evidence/FG-32-surface-recovery-2026-06-08.json") ?? "";
 const fg33Evidence = files.get("docs/evidence/FG-33-desktop-launcher-2026-06-08.json") ?? "";
+const fg34Evidence = files.get("docs/evidence/FG-34-default-profile-calibration-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2258,6 +2266,118 @@ if (
   !fg33Evidence.includes("\"waterContext\": \"webgpu\"")
 ) {
   errors.push("FG-33 evidence must record a passing signed Desktop launcher install and default-profile WebGPU render probe");
+}
+
+if (!packageJson.includes("\"fluid:default-profile-calibration\"") || !packageJson.includes("src/fluid/fluidDefaultProfileCalibration.report.ts")) {
+  errors.push("package.json must expose the FG-34 default-profile calibration command");
+}
+
+if (!tracking.includes("FG-34-T03") || !tracking.includes("FG-34-default-profile-calibration-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/37")) {
+  errors.push("docs/TRACKING.md must record FG-34 default-profile calibration evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-34") ||
+  !contract.includes("G-FG-34") ||
+  !contract.includes("Default-profile calibrated Desktop launch gate") ||
+  !contract.includes("npm run fluid:default-profile-calibration")
+) {
+  errors.push("fluidGridContract.ts must define the FG-34 default-profile calibration milestone, gate, and evidence command");
+}
+
+if (
+  !electronMain.includes("createMainWindowRevealer") ||
+  !electronMain.includes("show: true") ||
+  !electronMain.includes("did-finish-load") ||
+  !electronMain.includes("did-fail-load") ||
+  !electronMain.includes("app.focus({ steal: true })") ||
+  !electronMain.includes("revealFallback")
+) {
+  errors.push("electron/main.cjs must reveal the Desktop BrowserWindow outside the Playwright hidden-renderer path");
+}
+
+if (
+  !defaultProfileCalibration.includes("G-FG-34") ||
+  !defaultProfileCalibration.includes("defaultUserDataPath") ||
+  !defaultProfileCalibration.includes("storageBasePath") ||
+  !defaultProfileCalibration.includes("calibrated-auto") ||
+  !defaultProfileCalibration.includes("readByMainProcess") ||
+  !defaultProfileCalibration.includes("runtime color buckets") ||
+  !defaultProfileCalibration.includes("validateFluidCalibrationProfile")
+) {
+  errors.push("fluidDefaultProfileCalibration.ts must define the FG-34 default-profile storage, calibrated-auto runtime, and pixel checks");
+}
+
+if (
+  !defaultProfileCalibrationReport.includes("OCEAN_LAB_DEFAULT_PROFILE_USER_DATA") ||
+  !defaultProfileCalibrationReport.includes("HARBORLINE_USER_DATA_DIR") ||
+  !defaultProfileCalibrationReport.includes("fluid-calibration.v1.json") ||
+  !defaultProfileCalibrationReport.includes("Application Support") ||
+  !defaultProfileCalibrationReport.includes("Desktop") ||
+  !defaultProfileCalibrationReport.includes("Concrete cube") ||
+  !defaultProfileCalibrationReport.includes("G-FG-34")
+) {
+  errors.push("fluidDefaultProfileCalibration.report.ts must install the real default profile and probe the exact Desktop launch path");
+}
+
+if (
+  !defaultProfileCalibrationTest.includes("real default app storage") ||
+  !defaultProfileCalibrationTest.includes("falls back to high") ||
+  !defaultProfileCalibrationTest.includes("black or flat") ||
+  !defaultProfileCalibrationTest.includes("G-FG-34")
+) {
+  errors.push("fluidDefaultProfileCalibration.test.ts must cover FG-34 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-34") ||
+  !remap.includes("default-profile calibration") ||
+  !remap.includes("Application Support") ||
+  !remap.includes("calibrated-auto") ||
+  !remap.includes("768 x 432")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-34 default-profile calibration gate and evidence");
+}
+
+if (
+  !fg34Evidence.includes("\"gate\": \"G-FG-34\"") ||
+  !fg34Evidence.includes("\"pass\": true") ||
+  !fg34Evidence.includes("\"failures\": []") ||
+  !fg34Evidence.includes("\"defaultUserDataPath\": \"/Users/sasha/Library/Application Support/Ocean Impact Lab\"") ||
+  !fg34Evidence.includes("\"fileName\": \"fluid-calibration.v1.json\"") ||
+  !fg34Evidence.includes("\"persistedRawBytes\": 2376") ||
+  !fg34Evidence.includes("\"storageBasePath\": \"/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game\"") ||
+  !fg34Evidence.includes("\"verificationReadMatched\": true") ||
+  !fg34Evidence.includes("\"appVersion\": \"0.1.0\"") ||
+  !fg34Evidence.includes("\"adapterInfo\": \"apple / metal-3\"") ||
+  !fg34Evidence.includes("\"backend\": \"webgpu-compute\"") ||
+  !fg34Evidence.includes("\"sourceGate\": \"G-FG-23\"") ||
+  !fg34Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg34Evidence.includes("\"schema\": \"ocean-fluid-calibration-profile-v1\"") ||
+  !fg34Evidence.includes("\"executablePath\": \"/Users/sasha/Desktop/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab\"") ||
+  !fg34Evidence.includes("\"resolvesToInstalledBundle\": true") ||
+  !fg34Evidence.includes("\"targetPath\": \"/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app\"") ||
+  !fg34Evidence.includes("\"capabilitySelectedTier\": \"ultra\"") ||
+  !fg34Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg34Evidence.includes("\"launchMode\": \"desktop-launcher\"") ||
+  !fg34Evidence.includes("\"averageLuma\": 125.77515477638447") ||
+  !fg34Evidence.includes("\"colorBuckets\": 23") ||
+  !fg34Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg34Evidence.includes("\"variety\": \"varied\"") ||
+  !fg34Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg34Evidence.includes("\"cellsX\": 768") ||
+  !fg34Evidence.includes("\"cellsY\": 432") ||
+  !fg34Evidence.includes("\"calibratedTier\": \"ultra\"") ||
+  !fg34Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg34Evidence.includes("\"preferredTier\": \"ultra\"") ||
+  !fg34Evidence.includes("\"requestedTier\": \"auto\"") ||
+  !fg34Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg34Evidence.includes("\"waterFrames\": 81") ||
+  !fg34Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg34Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg34Evidence.includes("\"readByMainProcess\": true")
+) {
+  errors.push("FG-34 evidence must record a passing real default-profile calibrated Desktop launch with calibrated-auto ultra WebGPU render proof");
 }
 
 if (errors.length > 0) {

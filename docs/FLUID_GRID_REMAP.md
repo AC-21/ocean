@@ -933,6 +933,36 @@ Latest desktop-launcher evidence:
   nonblank/varied pixels, average luma `125.6693`, and `23` color buckets.
 - Gate: passed.
 
+FG-34 is complete as of 2026-06-08. FG-33 proved the Desktop button renders,
+but it still started from the real default profile at the conservative high
+tier because no calibration profile was installed in the normal Application
+Support folder. FG-34 installs the FG-23-derived, hardware-provenance-valid
+calibration profile into the real Ocean Impact Lab default profile, then
+launches the exact Desktop app with no fluid-tier environment overrides and
+proves Electron reads the profile before the renderer starts.
+
+Latest default-profile calibration evidence:
+
+- Command: `npm run fluid:default-profile-calibration`.
+- Gate: `G-FG-34`.
+- Evidence snapshot:
+  `docs/evidence/FG-34-default-profile-calibration-2026-06-08.json`.
+- Profile path:
+  `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game/fluid-calibration.v1.json`.
+- Profile proof: schema `ocean-fluid-calibration-profile-v1`, app version
+  `0.1.0`, source gate `G-FG-23`, capability source gate `G-FG-01`, adapter
+  `apple / metal-3`, selected tier `ultra`, persisted bytes `2376`, and
+  storage round-trip verified.
+- Runtime proof: `/Users/sasha/Desktop/Ocean Impact Lab.app` launches without
+  `OCEAN_LAB_FLUID_TIER`, `OCEAN_LAB_CALIBRATED_FLUID_TIER`, or
+  `HARBORLINE_USER_DATA_DIR`; selection mode is `calibrated-auto`, requested
+  tier is `auto`, selected tier is `ultra`, and the live canvas grid is
+  `768 x 432`.
+- Render proof: renderer `webgpu-grid-primary-v1`, context `webgpu`, `81`
+  water frames, nonblank/varied pixels, average luma `125.7752`, and `23`
+  color buckets.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1038,6 +1068,10 @@ Latest desktop-launcher evidence:
     outside the repo workspace, verify the Desktop launcher resolves to the
     signed app bundle, then launch that exact target with the default profile
     and prove nonblank/varied WebGPU pixels.
+32. Default-profile calibrated launch: install the local GPU calibration profile
+    into the real Ocean Impact Lab Application Support storage, then prove the
+    Desktop launcher selects calibrated-auto ultra without fluid-tier
+    environment overrides.
 
 ## Resolution Ladder
 

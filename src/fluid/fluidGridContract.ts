@@ -34,7 +34,8 @@ export type FluidGridMilestoneId =
   | "FG-30"
   | "FG-31"
   | "FG-32"
-  | "FG-33";
+  | "FG-33"
+  | "FG-34";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -70,7 +71,8 @@ export type FluidGridGateId =
   | "G-FG-30"
   | "G-FG-31"
   | "G-FG-32"
-  | "G-FG-33";
+  | "G-FG-33"
+  | "G-FG-34";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -171,6 +173,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-31", title: "Live impact energy budget gate", gate: "G-FG-31" },
   { id: "FG-32", title: "Live surface recovery damping gate", gate: "G-FG-32" },
   { id: "FG-33", title: "Desktop launcher install reproducibility gate", gate: "G-FG-33" },
+  { id: "FG-34", title: "Default-profile calibrated Desktop launch gate", gate: "G-FG-34" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -402,6 +405,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:desktop-launcher and docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
     passBar:
       "the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile",
+  },
+  {
+    id: "G-FG-34",
+    blocks: "FG-34",
+    evidence: "npm run fluid:default-profile-calibration and docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
+    passBar:
+      "the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live 768 x 432 WebGPU renderer",
   },
 ];
 
@@ -1201,6 +1211,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close desktop launcher reproducibility gate",
     exitProof:
       "npm run fluid:desktop-launcher passes with a signed app bundle, clean Desktop symlink target, nonblank/varied WebGPU pixels, and committed FG-33 evidence",
+  },
+  {
+    id: "FG-34-T01",
+    milestone: "FG-34",
+    status: "done",
+    title: "Define default-profile calibration checks",
+    exitProof:
+      "fluidDefaultProfileCalibration.ts requires real Ocean Impact Lab default storage, a valid FG-23 calibration profile, no fluid-tier environment overrides, calibrated-auto ultra selection, and nonblank WebGPU pixels",
+  },
+  {
+    id: "FG-34-T02",
+    milestone: "FG-34",
+    status: "done",
+    title: "Install calibration into the real desktop profile",
+    exitProof:
+      "fluidDefaultProfileCalibration.report.ts writes fluid-calibration.v1.json into /Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game and verifies the profile round-trip",
+  },
+  {
+    id: "FG-34-T03",
+    milestone: "FG-34",
+    status: "done",
+    title: "Close default-profile calibrated Desktop launch gate",
+    exitProof:
+      "npm run fluid:default-profile-calibration launches /Users/sasha/Desktop/Ocean Impact Lab.app without fluid-tier env overrides and proves calibrated-auto ultra on the 768 x 432 WebGPU renderer",
   },
 ];
 

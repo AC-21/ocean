@@ -51,7 +51,7 @@ async function createMainWindow() {
     minHeight: 720,
     minWidth: 1040,
     icon: appIconPath,
-    show: false,
+    show: true,
     title: "Ocean Impact Lab",
     webPreferences: {
       contextIsolation: true,
@@ -63,7 +63,13 @@ async function createMainWindow() {
     width: 1360,
   });
 
-  window.once("ready-to-show", () => window.show());
+  const revealWindow = createMainWindowRevealer(window);
+  const revealFallback = setTimeout(revealWindow, 1200);
+  revealFallback.unref?.();
+  window.once("closed", () => clearTimeout(revealFallback));
+  window.once("ready-to-show", revealWindow);
+  window.webContents.once("did-finish-load", revealWindow);
+  window.webContents.once("did-fail-load", revealWindow);
   window.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//i.test(url)) void shell.openExternal(url);
     return { action: "deny" };
@@ -76,11 +82,25 @@ async function createMainWindow() {
     const url = new URL(devServerUrl);
     appendFluidTierQuery(url.searchParams, await fluidTierQueryObject());
     await window.loadURL(url.toString());
+    revealWindow();
     return;
   }
 
   const fluidTierQuery = await fluidTierQueryObject();
   await window.loadFile(path.join(appRoot, "dist", "index.html"), Object.keys(fluidTierQuery).length > 0 ? { query: fluidTierQuery } : undefined);
+  revealWindow();
+}
+
+function createMainWindowRevealer(window) {
+  let revealed = false;
+  return () => {
+    if (revealed || window.isDestroyed()) return;
+    revealed = true;
+    if (window.isMinimized()) window.restore();
+    if (!window.isVisible()) window.show();
+    window.focus();
+    app.focus({ steal: true });
+  };
 }
 
 function appendFluidTierQuery(searchParams, query) {
