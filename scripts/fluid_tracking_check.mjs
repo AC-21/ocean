@@ -45,6 +45,7 @@ const requiredFiles = [
   "docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json",
   "docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json",
   "docs/evidence/FG-39-experimental-live-grid-2026-06-08.json",
+  "docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -118,6 +119,9 @@ const requiredFiles = [
   "src/fluid/fluidExperimentalLiveGrid.ts",
   "src/fluid/fluidExperimentalLiveGrid.report.ts",
   "src/fluid/fluidExperimentalLiveGrid.test.ts",
+  "src/fluid/fluidExperimentalReferenceOutcomes.ts",
+  "src/fluid/fluidExperimentalReferenceOutcomes.report.ts",
+  "src/fluid/fluidExperimentalReferenceOutcomes.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -137,8 +141,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -222,6 +226,9 @@ const highResolutionHeadroomTest = files.get("src/fluid/fluidHighResolutionHeadr
 const experimentalLiveGrid = files.get("src/fluid/fluidExperimentalLiveGrid.ts") ?? "";
 const experimentalLiveGridReport = files.get("src/fluid/fluidExperimentalLiveGrid.report.ts") ?? "";
 const experimentalLiveGridTest = files.get("src/fluid/fluidExperimentalLiveGrid.test.ts") ?? "";
+const experimentalReferenceOutcomes = files.get("src/fluid/fluidExperimentalReferenceOutcomes.ts") ?? "";
+const experimentalReferenceOutcomesReport = files.get("src/fluid/fluidExperimentalReferenceOutcomes.report.ts") ?? "";
+const experimentalReferenceOutcomesTest = files.get("src/fluid/fluidExperimentalReferenceOutcomes.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -277,6 +284,7 @@ const fg36Evidence = files.get("docs/evidence/FG-36-installed-reference-outcomes
 const fg37Evidence = files.get("docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json") ?? "";
 const fg38Evidence = files.get("docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json") ?? "";
 const fg39Evidence = files.get("docs/evidence/FG-39-experimental-live-grid-2026-06-08.json") ?? "";
+const fg40Evidence = files.get("docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2919,6 +2927,100 @@ if (
   !fg39Evidence.includes("\"particlesNoFullGridReadback\": true")
 ) {
   errors.push("FG-39 evidence must record a passing packaged experimental live 1024 x 576 WebGPU grid with smooth pacing and no-readback telemetry");
+}
+
+if (!packageJson.includes("\"fluid:experimental-reference-outcomes\"") || !packageJson.includes("src/fluid/fluidExperimentalReferenceOutcomes.report.ts")) {
+  errors.push("package.json must expose the FG-40 experimental reference outcomes command");
+}
+
+if (!tracking.includes("FG-40-T03") || !tracking.includes("FG-40-experimental-reference-outcomes-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/43")) {
+  errors.push("docs/TRACKING.md must record FG-40 experimental reference outcomes evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-40") ||
+  !contract.includes("G-FG-40") ||
+  !contract.includes("Experimental high-resolution reference outcomes gate") ||
+  !contract.includes("npm run fluid:experimental-reference-outcomes")
+) {
+  errors.push("fluidGridContract.ts must define the FG-40 experimental reference outcomes milestone, gate, and evidence command");
+}
+
+if (
+  !experimentalReferenceOutcomes.includes("G-FG-40") ||
+  !experimentalReferenceOutcomes.includes("requiredComparisonIds") ||
+  !experimentalReferenceOutcomes.includes("capability grid") ||
+  !experimentalReferenceOutcomes.includes("live renderer grid") ||
+  !experimentalReferenceOutcomes.includes("1024") ||
+  !experimentalReferenceOutcomes.includes("576") ||
+  !experimentalReferenceOutcomes.includes("particle path used full-grid readback") ||
+  !experimentalReferenceOutcomes.includes("frame loop")
+) {
+  errors.push("fluidExperimentalReferenceOutcomes.ts must define FG-40 high-res reference comparison, runtime-grid, frame-loop, and no-readback checks");
+}
+
+if (
+  !experimentalReferenceOutcomesReport.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !experimentalReferenceOutcomesReport.includes("OCEAN_LAB_EXPERIMENTAL_REFERENCE_OUT") ||
+  !experimentalReferenceOutcomesReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !experimentalReferenceOutcomesReport.includes("1024x576") ||
+  !experimentalReferenceOutcomesReport.includes("live-concrete-drop-splash-pressure") ||
+  !experimentalReferenceOutcomesReport.includes("live-ice-static-draft") ||
+  !experimentalReferenceOutcomesReport.includes("live-foam-damped-settling") ||
+  !experimentalReferenceOutcomesReport.includes("live-concrete-sink-terminal-band") ||
+  !experimentalReferenceOutcomesReport.includes("live-leaky-drum-sink-time-prediction") ||
+  !experimentalReferenceOutcomesReport.includes("data-water-particles-readback") ||
+  !experimentalReferenceOutcomesReport.includes("G-FG-40")
+) {
+  errors.push("fluidExperimentalReferenceOutcomes.report.ts must launch the packaged app with the experimental grid and replay all live reference cases");
+}
+
+if (
+  !experimentalReferenceOutcomesTest.includes("packaged high-resolution WebGPU telemetry") ||
+  !experimentalReferenceOutcomesTest.includes("reference drift") ||
+  !experimentalReferenceOutcomesTest.includes("Canvas fallback") ||
+  !experimentalReferenceOutcomesTest.includes("full-grid readback") ||
+  !experimentalReferenceOutcomesTest.includes("G-FG-40")
+) {
+  errors.push("fluidExperimentalReferenceOutcomes.test.ts must cover FG-40 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-40") ||
+  !remap.includes("experimental-reference-outcomes") ||
+  !remap.includes("experimental 1024 x 576 live WebGPU renderer") ||
+  !remap.includes("drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink") ||
+  !remap.includes("pressure plus particle no-full-grid-readback")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-40 experimental reference outcomes gate and evidence");
+}
+
+if (
+  !fg40Evidence.includes("\"gate\": \"G-FG-40\"") ||
+  !fg40Evidence.includes("\"pass\": true") ||
+  !fg40Evidence.includes("\"failures\": []") ||
+  !fg40Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg40Evidence.includes("\"preferredTier\": \"ultra\"") ||
+  !fg40Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg40Evidence.includes("\"capabilityGrid\": \"768x432\"") ||
+  !fg40Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg40Evidence.includes("\"runtimeGridOverride\"") ||
+  !fg40Evidence.includes("\"cellsX\": 1024") ||
+  !fg40Evidence.includes("\"comparisonCount\": 10") ||
+  !fg40Evidence.includes("\"live-drop-speed-reference\"") ||
+  !fg40Evidence.includes("\"live-splash-height-reference\"") ||
+  !fg40Evidence.includes("\"live-ice-equilibrium-submerged-fraction-reference\"") ||
+  !fg40Evidence.includes("\"live-foam-settled-draft-error\"") ||
+  !fg40Evidence.includes("\"live-concrete-terminal-speed-reference\"") ||
+  !fg40Evidence.includes("\"live-leaky-drum-sink-time-ratio-reference\"") ||
+  !fg40Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg40Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg40Evidence.includes("\"pressureActive\": true") ||
+  !fg40Evidence.includes("\"particlesActive\": true") ||
+  !fg40Evidence.includes("\"particlesNoFullGridReadbackPerFrame\": true") ||
+  !fg40Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-40 evidence must record passing high-resolution reference outcomes with live 1024 x 576 WebGPU telemetry and no-readback proof");
 }
 
 if (errors.length > 0) {

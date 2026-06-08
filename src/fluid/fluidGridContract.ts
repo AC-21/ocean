@@ -40,7 +40,8 @@ export type FluidGridMilestoneId =
   | "FG-36"
   | "FG-37"
   | "FG-38"
-  | "FG-39";
+  | "FG-39"
+  | "FG-40";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -82,7 +83,8 @@ export type FluidGridGateId =
   | "G-FG-36"
   | "G-FG-37"
   | "G-FG-38"
-  | "G-FG-39";
+  | "G-FG-39"
+  | "G-FG-40";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -189,6 +191,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-37", title: "Installed reference pacing envelope gate", gate: "G-FG-37" },
   { id: "FG-38", title: "Experimental high-resolution grid headroom gate", gate: "G-FG-38" },
   { id: "FG-39", title: "Experimental high-resolution live renderer gate", gate: "G-FG-39" },
+  { id: "FG-40", title: "Experimental high-resolution reference outcomes gate", gate: "G-FG-40" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -462,6 +465,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:experimental-live-grid and docs/evidence/FG-39-experimental-live-grid-2026-06-08.json",
     passBar:
       "the packaged Desktop app keeps default calibrated capability selection capped at ultra 768 x 432 while an explicit experimental runtime flag drives the live WebGPU renderer at 1024 x 576 with smooth idle and concrete-impact pacing, active pressure/particles/coupling, and no full-grid readback",
+  },
+  {
+    id: "G-FG-40",
+    blocks: "FG-40",
+    evidence: "npm run fluid:experimental-reference-outcomes and docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
+    passBar:
+      "the packaged Desktop app runs the experimental 1024 x 576 live WebGPU renderer through drop, splash, float, sink, and damping reference cases while capability selection remains capped at ultra 768 x 432 and no full-grid readback is used",
   },
 ];
 
@@ -1405,6 +1415,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close experimental live high-resolution grid gate",
     exitProof:
       "npm run fluid:experimental-live-grid passes with smooth idle and concrete-impact display pacing on the live high-resolution grid plus committed FG-39 evidence",
+  },
+  {
+    id: "FG-40-T01",
+    milestone: "FG-40",
+    status: "done",
+    title: "Define experimental high-resolution reference outcome checks",
+    exitProof:
+      "fluidExperimentalReferenceOutcomes.ts requires capability selection to remain ultra 768 x 432 while the live renderer grid is 1024 x 576 and all reference comparisons, pressure, particle, coupling, frame-loop, and no-readback telemetry pass",
+  },
+  {
+    id: "FG-40-T02",
+    milestone: "FG-40",
+    status: "done",
+    title: "Replay reference outcomes through the experimental live grid",
+    exitProof:
+      "fluidExperimentalReferenceOutcomes.report.ts launches the packaged app with OCEAN_LAB_FLUID_TIER=ultra and OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576, then replays concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference cases",
+  },
+  {
+    id: "FG-40-T03",
+    milestone: "FG-40",
+    status: "done",
+    title: "Close experimental high-resolution reference outcome gate",
+    exitProof:
+      "npm run fluid:experimental-reference-outcomes passes with all reference comparison bands, active WebGPU telemetry, fixed-step frame-loop stats, no-readback proof, and committed FG-40 evidence",
   },
 ];
 

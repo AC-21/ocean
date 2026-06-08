@@ -1122,6 +1122,35 @@ Experimental live grid evidence:
   report no full-grid readback.
 - Gate: passed.
 
+FG-40 extends the experimental live grid from renderer/pacing proof into
+reference-outcome proof for the experimental 1024 x 576 live WebGPU renderer.
+The packaged app launches with
+`OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576`, keeps capability selection capped
+at ultra `768 x 432`, and replays the same physical reference envelope used by
+the ultra gate against the live `1024 x 576` WebGPU renderer.
+
+Experimental reference outcome evidence:
+
+- Command: `npm run fluid:experimental-reference-outcomes`.
+- Gate: `G-FG-40`.
+- Evidence snapshot:
+  `docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json`.
+- Runtime invariant: capability selection stays `ultra` at `768 x 432`;
+  runtime grid override and live canvas grid must both be `1024 x 576`.
+- Reference scope: concrete drop/splash, ice float, foam damping, concrete
+  sink, and leaky-drum sink cases must preserve the existing reference bands
+  for impact speed, splash height, hydrostatic draft, equilibrium damping,
+  terminal sink speed, sink phase, and leak-rate sink-time ratio.
+- Measured reference outcomes: concrete impact speed `12.299 m/s`, splash
+  height `2.124 m`, ice equilibrium submerged fraction `0.8946`, ice draft
+  error `0.0021 m`, foam draft error `0.0144 m`, foam buoyancy error ratio
+  `0.0675`, concrete terminal sink speed `3.373 m/s`, and leaky-drum sink-time
+  ratio `0.2233` all stayed inside their accepted bands.
+- Telemetry proof: WebGPU renderer/context, bounded-pressure live solver,
+  localized particle splash, object-grid coupling, 120 Hz fixed-step frame-loop
+  stats, and pressure plus particle no-full-grid-readback flags must remain
+  active while the high-resolution renderer is attached.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1249,6 +1278,11 @@ Experimental live grid evidence:
     the actual packaged WebGPU canvas through an explicit
     `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` launch flag and require smooth live
     pacing plus no full-grid readback.
+37. Experimental high-resolution reference outcomes: replay the physical
+    reference packet through the explicit live `1024 x 576` renderer and require
+    drop, splash, float, sink, and damping comparisons to stay inside accepted
+    bands with active pressure, particle, coupling, frame-loop, and no-readback
+    evidence.
 
 ## Resolution Ladder
 

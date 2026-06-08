@@ -1,64 +1,20 @@
-import type { OceanPhysicsLiveSnapshot } from "../OceanPhysicsApp";
+import type { GridFluidCouplingForces } from "../physicsOcean";
 import type { FluidFrameLoopStats } from "./fluidFrameLoop";
 import type { FluidGridTierId } from "./fluidGridContract";
-import type { FluidWaterRenderStats } from "./fluidWaterRenderer";
-import type { GridFluidCouplingForces } from "../physicsOcean";
+import type { FluidWaterRenderStats, FluidWaterRuntimeGridDimensions } from "./fluidWaterRenderer";
+import type {
+  FluidReferenceCanvasTelemetry,
+  FluidReferenceFrameLoopCaseStats,
+  FluidReferenceOutcomeCase,
+  FluidReferenceOutcomeCategory,
+  FluidReferenceOutcomeComparison,
+} from "./fluidUltraReferenceOutcomes";
 
-export type FluidUltraReferenceOutcomeGate = "G-FG-22";
-export type FluidReferenceOutcomeCategory = "damping" | "drop" | "float" | "sink" | "splash";
+export type FluidExperimentalReferenceOutcomesGate = "G-FG-40";
 
-export type FluidReferenceOutcomeComparison = {
-  actual: number;
-  category: FluidReferenceOutcomeCategory;
-  expected: {
-    min: number;
-    max: number;
-  };
-  id: string;
-  pass: boolean;
-  unit: string;
-};
-
-export type FluidReferenceCanvasTelemetry = {
-  forceBoundN: number;
-  frames: number;
-  grid: string | null;
-  noFullGridReadbackPerFrame: boolean;
-  particles: string | null;
-  particlesActive: boolean;
-  particlesNoFullGridReadbackPerFrame?: boolean;
-  pressure: string | null;
-  pressureActive: boolean;
-  renderer: string | null;
-  status: string | null;
-  tier: string | null;
-  verticalPressureForceN: number;
-  waterContext: string | null;
-};
-
-export type FluidReferenceFrameLoopCaseStats = FluidFrameLoopStats & {
-  caseId: string;
-};
-
-export type FluidReferenceOutcomeCase = {
-  category: FluidReferenceOutcomeCategory | "drop+splash";
-  consumedCoupling?: GridFluidCouplingForces | null;
-  frameLoop?: FluidReferenceFrameLoopCaseStats | null;
-  id: string;
-  largeLeakSecondsUntilSink?: number | null;
-  pass: boolean;
-  smallLeakSecondsUntilSink?: number | null;
-  snapshot: OceanPhysicsLiveSnapshot;
-  stats?: FluidWaterRenderStats | null;
-  telemetry: FluidReferenceCanvasTelemetry;
-};
-
-export type FluidUltraReferenceOutcomesReport = {
+export type FluidExperimentalReferenceOutcomesReport = {
   capability: {
-    grid: {
-      cellsX: number;
-      cellsY: number;
-    };
+    grid: FluidWaterRuntimeGridDimensions;
     selectedTier: FluidGridTierId;
   } | null;
   cases: FluidReferenceOutcomeCase[];
@@ -67,29 +23,28 @@ export type FluidUltraReferenceOutcomesReport = {
   failures: string[];
   finalStats: FluidWaterRenderStats | null;
   frameLoop: FluidFrameLoopStats | null;
-  gate: FluidUltraReferenceOutcomeGate;
+  gate: FluidExperimentalReferenceOutcomesGate;
   generatedAt: string;
   launchMode: "electron-source" | "packaged-app";
   noFullGridReadbackPerFrame: boolean;
   pass: boolean;
   preferredTier: FluidGridTierId | "auto";
-  selectedGrid: {
-    cellsX: number;
-    cellsY: number;
-  };
+  runtimeGrid: FluidWaterRuntimeGridDimensions;
+  runtimeGridOverride: FluidWaterRuntimeGridDimensions | null;
   selectedTier: FluidGridTierId;
   summary: {
     caseCount: number;
     categories: FluidReferenceOutcomeCategory[];
     comparisonCount: number;
+    capabilityGrid: string;
     liveGrid: string;
     pressureForceBoundN: number;
   };
   telemetry: FluidReferenceCanvasTelemetry;
 };
 
-export type FluidUltraReferenceOutcomesOptions = {
-  capability: FluidUltraReferenceOutcomesReport["capability"];
+export type FluidExperimentalReferenceOutcomesOptions = {
+  capability: FluidExperimentalReferenceOutcomesReport["capability"];
   cases: FluidReferenceOutcomeCase[];
   comparisons: FluidReferenceOutcomeComparison[];
   consoleErrors?: string[];
@@ -97,15 +52,18 @@ export type FluidUltraReferenceOutcomesOptions = {
   finalStats: FluidWaterRenderStats | null;
   frameLoop: FluidFrameLoopStats | null;
   generatedAt?: string;
-  launchMode: FluidUltraReferenceOutcomesReport["launchMode"];
+  launchMode: FluidExperimentalReferenceOutcomesReport["launchMode"];
   noFullGridReadbackPerFrame: boolean;
   pageErrors?: string[];
   preferredTier: FluidGridTierId | "auto";
-  selectedGrid: FluidUltraReferenceOutcomesReport["selectedGrid"];
+  runtimeGrid: FluidWaterRuntimeGridDimensions;
+  runtimeGridOverride: FluidWaterRuntimeGridDimensions | null;
   selectedTier: FluidGridTierId;
   telemetry: FluidReferenceCanvasTelemetry;
 };
 
+const expectedCapabilityGrid = { cellsX: 768, cellsY: 432 };
+const expectedRuntimeGrid = { cellsX: 1024, cellsY: 576 };
 const requiredComparisonIds = [
   "live-drop-speed-reference",
   "live-splash-height-reference",
@@ -121,21 +79,24 @@ const requiredComparisonIds = [
 
 const requiredCategories: FluidReferenceOutcomeCategory[] = ["damping", "drop", "float", "sink", "splash"];
 
-export function createFluidUltraReferenceOutcomesReport(options: FluidUltraReferenceOutcomesOptions): FluidUltraReferenceOutcomesReport {
+export function createFluidExperimentalReferenceOutcomesReport(
+  options: FluidExperimentalReferenceOutcomesOptions
+): FluidExperimentalReferenceOutcomesReport {
   const comparisonIds = new Set(options.comparisons.map((comparisonEntry) => comparisonEntry.id));
   const comparisonCategories = new Set(options.comparisons.map((comparisonEntry) => comparisonEntry.category));
   const dropCase = options.cases.find((entry) => entry.id === "live-concrete-drop-splash-pressure");
-  const activeFrameLoops = options.cases.map((entry) => entry.frameLoop).filter((entry): entry is FluidReferenceFrameLoopCaseStats => entry !== null && entry !== undefined);
-  const liveGrid = `${options.selectedGrid.cellsX}x${options.selectedGrid.cellsY}`;
+  const activeFrameLoops = options.cases.map((entry) => entry.frameLoop).filter((entry): entry is FluidReferenceFrameLoopCaseStats => Boolean(entry));
+  const capabilityGrid = gridLabel(options.capability?.grid ?? { cellsX: 0, cellsY: 0 });
+  const liveGrid = gridLabel(options.runtimeGrid);
   const failures = [
     ...(options.launchMode === "packaged-app" ? [] : [`launch mode must be packaged-app, got ${options.launchMode}`]),
     ...(options.preferredTier === "ultra" ? [] : [`preferred tier must be ultra, got ${options.preferredTier}`]),
     ...(options.selectedTier === "ultra" ? [] : [`selected tier must be ultra, got ${options.selectedTier}`]),
-    ...(options.selectedGrid.cellsX === 768 && options.selectedGrid.cellsY === 432
-      ? []
-      : [`selected grid must be 768 x 432, got ${options.selectedGrid.cellsX} x ${options.selectedGrid.cellsY}`]),
     ...(options.capability?.selectedTier === "ultra" ? [] : [`capability selected tier must be ultra, got ${options.capability?.selectedTier ?? "missing"}`]),
-    ...(options.capability?.grid.cellsX === 768 && options.capability.grid.cellsY === 432 ? [] : ["capability grid must be 768 x 432."]),
+    ...gridFailures("capability grid", options.capability?.grid ?? { cellsX: 0, cellsY: 0 }, expectedCapabilityGrid),
+    ...(options.runtimeGridOverride ? [] : ["experimental runtime grid override was missing"]),
+    ...(options.runtimeGridOverride ? gridFailures("runtime grid override", options.runtimeGridOverride, expectedRuntimeGrid) : []),
+    ...gridFailures("live renderer grid", options.runtimeGrid, expectedRuntimeGrid),
     ...requiredComparisonIds.flatMap((id) => (comparisonIds.has(id) ? [] : [`missing reference comparison ${id}`])),
     ...requiredCategories.flatMap((category) => (comparisonCategories.has(category) ? [] : [`missing reference category ${category}`])),
     ...options.comparisons.flatMap((entry) =>
@@ -151,7 +112,7 @@ export function createFluidUltraReferenceOutcomesReport(options: FluidUltraRefer
     ...(dropCase?.consumedCoupling?.active ? [] : ["combined grid coupling never became active during concrete drop"]),
     ...(dropCase?.stats?.lastPressure?.noFullGridReadbackPerFrame ? [] : ["pressure path used full-grid readback during concrete drop"]),
     ...(options.finalStats?.tier === "ultra" ? [] : [`final renderer stats tier must be ultra, got ${options.finalStats?.tier ?? "missing"}`]),
-    ...(options.finalStats?.gridCellsX === 768 && options.finalStats.gridCellsY === 432 ? [] : ["final renderer stats grid must be 768 x 432."]),
+    ...(options.finalStats ? gridFailures("final renderer stats grid", { cellsX: options.finalStats.gridCellsX, cellsY: options.finalStats.gridCellsY }, expectedRuntimeGrid) : ["final renderer stats were missing"]),
     ...(options.noFullGridReadbackPerFrame ? [] : ["report did not preserve no-full-grid-readback telemetry"]),
     ...(activeFrameLoops.length >= 4 ? [] : ["active drop cases did not record frame-loop stats"]),
     ...activeFrameLoops.flatMap(failuresForFrameLoop),
@@ -167,15 +128,17 @@ export function createFluidUltraReferenceOutcomesReport(options: FluidUltraRefer
     failures,
     finalStats: options.finalStats,
     frameLoop: options.frameLoop,
-    gate: "G-FG-22",
+    gate: "G-FG-40",
     generatedAt: options.generatedAt ?? new Date().toISOString(),
     launchMode: options.launchMode,
     noFullGridReadbackPerFrame: options.noFullGridReadbackPerFrame,
     pass: failures.length === 0,
     preferredTier: options.preferredTier,
-    selectedGrid: options.selectedGrid,
+    runtimeGrid: options.runtimeGrid,
+    runtimeGridOverride: options.runtimeGridOverride,
     selectedTier: options.selectedTier,
     summary: {
+      capabilityGrid,
       caseCount: options.cases.length,
       categories: Array.from(comparisonCategories).sort() as FluidReferenceOutcomeCategory[],
       comparisonCount: options.comparisons.length,
@@ -194,6 +157,7 @@ function failuresForTelemetry(label: string, telemetry: FluidReferenceCanvasTele
     ...(telemetry.grid === liveGrid ? [] : [`${label} telemetry grid was ${telemetry.grid ?? "missing"}`]),
     ...(telemetry.pressure === "bounded-pressure-gradient-live-v1" ? [] : [`${label} pressure solver was ${telemetry.pressure ?? "missing"}`]),
     ...(telemetry.noFullGridReadbackPerFrame ? [] : [`${label} pressure path used full-grid readback`]),
+    ...(telemetry.particlesNoFullGridReadbackPerFrame === true ? [] : [`${label} particle path used full-grid readback`]),
   ];
 }
 
@@ -204,4 +168,14 @@ function failuresForFrameLoop(entry: FluidReferenceFrameLoopCaseStats): string[]
     ...(entry.maxSubstepsObserved <= entry.maxSubstepsPerFrame ? [] : [`frame loop for ${entry.caseId} exceeded max substeps`]),
     ...(entry.droppedDebtS === 0 ? [] : [`frame loop for ${entry.caseId} dropped simulation debt ${entry.droppedDebtS}`]),
   ];
+}
+
+function gridFailures(label: string, actual: FluidWaterRuntimeGridDimensions, expected: FluidWaterRuntimeGridDimensions): string[] {
+  return actual.cellsX === expected.cellsX && actual.cellsY === expected.cellsY
+    ? []
+    : [`${label} must be ${expected.cellsX} x ${expected.cellsY}, got ${actual.cellsX} x ${actual.cellsY}`];
+}
+
+function gridLabel(grid: FluidWaterRuntimeGridDimensions): string {
+  return `${grid.cellsX}x${grid.cellsY}`;
 }
