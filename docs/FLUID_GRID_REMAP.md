@@ -229,6 +229,48 @@ Latest frame-loop evidence:
 - Renderer remained `webgpu-grid-primary-v1` with `webgpu` context.
 - Gate: passed.
 
+FG-09 is complete as of 2026-06-08. It locks the next solver direction before
+more realism work lands. The decision is a hybrid GPU heightfield/free-surface
+grid plus localized particle splash layer: broad water lives in WebGPU grid
+buffers, while energetic object entry spawns bounded particles for spray, foam,
+sheets, entrained air, and secondary reentry.
+
+Latest solver architecture evidence:
+
+- Command: `npm run fluid:architecture`.
+- Report: `reports/fluid-solver-architecture-latest.json`.
+- Gate: `G-FG-09`.
+- Evidence snapshot:
+  `docs/evidence/FG-09-solver-architecture-2026-06-08.json`.
+- Recommended option: `hybrid-heightfield-particles`.
+- Accepted core: WebGPU shallow-water/free-surface grid for broad waves, local
+  particle layer for impact detail, CPU reference fixtures for calibration.
+- Rejected as the immediate production path: full 3D Eulerian CFD, particle-only
+  SPH/PBF water, and Stable-Fluids-style Eulerian water.
+- Deferred as incomplete by itself: GPU heightfield-only water, because it lacks
+  enough local detail for violent object-entry splashes.
+- Follow-on gates: `G-FG-10` reference ingestion, `G-FG-11` conservative
+  shallow-water upgrade, `G-FG-12` localized particle splash layer, and
+  `G-FG-13` coupled packaged-app calibration.
+- Gate: passed.
+
+Primary sources encoded in the gate:
+
+- [Stable Fluids](https://graphics.stanford.edu/courses/cs448-01-spring/papers/stam.pdf)
+  for the stable semi-Lagrangian solver family and its large-timestep tradeoff.
+- [Fluid Simulation, SIGGRAPH 2006 Course Notes](https://www.cs.ubc.ca/~rbridson/fluidsimulation/2006/fluids_notes.pdf)
+  for full 3D flow, free surfaces, particle-in-cell methods, and solid-fluid
+  coupling.
+- [Real-time Simulation of Large Bodies of Water with Small Scale Details](https://matthias-research.github.io/pages/publications/hfFluid.pdf)
+  for the heightfield-plus-particles water architecture and two-way body
+  coupling.
+- [Position Based Fluids](https://mmacklin.com/pbf_sig_preprint.pdf) for robust
+  localized real-time particle-fluid splash behavior.
+- [Efficient Shallow Water Simulations on GPUs](https://brodtkorb.org/files/publications/brodtkorb_gs11.pdf)
+  for GPU shallow-water implementation, verification, and validation direction.
+- [Rigid Body Interaction for Large-Scale Real-Time Water Simulation](https://onlinelibrary.wiley.com/doi/10.1155/2014/580154)
+  for keeping rigid-body interaction explicit in the large-water solver path.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -250,6 +292,10 @@ Latest frame-loop evidence:
 9. Frame-loop hardening: keep physics on a bounded fixed-step accumulator so
    render cadence, UI updates, and future grid resolution changes cannot create
    variable-timestep artifacts.
+10. Solver architecture gate: use primary-source evidence to keep the production
+    path on hybrid GPU heightfield/free-surface water plus local particles,
+    rejecting demo-only or hardware-impractical paths before implementation
+    cost grows.
 
 ## Resolution Ladder
 

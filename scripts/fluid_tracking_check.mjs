@@ -14,6 +14,7 @@ const requiredFiles = [
   "docs/evidence/FG-06-fluid-calibration-2026-06-07.json",
   "docs/evidence/FG-07-local-calibration-2026-06-08.json",
   "docs/evidence/FG-08-frame-loop-2026-06-08.json",
+  "docs/evidence/FG-09-solver-architecture-2026-06-08.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -21,10 +22,11 @@ const requiredFiles = [
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
+  "src/fluid/fluidSolverArchitecture.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -41,6 +43,7 @@ const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
 const packageJson = files.get("package.json") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
+const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
@@ -49,6 +52,7 @@ const fg05Evidence = files.get("docs/evidence/FG-05-fluid-splash-2026-06-07.json
 const fg06Evidence = files.get("docs/evidence/FG-06-fluid-calibration-2026-06-07.json") ?? "";
 const fg07Evidence = files.get("docs/evidence/FG-07-local-calibration-2026-06-08.json") ?? "";
 const fg08Evidence = files.get("docs/evidence/FG-08-frame-loop-2026-06-08.json") ?? "";
+const fg09Evidence = files.get("docs/evidence/FG-09-solver-architecture-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -190,6 +194,52 @@ if (
   !fg08Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"")
 ) {
   errors.push("FG-08 evidence must record a passing fixed-step WebGPU frame-loop report");
+}
+
+if (!packageJson.includes("\"fluid:architecture\"")) {
+  errors.push("package.json must expose the FG-09 solver architecture command");
+}
+
+if (!tracking.includes("FG-09-T03") || !tracking.includes("FG-09-solver-architecture-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/12")) {
+  errors.push("docs/TRACKING.md must record FG-09 solver architecture evidence and issue mapping");
+}
+
+if (
+  !solverArchitecture.includes("hybrid-heightfield-particles") ||
+  !solverArchitecture.includes("stam-1999-stable-fluids") ||
+  !solverArchitecture.includes("chentanez-muller-2010-heightfield-particles") ||
+  !solverArchitecture.includes("brodtkorb-saetra-altinakar-2012-gpu-shallow-water") ||
+  !solverArchitecture.includes("macklin-muller-2013-position-based-fluids")
+) {
+  errors.push("fluidSolverArchitecture.ts must capture the primary-source hybrid solver decision");
+}
+
+if (
+  !remap.includes("FG-09") ||
+  !remap.includes("hybrid GPU heightfield/free-surface") ||
+  !remap.includes("localized particle splash layer") ||
+  !remap.includes("Position Based Fluids") ||
+  !remap.includes("Efficient Shallow Water Simulations on GPUs")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-09 source-backed solver architecture decision");
+}
+
+if (
+  !fg09Evidence.includes("\"gate\": \"G-FG-09\"") ||
+  !fg09Evidence.includes("\"pass\": true") ||
+  !fg09Evidence.includes("\"recommendedOptionId\": \"hybrid-heightfield-particles\"") ||
+  !fg09Evidence.includes("\"primaryReferences\"") ||
+  !fg09Evidence.includes("stam-1999-stable-fluids") ||
+  !fg09Evidence.includes("bridson-fedkiw-muller-2006-course") ||
+  !fg09Evidence.includes("chentanez-muller-2010-heightfield-particles") ||
+  !fg09Evidence.includes("macklin-muller-2013-position-based-fluids") ||
+  !fg09Evidence.includes("brodtkorb-saetra-altinakar-2012-gpu-shallow-water") ||
+  !fg09Evidence.includes("\"full-3d-eulerian\"") ||
+  !fg09Evidence.includes("\"particle-only-pbf-sph\"") ||
+  !fg09Evidence.includes("\"stable-fluids-eulerian\"") ||
+  !fg09Evidence.includes("\"G-FG-13\"")
+) {
+  errors.push("FG-09 evidence must record a passing primary-source hybrid solver decision with rejected alternatives and follow-on gates");
 }
 
 if (errors.length > 0) {

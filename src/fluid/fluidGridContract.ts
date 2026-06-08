@@ -1,8 +1,28 @@
 export type FluidBackendKind = "webgpu-compute" | "cpu-deterministic-test" | "legacy-canvas-diagnostic";
 
-export type FluidGridMilestoneId = "FG-00" | "FG-01" | "FG-02" | "FG-03" | "FG-04" | "FG-05" | "FG-06" | "FG-07" | "FG-08";
+export type FluidGridMilestoneId =
+  | "FG-00"
+  | "FG-01"
+  | "FG-02"
+  | "FG-03"
+  | "FG-04"
+  | "FG-05"
+  | "FG-06"
+  | "FG-07"
+  | "FG-08"
+  | "FG-09";
 
-export type FluidGridGateId = "G-FG-00" | "G-FG-01" | "G-FG-02" | "G-FG-03" | "G-FG-04" | "G-FG-05" | "G-FG-06" | "G-FG-07" | "G-FG-08";
+export type FluidGridGateId =
+  | "G-FG-00"
+  | "G-FG-01"
+  | "G-FG-02"
+  | "G-FG-03"
+  | "G-FG-04"
+  | "G-FG-05"
+  | "G-FG-06"
+  | "G-FG-07"
+  | "G-FG-08"
+  | "G-FG-09";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -78,6 +98,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-06", title: "Calibration and near-realism validation", gate: "G-FG-06" },
   { id: "FG-07", title: "Local GPU calibration and frame pacing", gate: "G-FG-07" },
   { id: "FG-08", title: "Fixed-step simulation loop hardening", gate: "G-FG-08" },
+  { id: "FG-09", title: "Research-backed solver architecture decision", gate: "G-FG-09" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -134,6 +155,13 @@ export const fluidGridGates: FluidGridGate[] = [
     blocks: "FG-08",
     evidence: "npm run fluid:frame-loop and docs/evidence/FG-08-frame-loop-2026-06-08.json",
     passBar: "the app advances rigid-body physics through a bounded fixed-step accumulator with WebGPU rendering active and no dropped simulation debt at normal speed",
+  },
+  {
+    id: "G-FG-09",
+    blocks: "FG-09",
+    evidence: "npm run fluid:architecture and docs/evidence/FG-09-solver-architecture-2026-06-08.json",
+    passBar:
+      "primary-source solver decision selects a hybrid GPU heightfield/free-surface grid plus localized particle splash layer, rejects incomplete immediate paths, and names the next calibration-backed gates",
   },
 ];
 
@@ -333,6 +361,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     status: "done",
     title: "Verify frame-loop hardening in Electron",
     exitProof: "npm run fluid:frame-loop records 420 fixed physics steps, 421 WebGPU water frames, max substeps 1/24, and zero dropped simulation debt",
+  },
+  {
+    id: "FG-09-T01",
+    milestone: "FG-09",
+    status: "done",
+    title: "Capture primary-source solver references",
+    exitProof:
+      "fluidSolverArchitecture.ts records Stable Fluids, SIGGRAPH fluid simulation notes, heightfield-plus-particle water, Position Based Fluids, GPU shallow-water validation, and rigid-body water interaction sources",
+  },
+  {
+    id: "FG-09-T02",
+    milestone: "FG-09",
+    status: "done",
+    title: "Score and reject candidate solver architectures",
+    exitProof:
+      "npm run fluid:architecture scores broad heightfield-only, full 3D Eulerian, particle-only, stable-fluids Eulerian, and hybrid heightfield-plus-particles options",
+  },
+  {
+    id: "FG-09-T03",
+    milestone: "FG-09",
+    status: "done",
+    title: "Define the next implementation gates from the selected architecture",
+    exitProof:
+      "FG-09 evidence names FG-10 through FG-13 gates for reference ingestion, conservative shallow-water upgrade, local particle splash, and coupled calibration",
   },
 ];
 

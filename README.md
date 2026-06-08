@@ -77,6 +77,12 @@ Run the fixed-step frame-loop gate:
 npm run fluid:frame-loop
 ```
 
+Run the research-backed solver architecture gate:
+
+```sh
+npm run fluid:architecture
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
