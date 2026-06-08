@@ -35,7 +35,8 @@ export type FluidGridMilestoneId =
   | "FG-31"
   | "FG-32"
   | "FG-33"
-  | "FG-34";
+  | "FG-34"
+  | "FG-35";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -72,7 +73,8 @@ export type FluidGridGateId =
   | "G-FG-31"
   | "G-FG-32"
   | "G-FG-33"
-  | "G-FG-34";
+  | "G-FG-34"
+  | "G-FG-35";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -174,6 +176,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-32", title: "Live surface recovery damping gate", gate: "G-FG-32" },
   { id: "FG-33", title: "Desktop launcher install reproducibility gate", gate: "G-FG-33" },
   { id: "FG-34", title: "Default-profile calibrated Desktop launch gate", gate: "G-FG-34" },
+  { id: "FG-35", title: "Visible calibrated Desktop window gate", gate: "G-FG-35" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -412,6 +415,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:default-profile-calibration and docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
     passBar:
       "the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live 768 x 432 WebGPU renderer",
+  },
+  {
+    id: "G-FG-35",
+    blocks: "FG-35",
+    evidence: "npm run fluid:desktop-visibility and docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
+    passBar:
+      "a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface",
   },
 ];
 
@@ -1235,6 +1245,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close default-profile calibrated Desktop launch gate",
     exitProof:
       "npm run fluid:default-profile-calibration launches /Users/sasha/Desktop/Ocean Impact Lab.app without fluid-tier env overrides and proves calibrated-auto ultra on the 768 x 432 WebGPU renderer",
+  },
+  {
+    id: "FG-35-T01",
+    milestone: "FG-35",
+    status: "done",
+    title: "Define visible Desktop window checks",
+    exitProof:
+      "fluidDesktopVisibility.ts requires FG-34 calibrated-auto ultra evidence, an installed-bundle process, a visible frontmost Ocean Impact Lab window, and nonblank/varied ocean viewport pixels",
+  },
+  {
+    id: "FG-35-T02",
+    milestone: "FG-35",
+    status: "done",
+    title: "Probe normal macOS Desktop launch visibility",
+    exitProof:
+      "fluidDesktopVisibility.report.ts opens /Users/sasha/Desktop/Ocean Impact Lab.app through macOS open, foregrounds the app, captures the visible window, and samples the ocean viewport crop",
+  },
+  {
+    id: "FG-35-T03",
+    milestone: "FG-35",
+    status: "done",
+    title: "Close visible calibrated Desktop window gate",
+    exitProof:
+      "npm run fluid:desktop-visibility passes with the installed calibrated process, a frontmost visible window, and committed nonblack ocean viewport evidence",
   },
 ];
 

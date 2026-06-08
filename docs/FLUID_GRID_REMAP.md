@@ -963,6 +963,34 @@ Latest default-profile calibration evidence:
   color buckets.
 - Gate: passed.
 
+FG-35 is complete as of 2026-06-08. The black-screen follow-up exposed a
+different failure class from FG-34: an Electron renderer can be alive and
+pixel-probeable while the normal macOS Desktop/Finder launch path leaves the
+user without a visible ocean window. FG-35 turns the visible-window behavior
+into a release gate. It rebuilds and calibrates the Desktop app through FG-34,
+then opens `/Users/sasha/Desktop/Ocean Impact Lab.app` with macOS `open`,
+foregrounds the installed app, captures the actual screen, crops the ocean
+viewport region from the visible window, and rejects blank or flat pixels.
+
+Latest desktop-visibility evidence:
+
+- Command: `npm run fluid:desktop-visibility`.
+- Gate: `G-FG-35`.
+- Evidence snapshot:
+  `docs/evidence/FG-35-desktop-visibility-2026-06-08.json`.
+- Normal launch proof: process comes from
+  `/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app`
+  through the Desktop launcher, not the stale workspace-local `release` bundle.
+- Calibration prerequisite: input evidence is `G-FG-34`, passing
+  `calibrated-auto` ultra, renderer `webgpu-grid-primary-v1`, context `webgpu`,
+  and grid `768 x 432`.
+- Window proof: macOS exposes a visible frontmost `Ocean Impact Lab` window
+  with on-screen geometry.
+- Ocean viewport proof: a cropped screenshot of the visible water region is
+  nonblank/varied with enough luma and color-bucket diversity to reject a
+  black surface in the ocean pane.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1072,6 +1100,10 @@ Latest default-profile calibration evidence:
     into the real Ocean Impact Lab Application Support storage, then prove the
     Desktop launcher selects calibrated-auto ultra without fluid-tier
     environment overrides.
+33. Visible Desktop launch: open the Desktop app through the normal macOS
+    launch path, prove the installed calibrated process owns a visible
+    frontmost window, and sample the ocean viewport pixels so a black screen
+    cannot pass through hidden renderer automation.
 
 ## Resolution Ladder
 

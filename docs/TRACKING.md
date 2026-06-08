@@ -42,6 +42,7 @@ and GitHub issue mapping.
 | FG-32 | Live surface recovery damping gate | Done | G-FG-32 |
 | FG-33 | Desktop launcher install reproducibility gate | Done | G-FG-33 |
 | FG-34 | Default-profile calibrated Desktop launch gate | Done | G-FG-34 |
+| FG-35 | Visible calibrated Desktop window gate | Done | G-FG-35 |
 
 ## Gates
 
@@ -82,6 +83,7 @@ and GitHub issue mapping.
 | G-FG-32 | FG-32 | `npm run fluid:surface-recovery`; `docs/evidence/FG-32-surface-recovery-2026-06-08.json` | the packaged ultra WebGPU renderer shows post-impact visible surface agitation, foam, and pressure-work recovery over a deep-water concrete drop while maintaining active pressure, particles, coupling, fixed-step pacing, and no full-grid readback |
 | G-FG-33 | FG-33 | `npm run fluid:desktop-launcher`; `docs/evidence/FG-33-desktop-launcher-2026-06-08.json` | the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile |
 | G-FG-34 | FG-34 | `npm run fluid:default-profile-calibration`; `docs/evidence/FG-34-default-profile-calibration-2026-06-08.json` | the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live `768 x 432` WebGPU renderer |
+| G-FG-35 | FG-35 | `npm run fluid:desktop-visibility`; `docs/evidence/FG-35-desktop-visibility-2026-06-08.json` | a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface |
 
 ## Tasks
 
@@ -193,6 +195,9 @@ and GitHub issue mapping.
 | FG-34-T01 | FG-34 | Done | calibration | `fluidDefaultProfileCalibration.ts` requires real Ocean Impact Lab default storage, a valid FG-23 calibration profile, no fluid-tier environment overrides, calibrated-auto ultra selection, and nonblank WebGPU pixels |
 | FG-34-T02 | FG-34 | Done | storage | `fluidDefaultProfileCalibration.report.ts` writes `fluid-calibration.v1.json` into `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game` and verifies the profile round-trip |
 | FG-34-T03 | FG-34 | Done | verification | `npm run fluid:default-profile-calibration` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier env overrides and proves calibrated-auto ultra on the `768 x 432` WebGPU renderer |
+| FG-35-T01 | FG-35 | Done | release | `fluidDesktopVisibility.ts` requires FG-34 calibrated-auto ultra evidence, an installed-bundle process, a visible frontmost Ocean Impact Lab window, and nonblank/varied ocean viewport pixels |
+| FG-35-T02 | FG-35 | Done | verification | `fluidDesktopVisibility.report.ts` opens `/Users/sasha/Desktop/Ocean Impact Lab.app` through macOS `open`, foregrounds the app, captures the visible window, and samples the ocean viewport crop |
+| FG-35-T03 | FG-35 | Done | release | `npm run fluid:desktop-visibility` passes with the installed calibrated process, a frontmost visible window, and committed nonblack ocean viewport evidence |
 
 ## GitHub Labels
 
@@ -243,6 +248,7 @@ and GitHub issue mapping.
 | FG-32 | https://github.com/AC-21/ocean/issues/35 |
 | FG-33 | https://github.com/AC-21/ocean/issues/36 |
 | FG-34 | https://github.com/AC-21/ocean/issues/37 |
+| FG-35 | https://github.com/AC-21/ocean/issues/38 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

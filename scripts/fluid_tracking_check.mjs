@@ -40,6 +40,7 @@ const requiredFiles = [
   "docs/evidence/FG-32-surface-recovery-2026-06-08.json",
   "docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
   "docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
+  "docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -95,6 +96,9 @@ const requiredFiles = [
   "src/fluid/fluidDefaultProfileCalibration.ts",
   "src/fluid/fluidDefaultProfileCalibration.report.ts",
   "src/fluid/fluidDefaultProfileCalibration.test.ts",
+  "src/fluid/fluidDesktopVisibility.ts",
+  "src/fluid/fluidDesktopVisibility.report.ts",
+  "src/fluid/fluidDesktopVisibility.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -116,8 +120,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -182,6 +186,9 @@ const desktopLauncherTest = files.get("src/fluid/fluidDesktopLauncher.test.ts") 
 const defaultProfileCalibration = files.get("src/fluid/fluidDefaultProfileCalibration.ts") ?? "";
 const defaultProfileCalibrationReport = files.get("src/fluid/fluidDefaultProfileCalibration.report.ts") ?? "";
 const defaultProfileCalibrationTest = files.get("src/fluid/fluidDefaultProfileCalibration.test.ts") ?? "";
+const desktopVisibility = files.get("src/fluid/fluidDesktopVisibility.ts") ?? "";
+const desktopVisibilityReport = files.get("src/fluid/fluidDesktopVisibility.report.ts") ?? "";
+const desktopVisibilityTest = files.get("src/fluid/fluidDesktopVisibility.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -235,6 +242,7 @@ const fg31Evidence = files.get("docs/evidence/FG-31-impact-energy-budget-2026-06
 const fg32Evidence = files.get("docs/evidence/FG-32-surface-recovery-2026-06-08.json") ?? "";
 const fg33Evidence = files.get("docs/evidence/FG-33-desktop-launcher-2026-06-08.json") ?? "";
 const fg34Evidence = files.get("docs/evidence/FG-34-default-profile-calibration-2026-06-08.json") ?? "";
+const fg35Evidence = files.get("docs/evidence/FG-35-desktop-visibility-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2378,6 +2386,92 @@ if (
   !fg34Evidence.includes("\"readByMainProcess\": true")
 ) {
   errors.push("FG-34 evidence must record a passing real default-profile calibrated Desktop launch with calibrated-auto ultra WebGPU render proof");
+}
+
+if (!packageJson.includes("\"fluid:desktop-visibility\"") || !packageJson.includes("src/fluid/fluidDesktopVisibility.report.ts")) {
+  errors.push("package.json must expose the FG-35 desktop visibility command");
+}
+
+if (!tracking.includes("FG-35-T03") || !tracking.includes("FG-35-desktop-visibility-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/38")) {
+  errors.push("docs/TRACKING.md must record FG-35 visible Desktop window evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-35") ||
+  !contract.includes("G-FG-35") ||
+  !contract.includes("Visible calibrated Desktop window gate") ||
+  !contract.includes("npm run fluid:desktop-visibility")
+) {
+  errors.push("fluidGridContract.ts must define the FG-35 visible Desktop window milestone, gate, and evidence command");
+}
+
+if (
+  !desktopVisibility.includes("G-FG-35") ||
+  !desktopVisibility.includes("defaultProfileEvidence") ||
+  !desktopVisibility.includes("installedBundleProcess") ||
+  !desktopVisibility.includes("frontmost") ||
+  !desktopVisibility.includes("windowCount") ||
+  !desktopVisibility.includes("ocean viewport average luma") ||
+  !desktopVisibility.includes("ocean viewport color buckets")
+) {
+  errors.push("fluidDesktopVisibility.ts must define FG-35 calibrated profile, installed process, window, and ocean viewport checks");
+}
+
+if (
+  !desktopVisibilityReport.includes("open") ||
+  !desktopVisibilityReport.includes("screencapture") ||
+  !desktopVisibilityReport.includes("System Events") ||
+  !desktopVisibilityReport.includes("OCEAN_LAB_DESKTOP_VISIBILITY_DEFAULT_PROFILE_IN") ||
+  !desktopVisibilityReport.includes("oceanViewportCrop") ||
+  !desktopVisibilityReport.includes("reports/fluid-default-profile-calibration-latest.json") ||
+  !desktopVisibilityReport.includes("G-FG-35")
+) {
+  errors.push("fluidDesktopVisibility.report.ts must open the normal Desktop app, foreground it, screenshot it, and crop the ocean viewport");
+}
+
+if (
+  !desktopVisibilityTest.includes("stale high-tier") ||
+  !desktopVisibilityTest.includes("not user-visible") ||
+  !desktopVisibilityTest.includes("black or flat") ||
+  !desktopVisibilityTest.includes("not the installed bundle") ||
+  !desktopVisibilityTest.includes("G-FG-35")
+) {
+  errors.push("fluidDesktopVisibility.test.ts must cover FG-35 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-35") ||
+  !remap.includes("desktop-visibility") ||
+  !remap.includes("normal macOS Desktop") ||
+  !remap.includes("visible frontmost") ||
+  !remap.includes("black surface")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-35 visible Desktop launch gate and evidence");
+}
+
+if (
+  !fg35Evidence.includes("\"gate\": \"G-FG-35\"") ||
+  !fg35Evidence.includes("\"pass\": true") ||
+  !fg35Evidence.includes("\"failures\": []") ||
+  !fg35Evidence.includes("\"sourcePath\": \"reports/fluid-default-profile-calibration-latest.json\"") ||
+  !fg35Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg35Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg35Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg35Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg35Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg35Evidence.includes("\"path\": \"/Users/sasha/Desktop/Ocean Impact Lab.app\"") ||
+  !fg35Evidence.includes("\"resolvesToInstalledBundle\": true") ||
+  !fg35Evidence.includes("\"targetPath\": \"/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app\"") ||
+  !fg35Evidence.includes("\"installedBundleProcess\": true") ||
+  !fg35Evidence.includes("\"visible\": true") ||
+  !fg35Evidence.includes("\"frontmost\": true") ||
+  !fg35Evidence.includes("\"windowCount\": 1") ||
+  !fg35Evidence.includes("\"title\": \"Ocean Impact Lab\"") ||
+  !fg35Evidence.includes("\"onScreen\": true") ||
+  !fg35Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg35Evidence.includes("\"variety\": \"varied\"")
+) {
+  errors.push("FG-35 evidence must record a normal visible calibrated Desktop launch with nonblack ocean viewport pixels");
 }
 
 if (errors.length > 0) {
