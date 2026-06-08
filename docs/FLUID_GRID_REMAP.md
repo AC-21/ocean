@@ -615,6 +615,35 @@ Latest ultra renderer evidence:
   real time, and no Canvas fallback.
 - Gate: passed.
 
+FG-22 is complete as of 2026-06-08. It proves the ultra renderer is not merely
+a fast display mode; it can carry the live reference-outcome checks for drop,
+splash, float, sink, and damping. The packaged app launches with
+`OCEAN_LAB_FLUID_TIER=ultra`, selects the live `768 x 432` WebGPU grid, and
+then replays the concrete, ice, foam, concrete-sink, and leaky-drum scenarios
+used by the coupled reference gate.
+
+Latest ultra-tier live reference evidence:
+
+- Command: `npm run fluid:ultra-reference-outcomes`.
+- Runtime: packaged macOS app with `OCEAN_LAB_FLUID_TIER=ultra`.
+- Gate: `G-FG-22`.
+- Evidence snapshot:
+  `docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json`.
+- Selected live tier: `ultra`, grid `768 x 432`, renderer
+  `webgpu-grid-primary-v1`, context `webgpu`.
+- Reference coverage: drop speed, splash height, ice equilibrium submerged
+  fraction, ice hydrostatic draft error, foam settled draft error, foam
+  buoyancy error, foam equilibrium window, concrete terminal sink speed,
+  concrete sink phase, and leaky-drum sink-time ratio.
+- Measured outcomes: concrete drop speed `12.2987 m/s`, splash height
+  `2.1240 m`, ice draft error `0.0064 m`, foam buoyancy error `0.0400`,
+  concrete terminal sink speed `3.3725 m/s`, and leaky-drum sink-time ratio
+  `0.2233`.
+- Telemetry discipline: pressure, particles, and object-grid coupling active
+  during concrete impact; fixed-step frame-loop evidence captured for active
+  cases; no full-grid readback; no Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -683,6 +712,11 @@ Latest ultra renderer evidence:
     packaged app's runtime, keep fallback limits intact, and prove the live
     `768 x 432` renderer sustains smooth display pacing with pressure,
     particles, and object-grid coupling active.
+23. Ultra-tier live reference replay: drive the packaged ultra renderer through
+    the concrete, ice, foam, sink, and leaky-drum reference scenarios, then
+    verify drop, splash, float, sink, and damping outcomes remain inside their
+    accepted bands while pressure, particles, object-grid coupling, fixed-step
+    telemetry, and no-full-grid-readback discipline stay intact.
 
 ## Resolution Ladder
 

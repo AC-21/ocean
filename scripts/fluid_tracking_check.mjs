@@ -27,6 +27,7 @@ const requiredFiles = [
   "docs/evidence/FG-19-display-pacing-2026-06-08.json",
   "docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
   "docs/evidence/FG-21-ultra-renderer-2026-06-08.json",
+  "docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -46,6 +47,9 @@ const requiredFiles = [
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
+  "src/fluid/fluidUltraReferenceOutcomes.ts",
+  "src/fluid/fluidUltraReferenceOutcomes.report.ts",
+  "src/fluid/fluidUltraReferenceOutcomes.test.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
@@ -58,8 +62,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -88,6 +92,9 @@ const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.t
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
+const ultraReferenceOutcomes = files.get("src/fluid/fluidUltraReferenceOutcomes.ts") ?? "";
+const ultraReferenceOutcomesReport = files.get("src/fluid/fluidUltraReferenceOutcomes.report.ts") ?? "";
+const ultraReferenceOutcomesTest = files.get("src/fluid/fluidUltraReferenceOutcomes.test.ts") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
@@ -119,6 +126,7 @@ const fg18Evidence = files.get("docs/evidence/FG-18-live-reference-outcomes-2026
 const fg19Evidence = files.get("docs/evidence/FG-19-display-pacing-2026-06-08.json") ?? "";
 const fg20Evidence = files.get("docs/evidence/FG-20-resolution-scaling-2026-06-08.json") ?? "";
 const fg21Evidence = files.get("docs/evidence/FG-21-ultra-renderer-2026-06-08.json") ?? "";
+const fg22Evidence = files.get("docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1053,6 +1061,83 @@ if (
   !fg21Evidence.includes("\"worstDroppedFrameRatio\": 0")
 ) {
   errors.push("FG-21 evidence must record a passing packaged ultra live renderer report with smooth display pacing and active drop telemetry");
+}
+
+if (!packageJson.includes("\"fluid:ultra-reference-outcomes\"") || !packageJson.includes("src/fluid/fluidUltraReferenceOutcomes.report.ts")) {
+  errors.push("package.json must expose the FG-22 packaged ultra-reference-outcomes command");
+}
+
+if (!tracking.includes("FG-22-T03") || !tracking.includes("FG-22-ultra-reference-outcomes-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/25")) {
+  errors.push("docs/TRACKING.md must record FG-22 ultra reference outcome evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-22") ||
+  !contract.includes("G-FG-22") ||
+  !contract.includes("Ultra-tier live reference outcome gate") ||
+  !contract.includes("npm run fluid:ultra-reference-outcomes")
+) {
+  errors.push("fluidGridContract.ts must define the FG-22 ultra reference outcome milestone, gate, and evidence command");
+}
+
+if (
+  !ultraReferenceOutcomes.includes("G-FG-22") ||
+  !ultraReferenceOutcomes.includes("requiredComparisonIds") ||
+  !ultraReferenceOutcomes.includes("selected tier must be ultra") ||
+  !ultraReferenceOutcomes.includes("combined grid coupling never became active") ||
+  !ultraReferenceOutcomes.includes("frame loop for")
+) {
+  errors.push("fluidUltraReferenceOutcomes.ts must define the FG-22 ultra reference outcome gate and failure checks");
+}
+
+if (
+  !ultraReferenceOutcomesReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !ultraReferenceOutcomesReport.includes("window.__fluidGridPreferredTier === \"ultra\"") ||
+  !ultraReferenceOutcomesReport.includes("data-water-grid") ||
+  !ultraReferenceOutcomesReport.includes("live-concrete-drop-splash-pressure") ||
+  !ultraReferenceOutcomesReport.includes("live-leaky-drum-sink-time-ratio-reference")
+) {
+  errors.push("fluidUltraReferenceOutcomes.report.ts must launch the packaged ultra renderer and drive the live reference scenarios");
+}
+
+if (
+  !ultraReferenceOutcomesTest.includes("createFluidUltraReferenceOutcomesReport") ||
+  !ultraReferenceOutcomesTest.includes("rejects a high-tier live replay") ||
+  !ultraReferenceOutcomesTest.includes("particle splash feedback never became active")
+) {
+  errors.push("fluidUltraReferenceOutcomes.test.ts must cover FG-22 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-22") ||
+  !remap.includes("Ultra-tier live reference") ||
+  !remap.includes("fluid:ultra-reference-outcomes") ||
+  !remap.includes("drop, splash, float, sink, and damping")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-22 ultra live reference outcome gate and evidence");
+}
+
+if (
+  !fg22Evidence.includes("\"gate\": \"G-FG-22\"") ||
+  !fg22Evidence.includes("\"pass\": true") ||
+  !fg22Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg22Evidence.includes("\"preferredTier\": \"ultra\"") ||
+  !fg22Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg22Evidence.includes("\"cellsX\": 768") ||
+  !fg22Evidence.includes("\"cellsY\": 432") ||
+  !fg22Evidence.includes("\"liveGrid\": \"768x432\"") ||
+  !fg22Evidence.includes("\"caseCount\": 5") ||
+  !fg22Evidence.includes("\"comparisonCount\": 10") ||
+  !fg22Evidence.includes("\"live-drop-speed-reference\"") ||
+  !fg22Evidence.includes("\"live-splash-height-reference\"") ||
+  !fg22Evidence.includes("\"live-foam-settled-buoyancy-error\"") ||
+  !fg22Evidence.includes("\"live-leaky-drum-sink-time-ratio-reference\"") ||
+  !fg22Evidence.includes("\"particlesActive\": true") ||
+  !fg22Evidence.includes("\"pressureActive\": true") ||
+  !fg22Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg22Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-22 evidence must record a passing packaged ultra live reference outcome report with reference comparisons and active WebGPU telemetry");
 }
 
 if (errors.length > 0) {

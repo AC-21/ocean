@@ -29,6 +29,7 @@ and GitHub issue mapping.
 | FG-19 | Packaged display pacing and smoothness gate | Done | G-FG-19 |
 | FG-20 | Ultra-tier resolution scaling gate | Done | G-FG-20 |
 | FG-21 | Opt-in ultra-tier live renderer gate | Done | G-FG-21 |
+| FG-22 | Ultra-tier live reference outcome gate | Done | G-FG-22 |
 
 ## Gates
 
@@ -56,6 +57,7 @@ and GitHub issue mapping.
 | G-FG-19 | FG-19 | `npm run fluid:display-pacing`; `docs/evidence/FG-19-display-pacing-2026-06-08.json` | the packaged app sustains smooth display pacing across idle, dense impact, and foam damping scenarios at 1x with WebGPU pressure, particles, object-grid coupling, no dropped simulation debt, and no long-task stalls from diagnostics |
 | G-FG-20 | FG-20 | `npm run fluid:resolution-scale`; `docs/evidence/FG-20-resolution-scaling-2026-06-08.json` | the packaged app benchmarks standard, high, and ultra WebGPU tiers across grid stepping, bounded pressure shallow water, and localized particle splash with timestamp-query timing, bounded memory growth, no full-grid readback, and stable ultra/high timing ratios |
 | G-FG-21 | FG-21 | `npm run fluid:ultra-renderer`; `docs/evidence/FG-21-ultra-renderer-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and sustains smooth idle and concrete-impact display pacing with pressure, particles, object-grid coupling, zero dropped simulation debt, and no Canvas fallback |
+| G-FG-22 | FG-22 | `npm run fluid:ultra-reference-outcomes`; `docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and passes live reference comparisons for drop, splash, float, sink, and damping with pressure, particles, object-grid coupling, fixed-step telemetry, and no full-grid readback |
 
 ## Tasks
 
@@ -128,6 +130,9 @@ and GitHub issue mapping.
 | FG-21-T01 | FG-21 | Done | integration | Electron passes `OCEAN_LAB_FLUID_TIER` as a `fluidTier` query parameter and `OceanPhysicsApp` routes it through `detectFluidCapability` without bypassing fallback limits |
 | FG-21-T02 | FG-21 | Done | verification | `fluidUltraRenderer.report.ts` launches the packaged app with `OCEAN_LAB_FLUID_TIER=ultra` and waits for selected tier `ultra`, grid `768 x 432`, renderer `webgpu-grid-primary-v1`, and canvas water tier `ultra` |
 | FG-21-T03 | FG-21 | Done | performance | `npm run fluid:ultra-renderer` passes idle and concrete-impact ultra display pacing with worst p95 `9.3 ms`, p99 `9.4 ms`, zero dropped-frame ratio, and zero dropped simulation debt |
+| FG-22-T01 | FG-22 | Done | calibration | `fluidUltraReferenceOutcomes.ts` defines the FG-22 ultra reference outcome gate, required comparison IDs, required categories, and failure checks for tier, grid, telemetry, coupling, and frame-loop health |
+| FG-22-T02 | FG-22 | Done | verification | `fluidUltraReferenceOutcomes.report.ts` launches the packaged app with `OCEAN_LAB_FLUID_TIER=ultra` and drives concrete, ice, foam, sink, and leaky-drum live reference scenarios |
+| FG-22-T03 | FG-22 | Done | calibration | `npm run fluid:ultra-reference-outcomes` passes with selected tier `ultra`, grid `768 x 432`, 5 live cases, 10 reference comparisons, active pressure/particles/coupling during concrete impact, and no full-grid readback |
 
 ## GitHub Labels
 
@@ -165,6 +170,7 @@ and GitHub issue mapping.
 | FG-19 | https://github.com/AC-21/ocean/issues/22 |
 | FG-20 | https://github.com/AC-21/ocean/issues/23 |
 | FG-21 | https://github.com/AC-21/ocean/issues/24 |
+| FG-22 | https://github.com/AC-21/ocean/issues/25 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

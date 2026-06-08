@@ -22,7 +22,8 @@ export type FluidGridMilestoneId =
   | "FG-18"
   | "FG-19"
   | "FG-20"
-  | "FG-21";
+  | "FG-21"
+  | "FG-22";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -46,7 +47,8 @@ export type FluidGridGateId =
   | "G-FG-18"
   | "G-FG-19"
   | "G-FG-20"
-  | "G-FG-21";
+  | "G-FG-21"
+  | "G-FG-22";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -135,6 +137,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-19", title: "Packaged display pacing and smoothness gate", gate: "G-FG-19" },
   { id: "FG-20", title: "Ultra-tier resolution scaling gate", gate: "G-FG-20" },
   { id: "FG-21", title: "Opt-in ultra-tier live renderer gate", gate: "G-FG-21" },
+  { id: "FG-22", title: "Ultra-tier live reference outcome gate", gate: "G-FG-22" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -282,6 +285,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:ultra-renderer and docs/evidence/FG-21-ultra-renderer-2026-06-08.json",
     passBar:
       "the packaged app honors an explicit ultra-tier request, selects the live 768 x 432 WebGPU renderer, and sustains smooth idle and concrete-impact display pacing with pressure, particles, object-grid coupling, zero dropped simulation debt, and no Canvas fallback",
+  },
+  {
+    id: "G-FG-22",
+    blocks: "FG-22",
+    evidence: "npm run fluid:ultra-reference-outcomes and docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json",
+    passBar:
+      "the packaged app honors an explicit ultra-tier request, selects the live 768 x 432 WebGPU renderer, and passes live reference comparisons for drop, splash, float, sink, and damping with pressure, particles, object-grid coupling, fixed-step telemetry, and no full-grid readback",
   },
 ];
 
@@ -793,6 +803,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Measure ultra live display pacing",
     exitProof:
       "npm run fluid:ultra-renderer passes idle and concrete-impact ultra display pacing with worst p95 9.3 ms, p99 9.4 ms, zero dropped-frame ratio, and zero dropped simulation debt",
+  },
+  {
+    id: "FG-22-T01",
+    milestone: "FG-22",
+    status: "done",
+    title: "Define the ultra reference outcome gate contract",
+    exitProof:
+      "fluidUltraReferenceOutcomes.ts defines the FG-22 ultra reference outcome gate, required comparison IDs, required categories, and failure checks for tier, grid, telemetry, coupling, and frame-loop health",
+  },
+  {
+    id: "FG-22-T02",
+    milestone: "FG-22",
+    status: "done",
+    title: "Drive live reference scenarios on the ultra renderer",
+    exitProof:
+      "fluidUltraReferenceOutcomes.report.ts launches the packaged app with OCEAN_LAB_FLUID_TIER=ultra and drives concrete, ice, foam, sink, and leaky-drum live reference scenarios",
+  },
+  {
+    id: "FG-22-T03",
+    milestone: "FG-22",
+    status: "done",
+    title: "Verify ultra live reference evidence",
+    exitProof:
+      "npm run fluid:ultra-reference-outcomes passes with selected tier ultra, grid 768 x 432, 5 live cases, 10 reference comparisons, active pressure/particles/coupling during concrete impact, and no full-grid readback",
   },
 ];
 
