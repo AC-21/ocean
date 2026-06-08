@@ -37,7 +37,8 @@ export type FluidGridMilestoneId =
   | "FG-33"
   | "FG-34"
   | "FG-35"
-  | "FG-36";
+  | "FG-36"
+  | "FG-37";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -76,7 +77,8 @@ export type FluidGridGateId =
   | "G-FG-33"
   | "G-FG-34"
   | "G-FG-35"
-  | "G-FG-36";
+  | "G-FG-36"
+  | "G-FG-37";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -180,6 +182,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-34", title: "Default-profile calibrated Desktop launch gate", gate: "G-FG-34" },
   { id: "FG-35", title: "Visible calibrated Desktop window gate", gate: "G-FG-35" },
   { id: "FG-36", title: "Installed calibrated reference outcome gate", gate: "G-FG-36" },
+  { id: "FG-37", title: "Installed reference pacing envelope gate", gate: "G-FG-37" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -432,6 +435,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:installed-reference-outcomes and docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json",
     passBar:
       "the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU",
+  },
+  {
+    id: "G-FG-37",
+    blocks: "FG-37",
+    evidence: "npm run fluid:installed-reference-pacing and docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json",
+    passBar:
+      "the real installed Desktop app composes passing FG-36 reference outcomes with smooth calibrated-auto ultra display pacing while exercising concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference scenarios without fluid-tier or userData environment overrides",
   },
 ];
 
@@ -1303,6 +1313,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed calibrated reference outcome gate",
     exitProof:
       "npm run fluid:installed-reference-outcomes passes with calibrated-auto ultra, five live reference cases, ten comparisons, active WebGPU pressure/particles/coupling, and committed evidence",
+  },
+  {
+    id: "FG-37-T01",
+    milestone: "FG-37",
+    status: "done",
+    title: "Define installed reference pacing envelope checks",
+    exitProof:
+      "fluidInstalledReferencePacing.ts requires passing FG-36 evidence, no fluid-tier or userData env overrides, calibrated-auto ultra 768 x 432 samples, WebGPU renderer/context, smooth frame pacing, pressure/particle/coupling telemetry where expected, and no full-grid readback",
+  },
+  {
+    id: "FG-37-T02",
+    milestone: "FG-37",
+    status: "done",
+    title: "Measure reference-category pacing through the installed Desktop app",
+    exitProof:
+      "fluidInstalledReferencePacing.report.ts launches /Users/sasha/Desktop/Ocean Impact Lab.app with no fluid-tier or userData env overrides and samples concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink pacing windows",
+  },
+  {
+    id: "FG-37-T03",
+    milestone: "FG-37",
+    status: "done",
+    title: "Close installed reference pacing envelope gate",
+    exitProof:
+      "npm run fluid:installed-reference-pacing passes with composed FG-36 reference evidence, calibrated-auto ultra runtime, five reference-category pacing scenarios, smooth p95/p99 frame pacing, active WebGPU telemetry, and committed evidence",
   },
 ];
 

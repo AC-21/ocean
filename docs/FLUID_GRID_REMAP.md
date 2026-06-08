@@ -1022,6 +1022,42 @@ Latest installed-reference evidence:
   active during the installed-profile run.
 - Gate: passed.
 
+FG-37 is complete as of 2026-06-08. FG-36 proved the installed Desktop app can
+produce physically defensible reference outcomes, but outcome correctness alone
+does not prove the user-facing simulator is smooth while those cases run.
+FG-37 composes the passing FG-36 packet with a new installed-reference pacing
+envelope: the real Desktop launcher starts without `OCEAN_LAB_FLUID_TIER`,
+`OCEAN_LAB_CALIBRATED_FLUID_TIER`, or `HARBORLINE_USER_DATA_DIR`, selects
+calibrated-auto ultra, then samples smooth calibrated-auto ultra display pacing
+while exercising the same reference categories.
+
+Latest installed-reference pacing evidence:
+
+- Command: `npm run fluid:installed-reference-pacing`.
+- Gate: `G-FG-37`.
+- Evidence snapshot:
+  `docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json`.
+- Composed reference proof: input evidence is `G-FG-36`, passing, with five
+  installed reference cases, ten comparisons, categories `damping`, `drop`,
+  `float`, `sink`, and `splash`, and grid `768 x 432`.
+- Launch proof: `/Users/sasha/Desktop/Ocean Impact Lab.app` resolves to the
+  installed bundle under `/Users/sasha/Applications/Ocean Impact Lab Builds`,
+  and the pacing launch environment has no fluid-tier or user-data override.
+- Runtime proof: selection mode `calibrated-auto`, requested tier `auto`,
+  selected tier `ultra`, renderer `webgpu-grid-primary-v1`, context `webgpu`,
+  and grid `768 x 432`.
+- Pacing proof: five installed-reference pacing scenarios cover concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink.
+  Each scenario must pass the installed reference smoothness envelope for p95,
+  p99, dropped-frame ratio, duplicate water-frame ratio, water-frame
+  advancement, fixed-step debt, and long-task duration.
+- Measured pacing: worst p95 `9.20 ms`, worst p99 `9.40 ms`, worst
+  dropped-frame ratio `0`, worst duplicate water-frame ratio `0.00219`, and
+  zero fixed-step dropped debt across the five scenarios.
+- Telemetry proof: active pressure, object-grid coupling, particle telemetry
+  where expected, and no-full-grid-readback flags remain present while those
+  reference-category pacing windows are measured.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

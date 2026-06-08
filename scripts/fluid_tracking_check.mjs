@@ -42,6 +42,7 @@ const requiredFiles = [
   "docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
   "docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
   "docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json",
+  "docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -103,6 +104,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledReferenceOutcomes.ts",
   "src/fluid/fluidInstalledReferenceOutcomes.report.ts",
   "src/fluid/fluidInstalledReferenceOutcomes.test.ts",
+  "src/fluid/fluidInstalledReferencePacing.ts",
+  "src/fluid/fluidInstalledReferencePacing.report.ts",
+  "src/fluid/fluidInstalledReferencePacing.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -124,8 +128,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -196,6 +200,9 @@ const desktopVisibilityTest = files.get("src/fluid/fluidDesktopVisibility.test.t
 const installedReferenceOutcomes = files.get("src/fluid/fluidInstalledReferenceOutcomes.ts") ?? "";
 const installedReferenceOutcomesReport = files.get("src/fluid/fluidInstalledReferenceOutcomes.report.ts") ?? "";
 const installedReferenceOutcomesTest = files.get("src/fluid/fluidInstalledReferenceOutcomes.test.ts") ?? "";
+const installedReferencePacing = files.get("src/fluid/fluidInstalledReferencePacing.ts") ?? "";
+const installedReferencePacingReport = files.get("src/fluid/fluidInstalledReferencePacing.report.ts") ?? "";
+const installedReferencePacingTest = files.get("src/fluid/fluidInstalledReferencePacing.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -251,6 +258,7 @@ const fg33Evidence = files.get("docs/evidence/FG-33-desktop-launcher-2026-06-08.
 const fg34Evidence = files.get("docs/evidence/FG-34-default-profile-calibration-2026-06-08.json") ?? "";
 const fg35Evidence = files.get("docs/evidence/FG-35-desktop-visibility-2026-06-08.json") ?? "";
 const fg36Evidence = files.get("docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json") ?? "";
+const fg37Evidence = files.get("docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2576,6 +2584,106 @@ if (
   !fg36Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-36 evidence must record installed default-profile calibrated-auto reference outcomes with active WebGPU telemetry");
+}
+
+if (!packageJson.includes("\"fluid:installed-reference-pacing\"") || !packageJson.includes("src/fluid/fluidInstalledReferencePacing.report.ts")) {
+  errors.push("package.json must expose the FG-37 installed reference pacing command");
+}
+
+if (!tracking.includes("FG-37-T03") || !tracking.includes("FG-37-installed-reference-pacing-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/40")) {
+  errors.push("docs/TRACKING.md must record FG-37 installed reference pacing evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-37") ||
+  !contract.includes("G-FG-37") ||
+  !contract.includes("Installed reference pacing envelope gate") ||
+  !contract.includes("npm run fluid:installed-reference-pacing")
+) {
+  errors.push("fluidGridContract.ts must define the FG-37 installed reference pacing milestone, gate, and evidence command");
+}
+
+if (
+  !installedReferencePacing.includes("G-FG-37") ||
+  !installedReferencePacing.includes("referenceEvidence") ||
+  !installedReferencePacing.includes("installedReferencePacingThresholds") ||
+  !installedReferencePacing.includes("reference-concrete-drop-splash-pacing") ||
+  !installedReferencePacing.includes("reference-ice-float-pacing") ||
+  !installedReferencePacing.includes("reference-foam-damping-pacing") ||
+  !installedReferencePacing.includes("reference-concrete-sink-pacing") ||
+  !installedReferencePacing.includes("reference-leaky-drum-sink-pacing") ||
+  !installedReferencePacing.includes("observed a full-grid readback flag") ||
+  !installedReferencePacing.includes("never observed active object-grid coupling")
+) {
+  errors.push("fluidInstalledReferencePacing.ts must define FG-37 reference-evidence, category, smoothness, telemetry, and no-readback checks");
+}
+
+if (
+  !installedReferencePacingReport.includes("OCEAN_LAB_INSTALLED_REFERENCE_PACING_OUT") ||
+  !installedReferencePacingReport.includes("reports/fluid-installed-reference-outcomes-latest.json") ||
+  !installedReferencePacingReport.includes("delete launchEnv.HARBORLINE_USER_DATA_DIR") ||
+  !installedReferencePacingReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !installedReferencePacingReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER") ||
+  !installedReferencePacingReport.includes("Desktop") ||
+  !installedReferencePacingReport.includes("presetId: \"concrete-cube\"") ||
+  !installedReferencePacingReport.includes("presetId: \"ice-block\"") ||
+  !installedReferencePacingReport.includes("presetId: \"foam-rescue-block\"") ||
+  !installedReferencePacingReport.includes("presetId: \"leaky-steel-drum\"") ||
+  !installedReferencePacingReport.includes("data-water-pressure-readback") ||
+  !installedReferencePacingReport.includes("G-FG-37")
+) {
+  errors.push("fluidInstalledReferencePacing.report.ts must launch the Desktop app without env overrides and sample all installed reference pacing scenarios");
+}
+
+if (
+  !installedReferencePacingTest.includes("passing FG-36 reference outcome evidence") ||
+  !installedReferencePacingTest.includes("fallback runtime tier") ||
+  !installedReferencePacingTest.includes("choppy or fallback renderer pacing samples") ||
+  !installedReferencePacingTest.includes("missing expected particles, coupling, or no-readback telemetry") ||
+  !installedReferencePacingTest.includes("G-FG-37")
+) {
+  errors.push("fluidInstalledReferencePacing.test.ts must cover FG-37 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-37") ||
+  !remap.includes("installed-reference pacing") ||
+  !remap.includes("smooth calibrated-auto ultra display pacing") ||
+  !remap.includes("concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink") ||
+  !remap.includes("no-full-grid-readback")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-37 installed reference pacing gate and evidence");
+}
+
+if (
+  !fg37Evidence.includes("\"gate\": \"G-FG-37\"") ||
+  !fg37Evidence.includes("\"pass\": true") ||
+  !fg37Evidence.includes("\"failures\": []") ||
+  !fg37Evidence.includes("\"gate\": \"G-FG-36\"") ||
+  !fg37Evidence.includes("\"sourcePath\": \"reports/fluid-installed-reference-outcomes-latest.json\"") ||
+  !fg37Evidence.includes("\"caseCount\": 5") ||
+  !fg37Evidence.includes("\"comparisonCount\": 10") ||
+  !fg37Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg37Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg37Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg37Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg37Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg37Evidence.includes("\"envUserDataOverridePresent\": false") ||
+  !fg37Evidence.includes("\"path\": \"/Users/sasha/Desktop/Ocean Impact Lab.app\"") ||
+  !fg37Evidence.includes("\"resolvesToInstalledBundle\": true") ||
+  !fg37Evidence.includes("\"reference-concrete-drop-splash-pacing\"") ||
+  !fg37Evidence.includes("\"reference-ice-float-pacing\"") ||
+  !fg37Evidence.includes("\"reference-foam-damping-pacing\"") ||
+  !fg37Evidence.includes("\"reference-concrete-sink-pacing\"") ||
+  !fg37Evidence.includes("\"reference-leaky-drum-sink-pacing\"") ||
+  !fg37Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg37Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg37Evidence.includes("\"pressureActiveSeen\": true") ||
+  !fg37Evidence.includes("\"couplingActiveSeen\": true") ||
+  !fg37Evidence.includes("\"pressureNoFullGridReadback\": true") ||
+  !fg37Evidence.includes("\"particlesNoFullGridReadback\": true")
+) {
+  errors.push("FG-37 evidence must record composed installed reference correctness plus smooth calibrated-auto ultra WebGPU pacing");
 }
 
 if (errors.length > 0) {

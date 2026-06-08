@@ -44,6 +44,7 @@ and GitHub issue mapping.
 | FG-34 | Default-profile calibrated Desktop launch gate | Done | G-FG-34 |
 | FG-35 | Visible calibrated Desktop window gate | Done | G-FG-35 |
 | FG-36 | Installed calibrated reference outcome gate | Done | G-FG-36 |
+| FG-37 | Installed reference pacing envelope gate | Done | G-FG-37 |
 
 ## Gates
 
@@ -86,6 +87,7 @@ and GitHub issue mapping.
 | G-FG-34 | FG-34 | `npm run fluid:default-profile-calibration`; `docs/evidence/FG-34-default-profile-calibration-2026-06-08.json` | the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live `768 x 432` WebGPU renderer |
 | G-FG-35 | FG-35 | `npm run fluid:desktop-visibility`; `docs/evidence/FG-35-desktop-visibility-2026-06-08.json` | a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface |
 | G-FG-36 | FG-36 | `npm run fluid:installed-reference-outcomes`; `docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json` | the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU |
+| G-FG-37 | FG-37 | `npm run fluid:installed-reference-pacing`; `docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json` | the real installed Desktop app composes passing FG-36 reference outcomes with smooth calibrated-auto ultra display pacing while exercising concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference scenarios without fluid-tier or userData environment overrides |
 
 ## Tasks
 
@@ -203,6 +205,9 @@ and GitHub issue mapping.
 | FG-36-T01 | FG-36 | Done | calibration | `fluidInstalledReferenceOutcomes.ts` wraps the FG-22 reference comparison packet with default-profile, no-env-override, calibrated-auto ultra, Desktop launcher, pressure, particles, coupling, and no-readback checks |
 | FG-36-T02 | FG-36 | Done | verification | `fluidInstalledReferenceOutcomes.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` with no fluid-tier or userData env overrides and drives concrete, ice, foam, concrete sink, and leaky-drum scenarios |
 | FG-36-T03 | FG-36 | Done | calibration | `npm run fluid:installed-reference-outcomes` passes with calibrated-auto ultra, five live reference cases, ten comparisons, active WebGPU pressure/particles/coupling, and committed evidence |
+| FG-37-T01 | FG-37 | Done | performance | `fluidInstalledReferencePacing.ts` requires passing FG-36 evidence, no fluid-tier or userData env overrides, calibrated-auto ultra `768 x 432` samples, WebGPU renderer/context, smooth frame pacing, pressure/particle/coupling telemetry where expected, and no full-grid readback |
+| FG-37-T02 | FG-37 | Done | verification | `fluidInstalledReferencePacing.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` with no fluid-tier or userData env overrides and samples concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink pacing windows |
+| FG-37-T03 | FG-37 | Done | calibration | `npm run fluid:installed-reference-pacing` passes with composed FG-36 reference evidence, calibrated-auto ultra runtime, five reference-category pacing scenarios, smooth p95/p99 frame pacing, active WebGPU telemetry, and committed evidence |
 
 ## GitHub Labels
 
@@ -255,6 +260,7 @@ and GitHub issue mapping.
 | FG-34 | https://github.com/AC-21/ocean/issues/37 |
 | FG-35 | https://github.com/AC-21/ocean/issues/38 |
 | FG-36 | https://github.com/AC-21/ocean/issues/39 |
+| FG-37 | https://github.com/AC-21/ocean/issues/40 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
