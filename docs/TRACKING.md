@@ -93,6 +93,7 @@ and GitHub issue mapping.
 | G-FG-39 | FG-39 | `npm run fluid:experimental-live-grid`; `docs/evidence/FG-39-experimental-live-grid-2026-06-08.json` | the packaged Desktop app keeps default calibrated capability selection capped at ultra `768 x 432` while an explicit experimental runtime flag drives the live WebGPU renderer at `1024 x 576` with smooth idle and concrete-impact pacing, active pressure/particles/coupling, and no full-grid readback |
 | G-FG-40 | FG-40 | `npm run fluid:experimental-reference-outcomes`; `docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json` | the packaged Desktop app runs the experimental `1024 x 576` live WebGPU renderer through drop, splash, float, sink, and damping reference cases while capability selection remains capped at ultra `768 x 432` and no full-grid readback is used |
 | G-FG-41 | FG-41 | `npm run fluid:high-resolution-calibration`; `docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json` | a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live `1024 x 576` without `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` while capability selection remains capped at ultra `768 x 432` |
+| G-FG-42 | FG-42 | `npm run fluid:installed-high-resolution-reference-pacing`; `docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json` | the real installed Desktop app uses the default `fluid-calibration.v1.json` profile with a persisted FG-40 runtime grid, no fluid-tier, grid, or userData environment overrides, replays reference outcomes, and sustains smooth live `1024 x 576` WebGPU pacing |
 
 ## Tasks
 
@@ -225,6 +226,9 @@ and GitHub issue mapping.
 | FG-41-T01 | FG-41 | Done | calibration | `fluidPersistedCalibration.ts` validates an optional `runtimeGrid` profile field sourced from passing FG-40 evidence while existing tier-only profiles remain valid |
 | FG-41-T02 | FG-41 | Done | startup | `electron/main.cjs` reads the stored `runtimeGrid` profile field and forwards `experimentalFluidGrid=1024x576` when no manual grid environment override is present |
 | FG-41-T03 | FG-41 | Done | verification | `npm run fluid:high-resolution-calibration` passes with a stored FG-40 runtime grid, no fluid/grid env overrides, calibrated-auto ultra capability, and a live `1024 x 576` WebGPU canvas |
+| FG-42-T01 | FG-42 | Done | calibration | `fluidInstalledHighResolutionReferencePacing.report.ts` writes a provenance-valid FG-23 profile with FG-40 `runtimeGrid` into `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game/fluid-calibration.v1.json` |
+| FG-42-T02 | FG-42 | Done | verification | `fluidInstalledHighResolutionReferencePacing.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without `OCEAN_LAB_FLUID_TIER`, `OCEAN_LAB_CALIBRATED_FLUID_TIER`, `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID`, or `HARBORLINE_USER_DATA_DIR` and replays concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink at live `1024 x 576` |
+| FG-42-T03 | FG-42 | Done | performance | `npm run fluid:installed-high-resolution-reference-pacing` passes with five reference pacing scenarios at ~`120 FPS`, max p95 `9.20 ms`, max p99 `9.30 ms`, zero dropped-frame ratio, active WebGPU pressure/particles/coupling, and no full-grid readback |
 
 ## GitHub Labels
 
@@ -282,6 +286,7 @@ and GitHub issue mapping.
 | FG-39 | https://github.com/AC-21/ocean/issues/42 |
 | FG-40 | https://github.com/AC-21/ocean/issues/43 |
 | FG-41 | https://github.com/AC-21/ocean/issues/44 |
+| FG-42 | https://github.com/AC-21/ocean/issues/45 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

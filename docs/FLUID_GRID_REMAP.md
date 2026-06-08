@@ -1180,6 +1180,43 @@ Persisted high-resolution calibration evidence:
   `envExperimentalGridPresent: false`, and reached `12` live WebGPU water frames
   at `1024 x 576` before the gate accepted it.
 
+FG-42 closes the loop from temporary high-resolution proof to the real installed
+Desktop path. The gate writes the FG-40-derived runtime grid into the normal
+default `fluid-calibration.v1.json`, launches `/Users/sasha/Desktop/Ocean Impact
+Lab.app` without manual fluid-tier, high-resolution grid, or userData
+environment overrides, replays the reference outcomes, and then samples pacing
+while the live renderer stays at `1024 x 576`.
+
+Installed high-resolution reference pacing evidence:
+
+- Command: `npm run fluid:installed-high-resolution-reference-pacing`.
+- Gate: `G-FG-42`.
+- Evidence snapshot:
+  `docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json`.
+- Profile proof: the default Desktop storage path
+  `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game`
+  contains `fluid-calibration.v1.json`, persisted `2581` bytes, records the
+  FG-40 `runtimeGrid`, round-tripped through storage, and was read by the main
+  process.
+- Launch invariant: the installed app launched with no `OCEAN_LAB_FLUID_TIER`,
+  `OCEAN_LAB_CALIBRATED_FLUID_TIER`, `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID`, or
+  `HARBORLINE_USER_DATA_DIR`.
+- Runtime proof: selection mode remained `calibrated-auto`, selected tier
+  remained `ultra`, capability grid remained `768 x 432`,
+  `window.__fluidRuntimeGridOverride` reported `1024 x 576`, and the canvas
+  reported `webgpu-grid-primary-v1` / `webgpu` at live `1024 x 576`.
+- Reference proof: the installed high-resolution path replayed concrete
+  drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink with
+  five cases and ten reference comparisons, while preserving active pressure,
+  particles, object-grid coupling, fixed-step frame-loop telemetry, and pressure
+  plus particle no-full-grid-readback flags.
+- Pacing proof: five high-resolution reference scenarios sustained about
+  `120 FPS`, max p95 frame time `9.20 ms`, max p99 frame time `9.30 ms`, zero
+  dropped-frame ratio, worst duplicate-water-frame ratio `0.0022`, and live
+  `1024 x 576` canvas/runtime-grid telemetry in every representative sample.
+  This gives the installed app explicit 1024 x 576 canvas/runtime-grid telemetry
+  rather than a temporary experimental flag proof.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

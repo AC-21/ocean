@@ -47,6 +47,7 @@ const requiredFiles = [
   "docs/evidence/FG-39-experimental-live-grid-2026-06-08.json",
   "docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
+  "docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -128,6 +129,9 @@ const requiredFiles = [
   "src/fluid/fluidHighResolutionCalibration.ts",
   "src/fluid/fluidHighResolutionCalibration.report.ts",
   "src/fluid/fluidHighResolutionCalibration.test.ts",
+  "src/fluid/fluidInstalledHighResolutionReferencePacing.ts",
+  "src/fluid/fluidInstalledHighResolutionReferencePacing.report.ts",
+  "src/fluid/fluidInstalledHighResolutionReferencePacing.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -147,8 +151,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -240,6 +244,9 @@ const experimentalReferenceOutcomesTest = files.get("src/fluid/fluidExperimental
 const highResolutionCalibration = files.get("src/fluid/fluidHighResolutionCalibration.ts") ?? "";
 const highResolutionCalibrationReport = files.get("src/fluid/fluidHighResolutionCalibration.report.ts") ?? "";
 const highResolutionCalibrationTest = files.get("src/fluid/fluidHighResolutionCalibration.test.ts") ?? "";
+const installedHighResolutionReferencePacing = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.ts") ?? "";
+const installedHighResolutionReferencePacingReport = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.report.ts") ?? "";
+const installedHighResolutionReferencePacingTest = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -297,6 +304,7 @@ const fg38Evidence = files.get("docs/evidence/FG-38-high-resolution-headroom-202
 const fg39Evidence = files.get("docs/evidence/FG-39-experimental-live-grid-2026-06-08.json") ?? "";
 const fg40Evidence = files.get("docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json") ?? "";
 const fg41Evidence = files.get("docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json") ?? "";
+const fg42Evidence = files.get("docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3133,6 +3141,105 @@ if (
   !fg41Evidence.includes("\"verificationReadMatched\": true")
 ) {
   errors.push("FG-41 evidence must record persisted FG-40 runtimeGrid calibration launching live 1024 x 576 without manual grid env overrides");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-reference-pacing\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionReferencePacing.report.ts")
+) {
+  errors.push("package.json must expose the FG-42 installed high-resolution reference pacing command");
+}
+
+if (
+  !tracking.includes("FG-42-T03") ||
+  !tracking.includes("FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/45")
+) {
+  errors.push("docs/TRACKING.md must record FG-42 installed high-resolution reference pacing evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-42") ||
+  !contract.includes("G-FG-42") ||
+  !contract.includes("Installed high-resolution reference pacing gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-reference-pacing")
+) {
+  errors.push("fluidGridContract.ts must define the FG-42 installed high-resolution reference pacing milestone, gate, and evidence command");
+}
+
+if (
+  !installedHighResolutionReferencePacing.includes("G-FG-42") ||
+  !installedHighResolutionReferencePacing.includes("source calibration gate was") ||
+  !installedHighResolutionReferencePacing.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID must be absent") ||
+  !installedHighResolutionReferencePacing.includes("runtime grid override global did not report 1024 x 576") ||
+  !installedHighResolutionReferencePacing.includes("samples did not all render 1024x576 canvas grid") ||
+  !installedHighResolutionReferencePacing.includes("main process did not read the installed high-resolution runtime grid")
+) {
+  errors.push("fluidInstalledHighResolutionReferencePacing.ts must define FG-42 installed default-profile, env absence, high-resolution, and pacing checks");
+}
+
+if (
+  !installedHighResolutionReferencePacingReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_REFERENCE_PACING_OUT") ||
+  !installedHighResolutionReferencePacingReport.includes("docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json") ||
+  !installedHighResolutionReferencePacingReport.includes("delete launchEnv.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !installedHighResolutionReferencePacingReport.includes("calibrationProfileWithExperimentalRuntimeGrid") ||
+  !installedHighResolutionReferencePacingReport.includes("defaultUserDataPath") ||
+  !installedHighResolutionReferencePacingReport.includes("window.__fluidRuntimeGridOverride?.cellsX === 1024") ||
+  !installedHighResolutionReferencePacingReport.includes("high-resolution-concrete-drop-splash-pacing")
+) {
+  errors.push("fluidInstalledHighResolutionReferencePacing.report.ts must install the FG-40 runtimeGrid into default storage and measure installed high-resolution reference pacing without env overrides");
+}
+
+if (
+  !installedHighResolutionReferencePacingTest.includes("installed high-resolution reference pacing gate") ||
+  !installedHighResolutionReferencePacingTest.includes("stale or incomplete source calibration") ||
+  !installedHighResolutionReferencePacingTest.includes("environment overrides") ||
+  !installedHighResolutionReferencePacingTest.includes("fallback live grids") ||
+  !installedHighResolutionReferencePacingTest.includes("missing active particles")
+) {
+  errors.push("fluidInstalledHighResolutionReferencePacing.test.ts must cover FG-42 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-42") ||
+  !remap.includes("Installed high-resolution reference pacing evidence") ||
+  !remap.includes("fluid-calibration.v1.json") ||
+  !remap.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !remap.includes("1024 x 576 canvas/runtime-grid telemetry")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-42 installed high-resolution reference pacing gate and evidence");
+}
+
+if (
+  !fg42Evidence.includes("\"gate\": \"G-FG-42\"") ||
+  !fg42Evidence.includes("\"pass\": true") ||
+  !fg42Evidence.includes("\"failures\": []") ||
+  !fg42Evidence.includes("\"gate\": \"G-FG-41\"") ||
+  !fg42Evidence.includes("\"sourceCalibration\"") ||
+  !fg42Evidence.includes("\"defaultStorage\": true") ||
+  !fg42Evidence.includes("\"profileHadRuntimeGrid\": true") ||
+  !fg42Evidence.includes("\"readByMainProcess\": true") ||
+  !fg42Evidence.includes("\"envExperimentalGridPresent\": false") ||
+  !fg42Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg42Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg42Evidence.includes("\"envUserDataOverridePresent\": false") ||
+  !fg42Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg42Evidence.includes("\"runtimeGridOverride\"") ||
+  !fg42Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg42Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg42Evidence.includes("\"referenceCaseCount\": 5") ||
+  !fg42Evidence.includes("\"referenceComparisonCount\": 10") ||
+  !fg42Evidence.includes("\"scenarioCount\": 5") ||
+  !fg42Evidence.includes("\"high-resolution-concrete-drop-splash-pacing\"") ||
+  !fg42Evidence.includes("\"high-resolution-foam-damping-pacing\"") ||
+  !fg42Evidence.includes("\"worstDroppedFrameRatio\": 0") ||
+  !fg42Evidence.includes("\"maxP99FrameMs\"") ||
+  !fg42Evidence.includes("\"pressureActive\": true") ||
+  !fg42Evidence.includes("\"particlesActive\": true") ||
+  !fg42Evidence.includes("\"particlesNoFullGridReadbackPerFrame\": true") ||
+  !fg42Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-42 evidence must record default-profile installed high-resolution reference pacing with live 1024 x 576 WebGPU telemetry and no-readback proof");
 }
 
 if (errors.length > 0) {

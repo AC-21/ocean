@@ -42,7 +42,8 @@ export type FluidGridMilestoneId =
   | "FG-38"
   | "FG-39"
   | "FG-40"
-  | "FG-41";
+  | "FG-41"
+  | "FG-42";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -86,7 +87,8 @@ export type FluidGridGateId =
   | "G-FG-38"
   | "G-FG-39"
   | "G-FG-40"
-  | "G-FG-41";
+  | "G-FG-41"
+  | "G-FG-42";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -195,6 +197,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-39", title: "Experimental high-resolution live renderer gate", gate: "G-FG-39" },
   { id: "FG-40", title: "Experimental high-resolution reference outcomes gate", gate: "G-FG-40" },
   { id: "FG-41", title: "Persisted high-resolution runtime-grid calibration gate", gate: "G-FG-41" },
+  { id: "FG-42", title: "Installed high-resolution reference pacing gate", gate: "G-FG-42" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -482,6 +485,14 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:high-resolution-calibration and docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
     passBar:
       "a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live 1024 x 576 without OCEAN_LAB_EXPERIMENTAL_FLUID_GRID while capability selection remains capped at ultra 768 x 432",
+  },
+  {
+    id: "G-FG-42",
+    blocks: "FG-42",
+    evidence:
+      "npm run fluid:installed-high-resolution-reference-pacing and docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
+    passBar:
+      "the real installed Desktop app uses the default fluid-calibration.v1.json profile with a persisted FG-40 runtimeGrid, no fluid-tier, grid, or userData environment overrides, replays drop/splash, float, sink, and damping reference outcomes, and sustains smooth live 1024 x 576 WebGPU pacing",
   },
 ];
 
@@ -1473,6 +1484,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close persisted high-resolution runtime-grid calibration gate",
     exitProof:
       "npm run fluid:high-resolution-calibration passes with a stored FG-40 runtime grid, no fluid/grid env overrides, calibrated-auto ultra capability, and a live 1024 x 576 WebGPU canvas",
+  },
+  {
+    id: "FG-42-T01",
+    milestone: "FG-42",
+    status: "done",
+    title: "Install high-resolution runtime grid into the default Desktop profile",
+    exitProof:
+      "fluidInstalledHighResolutionReferencePacing.report.ts writes a provenance-valid FG-23 profile with FG-40 runtimeGrid into /Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game/fluid-calibration.v1.json",
+  },
+  {
+    id: "FG-42-T02",
+    milestone: "FG-42",
+    status: "done",
+    title: "Replay reference outcomes from the installed high-resolution path",
+    exitProof:
+      "fluidInstalledHighResolutionReferencePacing.report.ts launches /Users/sasha/Desktop/Ocean Impact Lab.app without OCEAN_LAB_FLUID_TIER, OCEAN_LAB_CALIBRATED_FLUID_TIER, OCEAN_LAB_EXPERIMENTAL_FLUID_GRID, or HARBORLINE_USER_DATA_DIR and replays the FG-40 reference cases at live 1024 x 576",
+  },
+  {
+    id: "FG-42-T03",
+    milestone: "FG-42",
+    status: "done",
+    title: "Close installed high-resolution reference pacing gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-reference-pacing passes with calibrated-auto ultra, capability grid 768 x 432, live canvas 1024 x 576, five reference pacing scenarios, p99 frame time under 10 ms, active pressure/particles/coupling, and no full-grid readback",
   },
 ];
 
