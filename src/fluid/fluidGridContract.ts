@@ -19,7 +19,8 @@ export type FluidGridMilestoneId =
   | "FG-15"
   | "FG-16"
   | "FG-17"
-  | "FG-18";
+  | "FG-18"
+  | "FG-19";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -40,7 +41,8 @@ export type FluidGridGateId =
   | "G-FG-15"
   | "G-FG-16"
   | "G-FG-17"
-  | "G-FG-18";
+  | "G-FG-18"
+  | "G-FG-19";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -126,6 +128,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-16", title: "Live pressure-gradient broad-water renderer path", gate: "G-FG-16" },
   { id: "FG-17", title: "Pressure-informed rigid-body force feedback", gate: "G-FG-17" },
   { id: "FG-18", title: "Live coupled reference outcome gate", gate: "G-FG-18" },
+  { id: "FG-19", title: "Packaged display pacing and smoothness gate", gate: "G-FG-19" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -252,6 +255,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:live-reference-outcomes and docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
     passBar:
       "the packaged app exposes live physics snapshots and passes reference-outcome comparisons for drop, splash, float, sink, and damping while WebGPU pressure, particle, object-grid, and fixed-step telemetry remain bounded",
+  },
+  {
+    id: "G-FG-19",
+    blocks: "FG-19",
+    evidence: "npm run fluid:display-pacing and docs/evidence/FG-19-display-pacing-2026-06-08.json",
+    passBar:
+      "the packaged app sustains smooth display pacing across idle, dense impact, and foam damping scenarios at 1x with WebGPU pressure, particles, object-grid coupling, no dropped simulation debt, and no long-task stalls from diagnostics",
   },
 ];
 
@@ -691,6 +701,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Preserve WebGPU telemetry during reference replay",
     exitProof:
       "FG-18 evidence records WebGPU renderer context, bounded pressure feedback, live particles, object-grid coupling, no full-grid readback, and fixed-step frame-loop health",
+  },
+  {
+    id: "FG-19-T01",
+    milestone: "FG-19",
+    status: "done",
+    title: "Separate full diagnostics from per-frame motion snapshots",
+    exitProof:
+      "OceanPhysicsApp publishes fast motion snapshots every frame while scenario controls can request full prediction and equilibrium snapshots on demand",
+  },
+  {
+    id: "FG-19-T02",
+    milestone: "FG-19",
+    status: "done",
+    title: "Measure packaged display pacing under active fluid workloads",
+    exitProof:
+      "fluidDisplayPacing.report.ts samples idle, concrete impact, and foam damping in the packaged app with RAF frame timing, long-task, WebGPU renderer, pressure, particle, and coupling telemetry",
+  },
+  {
+    id: "FG-19-T03",
+    milestone: "FG-19",
+    status: "done",
+    title: "Verify smoothness evidence and diagnostic throttling",
+    exitProof:
+      "npm run fluid:display-pacing passes with worst p95 9.2 ms, p99 9.3 ms, 0.13% dropped-frame ratio, zero long-task duration, and zero dropped simulation debt",
   },
 ];
 

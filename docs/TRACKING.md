@@ -26,6 +26,7 @@ and GitHub issue mapping.
 | FG-16 | Live pressure-gradient broad-water renderer path | Done | G-FG-16 |
 | FG-17 | Pressure-informed rigid-body force feedback | Done | G-FG-17 |
 | FG-18 | Live coupled reference outcome gate | Done | G-FG-18 |
+| FG-19 | Packaged display pacing and smoothness gate | Done | G-FG-19 |
 
 ## Gates
 
@@ -50,6 +51,7 @@ and GitHub issue mapping.
 | G-FG-16 | FG-16 | `npm run fluid:live-pressure`; `docs/evidence/FG-16-live-pressure-2026-06-08.json` | the packaged WebGPU renderer advances live broad water with bounded pressure-gradient momentum buffers and exposes pressure plus particle telemetry without Canvas fallback or full-grid readback |
 | G-FG-17 | FG-17 | `npm run fluid:live-pressure-feedback`; `docs/evidence/FG-17-pressure-feedback-2026-06-08.json` | the packaged app feeds bounded live pressure force deltas into the rigid-body grid coupling consumed by `stepSimulation` while retaining WebGPU pressure, object-grid, and particle telemetry |
 | G-FG-18 | FG-18 | `npm run fluid:live-reference-outcomes`; `docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json` | the packaged app exposes live physics snapshots and passes reference-outcome comparisons for drop, splash, float, sink, and damping while WebGPU pressure, particle, object-grid, and fixed-step telemetry remain bounded |
+| G-FG-19 | FG-19 | `npm run fluid:display-pacing`; `docs/evidence/FG-19-display-pacing-2026-06-08.json` | the packaged app sustains smooth display pacing across idle, dense impact, and foam damping scenarios at 1x with WebGPU pressure, particles, object-grid coupling, no dropped simulation debt, and no long-task stalls from diagnostics |
 
 ## Tasks
 
@@ -113,6 +115,9 @@ and GitHub issue mapping.
 | FG-18-T01 | FG-18 | Done | diagnostics | `OceanPhysicsApp` exposes `window.__oceanPhysicsSnapshot` and `window.__oceanPhysicsScenarioControls` with live drop, impact, float prediction, damping, sink, and diagnostic values |
 | FG-18-T02 | FG-18 | Done | verification | `npm run fluid:live-reference-outcomes` drives the packaged app through concrete, ice, foam, and leaky-drum reference scenarios and compares live outcomes against accepted bands |
 | FG-18-T03 | FG-18 | Done | telemetry | FG-18 evidence records WebGPU renderer context, bounded pressure feedback, live particles, object-grid coupling, no full-grid readback, and fixed-step frame-loop health |
+| FG-19-T01 | FG-19 | Done | diagnostics | `OceanPhysicsApp` publishes fast motion snapshots every frame while scenario controls can request full prediction and equilibrium snapshots on demand |
+| FG-19-T02 | FG-19 | Done | verification | `fluidDisplayPacing.report.ts` samples idle, concrete impact, and foam damping in the packaged app with RAF frame timing, long-task, WebGPU renderer, pressure, particle, and coupling telemetry |
+| FG-19-T03 | FG-19 | Done | performance | `npm run fluid:display-pacing` passes with worst p95 `9.2 ms`, p99 `9.3 ms`, `0.13%` dropped-frame ratio, zero long-task duration, and zero dropped simulation debt |
 
 ## GitHub Labels
 
@@ -147,6 +152,7 @@ and GitHub issue mapping.
 | FG-16 | https://github.com/AC-21/ocean/issues/19 |
 | FG-17 | https://github.com/AC-21/ocean/issues/20 |
 | FG-18 | https://github.com/AC-21/ocean/issues/21 |
+| FG-19 | https://github.com/AC-21/ocean/issues/22 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

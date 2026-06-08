@@ -15,6 +15,12 @@ declare global {
     __fluidGridCouplingForces?: GridFluidCouplingForces;
     __fluidFrameLoopStats?: FluidFrameLoopStats;
     __fluidWaterRenderStats?: FluidWaterRenderStats;
+    __displayPacingObserved?: {
+      couplingActiveSeen: boolean;
+      longTaskSupported: boolean;
+      particlesActiveSeen: boolean;
+      pressureActiveSeen: boolean;
+    };
     __oceanPhysicsScenarioControls?: OceanPhysicsScenarioControls;
     __oceanPhysicsSnapshot?: OceanPhysicsLiveSnapshot;
     __runFluidGridBenchmark?: typeof runFluidGridBenchmark;

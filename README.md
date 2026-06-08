@@ -137,6 +137,12 @@ Run the packaged live reference-outcomes gate:
 npm run fluid:live-reference-outcomes
 ```
 
+Run the packaged display-pacing smoothness gate:
+
+```sh
+npm run fluid:display-pacing
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -176,7 +182,10 @@ the rigid-body coupling consumed by the fixed-step simulation loop. FG-18 drives
 the packaged app through live concrete, ice, foam, and leaky-drum reference
 cases and verifies drop, splash, float, sink, and damping outcomes from
 `window.__oceanPhysicsSnapshot` while WebGPU pressure, particle, object-grid,
-and frame-loop telemetry remain bounded.
+and frame-loop telemetry remain bounded. FG-19 keeps full prediction and
+equilibrium diagnostics off the per-frame display path, then verifies packaged
+idle, dense-impact, and foam-damping scenarios sustain smooth WebGPU frame
+pacing with no diagnostic long-task stalls.
 
 ## Run
 

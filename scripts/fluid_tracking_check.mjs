@@ -24,6 +24,7 @@ const requiredFiles = [
   "docs/evidence/FG-16-live-pressure-2026-06-08.json",
   "docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
   "docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
+  "docs/evidence/FG-19-display-pacing-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -33,6 +34,9 @@ const requiredFiles = [
   "src/OceanPhysicsApp.tsx",
   "src/OceanPhysicsApp.test.tsx",
   "src/physicsOcean.ts",
+  "src/fluid/fluidDisplayPacing.ts",
+  "src/fluid/fluidDisplayPacing.report.ts",
+  "src/fluid/fluidDisplayPacing.test.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
@@ -45,8 +49,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -65,6 +69,9 @@ const liveReferenceScript = files.get("scripts/fluid_live_reference_outcomes_rep
 const oceanPhysicsApp = files.get("src/OceanPhysicsApp.tsx") ?? "";
 const oceanPhysicsAppTest = files.get("src/OceanPhysicsApp.test.tsx") ?? "";
 const physicsOcean = files.get("src/physicsOcean.ts") ?? "";
+const displayPacing = files.get("src/fluid/fluidDisplayPacing.ts") ?? "";
+const displayPacingReport = files.get("src/fluid/fluidDisplayPacing.report.ts") ?? "";
+const displayPacingTest = files.get("src/fluid/fluidDisplayPacing.test.ts") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
@@ -93,6 +100,7 @@ const fg15Evidence = files.get("docs/evidence/FG-15-pressure-gradient-2026-06-08
 const fg16Evidence = files.get("docs/evidence/FG-16-live-pressure-2026-06-08.json") ?? "";
 const fg17Evidence = files.get("docs/evidence/FG-17-pressure-feedback-2026-06-08.json") ?? "";
 const fg18Evidence = files.get("docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json") ?? "";
+const fg19Evidence = files.get("docs/evidence/FG-19-display-pacing-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -802,6 +810,79 @@ if (
   !fg18Evidence.includes("\"fixedStepS\": 0.008333333333333333")
 ) {
   errors.push("FG-18 evidence must record a passing packaged live reference outcome report with all required categories and bounded telemetry");
+}
+
+if (!packageJson.includes("\"fluid:display-pacing\"") || !packageJson.includes("src/fluid/fluidDisplayPacing.report.ts")) {
+  errors.push("package.json must expose the FG-19 packaged display-pacing command");
+}
+
+if (!tracking.includes("FG-19-T03") || !tracking.includes("FG-19-display-pacing-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/22")) {
+  errors.push("docs/TRACKING.md must record FG-19 packaged display pacing evidence and issue mapping");
+}
+
+if (
+  !oceanPhysicsApp.includes("oceanPhysicsMotionSnapshotFor") ||
+  !oceanPhysicsApp.includes("liveSnapshotRef") ||
+  !oceanPhysicsApp.includes("equilibriumPanelSnapshot") ||
+  !oceanPhysicsApp.includes("snapshot: () => publishLiveSnapshot(simulationRef.current)")
+) {
+  errors.push("OceanPhysicsApp.tsx must keep full diagnostics off the per-frame display path while exposing explicit full snapshots for FG-19");
+}
+
+if (
+  !displayPacing.includes("G-FG-19") ||
+  !displayPacing.includes("maxP95FrameMs") ||
+  !displayPacing.includes("maxLongTaskDurationMs") ||
+  !displayPacing.includes("activePhysicsDurationMsFor") ||
+  !displayPacing.includes("duplicateWaterFrameRatio")
+) {
+  errors.push("fluidDisplayPacing.ts must define the FG-19 display pacing summary thresholds");
+}
+
+if (
+  !displayPacingReport.includes("idle-display-pacing") ||
+  !displayPacingReport.includes("concrete-impact-display-pacing") ||
+  !displayPacingReport.includes("foam-damping-display-pacing") ||
+  !displayPacingReport.includes("PerformanceObserver") ||
+  !displayPacingReport.includes("longtask") ||
+  !displayPacingReport.includes("window.__oceanPhysicsSnapshot")
+) {
+  errors.push("fluidDisplayPacing.report.ts must drive packaged idle, concrete impact, and foam damping smoothness scenarios");
+}
+
+if (
+  !displayPacingTest.includes("summarizeDisplayPacing") ||
+  !displayPacingTest.includes("resets before sampling ends") ||
+  !displayPacingTest.includes("primary WebGPU")
+) {
+  errors.push("fluidDisplayPacing.test.ts must cover FG-19 smoothness summary and telemetry failures");
+}
+
+if (
+  !remap.includes("FG-19") ||
+  !remap.includes("display-pacing") ||
+  !remap.includes("foam damping") ||
+  !remap.includes("no long-task stalls") ||
+  !remap.includes("Packaged display pacing")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-19 packaged display pacing gate and evidence");
+}
+
+if (
+  !fg19Evidence.includes("\"gate\": \"G-FG-19\"") ||
+  !fg19Evidence.includes("\"pass\": true") ||
+  !fg19Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg19Evidence.includes("\"scenarioCount\": 3") ||
+  !fg19Evidence.includes("\"idle-display-pacing\"") ||
+  !fg19Evidence.includes("\"concrete-impact-display-pacing\"") ||
+  !fg19Evidence.includes("\"foam-damping-display-pacing\"") ||
+  !fg19Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg19Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg19Evidence.includes("\"pressureActiveSeen\": true") ||
+  !fg19Evidence.includes("\"longTaskDurationMs\": 0") ||
+  !fg19Evidence.includes("\"maxDroppedDebtS\": 0")
+) {
+  errors.push("FG-19 evidence must record a passing packaged display pacing report with WebGPU telemetry and zero long-task/dropped-debt failures");
 }
 
 if (errors.length > 0) {

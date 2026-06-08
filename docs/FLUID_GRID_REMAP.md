@@ -535,6 +535,34 @@ Latest live reference-outcome evidence:
   full-grid readback.
 - Gate: passed.
 
+FG-19 is complete as of 2026-06-08. It exists because smoothness has to be
+proven in the packaged app with the same live pressure, particle, coupling, and
+physics readouts that the reference gates use. A profiler showed that the foam
+damping case was not GPU-bound: physics stepping was near `1 ms`, while live
+float prediction and equilibrium diagnostics were blocking the main thread.
+The app now publishes fast per-frame motion snapshots and keeps full
+prediction/equilibrium diagnostics available through explicit scenario-control
+snapshots, so display pacing no longer competes with heavy reference math.
+
+Latest packaged display-pacing evidence:
+
+- Command: `npm run fluid:display-pacing`.
+- Runtime: packaged macOS app.
+- Gate: `G-FG-19`.
+- Evidence snapshot:
+  `docs/evidence/FG-19-display-pacing-2026-06-08.json`.
+- Coverage: idle display pacing, concrete impact display pacing, and foam
+  damping display pacing at `1x` time scale.
+- Smoothness: worst p95 frame time `9.2 ms`, worst p99 frame time `9.3 ms`,
+  worst dropped-frame ratio `0.13%`, zero long-task duration, zero dropped
+  simulation debt, and active physics time ratios near real time for concrete
+  and foam.
+- Telemetry discipline: WebGPU renderer `webgpu-grid-primary-v1`, context
+  `webgpu`, pressure telemetry active, particles active in impact/damping
+  scenarios, object-grid coupling active in active physics scenarios, and no
+  Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -591,6 +619,10 @@ Latest live reference-outcome evidence:
     packaged reference scenarios, and verify observed drop, splash, float, sink,
     and damping outcomes while pressure, particles, object-grid coupling, and
     frame-loop telemetry remain bounded.
+20. Packaged display pacing: keep full prediction/equilibrium diagnostics off
+    the per-frame display path, then verify idle, dense impact, and foam damping
+    scenarios sustain smooth WebGPU frame pacing with no long-task stalls or
+    dropped simulation debt.
 
 ## Resolution Ladder
 

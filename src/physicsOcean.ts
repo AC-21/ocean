@@ -1521,7 +1521,7 @@ export function predictFloatOutcome(spec: ObjectSpec, settings: OceanSettings): 
       : fullWaterloggedDensity >= settings.waterDensityKgM3
         ? (settings.waterDensityKgM3 - effectiveDensity) / settings.waterDensityKgM3
         : null;
-  const initialEquilibrium = solveFloatEquilibrium(spec, settings, 0);
+  const initialEquilibrium = solveFloatEquilibrium(spec, settings, 0, 0);
 
   if (!initialEquilibrium) {
     return {

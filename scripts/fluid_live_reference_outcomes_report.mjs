@@ -315,7 +315,7 @@ async function waitForSnapshot(page, predicate, label) {
   const deadline = Date.now() + timeoutMs;
   let lastSnapshot = null;
   while (Date.now() < deadline) {
-    lastSnapshot = await page.evaluate(() => window.__oceanPhysicsSnapshot ?? null);
+    lastSnapshot = await page.evaluate(() => window.__oceanPhysicsScenarioControls?.snapshot?.() ?? window.__oceanPhysicsSnapshot ?? null);
     if (lastSnapshot && predicate(lastSnapshot)) return lastSnapshot;
     await page.waitForTimeout(80);
   }

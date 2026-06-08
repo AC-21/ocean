@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { oceanPhysicsLiveSnapshotFor } from "./OceanPhysicsApp";
+import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor } from "./OceanPhysicsApp";
 import { cloneObjectSpec, createSimulation, defaultOceanSettings, objectPresets, startDrop, stepSimulation } from "./physicsOcean";
 
 const calmSettings = {
@@ -54,6 +54,40 @@ describe("ocean physics live snapshot", () => {
     expect(snapshot.impact?.splashHeightM).toBeGreaterThan(0);
     expect(snapshot.liveFloatDurationS).toBeGreaterThanOrEqual(0);
     expect(snapshot.phase).not.toBe("ready");
+  });
+
+  it("patches fast motion fields while keeping cached prediction diagnostics", () => {
+    const foam = cloneObjectSpec(requiredPreset("foam-rescue-block"));
+    const initialState = createSimulation(foam, 1.35, 0.18);
+    const initialSnapshot = oceanPhysicsLiveSnapshotFor({
+      dropHeightM: 1.35,
+      releaseAngleRad: 0.18,
+      selectedPresetId: foam.id,
+      settings: calmSettings,
+      spec: foam,
+      state: initialState,
+      waterRenderMode: "webgpu",
+    });
+    let state = startDrop(initialState);
+    for (let index = 0; index < 20; index += 1) {
+      state = stepSimulation(state, foam, calmSettings, 1 / 120);
+    }
+
+    const motionSnapshot = oceanPhysicsMotionSnapshotFor(initialSnapshot, {
+      dropHeightM: 1.35,
+      releaseAngleRad: 0.18,
+      selectedPresetId: foam.id,
+      settings: calmSettings,
+      spec: foam,
+      state,
+      waterRenderMode: "webgpu",
+    });
+
+    expect(motionSnapshot.timeS).toBeGreaterThan(initialSnapshot.timeS);
+    expect(motionSnapshot.object.centerYM).toBeLessThan(initialSnapshot.object.centerYM);
+    expect(motionSnapshot.diagnostics.submergedFraction).toBeGreaterThanOrEqual(0);
+    expect(motionSnapshot.prediction).toBe(initialSnapshot.prediction);
+    expect(motionSnapshot.equilibrium.draftErrorM).toBe(initialSnapshot.equilibrium.draftErrorM);
   });
 });
 
