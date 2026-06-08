@@ -2,6 +2,11 @@ const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const { createHarborlineStorage, desktopStorageFiles } = require("./storage.cjs");
+const {
+  calibratedFluidCalibrationFromProfile,
+  validExperimentalFluidGrid,
+  validFluidTier,
+} = require("./fluid-calibration.cjs");
 
 const appRoot = path.resolve(__dirname, "..");
 const distRootUrl = pathToFileURL(path.join(appRoot, "dist") + path.sep).href;
@@ -9,7 +14,7 @@ const appIconPath = path.join(appRoot, "dist", "app-icon.svg");
 const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
 const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
 const envCalibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
-const experimentalFluidGrid = validExperimentalFluidGrid(process.env.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID);
+const envExperimentalFluidGrid = validExperimentalFluidGrid(process.env.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID);
 let storage;
 let mainWindow = null;
 let isQuitting = false;
@@ -137,6 +142,7 @@ async function fluidTierQueryObject() {
   const storedCalibration = await calibratedFluidCalibrationFromStorage();
   const envTier = validFluidTier(envCalibratedFluidTier);
   const calibratedFluidTier = envTier ?? storedCalibration?.tier;
+  const experimentalFluidGrid = envExperimentalFluidGrid ?? storedCalibration?.runtimeGrid;
   const fluidTier = requestedFluidTier || (!requestedFluidTier && calibratedFluidTier ? "auto" : undefined);
   return {
     ...(fluidTier ? { fluidTier } : {}),
@@ -152,59 +158,10 @@ async function calibratedFluidCalibrationFromStorage() {
     const raw = await storage.readText(desktopStorageFiles.fluidCalibrationProfile);
     if (!raw) return undefined;
     const profile = JSON.parse(raw);
-    if (calibrationProfileFailures(profile, app.getVersion()).length > 0) return undefined;
-    const tier = validFluidTier(profile?.selectedTier);
-    return tier ? { fingerprint: profile.capability.fingerprint, tier } : undefined;
+    return calibratedFluidCalibrationFromProfile(profile, app.getVersion());
   } catch {
     return undefined;
   }
-}
-
-function calibrationProfileFailures(profile, expectedAppVersion) {
-  const selectedTier = validFluidTier(profile?.selectedTier);
-  const capability = profile?.capability;
-  return [
-    ...(profile?.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid"]),
-    ...(profile?.pass === true ? [] : ["profile did not pass"]),
-    ...(profile?.sourceGate === "G-FG-23" ? [] : ["profile source gate was invalid"]),
-    ...(profile?.source?.adaptiveGate === "G-FG-23" ? [] : ["profile adaptive source gate was invalid"]),
-    ...(typeof profile?.source?.adaptiveGeneratedAt === "string" && profile.source.adaptiveGeneratedAt.length > 0 ? [] : ["profile adaptive source timestamp was missing"]),
-    ...(profile?.source?.selectedTier === profile?.selectedTier ? [] : ["profile source tier did not match selected tier"]),
-    ...(selectedTier ? [] : ["profile selected tier was invalid"]),
-    ...(profile?.appVersion === expectedAppVersion ? [] : ["profile app version did not match runtime"]),
-    ...(capability?.sourceGate === "G-FG-01" ? [] : ["profile capability source gate was invalid"]),
-    ...(capability?.status === "webgpu-ready" ? [] : ["profile capability status was invalid"]),
-    ...(capability?.backend === "webgpu-compute" ? [] : ["profile capability backend was invalid"]),
-    ...(typeof capability?.adapterInfo === "string" && capability.adapterInfo.length > 0 ? [] : ["profile capability adapter was missing"]),
-    ...(Array.isArray(capability?.features) && capability.features.length > 0 ? [] : ["profile capability features were missing"]),
-    ...(capability?.limits?.maxStorageBufferBindingSize !== undefined && capability.limits.maxStorageBufferBindingSize !== null
-      ? []
-      : ["profile capability storage limit was missing"]),
-    ...(capability?.fingerprint === capabilityFingerprint(capability) ? [] : ["profile capability fingerprint did not match provenance"]),
-  ];
-}
-
-function validFluidTier(value) {
-  return value === "low" || value === "standard" || value === "high" || value === "ultra" ? value : undefined;
-}
-
-function validExperimentalFluidGrid(value) {
-  return value === "1024x576" || value === "1280x720" ? value : undefined;
-}
-
-function capabilityFingerprint(capability) {
-  if (!capability) return undefined;
-  const limitKeys = [
-    "maxBufferSize",
-    "maxComputeInvocationsPerWorkgroup",
-    "maxComputeWorkgroupSizeX",
-    "maxComputeWorkgroupSizeY",
-    "maxComputeWorkgroupsPerDimension",
-    "maxStorageBufferBindingSize",
-  ];
-  const features = Array.from(new Set(Array.isArray(capability.features) ? capability.features.filter((value) => typeof value === "string" && value.length > 0) : [])).sort().join(",");
-  const limits = limitKeys.map((key) => `${key}:${capability.limits?.[key] ?? "null"}`).join(",");
-  return [`adapter:${capability.adapterInfo ?? ""}`, `backend:${capability.backend}`, `features:${features}`, `limits:${limits}`, `status:${capability.status}`].join("|");
 }
 
 app.whenReady().then(async () => {

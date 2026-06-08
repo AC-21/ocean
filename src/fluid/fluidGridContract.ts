@@ -41,7 +41,8 @@ export type FluidGridMilestoneId =
   | "FG-37"
   | "FG-38"
   | "FG-39"
-  | "FG-40";
+  | "FG-40"
+  | "FG-41";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -84,7 +85,8 @@ export type FluidGridGateId =
   | "G-FG-37"
   | "G-FG-38"
   | "G-FG-39"
-  | "G-FG-40";
+  | "G-FG-40"
+  | "G-FG-41";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -192,6 +194,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-38", title: "Experimental high-resolution grid headroom gate", gate: "G-FG-38" },
   { id: "FG-39", title: "Experimental high-resolution live renderer gate", gate: "G-FG-39" },
   { id: "FG-40", title: "Experimental high-resolution reference outcomes gate", gate: "G-FG-40" },
+  { id: "FG-41", title: "Persisted high-resolution runtime-grid calibration gate", gate: "G-FG-41" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -472,6 +475,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:experimental-reference-outcomes and docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
     passBar:
       "the packaged Desktop app runs the experimental 1024 x 576 live WebGPU renderer through drop, splash, float, sink, and damping reference cases while capability selection remains capped at ultra 768 x 432 and no full-grid readback is used",
+  },
+  {
+    id: "G-FG-41",
+    blocks: "FG-41",
+    evidence: "npm run fluid:high-resolution-calibration and docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
+    passBar:
+      "a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live 1024 x 576 without OCEAN_LAB_EXPERIMENTAL_FLUID_GRID while capability selection remains capped at ultra 768 x 432",
   },
 ];
 
@@ -1439,6 +1449,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close experimental high-resolution reference outcome gate",
     exitProof:
       "npm run fluid:experimental-reference-outcomes passes with all reference comparison bands, active WebGPU telemetry, fixed-step frame-loop stats, no-readback proof, and committed FG-40 evidence",
+  },
+  {
+    id: "FG-41-T01",
+    milestone: "FG-41",
+    status: "done",
+    title: "Store optional high-resolution runtime-grid calibration",
+    exitProof:
+      "fluidPersistedCalibration.ts validates an optional runtimeGrid profile field sourced from passing FG-40 evidence while existing tier-only profiles remain valid",
+  },
+  {
+    id: "FG-41-T02",
+    milestone: "FG-41",
+    status: "done",
+    title: "Read persisted runtime grid during packaged startup",
+    exitProof:
+      "electron/main.cjs reads the stored runtimeGrid profile field and forwards experimentalFluidGrid=1024x576 when no manual grid environment override is present",
+  },
+  {
+    id: "FG-41-T03",
+    milestone: "FG-41",
+    status: "done",
+    title: "Close persisted high-resolution runtime-grid calibration gate",
+    exitProof:
+      "npm run fluid:high-resolution-calibration passes with a stored FG-40 runtime grid, no fluid/grid env overrides, calibrated-auto ultra capability, and a live 1024 x 576 WebGPU canvas",
   },
 ];
 

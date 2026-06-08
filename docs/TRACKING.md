@@ -92,6 +92,7 @@ and GitHub issue mapping.
 | G-FG-38 | FG-38 | `npm run fluid:high-resolution-headroom`; `docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json` | the packaged Desktop app keeps production runtime selection capped at ultra while benchmark-only explicit high-resolution grids beyond `768 x 432` pass WebGPU grid, bounded pressure-gradient, and localized particle-splash timing, memory, no-readback, and diagnostic thresholds with timestamp-query evidence |
 | G-FG-39 | FG-39 | `npm run fluid:experimental-live-grid`; `docs/evidence/FG-39-experimental-live-grid-2026-06-08.json` | the packaged Desktop app keeps default calibrated capability selection capped at ultra `768 x 432` while an explicit experimental runtime flag drives the live WebGPU renderer at `1024 x 576` with smooth idle and concrete-impact pacing, active pressure/particles/coupling, and no full-grid readback |
 | G-FG-40 | FG-40 | `npm run fluid:experimental-reference-outcomes`; `docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json` | the packaged Desktop app runs the experimental `1024 x 576` live WebGPU renderer through drop, splash, float, sink, and damping reference cases while capability selection remains capped at ultra `768 x 432` and no full-grid readback is used |
+| G-FG-41 | FG-41 | `npm run fluid:high-resolution-calibration`; `docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json` | a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live `1024 x 576` without `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` while capability selection remains capped at ultra `768 x 432` |
 
 ## Tasks
 
@@ -221,6 +222,9 @@ and GitHub issue mapping.
 | FG-40-T01 | FG-40 | Done | physics | `fluidExperimentalReferenceOutcomes.ts` requires capability selection to remain ultra `768 x 432` while the live renderer grid is `1024 x 576` and all reference comparisons, pressure, particle, coupling, frame-loop, and no-readback telemetry pass |
 | FG-40-T02 | FG-40 | Done | verification | `fluidExperimentalReferenceOutcomes.report.ts` launches the packaged app with `OCEAN_LAB_FLUID_TIER=ultra` and `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576`, then replays concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference cases |
 | FG-40-T03 | FG-40 | Done | calibration | `npm run fluid:experimental-reference-outcomes` passes with all reference comparison bands, active WebGPU telemetry, fixed-step frame-loop stats, no-readback proof, and committed FG-40 evidence |
+| FG-41-T01 | FG-41 | Done | calibration | `fluidPersistedCalibration.ts` validates an optional `runtimeGrid` profile field sourced from passing FG-40 evidence while existing tier-only profiles remain valid |
+| FG-41-T02 | FG-41 | Done | startup | `electron/main.cjs` reads the stored `runtimeGrid` profile field and forwards `experimentalFluidGrid=1024x576` when no manual grid environment override is present |
+| FG-41-T03 | FG-41 | Done | verification | `npm run fluid:high-resolution-calibration` passes with a stored FG-40 runtime grid, no fluid/grid env overrides, calibrated-auto ultra capability, and a live `1024 x 576` WebGPU canvas |
 
 ## GitHub Labels
 
@@ -277,6 +281,7 @@ and GitHub issue mapping.
 | FG-38 | https://github.com/AC-21/ocean/issues/41 |
 | FG-39 | https://github.com/AC-21/ocean/issues/42 |
 | FG-40 | https://github.com/AC-21/ocean/issues/43 |
+| FG-41 | https://github.com/AC-21/ocean/issues/44 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

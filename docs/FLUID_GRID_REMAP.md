@@ -1151,6 +1151,35 @@ Experimental reference outcome evidence:
   stats, and pressure plus particle no-full-grid-readback flags must remain
   active while the high-resolution renderer is attached.
 
+FG-41 promotes the validated high-resolution renderer into persisted local
+calibration. Instead of requiring a manual
+`OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576` launch, the app-owned calibration
+profile can record an optional `runtimeGrid` sourced from passing FG-40
+evidence. Electron then reads that profile at startup and forwards
+`experimentalFluidGrid=1024x576` into the renderer query while the calibrated
+tier/capability ladder still reports ultra at `768 x 432`.
+
+Persisted high-resolution calibration evidence:
+
+- Command: `npm run fluid:high-resolution-calibration`.
+- Gate: `G-FG-41`.
+- Evidence snapshot:
+  `docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json`.
+- Source invariant: the profile runtime grid must come from passing `G-FG-40`
+  evidence with live grid `1024 x 576`, five cases, and ten reference
+  comparisons.
+- Launch invariant: the packaged app is launched with no
+  `OCEAN_LAB_FLUID_TIER`, `OCEAN_LAB_CALIBRATED_FLUID_TIER`, or
+  `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` environment override.
+- Runtime proof: selection mode is `calibrated-auto`, selected tier remains
+  `ultra`, capability grid remains `768 x 432`, `window.__fluidRuntimeGridOverride`
+  reports `1024 x 576`, and the live canvas reports `1024 x 576` with
+  `webgpu-grid-primary-v1` / `webgpu`.
+- Measured startup proof: the persisted profile was `2581` bytes, round-tripped
+  through storage, was read by the main process, launched with
+  `envExperimentalGridPresent: false`, and reached `12` live WebGPU water frames
+  at `1024 x 576` before the gate accepted it.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1283,6 +1312,10 @@ Experimental reference outcome evidence:
     drop, splash, float, sink, and damping comparisons to stay inside accepted
     bands with active pressure, particle, coupling, frame-loop, and no-readback
     evidence.
+38. Persisted high-resolution runtime-grid calibration: store the approved
+    `1024 x 576` runtime grid in the local calibration profile only when FG-40
+    passes, then prove packaged startup can recover that grid from storage
+    without manual fluid/grid environment overrides.
 
 ## Resolution Ladder
 

@@ -49,6 +49,7 @@
     "fluid:high-resolution-headroom": "npm run desktop:package:mac && vite-node src/fluid/fluidHighResolutionHeadroom.report.ts",
     "fluid:experimental-live-grid": "npm run desktop:package:mac && vite-node src/fluid/fluidExperimentalLiveGrid.report.ts",
     "fluid:experimental-reference-outcomes": "npm run desktop:package:mac && vite-node src/fluid/fluidExperimentalReferenceOutcomes.report.ts",
+    "fluid:high-resolution-calibration": "npm run desktop:package:mac && vite-node src/fluid/fluidHighResolutionCalibration.report.ts",
     "fluid:ultra-renderer": "npm run desktop:package:mac && vite-node src/fluid/fluidUltraRenderer.report.ts",
     "fluid:ultra-reference-outcomes": "npm run desktop:package:mac && vite-node src/fluid/fluidUltraReferenceOutcomes.report.ts",
     "fluid:adaptive-tier": "npm run desktop:package:mac && vite-node src/fluid/fluidAdaptiveTier.report.ts",

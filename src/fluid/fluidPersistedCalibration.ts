@@ -1,5 +1,6 @@
 import type { FluidGridTierId } from "./fluidGridContract";
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
+import type { FluidExperimentalReferenceOutcomesReport } from "./fluidExperimentalReferenceOutcomes";
 import {
   capabilityProvenanceForReport,
   fluidCapabilityFingerprintForProvenance,
@@ -16,6 +17,7 @@ export type FluidCalibrationProfile = {
   capability: FluidCalibrationCapabilityProvenance;
   generatedAt: string;
   pass: boolean;
+  runtimeGrid?: FluidCalibrationRuntimeGrid;
   schema: "ocean-fluid-calibration-profile-v1";
   selectedTier: FluidGridTierId;
   source: {
@@ -29,6 +31,15 @@ export type FluidCalibrationProfile = {
     maxUltraGpuP95StepMs: number | null;
     maxUltraToHighGpuP95Ratio: number | null;
   };
+};
+
+export type FluidCalibrationRuntimeGrid = {
+  capabilityGrid: "768x432";
+  cellsX: 1024;
+  cellsY: 576;
+  liveGrid: "1024x576";
+  sourceGate: "G-FG-40";
+  sourceGeneratedAt: string;
 };
 
 export type FluidCalibrationCapabilityProvenance = FluidCapabilityProvenance & {
@@ -96,6 +107,39 @@ export function calibrationProfileForAdaptiveReport(
   };
 }
 
+export function calibrationProfileWithExperimentalRuntimeGrid(
+  profile: FluidCalibrationProfile,
+  experimentalReference: FluidExperimentalReferenceOutcomesReport
+): FluidCalibrationProfile {
+  const failures = [
+    ...(experimentalReference.gate === "G-FG-40" ? [] : [`runtime grid source gate was ${experimentalReference.gate}`]),
+    ...(experimentalReference.pass ? [] : ["runtime grid source evidence did not pass"]),
+    ...(experimentalReference.summary.capabilityGrid === "768x432"
+      ? []
+      : [`runtime grid source capability grid was ${experimentalReference.summary.capabilityGrid}`]),
+    ...(experimentalReference.summary.liveGrid === "1024x576"
+      ? []
+      : [`runtime grid source live grid was ${experimentalReference.summary.liveGrid}`]),
+    ...(experimentalReference.runtimeGrid.cellsX === 1024 && experimentalReference.runtimeGrid.cellsY === 576
+      ? []
+      : [`runtime grid source dimensions were ${experimentalReference.runtimeGrid.cellsX} x ${experimentalReference.runtimeGrid.cellsY}`]),
+  ];
+  if (failures.length > 0) {
+    throw new Error(`Cannot add experimental runtime grid calibration:\n${failures.join("\n")}`);
+  }
+  return {
+    ...profile,
+    runtimeGrid: {
+      capabilityGrid: "768x432",
+      cellsX: 1024,
+      cellsY: 576,
+      liveGrid: "1024x576",
+      sourceGate: "G-FG-40",
+      sourceGeneratedAt: experimentalReference.generatedAt,
+    },
+  };
+}
+
 export function validateFluidCalibrationProfile(
   profile: FluidCalibrationProfile,
   options: FluidCalibrationProfileValidationOptions = {}
@@ -124,6 +168,22 @@ export function validateFluidCalibrationProfile(
     ...(profile.summary.maxLiveP95FrameMs !== null ? [] : ["profile is missing live frame-pacing summary."]),
     ...(profile.summary.maxUltraGpuP95StepMs !== null ? [] : ["profile is missing ultra GPU timing summary."]),
     ...(profile.summary.maxUltraToHighGpuP95Ratio !== null ? [] : ["profile is missing ultra/high timing ratio summary."]),
+    ...runtimeGridFailures(profile.runtimeGrid),
+  ];
+}
+
+export function runtimeGridFailures(runtimeGrid: FluidCalibrationRuntimeGrid | undefined): string[] {
+  if (runtimeGrid === undefined) return [];
+  return [
+    ...(runtimeGrid.sourceGate === "G-FG-40" ? [] : ["profile runtime grid must come from gate G-FG-40."]),
+    ...(typeof runtimeGrid.sourceGeneratedAt === "string" && runtimeGrid.sourceGeneratedAt.length > 0
+      ? []
+      : ["profile runtime grid must record source evidence timestamp."]),
+    ...(runtimeGrid.capabilityGrid === "768x432" ? [] : [`profile runtime grid capability grid was ${runtimeGrid.capabilityGrid}.`]),
+    ...(runtimeGrid.liveGrid === "1024x576" ? [] : [`profile runtime grid live grid was ${runtimeGrid.liveGrid}.`]),
+    ...(runtimeGrid.cellsX === 1024 && runtimeGrid.cellsY === 576
+      ? []
+      : [`profile runtime grid was ${runtimeGrid.cellsX} x ${runtimeGrid.cellsY}, expected 1024 x 576.`]),
   ];
 }
 

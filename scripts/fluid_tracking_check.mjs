@@ -46,10 +46,13 @@ const requiredFiles = [
   "docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json",
   "docs/evidence/FG-39-experimental-live-grid-2026-06-08.json",
   "docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
+  "docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
+  "electron/fluid-calibration.cjs",
+  "electron/fluid-calibration.test.mjs",
   "electron/main.cjs",
   "electron/storage.cjs",
   "electron/storage.test.mjs",
@@ -122,6 +125,9 @@ const requiredFiles = [
   "src/fluid/fluidExperimentalReferenceOutcomes.ts",
   "src/fluid/fluidExperimentalReferenceOutcomes.report.ts",
   "src/fluid/fluidExperimentalReferenceOutcomes.test.ts",
+  "src/fluid/fluidHighResolutionCalibration.ts",
+  "src/fluid/fluidHighResolutionCalibration.report.ts",
+  "src/fluid/fluidHighResolutionCalibration.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -141,8 +147,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -157,6 +163,8 @@ const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
 const fluidGridGpu = files.get("src/fluid/fluidGridGpu.ts") ?? "";
+const electronFluidCalibration = files.get("electron/fluid-calibration.cjs") ?? "";
+const electronFluidCalibrationTest = files.get("electron/fluid-calibration.test.mjs") ?? "";
 const electronMain = files.get("electron/main.cjs") ?? "";
 const electronStorage = files.get("electron/storage.cjs") ?? "";
 const electronStorageTest = files.get("electron/storage.test.mjs") ?? "";
@@ -229,6 +237,9 @@ const experimentalLiveGridTest = files.get("src/fluid/fluidExperimentalLiveGrid.
 const experimentalReferenceOutcomes = files.get("src/fluid/fluidExperimentalReferenceOutcomes.ts") ?? "";
 const experimentalReferenceOutcomesReport = files.get("src/fluid/fluidExperimentalReferenceOutcomes.report.ts") ?? "";
 const experimentalReferenceOutcomesTest = files.get("src/fluid/fluidExperimentalReferenceOutcomes.test.ts") ?? "";
+const highResolutionCalibration = files.get("src/fluid/fluidHighResolutionCalibration.ts") ?? "";
+const highResolutionCalibrationReport = files.get("src/fluid/fluidHighResolutionCalibration.report.ts") ?? "";
+const highResolutionCalibrationTest = files.get("src/fluid/fluidHighResolutionCalibration.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -285,6 +296,7 @@ const fg37Evidence = files.get("docs/evidence/FG-37-installed-reference-pacing-2
 const fg38Evidence = files.get("docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json") ?? "";
 const fg39Evidence = files.get("docs/evidence/FG-39-experimental-live-grid-2026-06-08.json") ?? "";
 const fg40Evidence = files.get("docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json") ?? "";
+const fg41Evidence = files.get("docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1421,9 +1433,10 @@ if (
 
 if (
   !electronMain.includes("calibratedFluidCalibrationFromStorage") ||
+  !electronMain.includes("calibratedFluidCalibrationFromProfile") ||
   !electronMain.includes("desktopStorageFiles.fluidCalibrationProfile") ||
-  !electronMain.includes("ocean-fluid-calibration-profile-v1") ||
-  !electronMain.includes("calibrationProfileFailures(profile, app.getVersion())") ||
+  !electronFluidCalibration.includes("ocean-fluid-calibration-profile-v1") ||
+  !electronFluidCalibration.includes("calibrationProfileFailures(profile, expectedAppVersion)") ||
   !electronMain.includes("!requestedFluidTier && calibratedFluidTier ? \"auto\"") ||
   !electronMain.includes("calibratedFluidFingerprint")
 ) {
@@ -1680,11 +1693,11 @@ if (
 }
 
 if (
-  !electronMain.includes("calibrationProfileFailures") ||
+  !electronFluidCalibration.includes("calibrationProfileFailures") ||
   !electronMain.includes("app.getVersion()") ||
-  !electronMain.includes("profile?.appVersion === expectedAppVersion") ||
-  !electronMain.includes("profile?.source?.adaptiveGate === \"G-FG-23\"") ||
-  !electronMain.includes("profile source tier did not match selected tier")
+  !electronFluidCalibration.includes("profile?.appVersion === expectedAppVersion") ||
+  !electronFluidCalibration.includes("profile?.source?.adaptiveGate === \"G-FG-23\"") ||
+  !electronFluidCalibration.includes("profile source tier did not match selected tier")
 ) {
   errors.push("electron/main.cjs must reject stale or malformed calibration profiles before setting calibratedFluidTier");
 }
@@ -1780,8 +1793,8 @@ if (
 
 if (
   !electronMain.includes("calibratedFluidFingerprint") ||
-  !electronMain.includes("capabilityFingerprint") ||
-  !electronMain.includes("profile capability fingerprint did not match provenance")
+  !electronFluidCalibration.includes("capabilityFingerprint") ||
+  !electronFluidCalibration.includes("profile capability fingerprint did not match provenance")
 ) {
   errors.push("electron/main.cjs must pass valid calibration fingerprints and reject tampered profile capability provenance");
 }
@@ -2828,7 +2841,7 @@ if (
   !electronMain.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
   !electronMain.includes("validExperimentalFluidGrid") ||
   !electronMain.includes("experimentalFluidGrid") ||
-  !electronMain.includes("1024x576")
+  !electronFluidCalibration.includes("1024x576")
 ) {
   errors.push("electron/main.cjs must validate and forward the FG-39 experimental fluid grid flag");
 }
@@ -3021,6 +3034,105 @@ if (
   !fg40Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-40 evidence must record passing high-resolution reference outcomes with live 1024 x 576 WebGPU telemetry and no-readback proof");
+}
+
+if (!packageJson.includes("\"fluid:high-resolution-calibration\"") || !packageJson.includes("src/fluid/fluidHighResolutionCalibration.report.ts")) {
+  errors.push("package.json must expose the FG-41 high-resolution calibration command");
+}
+
+if (!tracking.includes("FG-41-T03") || !tracking.includes("FG-41-high-resolution-calibration-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/44")) {
+  errors.push("docs/TRACKING.md must record FG-41 high-resolution calibration evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-41") ||
+  !contract.includes("G-FG-41") ||
+  !contract.includes("Persisted high-resolution runtime-grid calibration gate") ||
+  !contract.includes("npm run fluid:high-resolution-calibration")
+) {
+  errors.push("fluidGridContract.ts must define the FG-41 high-resolution calibration milestone, gate, and evidence command");
+}
+
+if (
+  !persistedCalibration.includes("runtimeGrid") ||
+  !persistedCalibration.includes("G-FG-40") ||
+  !persistedCalibration.includes("calibrationProfileWithExperimentalRuntimeGrid") ||
+  !persistedCalibration.includes("runtimeGridFailures") ||
+  !persistedCalibration.includes("1024")
+) {
+  errors.push("fluidPersistedCalibration.ts must support optional FG-40 runtimeGrid calibration in the profile");
+}
+
+if (
+  !electronMain.includes("storedCalibration?.runtimeGrid") ||
+  !electronFluidCalibration.includes("validCalibrationRuntimeGrid") ||
+  !electronFluidCalibration.includes("calibrationRuntimeGridFailures") ||
+  !electronMain.includes("experimentalFluidGrid = envExperimentalFluidGrid") ||
+  !electronFluidCalibrationTest.includes("does not yet have a high-resolution runtime grid")
+) {
+  errors.push("electron/main.cjs must read persisted runtimeGrid calibration while preserving env override precedence");
+}
+
+if (
+  !highResolutionCalibration.includes("G-FG-41") ||
+  !highResolutionCalibration.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID must be absent") ||
+  !highResolutionCalibration.includes("main process did not read the persisted high-resolution runtime grid") ||
+  !highResolutionCalibration.includes("1024x576") ||
+  !highResolutionCalibration.includes("768x432")
+) {
+  errors.push("fluidHighResolutionCalibration.ts must define FG-41 persisted runtime-grid, env absence, and startup checks");
+}
+
+if (
+  !highResolutionCalibrationReport.includes("OCEAN_LAB_HIGH_RESOLUTION_CALIBRATION_OUT") ||
+  !highResolutionCalibrationReport.includes("docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json") ||
+  !highResolutionCalibrationReport.includes("delete launchEnv.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !highResolutionCalibrationReport.includes("calibrationProfileWithExperimentalRuntimeGrid") ||
+  !highResolutionCalibrationReport.includes("window.__fluidRuntimeGridOverride?.cellsX === 1024") ||
+  !highResolutionCalibrationReport.includes("G-FG-41")
+) {
+  errors.push("fluidHighResolutionCalibration.report.ts must build a persisted FG-40 runtimeGrid profile and launch without manual grid env overrides");
+}
+
+if (
+  !highResolutionCalibrationTest.includes("stored FG-40 runtime grid") ||
+  !highResolutionCalibrationTest.includes("manual env override") ||
+  !highResolutionCalibrationTest.includes("profile without FG-40 runtime-grid provenance") ||
+  !highResolutionCalibrationTest.includes("G-FG-41")
+) {
+  errors.push("fluidHighResolutionCalibration.test.ts must cover FG-41 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-41") ||
+  !remap.includes("Persisted high-resolution calibration evidence") ||
+  !remap.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !remap.includes("window.__fluidRuntimeGridOverride") ||
+  !remap.includes("no `OCEAN_LAB_FLUID_TIER`")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-41 persisted high-resolution calibration gate and evidence");
+}
+
+if (
+  !fg41Evidence.includes("\"gate\": \"G-FG-41\"") ||
+  !fg41Evidence.includes("\"pass\": true") ||
+  !fg41Evidence.includes("\"failures\": []") ||
+  !fg41Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg41Evidence.includes("\"envExperimentalGridPresent\": false") ||
+  !fg41Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg41Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg41Evidence.includes("\"sourceGate\": \"G-FG-40\"") ||
+  !fg41Evidence.includes("\"sourceEvidence\"") ||
+  !fg41Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg41Evidence.includes("\"capabilityGrid\": \"768x432\"") ||
+  !fg41Evidence.includes("\"runtimeGridOverride\"") ||
+  !fg41Evidence.includes("\"grid\": \"1024x576\"") ||
+  !fg41Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg41Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg41Evidence.includes("\"readByMainProcess\": true") ||
+  !fg41Evidence.includes("\"verificationReadMatched\": true")
+) {
+  errors.push("FG-41 evidence must record persisted FG-40 runtimeGrid calibration launching live 1024 x 576 without manual grid env overrides");
 }
 
 if (errors.length > 0) {
