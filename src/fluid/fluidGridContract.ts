@@ -21,7 +21,8 @@ export type FluidGridMilestoneId =
   | "FG-17"
   | "FG-18"
   | "FG-19"
-  | "FG-20";
+  | "FG-20"
+  | "FG-21";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -44,7 +45,8 @@ export type FluidGridGateId =
   | "G-FG-17"
   | "G-FG-18"
   | "G-FG-19"
-  | "G-FG-20";
+  | "G-FG-20"
+  | "G-FG-21";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -132,6 +134,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-18", title: "Live coupled reference outcome gate", gate: "G-FG-18" },
   { id: "FG-19", title: "Packaged display pacing and smoothness gate", gate: "G-FG-19" },
   { id: "FG-20", title: "Ultra-tier resolution scaling gate", gate: "G-FG-20" },
+  { id: "FG-21", title: "Opt-in ultra-tier live renderer gate", gate: "G-FG-21" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -272,6 +275,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:resolution-scale and docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
     passBar:
       "the packaged app benchmarks standard, high, and ultra WebGPU tiers across grid stepping, bounded pressure shallow water, and localized particle splash with timestamp-query timing, bounded memory growth, no full-grid readback, and stable ultra/high timing ratios",
+  },
+  {
+    id: "G-FG-21",
+    blocks: "FG-21",
+    evidence: "npm run fluid:ultra-renderer and docs/evidence/FG-21-ultra-renderer-2026-06-08.json",
+    passBar:
+      "the packaged app honors an explicit ultra-tier request, selects the live 768 x 432 WebGPU renderer, and sustains smooth idle and concrete-impact display pacing with pressure, particles, object-grid coupling, zero dropped simulation debt, and no Canvas fallback",
   },
 ];
 
@@ -759,6 +769,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify local ultra-tier scaling evidence",
     exitProof:
       "npm run fluid:resolution-scale passes with ultra 331776 cells, grid p95 0.0903 ms, pressure p95 0.0733 ms, particle p95 0.0288 ms, and 17.97 MiB measured storage",
+  },
+  {
+    id: "FG-21-T01",
+    milestone: "FG-21",
+    status: "done",
+    title: "Add opt-in live renderer tier selection",
+    exitProof:
+      "Electron passes OCEAN_LAB_FLUID_TIER as a fluidTier query parameter and OceanPhysicsApp routes it through detectFluidCapability without bypassing fallback limits",
+  },
+  {
+    id: "FG-21-T02",
+    milestone: "FG-21",
+    status: "done",
+    title: "Verify packaged ultra renderer activation",
+    exitProof:
+      "fluidUltraRenderer.report.ts launches the packaged app with OCEAN_LAB_FLUID_TIER=ultra and waits for selected tier ultra, grid 768 x 432, renderer webgpu-grid-primary-v1, and canvas water tier ultra",
+  },
+  {
+    id: "FG-21-T03",
+    milestone: "FG-21",
+    status: "done",
+    title: "Measure ultra live display pacing",
+    exitProof:
+      "npm run fluid:ultra-renderer passes idle and concrete-impact ultra display pacing with worst p95 9.3 ms, p99 9.4 ms, zero dropped-frame ratio, and zero dropped simulation debt",
   },
 ];
 

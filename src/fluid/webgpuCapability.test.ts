@@ -71,6 +71,7 @@ describe("WebGPU fluid capability detection", () => {
 
   it("selects the largest tier allowed by limits and memory budget", () => {
     expect(selectFluidGridTier(generousLimits, "high")).toBe("high");
+    expect(selectFluidGridTier(generousLimits, "ultra")).toBe("ultra");
     expect(selectFluidGridTier(generousLimits, "ultra", estimateFluidGridBytes(gridForTier("high")) + 1)).toBe("high");
     expect(selectFluidGridTier({ ...generousLimits, maxComputeInvocationsPerWorkgroup: 32 }, "high")).toBe("low");
     expect(fluidGridTiers.map((tier) => tier.id)).toEqual(["low", "standard", "high", "ultra"]);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
 import { createFluidFrameLoopState, defaultFluidFrameLoopConfig, frameLoopStats, planFluidFrameStep } from "./fluid/fluidFrameLoop";
+import type { FluidGridTierId } from "./fluid/fluidGridContract";
 import { runParticleSplashBenchmark } from "./fluid/fluidParticleSplash";
 import { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import {
@@ -150,6 +151,7 @@ export default function OceanPhysicsApp() {
   const simulationRef = useRef<SimulationState>(createSimulation(spec, dropHeightM));
   const [snapshot, setSnapshot] = useState<SimulationState>(simulationRef.current);
   const [fluidCapability, setFluidCapability] = useState<FluidCapabilityReport>(() => pendingFluidCapabilityReport());
+  const preferredFluidTier = useMemo(() => preferredFluidTierFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
   const [waterRenderMode, setWaterRenderMode] = useState<"fallback" | "initializing" | "webgpu">("initializing");
   const waterRendererRef = useRef<FluidWaterRenderer | null>(null);
   const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
@@ -171,9 +173,10 @@ export default function OceanPhysicsApp() {
     window.__runParticleSplashBenchmark = runParticleSplashBenchmark;
     window.__runShallowWaterBenchmark = runShallowWaterBenchmark;
     window.__fluidGridCapabilityReport = fluidCapability;
-    detectFluidCapability().then((report) => {
+    detectFluidCapability({ preferredTier: preferredFluidTier }).then((report) => {
       if (cancelled) return;
       window.__fluidGridCapabilityReport = report;
+      window.__fluidGridPreferredTier = preferredFluidTier ?? "auto";
       setFluidCapability(report);
     });
     return () => {
@@ -182,7 +185,7 @@ export default function OceanPhysicsApp() {
       delete window.__runParticleSplashBenchmark;
       delete window.__runShallowWaterBenchmark;
     };
-  }, []);
+  }, [preferredFluidTier]);
 
   useEffect(() => {
     let cancelled = false;
@@ -639,6 +642,7 @@ export default function OceanPhysicsApp() {
         className="simulation-stage"
         data-fluid-backend={fluidCapability.backend}
         data-fluid-capability={fluidCapability.status}
+        data-fluid-preferred-tier={preferredFluidTier ?? "auto"}
         data-fluid-tier={fluidCapability.selectedTier}
         data-water-render-mode={waterRenderMode}
       >
@@ -680,7 +684,7 @@ export default function OceanPhysicsApp() {
         <div className="readout-block">
           <span>Fluid Backend</span>
           <strong>{fluidCapabilityTitle(fluidCapability)}</strong>
-          <em>{fluidCapability.fallbackReason ?? `${fluidCapability.selectedTier} grid selected from WebGPU adapter limits`}</em>
+          <em>{fluidCapability.fallbackReason ?? `${fluidCapability.selectedTier} grid selected from ${preferredFluidTier ? `${preferredFluidTier} request and ` : ""}WebGPU adapter limits`}</em>
           <div className="small-grid">
             <Metric label="Backend" value={fluidCapability.backend} />
             <Metric label="Tier" value={fluidCapability.selectedTier} tone={fluidCapability.status === "webgpu-ready" ? "positive" : undefined} />
@@ -961,6 +965,11 @@ function fluidCapabilityTitle(report: FluidCapabilityReport) {
   if (report.status === "checking") return "Checking GPU";
   if (report.status === "webgpu-ready") return "WebGPU compute ready";
   return "CPU reference fallback";
+}
+
+export function preferredFluidTierFromSearch(search: string): FluidGridTierId | undefined {
+  const value = new URLSearchParams(search).get("fluidTier");
+  return value === "low" || value === "standard" || value === "high" || value === "ultra" ? value : undefined;
 }
 
 function formatBytes(bytes: number) {

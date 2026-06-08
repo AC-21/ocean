@@ -149,6 +149,12 @@ Run the packaged standard/high/ultra resolution-scaling gate:
 npm run fluid:resolution-scale
 ```
 
+Run the packaged opt-in ultra live renderer gate:
+
+```sh
+npm run fluid:ultra-renderer
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -194,7 +200,11 @@ idle, dense-impact, and foam-damping scenarios sustain smooth WebGPU frame
 pacing with no diagnostic long-task stalls. FG-20 measures the packaged
 standard, high, and ultra tiers across grid stepping, pressure shallow water,
 and particle splash, proving that the local GPU can run the ultra `768 x 432`
-grid with bounded timestamp-query timing and no full-grid readback.
+grid with bounded timestamp-query timing and no full-grid readback. FG-21 turns
+that into an opt-in live packaged renderer path: `OCEAN_LAB_FLUID_TIER=ultra`
+selects the `768 x 432` WebGPU renderer, then the gate verifies idle and
+concrete-impact display pacing stay smooth with pressure, particles, and
+object-grid coupling active.
 
 ## Run
 

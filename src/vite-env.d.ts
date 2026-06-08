@@ -6,6 +6,7 @@ import type { runParticleSplashBenchmark } from "./fluid/fluidParticleSplash";
 import type { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import type { FluidFrameLoopStats } from "./fluid/fluidFrameLoop";
 import type { FluidWaterRenderStats } from "./fluid/fluidWaterRenderer";
+import type { FluidGridTierId } from "./fluid/fluidGridContract";
 import type { OceanPhysicsLiveSnapshot, OceanPhysicsScenarioControls } from "./OceanPhysicsApp";
 import type { GridFluidCouplingForces } from "./physicsOcean";
 
@@ -13,6 +14,7 @@ declare global {
   interface Window {
     __fluidGridCapabilityReport?: FluidCapabilityReport;
     __fluidGridCouplingForces?: GridFluidCouplingForces;
+    __fluidGridPreferredTier?: FluidGridTierId | "auto";
     __fluidFrameLoopStats?: FluidFrameLoopStats;
     __fluidWaterRenderStats?: FluidWaterRenderStats;
     __displayPacingObserved?: {

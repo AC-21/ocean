@@ -7,6 +7,7 @@ const appRoot = path.resolve(__dirname, "..");
 const distRootUrl = pathToFileURL(path.join(appRoot, "dist") + path.sep).href;
 const appIconPath = path.join(appRoot, "dist", "app-icon.svg");
 const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
+const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
 let storage;
 
 app.setName("Ocean Impact Lab");
@@ -71,11 +72,13 @@ async function createMainWindow() {
   });
 
   if (devServerUrl) {
-    await window.loadURL(devServerUrl);
+    const url = new URL(devServerUrl);
+    if (requestedFluidTier) url.searchParams.set("fluidTier", requestedFluidTier);
+    await window.loadURL(url.toString());
     return;
   }
 
-  await window.loadFile(path.join(appRoot, "dist", "index.html"));
+  await window.loadFile(path.join(appRoot, "dist", "index.html"), requestedFluidTier ? { query: { fluidTier: requestedFluidTier } } : undefined);
 }
 
 app.whenReady().then(async () => {

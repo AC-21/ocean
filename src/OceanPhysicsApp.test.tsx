@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor } from "./OceanPhysicsApp";
+import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor, preferredFluidTierFromSearch } from "./OceanPhysicsApp";
 import { cloneObjectSpec, createSimulation, defaultOceanSettings, objectPresets, startDrop, stepSimulation } from "./physicsOcean";
 
 const calmSettings = {
@@ -11,6 +11,13 @@ const calmSettings = {
 };
 
 describe("ocean physics live snapshot", () => {
+  it("parses an explicit WebGPU fluid tier from the app URL", () => {
+    expect(preferredFluidTierFromSearch("?fluidTier=ultra")).toBe("ultra");
+    expect(preferredFluidTierFromSearch("?fluidTier=standard")).toBe("standard");
+    expect(preferredFluidTierFromSearch("?fluidTier=banana")).toBeUndefined();
+    expect(preferredFluidTierFromSearch("")).toBeUndefined();
+  });
+
   it("exposes reference-ready float prediction and diagnostic fields", () => {
     const iceBlock = cloneObjectSpec(requiredPreset("ice-block"));
     const state = createSimulation(iceBlock, 1, 0);

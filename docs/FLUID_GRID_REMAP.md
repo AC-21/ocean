@@ -591,6 +591,30 @@ Latest resolution-scaling evidence:
   families passed at every tier, and no full-grid readback path was used.
 - Gate: passed.
 
+FG-21 is complete as of 2026-06-08. It turns the ultra tier from benchmark-only
+evidence into a live packaged renderer path. The Electron shell accepts
+`OCEAN_LAB_FLUID_TIER=ultra`, passes it to the renderer as `?fluidTier=ultra`,
+and the app routes that request through the same WebGPU capability limits that
+protect fallback behavior. This keeps ultra opt-in and measurable rather than
+silently making it the default on unsupported hardware.
+
+Latest ultra renderer evidence:
+
+- Command: `npm run fluid:ultra-renderer`.
+- Runtime: packaged macOS app with `OCEAN_LAB_FLUID_TIER=ultra`.
+- Gate: `G-FG-21`.
+- Evidence snapshot:
+  `docs/evidence/FG-21-ultra-renderer-2026-06-08.json`.
+- Selected live tier: `ultra`, grid `768 x 432`, renderer
+  `webgpu-grid-primary-v1`, context `webgpu`.
+- Display pacing: idle ultra p95 `8.9 ms`, p99 `9.2 ms`; concrete-impact ultra
+  p95 `9.3 ms`, p99 `9.4 ms`; zero dropped-frame ratio and zero dropped
+  simulation debt in both scenarios.
+- Live physics telemetry: pressure active, particles active during impact,
+  object-grid coupling active during impact, fixed-step physics advancing near
+  real time, and no Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -655,6 +679,10 @@ Latest resolution-scaling evidence:
     packaged app across grid stepping, pressure shallow water, and particle
     splash, then use timestamp-query timing, memory growth, and ultra/high
     ratios to guide future high-resolution grid choices.
+22. Opt-in ultra renderer: pass an explicit ultra-tier request through the
+    packaged app's runtime, keep fallback limits intact, and prove the live
+    `768 x 432` renderer sustains smooth display pacing with pressure,
+    particles, and object-grid coupling active.
 
 ## Resolution Ladder
 

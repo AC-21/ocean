@@ -26,10 +26,12 @@ const requiredFiles = [
   "docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-19-display-pacing-2026-06-08.json",
   "docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
+  "docs/evidence/FG-21-ultra-renderer-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
+  "electron/main.cjs",
   "package.json",
   "scripts/fluid_live_reference_outcomes_report.mjs",
   "src/OceanPhysicsApp.tsx",
@@ -41,6 +43,9 @@ const requiredFiles = [
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
+  "src/fluid/fluidUltraRenderer.ts",
+  "src/fluid/fluidUltraRenderer.report.ts",
+  "src/fluid/fluidUltraRenderer.test.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
@@ -53,8 +58,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -68,6 +73,7 @@ const files = new Map(requiredFiles.map((filePath) => [filePath, readRequired(fi
 const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
+const electronMain = files.get("electron/main.cjs") ?? "";
 const packageJson = files.get("package.json") ?? "";
 const liveReferenceScript = files.get("scripts/fluid_live_reference_outcomes_report.mjs") ?? "";
 const oceanPhysicsApp = files.get("src/OceanPhysicsApp.tsx") ?? "";
@@ -79,6 +85,9 @@ const displayPacingTest = files.get("src/fluid/fluidDisplayPacing.test.ts") ?? "
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
+const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
+const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
+const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
@@ -109,6 +118,7 @@ const fg17Evidence = files.get("docs/evidence/FG-17-pressure-feedback-2026-06-08
 const fg18Evidence = files.get("docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json") ?? "";
 const fg19Evidence = files.get("docs/evidence/FG-19-display-pacing-2026-06-08.json") ?? "";
 const fg20Evidence = files.get("docs/evidence/FG-20-resolution-scaling-2026-06-08.json") ?? "";
+const fg21Evidence = files.get("docs/evidence/FG-21-ultra-renderer-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -958,6 +968,91 @@ if (
   !fg20Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-20 evidence must record a passing packaged standard/high/ultra resolution scaling report with ultra timing, storage, and ratio evidence");
+}
+
+if (!packageJson.includes("\"fluid:ultra-renderer\"") || !packageJson.includes("src/fluid/fluidUltraRenderer.report.ts")) {
+  errors.push("package.json must expose the FG-21 packaged ultra-renderer command");
+}
+
+if (!tracking.includes("FG-21-T03") || !tracking.includes("FG-21-ultra-renderer-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/24")) {
+  errors.push("docs/TRACKING.md must record FG-21 ultra renderer evidence and issue mapping");
+}
+
+if (!electronMain.includes("OCEAN_LAB_FLUID_TIER") || !electronMain.includes("fluidTier")) {
+  errors.push("electron/main.cjs must pass the FG-21 fluid tier override into the renderer URL");
+}
+
+if (
+  !oceanPhysicsApp.includes("preferredFluidTierFromSearch") ||
+  !oceanPhysicsApp.includes("detectFluidCapability({ preferredTier") ||
+  !oceanPhysicsApp.includes("__fluidGridPreferredTier") ||
+  !oceanPhysicsApp.includes("data-fluid-preferred-tier")
+) {
+  errors.push("OceanPhysicsApp.tsx must honor and expose the FG-21 preferred fluid tier through capability detection");
+}
+
+if (!oceanPhysicsAppTest.includes("preferredFluidTierFromSearch") || !oceanPhysicsAppTest.includes("?fluidTier=ultra")) {
+  errors.push("OceanPhysicsApp.test.tsx must cover FG-21 fluid tier URL parsing");
+}
+
+if (!viteEnv.includes("__fluidGridPreferredTier")) {
+  errors.push("vite-env.d.ts must type the FG-21 preferred fluid tier telemetry");
+}
+
+if (
+  !ultraRenderer.includes("G-FG-21") ||
+  !ultraRenderer.includes("selectedTier === \"ultra\"") ||
+  !ultraRenderer.includes("768") ||
+  !ultraRenderer.includes("432") ||
+  !ultraRenderer.includes("display samples did not all observe ultra tier")
+) {
+  errors.push("fluidUltraRenderer.ts must define the FG-21 ultra live renderer gate");
+}
+
+if (
+  !ultraRendererReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !ultraRendererReport.includes("__fluidGridPreferredTier === \"ultra\"") ||
+  !ultraRendererReport.includes("data-water-grid") ||
+  !ultraRendererReport.includes("idle-ultra-display-pacing") ||
+  !ultraRendererReport.includes("concrete-ultra-impact-display-pacing")
+) {
+  errors.push("fluidUltraRenderer.report.ts must launch and measure the packaged ultra live renderer");
+}
+
+if (
+  !ultraRendererTest.includes("createFluidUltraRendererReport") ||
+  !ultraRendererTest.includes("selected tier must be ultra") ||
+  !ultraRendererTest.includes("display samples")
+) {
+  errors.push("fluidUltraRenderer.test.ts must cover FG-21 ultra renderer failure cases");
+}
+
+if (
+  !remap.includes("FG-21") ||
+  !remap.includes("OCEAN_LAB_FLUID_TIER=ultra") ||
+  !remap.includes("Opt-in ultra renderer") ||
+  !remap.includes("768 x 432") ||
+  !remap.includes("concrete-impact ultra")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-21 opt-in ultra live renderer gate and evidence");
+}
+
+if (
+  !fg21Evidence.includes("\"gate\": \"G-FG-21\"") ||
+  !fg21Evidence.includes("\"pass\": true") ||
+  !fg21Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg21Evidence.includes("\"preferredTier\": \"ultra\"") ||
+  !fg21Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg21Evidence.includes("\"cellsX\": 768") ||
+  !fg21Evidence.includes("\"cellsY\": 432") ||
+  !fg21Evidence.includes("\"idle-ultra-display-pacing\"") ||
+  !fg21Evidence.includes("\"concrete-ultra-impact-display-pacing\"") ||
+  !fg21Evidence.includes("\"particlesActiveSeen\": true") ||
+  !fg21Evidence.includes("\"pressureActiveSeen\": true") ||
+  !fg21Evidence.includes("\"couplingActiveSeen\": true") ||
+  !fg21Evidence.includes("\"worstDroppedFrameRatio\": 0")
+) {
+  errors.push("FG-21 evidence must record a passing packaged ultra live renderer report with smooth display pacing and active drop telemetry");
 }
 
 if (errors.length > 0) {
