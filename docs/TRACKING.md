@@ -27,6 +27,7 @@ and GitHub issue mapping.
 | FG-17 | Pressure-informed rigid-body force feedback | Done | G-FG-17 |
 | FG-18 | Live coupled reference outcome gate | Done | G-FG-18 |
 | FG-19 | Packaged display pacing and smoothness gate | Done | G-FG-19 |
+| FG-20 | Ultra-tier resolution scaling gate | Done | G-FG-20 |
 
 ## Gates
 
@@ -52,6 +53,7 @@ and GitHub issue mapping.
 | G-FG-17 | FG-17 | `npm run fluid:live-pressure-feedback`; `docs/evidence/FG-17-pressure-feedback-2026-06-08.json` | the packaged app feeds bounded live pressure force deltas into the rigid-body grid coupling consumed by `stepSimulation` while retaining WebGPU pressure, object-grid, and particle telemetry |
 | G-FG-18 | FG-18 | `npm run fluid:live-reference-outcomes`; `docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json` | the packaged app exposes live physics snapshots and passes reference-outcome comparisons for drop, splash, float, sink, and damping while WebGPU pressure, particle, object-grid, and fixed-step telemetry remain bounded |
 | G-FG-19 | FG-19 | `npm run fluid:display-pacing`; `docs/evidence/FG-19-display-pacing-2026-06-08.json` | the packaged app sustains smooth display pacing across idle, dense impact, and foam damping scenarios at 1x with WebGPU pressure, particles, object-grid coupling, no dropped simulation debt, and no long-task stalls from diagnostics |
+| G-FG-20 | FG-20 | `npm run fluid:resolution-scale`; `docs/evidence/FG-20-resolution-scaling-2026-06-08.json` | the packaged app benchmarks standard, high, and ultra WebGPU tiers across grid stepping, bounded pressure shallow water, and localized particle splash with timestamp-query timing, bounded memory growth, no full-grid readback, and stable ultra/high timing ratios |
 
 ## Tasks
 
@@ -118,6 +120,9 @@ and GitHub issue mapping.
 | FG-19-T01 | FG-19 | Done | diagnostics | `OceanPhysicsApp` publishes fast motion snapshots every frame while scenario controls can request full prediction and equilibrium snapshots on demand |
 | FG-19-T02 | FG-19 | Done | verification | `fluidDisplayPacing.report.ts` samples idle, concrete impact, and foam damping in the packaged app with RAF frame timing, long-task, WebGPU renderer, pressure, particle, and coupling telemetry |
 | FG-19-T03 | FG-19 | Done | performance | `npm run fluid:display-pacing` passes with worst p95 `9.2 ms`, p99 `9.3 ms`, `0.13%` dropped-frame ratio, zero long-task duration, and zero dropped simulation debt |
+| FG-20-T01 | FG-20 | Done | diagnostics | `fluidResolutionScaling.ts` requires standard, high, and ultra evidence with GPU timestamp timing, monotonic cell/storage growth, no full-grid readback, and bounded ultra/high p95 ratios |
+| FG-20-T02 | FG-20 | Done | verification | `fluidResolutionScaling.report.ts` launches the packaged app and runs grid, pressure shallow-water, and particle splash benchmarks for standard, high, and ultra tiers |
+| FG-20-T03 | FG-20 | Done | performance | `npm run fluid:resolution-scale` passes with ultra `331776` cells, grid p95 `0.0903 ms`, pressure p95 `0.0733 ms`, particle p95 `0.0288 ms`, and `17.97 MiB` measured storage |
 
 ## GitHub Labels
 
@@ -153,6 +158,7 @@ and GitHub issue mapping.
 | FG-17 | https://github.com/AC-21/ocean/issues/20 |
 | FG-18 | https://github.com/AC-21/ocean/issues/21 |
 | FG-19 | https://github.com/AC-21/ocean/issues/22 |
+| FG-20 | https://github.com/AC-21/ocean/issues/23 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

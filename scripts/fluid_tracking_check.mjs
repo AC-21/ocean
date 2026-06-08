@@ -25,6 +25,7 @@ const requiredFiles = [
   "docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
   "docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-19-display-pacing-2026-06-08.json",
+  "docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -37,6 +38,9 @@ const requiredFiles = [
   "src/fluid/fluidDisplayPacing.ts",
   "src/fluid/fluidDisplayPacing.report.ts",
   "src/fluid/fluidDisplayPacing.test.ts",
+  "src/fluid/fluidResolutionScaling.ts",
+  "src/fluid/fluidResolutionScaling.report.ts",
+  "src/fluid/fluidResolutionScaling.test.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
@@ -49,8 +53,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -72,6 +76,9 @@ const physicsOcean = files.get("src/physicsOcean.ts") ?? "";
 const displayPacing = files.get("src/fluid/fluidDisplayPacing.ts") ?? "";
 const displayPacingReport = files.get("src/fluid/fluidDisplayPacing.report.ts") ?? "";
 const displayPacingTest = files.get("src/fluid/fluidDisplayPacing.test.ts") ?? "";
+const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
+const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
+const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
@@ -101,6 +108,7 @@ const fg16Evidence = files.get("docs/evidence/FG-16-live-pressure-2026-06-08.jso
 const fg17Evidence = files.get("docs/evidence/FG-17-pressure-feedback-2026-06-08.json") ?? "";
 const fg18Evidence = files.get("docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json") ?? "";
 const fg19Evidence = files.get("docs/evidence/FG-19-display-pacing-2026-06-08.json") ?? "";
+const fg20Evidence = files.get("docs/evidence/FG-20-resolution-scaling-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -883,6 +891,73 @@ if (
   !fg19Evidence.includes("\"maxDroppedDebtS\": 0")
 ) {
   errors.push("FG-19 evidence must record a passing packaged display pacing report with WebGPU telemetry and zero long-task/dropped-debt failures");
+}
+
+if (!packageJson.includes("\"fluid:resolution-scale\"") || !packageJson.includes("src/fluid/fluidResolutionScaling.report.ts")) {
+  errors.push("package.json must expose the FG-20 packaged resolution-scaling command");
+}
+
+if (!tracking.includes("FG-20-T03") || !tracking.includes("FG-20-resolution-scaling-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/23")) {
+  errors.push("docs/TRACKING.md must record FG-20 resolution scaling evidence and issue mapping");
+}
+
+if (
+  !resolutionScaling.includes("G-FG-20") ||
+  !resolutionScaling.includes("resolutionScalingTiers") ||
+  !resolutionScaling.includes("\"standard\", \"high\", \"ultra\"") ||
+  !resolutionScaling.includes("maxUltraToHighGpuP95Ratio") ||
+  !resolutionScaling.includes("selectFluidGridTier(options.capability.limits, \"ultra\")")
+) {
+  errors.push("fluidResolutionScaling.ts must define the FG-20 standard/high/ultra resolution scaling gate");
+}
+
+if (
+  !resolutionScalingReport.includes("G-FG-20") ||
+  !resolutionScalingReport.includes("__runFluidGridBenchmark") ||
+  !resolutionScalingReport.includes("__runShallowWaterBenchmark") ||
+  !resolutionScalingReport.includes("__runParticleSplashBenchmark") ||
+  !resolutionScalingReport.includes("resolutionScalingTiers") ||
+  !resolutionScalingReport.includes("packaged-app")
+) {
+  errors.push("fluidResolutionScaling.report.ts must drive packaged standard/high/ultra grid, pressure, and particle benchmarks");
+}
+
+if (
+  !resolutionScalingTest.includes("createFluidResolutionScalingReport") ||
+  !resolutionScalingTest.includes("missing ultra") ||
+  !resolutionScalingTest.includes("excessive ultra/high scaling ratios") ||
+  !resolutionScalingTest.includes("GPU timestamps")
+) {
+  errors.push("fluidResolutionScaling.test.ts must cover FG-20 resolution scaling failures");
+}
+
+if (
+  !remap.includes("FG-20") ||
+  !remap.includes("resolution-scaling") ||
+  !remap.includes("331,776") ||
+  !remap.includes("ultra/high p95 ratios") ||
+  !remap.includes("Resolution scaling")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-20 ultra-tier resolution scaling gate and evidence");
+}
+
+if (
+  !fg20Evidence.includes("\"gate\": \"G-FG-20\"") ||
+  !fg20Evidence.includes("\"pass\": true") ||
+  !fg20Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg20Evidence.includes("\"tierCount\": 3") ||
+  !fg20Evidence.includes("\"standard\"") ||
+  !fg20Evidence.includes("\"high\"") ||
+  !fg20Evidence.includes("\"ultra\"") ||
+  !fg20Evidence.includes("\"cellCount\": 331776") ||
+  !fg20Evidence.includes("\"particleCapacity\": 8192") ||
+  !fg20Evidence.includes("\"gridGpuP95\": 2.0687679083094554") ||
+  !fg20Evidence.includes("\"pressureGpuP95\": 1.0292691837508958") ||
+  !fg20Evidence.includes("\"particlesGpuP95\": 1.9194666666666669") ||
+  !fg20Evidence.includes("\"maxEstimatedStorageBytes\": 18841600") ||
+  !fg20Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-20 evidence must record a passing packaged standard/high/ultra resolution scaling report with ultra timing, storage, and ratio evidence");
 }
 
 if (errors.length > 0) {

@@ -563,6 +563,34 @@ Latest packaged display-pacing evidence:
   Canvas fallback.
 - Gate: passed.
 
+FG-20 is complete as of 2026-06-08. It turns the resolution ladder from a
+static design target into measured local GPU evidence. The packaged app now
+runs standard, high, and ultra tiers through three solver families: broad grid
+stepping, bounded pressure-gradient shallow water, and localized particle
+splash. This is the first gate that directly proves the current machine has
+headroom for higher-resolution fluid grids instead of only proving the selected
+`high` renderer tier.
+
+Latest resolution-scaling evidence:
+
+- Command: `npm run fluid:resolution-scale`.
+- Runtime: packaged macOS app.
+- Gate: `G-FG-20`.
+- Evidence snapshot:
+  `docs/evidence/FG-20-resolution-scaling-2026-06-08.json`.
+- Coverage: `standard` (`256 x 144`), `high` (`512 x 288`), and `ultra`
+  (`768 x 432`) tiers across grid stepping, pressure shallow-water, and
+  particle splash.
+- Ultra result: `331,776` cells, combined measured storage `17.97 MiB`, grid
+  GPU p95 `0.0903 ms`, pressure GPU p95 `0.0733 ms`, and particle GPU p95
+  `0.0288 ms`.
+- Scaling: ultra/high p95 ratios were `2.07x` for grid stepping, `1.03x` for
+  pressure shallow water, and `1.92x` for particle splash, all below the `5x`
+  gate cap.
+- Telemetry discipline: timestamp-query timing was available, all solver
+  families passed at every tier, and no full-grid readback path was used.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -623,6 +651,10 @@ Latest packaged display-pacing evidence:
     the per-frame display path, then verify idle, dense impact, and foam damping
     scenarios sustain smooth WebGPU frame pacing with no long-task stalls or
     dropped simulation debt.
+21. Resolution scaling: benchmark standard, high, and ultra tiers in the
+    packaged app across grid stepping, pressure shallow water, and particle
+    splash, then use timestamp-query timing, memory growth, and ultra/high
+    ratios to guide future high-resolution grid choices.
 
 ## Resolution Ladder
 

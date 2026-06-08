@@ -20,7 +20,8 @@ export type FluidGridMilestoneId =
   | "FG-16"
   | "FG-17"
   | "FG-18"
-  | "FG-19";
+  | "FG-19"
+  | "FG-20";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -42,7 +43,8 @@ export type FluidGridGateId =
   | "G-FG-16"
   | "G-FG-17"
   | "G-FG-18"
-  | "G-FG-19";
+  | "G-FG-19"
+  | "G-FG-20";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -129,6 +131,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-17", title: "Pressure-informed rigid-body force feedback", gate: "G-FG-17" },
   { id: "FG-18", title: "Live coupled reference outcome gate", gate: "G-FG-18" },
   { id: "FG-19", title: "Packaged display pacing and smoothness gate", gate: "G-FG-19" },
+  { id: "FG-20", title: "Ultra-tier resolution scaling gate", gate: "G-FG-20" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -262,6 +265,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:display-pacing and docs/evidence/FG-19-display-pacing-2026-06-08.json",
     passBar:
       "the packaged app sustains smooth display pacing across idle, dense impact, and foam damping scenarios at 1x with WebGPU pressure, particles, object-grid coupling, no dropped simulation debt, and no long-task stalls from diagnostics",
+  },
+  {
+    id: "G-FG-20",
+    blocks: "FG-20",
+    evidence: "npm run fluid:resolution-scale and docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
+    passBar:
+      "the packaged app benchmarks standard, high, and ultra WebGPU tiers across grid stepping, bounded pressure shallow water, and localized particle splash with timestamp-query timing, bounded memory growth, no full-grid readback, and stable ultra/high timing ratios",
   },
 ];
 
@@ -725,6 +735,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify smoothness evidence and diagnostic throttling",
     exitProof:
       "npm run fluid:display-pacing passes with worst p95 9.2 ms, p99 9.3 ms, 0.13% dropped-frame ratio, zero long-task duration, and zero dropped simulation debt",
+  },
+  {
+    id: "FG-20-T01",
+    milestone: "FG-20",
+    status: "done",
+    title: "Define ultra-tier resolution scaling report",
+    exitProof:
+      "fluidResolutionScaling.ts requires standard, high, and ultra evidence with GPU timestamp timing, monotonic cell/storage growth, no full-grid readback, and bounded ultra/high p95 ratios",
+  },
+  {
+    id: "FG-20-T02",
+    milestone: "FG-20",
+    status: "done",
+    title: "Measure packaged standard/high/ultra WebGPU tiers",
+    exitProof:
+      "fluidResolutionScaling.report.ts launches the packaged app and runs grid, pressure shallow-water, and particle splash benchmarks for standard, high, and ultra tiers",
+  },
+  {
+    id: "FG-20-T03",
+    milestone: "FG-20",
+    status: "done",
+    title: "Verify local ultra-tier scaling evidence",
+    exitProof:
+      "npm run fluid:resolution-scale passes with ultra 331776 cells, grid p95 0.0903 ms, pressure p95 0.0733 ms, particle p95 0.0288 ms, and 17.97 MiB measured storage",
   },
 ];
 

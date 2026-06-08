@@ -1,0 +1,130 @@
+{
+  "capability": {
+    "adapterInfo": "apple / metal-3",
+    "adapterName": "apple / metal-3",
+    "backend": "webgpu-compute",
+    "fallbackReason": null,
+    "features": [
+      "bgra8unorm-storage",
+      "clip-distances",
+      "core-features-and-limits",
+      "depth-clip-control",
+      "depth32float-stencil8",
+      "dual-source-blending",
+      "float32-blendable",
+      "float32-filterable",
+      "indirect-first-instance",
+      "primitive-index",
+      "rg11b10ufloat-renderable",
+      "shader-f16",
+      "subgroups",
+      "texture-component-swizzle",
+      "texture-compression-astc",
+      "texture-compression-astc-sliced-3d",
+      "texture-compression-bc",
+      "texture-compression-bc-sliced-3d",
+      "texture-compression-etc2",
+      "texture-formats-tier1",
+      "texture-formats-tier2",
+      "timestamp-query"
+    ],
+    "forbiddenProductionRenderers": [
+      "canvas-2d",
+      "per-pixel-cpu-water-draw",
+      "visual-only-water"
+    ],
+    "generatedAt": "2026-06-08T04:19:28.419Z",
+    "grid": {
+      "cellsX": 512,
+      "cellsY": 288,
+      "estimatedBytes": 4718592,
+      "tier": "high"
+    },
+    "limits": {
+      "maxBufferSize": 268435456,
+      "maxComputeInvocationsPerWorkgroup": 256,
+      "maxComputeWorkgroupSizeX": 256,
+      "maxComputeWorkgroupSizeY": 256,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxStorageBufferBindingSize": 134217728
+    },
+    "requiredBrowserApis": [
+      "navigator.gpu",
+      "GPUDevice",
+      "GPUComputePassEncoder"
+    ],
+    "selectedTier": "high",
+    "status": "webgpu-ready"
+  },
+  "failures": [],
+  "gate": "G-FG-20",
+  "generatedAt": "2026-06-08T04:19:29.448Z",
+  "launchMode": "packaged-app",
+  "pass": true,
+  "summary": {
+    "maxEstimatedStorageBytes": 18841600,
+    "maxGridGpuP95StepMs": 0.09025,
+    "maxParticleGpuP95StepMs": 0.028792,
+    "maxPressureGpuP95StepMs": 0.07325,
+    "tierCount": 3,
+    "ultraToHighRatios": {
+      "gridGpuP95": 2.0687679083094554,
+      "particlesGpuP95": 1.9194666666666669,
+      "pressureGpuP95": 1.0292691837508958
+    }
+  },
+  "thresholds": {
+    "maxGridUltraGpuP95StepMs": 2,
+    "maxParticleUltraGpuP95StepMs": 2.5,
+    "maxPressureUltraGpuP95StepMs": 2.5,
+    "maxUltraToHighGpuP95Ratio": 5,
+    "requireGpuTimestamps": true
+  },
+  "tiers": [
+    {
+      "cellCount": 36864,
+      "estimatedStorageBytes": 2129920,
+      "gridGpuP95StepMs": 0.013917,
+      "gridPass": true,
+      "gridWallAverageStepMs": 0.06999999955296517,
+      "particleCapacity": 2048,
+      "particleGpuP95StepMs": 0.021792,
+      "particlesPass": true,
+      "particlesWallAverageStepMs": 0.048750000074505806,
+      "pressureGpuP95StepMs": 0.009416,
+      "pressurePass": true,
+      "pressureWallAverageStepMs": 0.0703125,
+      "tier": "standard"
+    },
+    {
+      "cellCount": 147456,
+      "estimatedStorageBytes": 8388608,
+      "gridGpuP95StepMs": 0.043625,
+      "gridPass": true,
+      "gridWallAverageStepMs": 0.07222222205665377,
+      "particleCapacity": 4096,
+      "particleGpuP95StepMs": 0.015,
+      "particlesPass": true,
+      "particlesWallAverageStepMs": 0.03680555522441864,
+      "pressureGpuP95StepMs": 0.071167,
+      "pressurePass": true,
+      "pressureWallAverageStepMs": 0.09642857206719262,
+      "tier": "high"
+    },
+    {
+      "cellCount": 331776,
+      "estimatedStorageBytes": 18841600,
+      "gridGpuP95StepMs": 0.09025,
+      "gridPass": true,
+      "gridWallAverageStepMs": 0.125,
+      "particleCapacity": 8192,
+      "particleGpuP95StepMs": 0.028792,
+      "particlesPass": true,
+      "particlesWallAverageStepMs": 0.04833333343267441,
+      "pressureGpuP95StepMs": 0.07325,
+      "pressurePass": true,
+      "pressureWallAverageStepMs": 0.16749999970197677,
+      "tier": "ultra"
+    }
+  ]
+}

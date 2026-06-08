@@ -143,6 +143,12 @@ Run the packaged display-pacing smoothness gate:
 npm run fluid:display-pacing
 ```
 
+Run the packaged standard/high/ultra resolution-scaling gate:
+
+```sh
+npm run fluid:resolution-scale
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -185,7 +191,10 @@ cases and verifies drop, splash, float, sink, and damping outcomes from
 and frame-loop telemetry remain bounded. FG-19 keeps full prediction and
 equilibrium diagnostics off the per-frame display path, then verifies packaged
 idle, dense-impact, and foam-damping scenarios sustain smooth WebGPU frame
-pacing with no diagnostic long-task stalls.
+pacing with no diagnostic long-task stalls. FG-20 measures the packaged
+standard, high, and ultra tiers across grid stepping, pressure shallow water,
+and particle splash, proving that the local GPU can run the ultra `768 x 432`
+grid with bounded timestamp-query timing and no full-grid readback.
 
 ## Run
 
