@@ -34,6 +34,7 @@ const requiredFiles = [
   "docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
   "docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
   "docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
+  "docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -68,6 +69,9 @@ const requiredFiles = [
   "src/fluid/fluidCalibrationProvenance.ts",
   "src/fluid/fluidCalibrationProvenance.report.ts",
   "src/fluid/fluidCalibrationProvenance.test.ts",
+  "src/fluid/fluidSustainedInteractionPacing.ts",
+  "src/fluid/fluidSustainedInteractionPacing.report.ts",
+  "src/fluid/fluidSustainedInteractionPacing.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -89,8 +93,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -134,6 +138,9 @@ const calibrationFreshnessTest = files.get("src/fluid/fluidCalibrationFreshness.
 const calibrationProvenance = files.get("src/fluid/fluidCalibrationProvenance.ts") ?? "";
 const calibrationProvenanceReport = files.get("src/fluid/fluidCalibrationProvenance.report.ts") ?? "";
 const calibrationProvenanceTest = files.get("src/fluid/fluidCalibrationProvenance.test.ts") ?? "";
+const sustainedInteractionPacing = files.get("src/fluid/fluidSustainedInteractionPacing.ts") ?? "";
+const sustainedInteractionPacingReport = files.get("src/fluid/fluidSustainedInteractionPacing.report.ts") ?? "";
+const sustainedInteractionPacingTest = files.get("src/fluid/fluidSustainedInteractionPacing.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -181,6 +188,7 @@ const fg25Evidence = files.get("docs/evidence/FG-25-installed-calibration-2026-0
 const fg26Evidence = files.get("docs/evidence/FG-26-installed-display-pacing-2026-06-08.json") ?? "";
 const fg27Evidence = files.get("docs/evidence/FG-27-calibration-freshness-2026-06-08.json") ?? "";
 const fg28Evidence = files.get("docs/evidence/FG-28-calibration-provenance-2026-06-08.json") ?? "";
+const fg29Evidence = files.get("docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1761,6 +1769,95 @@ if (
   !fg28Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-28 evidence must record a passing packaged calibration provenance report with matching, copied-profile, and tampered-profile fallback behavior");
+}
+
+if (!packageJson.includes("\"fluid:sustained-interaction-pacing\"") || !packageJson.includes("src/fluid/fluidSustainedInteractionPacing.report.ts")) {
+  errors.push("package.json must expose the FG-29 packaged sustained-interaction-pacing command");
+}
+
+if (!tracking.includes("FG-29-T03") || !tracking.includes("FG-29-sustained-interaction-pacing-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/32")) {
+  errors.push("docs/TRACKING.md must record FG-29 sustained interaction pacing evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-29") ||
+  !contract.includes("G-FG-29") ||
+  !contract.includes("Sustained calibrated interaction pacing gate") ||
+  !contract.includes("npm run fluid:sustained-interaction-pacing")
+) {
+  errors.push("fluidGridContract.ts must define the FG-29 sustained interaction pacing milestone, gate, and evidence command");
+}
+
+if (
+  !sustainedInteractionPacing.includes("G-FG-29") ||
+  !sustainedInteractionPacing.includes("sustained-calibrated-mixed-drops") ||
+  !sustainedInteractionPacing.includes("minSamples: 600") ||
+  !sustainedInteractionPacing.includes("workload never observed active pressure telemetry") ||
+  !sustainedInteractionPacing.includes("samples did not all observe calibrated-auto")
+) {
+  errors.push("fluidSustainedInteractionPacing.ts must define sustained calibrated workload smoothness and telemetry checks");
+}
+
+if (
+  !sustainedInteractionPacingReport.includes("installFluidCalibrationProfile") ||
+  !sustainedInteractionPacingReport.includes("concrete-cube") ||
+  !sustainedInteractionPacingReport.includes("foam-rescue-block") ||
+  !sustainedInteractionPacingReport.includes("leaky-steel-drum") ||
+  !sustainedInteractionPacingReport.includes("steel-sphere") ||
+  !sustainedInteractionPacingReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !sustainedInteractionPacingReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER") ||
+  !sustainedInteractionPacingReport.includes("physicsOffsetS")
+) {
+  errors.push("fluidSustainedInteractionPacing.report.ts must drive a sustained env-free packaged installed-profile workload with monotonic physics-time sampling");
+}
+
+if (
+  !sustainedInteractionPacingTest.includes("mixed sustained workload") ||
+  !sustainedInteractionPacingTest.includes("choppy frames") ||
+  !sustainedInteractionPacingTest.includes("lost calibrated ultra telemetry") ||
+  !sustainedInteractionPacingTest.includes("G-FG-29")
+) {
+  errors.push("fluidSustainedInteractionPacing.test.ts must cover FG-29 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-29") ||
+  !remap.includes("sustained-interaction-pacing") ||
+  !remap.includes("concrete, foam") ||
+  !remap.includes("leaky-drum") ||
+  !remap.includes("fixed-step simulation debt")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-29 sustained interaction pacing gate and evidence");
+}
+
+if (
+  !fg29Evidence.includes("\"gate\": \"G-FG-29\"") ||
+  !fg29Evidence.includes("\"pass\": true") ||
+  !fg29Evidence.includes("\"installedTier\": \"ultra\"") ||
+  !fg29Evidence.includes("\"reusedByMainProcess\": true") ||
+  !fg29Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg29Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg29Evidence.includes("\"selectedGrid\"") ||
+  !fg29Evidence.includes("\"cellsX\": 768") ||
+  !fg29Evidence.includes("\"cellsY\": 432") ||
+  !fg29Evidence.includes("\"sustained-calibrated-mixed-drops\"") ||
+  !fg29Evidence.includes("\"Concrete cube dense impact\"") ||
+  !fg29Evidence.includes("\"Foam block damping\"") ||
+  !fg29Evidence.includes("\"Leaky drum float/fill\"") ||
+  !fg29Evidence.includes("\"Steel sphere compact sink\"") ||
+  !fg29Evidence.includes("\"actionCount\": 4") ||
+  !fg29Evidence.includes("\"firedActionCount\": 4") ||
+  !fg29Evidence.includes("\"capabilityGrid\": \"768x432\"") ||
+  !fg29Evidence.includes("\"capabilitySelectedTier\": \"ultra\"") ||
+  !fg29Evidence.includes("\"tierSelectionMode\": \"calibrated-auto\"") ||
+  !fg29Evidence.includes("\"pressureActiveSeen\": true") ||
+  !fg29Evidence.includes("\"particlesActiveSeen\": true") ||
+  !fg29Evidence.includes("\"couplingActiveSeen\": true") ||
+  !fg29Evidence.includes("\"stability\": \"smooth\"") ||
+  !fg29Evidence.includes("\"maxDroppedDebtS\": 0") ||
+  !fg29Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-29 evidence must record a passing packaged sustained calibrated interaction pacing report");
 }
 
 if (errors.length > 0) {

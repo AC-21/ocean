@@ -793,6 +793,31 @@ Latest calibration-provenance evidence:
   selected tier/grid are `high` at `512 x 288`.
 - Gate: passed.
 
+FG-29 is complete as of 2026-06-08. It raises the local smoothness bar from
+isolated scenario samples to one sustained calibrated interaction workload.
+The packaged app installs the hardware-provenance-valid calibration profile,
+launches with no fluid-tier environment variables, then drives concrete, foam,
+leaky-drum, and steel-sphere drops across one longer sample window while the
+runtime remains `calibrated-auto -> ultra`.
+
+Latest sustained-interaction-pacing evidence:
+
+- Command: `npm run fluid:sustained-interaction-pacing`.
+- Runtime: packaged macOS app with installed `fluid-calibration.v1.json`, no
+  `OCEAN_LAB_FLUID_TIER`, and no `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-29`.
+- Evidence snapshot:
+  `docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json`.
+- Workload proof: four scripted drops cover dense concrete impact, foam
+  damping, leaky-drum float/fill behavior, and compact steel-sphere sinking in
+  one sustained run.
+- Runtime proof: every representative sample stays on calibrated-auto ultra,
+  the `768 x 432` WebGPU grid, and `webgpu-grid-primary-v1`.
+- Smoothness proof: active pressure, particles, and object-grid coupling are
+  observed while frame pacing, long-task duration, water-frame progression, and
+  fixed-step simulation debt remain inside thresholds.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

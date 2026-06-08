@@ -1,0 +1,303 @@
+{
+  "adaptiveSource": {
+    "gate": "G-FG-23",
+    "pass": true,
+    "recommendation": {
+      "failures": [],
+      "reason": "ultra has measured local headroom and live reference parity",
+      "selectedTier": "ultra",
+      "summary": {
+        "maxEstimatedStorageBytes": 18841600,
+        "maxLiveP95FrameMs": 9.300000000000182,
+        "maxLiveP99FrameMs": 9.399999999999636,
+        "maxUltraGpuP95StepMs": 0.09025,
+        "maxUltraToHighGpuP95Ratio": 2.0687679083094554,
+        "referenceCategories": [
+          "damping",
+          "drop",
+          "float",
+          "sink",
+          "splash"
+        ]
+      }
+    }
+  },
+  "failures": [],
+  "gate": "G-FG-29",
+  "generatedAt": "2026-06-08T06:19:43.055Z",
+  "install": {
+    "fileName": "fluid-calibration.v1.json",
+    "installedAt": "2026-06-08T06:19:26.269Z",
+    "installedProfile": {
+      "appVersion": "0.1.0",
+      "capability": {
+        "adapterInfo": "apple / metal-3",
+        "backend": "webgpu-compute",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "fingerprint": "adapter:apple / metal-3|backend:webgpu-compute|features:bgra8unorm-storage,clip-distances,core-features-and-limits,depth-clip-control,depth32float-stencil8,dual-source-blending,float32-blendable,float32-filterable,indirect-first-instance,primitive-index,rg11b10ufloat-renderable,shader-f16,subgroups,texture-component-swizzle,texture-compression-astc,texture-compression-astc-sliced-3d,texture-compression-bc,texture-compression-bc-sliced-3d,texture-compression-etc2,texture-formats-tier1,texture-formats-tier2,timestamp-query|limits:maxBufferSize:268435456,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupsPerDimension:65535,maxStorageBufferBindingSize:134217728|status:webgpu-ready",
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready",
+        "sourceGate": "G-FG-01"
+      },
+      "generatedAt": "2026-06-08T06:19:26.269Z",
+      "pass": true,
+      "schema": "ocean-fluid-calibration-profile-v1",
+      "selectedTier": "ultra",
+      "source": {
+        "adaptiveGeneratedAt": "2026-06-08T04:53:50.864Z",
+        "adaptiveGate": "G-FG-23",
+        "selectedTier": "ultra"
+      },
+      "sourceGate": "G-FG-23",
+      "summary": {
+        "maxLiveP95FrameMs": 9.300000000000182,
+        "maxUltraGpuP95StepMs": 0.09025,
+        "maxUltraToHighGpuP95Ratio": 2.0687679083094554
+      }
+    },
+    "persistedRawBytes": 2376,
+    "storageBasePath": "/private/var/folders/lg/0mn4rygj65x7gmzwqglpj58r0000gn/T/ocean-lab-sustained-interaction-REL0us/harborline-game",
+    "verificationReadMatched": true
+  },
+  "launchMode": "packaged-app",
+  "pass": true,
+  "runtime": {
+    "envCalibratedTierPresent": false,
+    "envRequestedTierPresent": false,
+    "selectedGrid": {
+      "cellsX": 768,
+      "cellsY": 432
+    },
+    "selectedTier": "ultra",
+    "selection": {
+      "calibratedTier": "ultra",
+      "mode": "calibrated-auto",
+      "preferredTier": "ultra",
+      "reason": "local calibration selected tier",
+      "requestedTier": "auto"
+    }
+  },
+  "storage": {
+    "fileName": "fluid-calibration.v1.json",
+    "installedTier": "ultra",
+    "reusedByMainProcess": true,
+    "verificationReadMatched": true
+  },
+  "summary": {
+    "actionCount": 4,
+    "durationMs": 12800,
+    "maxDroppedDebtS": 0,
+    "p95FrameMs": 9.300000000000182,
+    "p99FrameMs": 9.400000000000091,
+    "sampleCount": 1536,
+    "stability": "smooth",
+    "waterFrameDelta": 1561,
+    "worstDroppedFrameRatio": 0,
+    "worstDuplicateWaterFrameRatio": 0.0006510416666666666
+  },
+  "thresholds": {
+    "maxDroppedDebtS": 1e-9,
+    "maxDroppedFrameRatio": 0.08,
+    "maxDuplicateWaterFrameRatio": 0.16,
+    "maxLongTaskDurationMs": 160,
+    "maxP95FrameMs": 24,
+    "maxP99FrameMs": 36,
+    "maxSimTimeRatio": 1.25,
+    "minActiveSimTimeRatio": 0.72,
+    "minAverageFps": 55,
+    "minSamples": 600,
+    "minWaterFrameDelta": 240,
+    "targetFrameMs": 16.666666666666668
+  },
+  "workload": {
+    "actions": [
+      {
+        "atMs": 0,
+        "dropHeightM": 8,
+        "label": "Concrete cube dense impact",
+        "presetId": "concrete-cube",
+        "releaseAngleRad": 0
+      },
+      {
+        "atMs": 3200,
+        "dropHeightM": 1.35,
+        "label": "Foam block damping",
+        "presetId": "foam-rescue-block",
+        "releaseAngleRad": 0.18
+      },
+      {
+        "atMs": 6400,
+        "dropHeightM": 2.2,
+        "label": "Leaky drum float/fill",
+        "presetId": "leaky-steel-drum",
+        "releaseAngleRad": -0.14
+      },
+      {
+        "atMs": 9600,
+        "dropHeightM": 5.2,
+        "label": "Steel sphere compact sink",
+        "presetId": "steel-sphere",
+        "releaseAngleRad": 0.06
+      }
+    ],
+    "durationMs": 12800,
+    "expectedActivePhysics": true,
+    "framePacing": {
+      "averageFps": 119.91193966930553,
+      "averageFrameMs": 8.339453124999988,
+      "displayRefreshEstimateHz": 120.48192771084074,
+      "droppedFrameCount": 0,
+      "droppedFrameRatio": 0,
+      "duplicateWaterFrameCount": 1,
+      "duplicateWaterFrameRatio": 0.0006510416666666666,
+      "durationMs": 12800.5,
+      "longTaskCount": 0,
+      "longTaskDurationMs": 0,
+      "maxDroppedDebtS": 0,
+      "maxFrameMs": 16.69999999999891,
+      "maxSubstepsObserved": 12,
+      "minFrameMs": 7.199999999998909,
+      "p50FrameMs": 8.300000000000182,
+      "p95FrameMs": 9.300000000000182,
+      "p99FrameMs": 9.400000000000091,
+      "pass": true,
+      "sampleCount": 1536,
+      "simulatedTimeRatio": 1.03998252130216,
+      "stability": "smooth",
+      "thresholds": {
+        "maxDroppedDebtS": 1e-9,
+        "maxDroppedFrameRatio": 0.08,
+        "maxDuplicateWaterFrameRatio": 0.16,
+        "maxLongTaskDurationMs": 160,
+        "maxP95FrameMs": 24,
+        "maxP99FrameMs": 36,
+        "maxSimTimeRatio": 1.25,
+        "minActiveSimTimeRatio": 0.72,
+        "minAverageFps": 55,
+        "minSamples": 600,
+        "minWaterFrameDelta": 240,
+        "targetFrameMs": 16.666666666666668
+      },
+      "waterFrameDelta": 1561
+    },
+    "id": "sustained-calibrated-mixed-drops",
+    "label": "Sustained calibrated mixed object drops",
+    "representativeSamples": [
+      {
+        "atMs": 0,
+        "capabilityGrid": "768x432",
+        "capabilitySelectedTier": "ultra",
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "dtMs": 0,
+        "longTaskCount": 0,
+        "longTaskDurationMs": 0,
+        "maxSubstepsObserved": 0,
+        "particlesActive": false,
+        "phase": "falling",
+        "physicsTimeS": 0,
+        "pressureActive": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "tier": "ultra",
+        "tierSelectionMode": "calibrated-auto",
+        "tierSelectionPreferredTier": "ultra",
+        "tierSelectionRequestedTier": "auto",
+        "totalSubsteps": 0,
+        "waterContext": "webgpu",
+        "waterFrame": 14
+      },
+      {
+        "atMs": 6400,
+        "capabilityGrid": "768x432",
+        "capabilitySelectedTier": "ultra",
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "dtMs": 0,
+        "longTaskCount": 0,
+        "longTaskDurationMs": 0,
+        "maxSubstepsObserved": 12,
+        "particlesActive": false,
+        "phase": "falling",
+        "physicsTimeS": 6.833333333333315,
+        "pressureActive": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "tier": "ultra",
+        "tierSelectionMode": "calibrated-auto",
+        "tierSelectionPreferredTier": "ultra",
+        "tierSelectionRequestedTier": "auto",
+        "totalSubsteps": 12,
+        "waterContext": "webgpu",
+        "waterFrame": 801
+      },
+      {
+        "atMs": 12800.5,
+        "capabilityGrid": "768x432",
+        "capabilitySelectedTier": "ultra",
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "dtMs": 7.899999999999636,
+        "longTaskCount": 0,
+        "longTaskDurationMs": 0,
+        "maxSubstepsObserved": 0,
+        "particlesActive": false,
+        "phase": "ready",
+        "physicsTimeS": 10.04166666666664,
+        "pressureActive": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "tier": "ultra",
+        "tierSelectionMode": "calibrated-auto",
+        "tierSelectionPreferredTier": "ultra",
+        "tierSelectionRequestedTier": "auto",
+        "totalSubsteps": 0,
+        "waterContext": "webgpu",
+        "waterFrame": 1575
+      }
+    ],
+    "sampleCount": 1540,
+    "telemetry": {
+      "couplingActiveSeen": true,
+      "finalPhase": "ready",
+      "firedActionCount": 4,
+      "longTaskSupported": true,
+      "particlesActiveSeen": true,
+      "pressureActiveSeen": true,
+      "renderMode": "webgpu",
+      "renderer": "webgpu-grid-primary-v1",
+      "timeScale": 1,
+      "waterContext": "webgpu"
+    }
+  }
+}

@@ -29,7 +29,8 @@ export type FluidGridMilestoneId =
   | "FG-25"
   | "FG-26"
   | "FG-27"
-  | "FG-28";
+  | "FG-28"
+  | "FG-29";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -60,7 +61,8 @@ export type FluidGridGateId =
   | "G-FG-25"
   | "G-FG-26"
   | "G-FG-27"
-  | "G-FG-28";
+  | "G-FG-28"
+  | "G-FG-29";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -156,6 +158,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-26", title: "Installed calibration display pacing gate", gate: "G-FG-26" },
   { id: "FG-27", title: "Calibration profile freshness invalidation gate", gate: "G-FG-27" },
   { id: "FG-28", title: "Calibration profile hardware provenance gate", gate: "G-FG-28" },
+  { id: "FG-29", title: "Sustained calibrated interaction pacing gate", gate: "G-FG-29" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -352,6 +355,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:calibration-provenance and docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
     passBar:
       "calibration profiles bind to FG-01 WebGPU capability provenance; the packaged app reuses a matching profile, downgrades a copied-profile hardware mismatch to high, and rejects a tampered capability fingerprint without fluid-tier environment variables",
+  },
+  {
+    id: "G-FG-29",
+    blocks: "FG-29",
+    evidence: "npm run fluid:sustained-interaction-pacing and docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json",
+    passBar:
+      "a packaged installed-profile calibrated-auto ultra run drives a sustained mixed-object workload while the WebGPU renderer remains on 768 x 432, active pressure/particles/coupling are observed, display pacing stays smooth, and fixed-step simulation debt remains bounded",
   },
 ];
 
@@ -1031,6 +1041,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify valid, mismatched, and tampered profile behavior",
     exitProof:
       "npm run fluid:calibration-provenance passes with matching calibrated-auto ultra, copied-profile high fallback, tampered-profile default-high fallback, and committed FG-28 evidence",
+  },
+  {
+    id: "FG-29-T01",
+    milestone: "FG-29",
+    status: "done",
+    title: "Define sustained calibrated workload pacing checks",
+    exitProof:
+      "fluidSustainedInteractionPacing.ts requires a multi-action mixed-object workload, calibrated-auto ultra samples, WebGPU pressure/particles/coupling telemetry, smooth frame pacing, and zero fixed-step debt",
+  },
+  {
+    id: "FG-29-T02",
+    milestone: "FG-29",
+    status: "done",
+    title: "Drive sustained packaged interaction evidence",
+    exitProof:
+      "fluidSustainedInteractionPacing.report.ts installs the calibration profile, launches the packaged app with no fluid-tier environment variables, and samples concrete, foam, leaky-drum, and steel-sphere drops in one sustained run",
+  },
+  {
+    id: "FG-29-T03",
+    milestone: "FG-29",
+    status: "done",
+    title: "Close sustained interaction pacing gate",
+    exitProof:
+      "npm run fluid:sustained-interaction-pacing passes with calibrated-auto ultra, 768 x 432 WebGPU samples, active physics telemetry, smooth sustained pacing, and committed FG-29 evidence",
   },
 ];
 
