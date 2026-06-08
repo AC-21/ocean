@@ -8,6 +8,7 @@ const distRootUrl = pathToFileURL(path.join(appRoot, "dist") + path.sep).href;
 const appIconPath = path.join(appRoot, "dist", "app-icon.svg");
 const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
 const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
+const calibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
 let storage;
 
 app.setName("Ocean Impact Lab");
@@ -73,12 +74,25 @@ async function createMainWindow() {
 
   if (devServerUrl) {
     const url = new URL(devServerUrl);
-    if (requestedFluidTier) url.searchParams.set("fluidTier", requestedFluidTier);
+    appendFluidTierQuery(url.searchParams);
     await window.loadURL(url.toString());
     return;
   }
 
-  await window.loadFile(path.join(appRoot, "dist", "index.html"), requestedFluidTier ? { query: { fluidTier: requestedFluidTier } } : undefined);
+  const fluidTierQuery = fluidTierQueryObject();
+  await window.loadFile(path.join(appRoot, "dist", "index.html"), Object.keys(fluidTierQuery).length > 0 ? { query: fluidTierQuery } : undefined);
+}
+
+function appendFluidTierQuery(searchParams) {
+  if (requestedFluidTier) searchParams.set("fluidTier", requestedFluidTier);
+  if (calibratedFluidTier) searchParams.set("calibratedFluidTier", calibratedFluidTier);
+}
+
+function fluidTierQueryObject() {
+  return {
+    ...(requestedFluidTier ? { fluidTier: requestedFluidTier } : {}),
+    ...(calibratedFluidTier ? { calibratedFluidTier } : {}),
+  };
 }
 
 app.whenReady().then(async () => {

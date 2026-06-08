@@ -23,7 +23,8 @@ export type FluidGridMilestoneId =
   | "FG-19"
   | "FG-20"
   | "FG-21"
-  | "FG-22";
+  | "FG-22"
+  | "FG-23";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -48,7 +49,8 @@ export type FluidGridGateId =
   | "G-FG-19"
   | "G-FG-20"
   | "G-FG-21"
-  | "G-FG-22";
+  | "G-FG-22"
+  | "G-FG-23";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -138,6 +140,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-20", title: "Ultra-tier resolution scaling gate", gate: "G-FG-20" },
   { id: "FG-21", title: "Opt-in ultra-tier live renderer gate", gate: "G-FG-21" },
   { id: "FG-22", title: "Ultra-tier live reference outcome gate", gate: "G-FG-22" },
+  { id: "FG-23", title: "Adaptive local GPU tier calibration selector", gate: "G-FG-23" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -292,6 +295,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:ultra-reference-outcomes and docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json",
     passBar:
       "the packaged app honors an explicit ultra-tier request, selects the live 768 x 432 WebGPU renderer, and passes live reference comparisons for drop, splash, float, sink, and damping with pressure, particles, object-grid coupling, fixed-step telemetry, and no full-grid readback",
+  },
+  {
+    id: "G-FG-23",
+    blocks: "FG-23",
+    evidence: "npm run fluid:adaptive-tier and docs/evidence/FG-23-adaptive-tier-2026-06-08.json",
+    passBar:
+      "the packaged app composes local resolution, ultra renderer, and ultra reference evidence into a calibrated auto tier recommendation, then launches with auto tier selection and proves calibrated-auto selects the live 768 x 432 ultra WebGPU renderer",
   },
 ];
 
@@ -827,6 +837,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify ultra live reference evidence",
     exitProof:
       "npm run fluid:ultra-reference-outcomes passes with selected tier ultra, grid 768 x 432, 5 live cases, 10 reference comparisons, active pressure/particles/coupling during concrete impact, and no full-grid readback",
+  },
+  {
+    id: "FG-23-T01",
+    milestone: "FG-23",
+    status: "done",
+    title: "Add adaptive fluid tier selection",
+    exitProof:
+      "fluidAdaptiveTier.ts parses explicit, calibrated-auto, default-high, and auto-fallback-high modes while preserving explicit user tier overrides",
+  },
+  {
+    id: "FG-23-T02",
+    milestone: "FG-23",
+    status: "done",
+    title: "Compose local GPU headroom into a tier recommendation",
+    exitProof:
+      "fluidAdaptiveTier.ts recommends ultra only when FG-20 resolution scaling, FG-21 ultra renderer pacing, and FG-22 ultra reference outcomes pass local headroom thresholds",
+  },
+  {
+    id: "FG-23-T03",
+    milestone: "FG-23",
+    status: "done",
+    title: "Verify calibrated-auto packaged runtime selection",
+    exitProof:
+      "npm run fluid:adaptive-tier passes with recommendation ultra, calibrated-auto runtime mode, selected grid 768 x 432, WebGPU renderer, and committed FG-23 evidence",
   },
 ];
 

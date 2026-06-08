@@ -28,6 +28,7 @@ const requiredFiles = [
   "docs/evidence/FG-20-resolution-scaling-2026-06-08.json",
   "docs/evidence/FG-21-ultra-renderer-2026-06-08.json",
   "docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json",
+  "docs/evidence/FG-23-adaptive-tier-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -41,6 +42,9 @@ const requiredFiles = [
   "src/fluid/fluidDisplayPacing.ts",
   "src/fluid/fluidDisplayPacing.report.ts",
   "src/fluid/fluidDisplayPacing.test.ts",
+  "src/fluid/fluidAdaptiveTier.ts",
+  "src/fluid/fluidAdaptiveTier.report.ts",
+  "src/fluid/fluidAdaptiveTier.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -62,8 +66,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -86,6 +90,9 @@ const physicsOcean = files.get("src/physicsOcean.ts") ?? "";
 const displayPacing = files.get("src/fluid/fluidDisplayPacing.ts") ?? "";
 const displayPacingReport = files.get("src/fluid/fluidDisplayPacing.report.ts") ?? "";
 const displayPacingTest = files.get("src/fluid/fluidDisplayPacing.test.ts") ?? "";
+const adaptiveTier = files.get("src/fluid/fluidAdaptiveTier.ts") ?? "";
+const adaptiveTierReport = files.get("src/fluid/fluidAdaptiveTier.report.ts") ?? "";
+const adaptiveTierTest = files.get("src/fluid/fluidAdaptiveTier.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -127,6 +134,7 @@ const fg19Evidence = files.get("docs/evidence/FG-19-display-pacing-2026-06-08.js
 const fg20Evidence = files.get("docs/evidence/FG-20-resolution-scaling-2026-06-08.json") ?? "";
 const fg21Evidence = files.get("docs/evidence/FG-21-ultra-renderer-2026-06-08.json") ?? "";
 const fg22Evidence = files.get("docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json") ?? "";
+const fg23Evidence = files.get("docs/evidence/FG-23-adaptive-tier-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1138,6 +1146,101 @@ if (
   !fg22Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-22 evidence must record a passing packaged ultra live reference outcome report with reference comparisons and active WebGPU telemetry");
+}
+
+if (!packageJson.includes("\"fluid:adaptive-tier\"") || !packageJson.includes("src/fluid/fluidAdaptiveTier.report.ts")) {
+  errors.push("package.json must expose the FG-23 packaged adaptive-tier command");
+}
+
+if (!tracking.includes("FG-23-T03") || !tracking.includes("FG-23-adaptive-tier-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/26")) {
+  errors.push("docs/TRACKING.md must record FG-23 adaptive tier evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-23") ||
+  !contract.includes("G-FG-23") ||
+  !contract.includes("Adaptive local GPU tier calibration selector") ||
+  !contract.includes("npm run fluid:adaptive-tier")
+) {
+  errors.push("fluidGridContract.ts must define the FG-23 adaptive tier milestone, gate, and evidence command");
+}
+
+if (!electronMain.includes("OCEAN_LAB_CALIBRATED_FLUID_TIER") || !electronMain.includes("calibratedFluidTier") || !electronMain.includes("fluidTierQueryObject")) {
+  errors.push("electron/main.cjs must forward the FG-23 calibrated auto tier query into the renderer");
+}
+
+if (
+  !oceanPhysicsApp.includes("fluidRuntimeTierSelectionFromSearch") ||
+  !oceanPhysicsApp.includes("__fluidGridTierSelection") ||
+  !oceanPhysicsApp.includes("data-fluid-tier-selection-mode") ||
+  !oceanPhysicsApp.includes("data-fluid-tier-requested")
+) {
+  errors.push("OceanPhysicsApp.tsx must expose the FG-23 adaptive tier selection telemetry");
+}
+
+if (!oceanPhysicsAppTest.includes("runtimeFluidTierSelectionFromSearch") || !oceanPhysicsAppTest.includes("calibrated-auto") || !oceanPhysicsAppTest.includes("default-high")) {
+  errors.push("OceanPhysicsApp.test.tsx must cover FG-23 adaptive tier URL parsing");
+}
+
+if (!viteEnv.includes("__fluidGridTierSelection")) {
+  errors.push("vite-env.d.ts must type the FG-23 adaptive tier telemetry");
+}
+
+if (
+  !adaptiveTier.includes("G-FG-23") ||
+  !adaptiveTier.includes("fluidRuntimeTierSelectionFromSearch") ||
+  !adaptiveTier.includes("recommendAdaptiveFluidTier") ||
+  !adaptiveTier.includes("explicit tier override") ||
+  !adaptiveTier.includes("calibrated-auto") ||
+  !adaptiveTier.includes("ultra has measured local headroom")
+) {
+  errors.push("fluidAdaptiveTier.ts must define FG-23 adaptive selection and recommendation logic");
+}
+
+if (
+  !adaptiveTierReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !adaptiveTierReport.includes("OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !adaptiveTierReport.includes("window.__fluidGridTierSelection?.mode === \"calibrated-auto\"") ||
+  !adaptiveTierReport.includes("FG-20-resolution-scaling") ||
+  !adaptiveTierReport.includes("FG-22-ultra-reference-outcomes")
+) {
+  errors.push("fluidAdaptiveTier.report.ts must compose prior evidence and probe the packaged calibrated-auto runtime path");
+}
+
+if (
+  !adaptiveTierTest.includes("explicit tier overrides") ||
+  !adaptiveTierTest.includes("calibrated tier") ||
+  !adaptiveTierTest.includes("rejects ultra auto promotion") ||
+  !adaptiveTierTest.includes("G-FG-23")
+) {
+  errors.push("fluidAdaptiveTier.test.ts must cover FG-23 adaptive tier pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-23") ||
+  !remap.includes("adaptive-tier") ||
+  !remap.includes("calibrated-auto") ||
+  !remap.includes("max ultra GPU p95 step")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-23 adaptive tier gate and evidence");
+}
+
+if (
+  !fg23Evidence.includes("\"gate\": \"G-FG-23\"") ||
+  !fg23Evidence.includes("\"pass\": true") ||
+  !fg23Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg23Evidence.includes("\"reason\": \"ultra has measured local headroom and live reference parity\"") ||
+  !fg23Evidence.includes("\"maxUltraGpuP95StepMs\": 0.09025") ||
+  !fg23Evidence.includes("\"maxUltraToHighGpuP95Ratio\": 2.0687679083094554") ||
+  !fg23Evidence.includes("\"maxLiveP95FrameMs\": 9.300000000000182") ||
+  !fg23Evidence.includes("\"requestedTier\": \"auto\"") ||
+  !fg23Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg23Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg23Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg23Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg23Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-23 evidence must record a passing packaged calibrated-auto adaptive tier report");
 }
 
 if (errors.length > 0) {

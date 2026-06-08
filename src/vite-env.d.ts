@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import type { FluidCapabilityReport } from "./fluid/webgpuCapability";
+import type { FluidRuntimeTierSelection } from "./fluid/fluidAdaptiveTier";
 import type { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
 import type { runParticleSplashBenchmark } from "./fluid/fluidParticleSplash";
 import type { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
@@ -15,6 +16,7 @@ declare global {
     __fluidGridCapabilityReport?: FluidCapabilityReport;
     __fluidGridCouplingForces?: GridFluidCouplingForces;
     __fluidGridPreferredTier?: FluidGridTierId | "auto";
+    __fluidGridTierSelection?: FluidRuntimeTierSelection;
     __fluidFrameLoopStats?: FluidFrameLoopStats;
     __fluidWaterRenderStats?: FluidWaterRenderStats;
     __displayPacingObserved?: {

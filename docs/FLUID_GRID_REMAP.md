@@ -644,6 +644,30 @@ Latest ultra-tier live reference evidence:
   cases; no full-grid readback; no Canvas fallback.
 - Gate: passed.
 
+FG-23 is complete as of 2026-06-08. It turns the prior local GPU evidence into
+an adaptive tier selector. Explicit user or environment tier overrides still
+win, but `fluidTier=auto` can now consume a calibrated recommendation and route
+the packaged app to the measured local tier. On this machine, the composed
+FG-20, FG-21, and FG-22 evidence recommends `ultra`.
+
+Latest adaptive-tier evidence:
+
+- Command: `npm run fluid:adaptive-tier`.
+- Runtime: packaged macOS app launched with `OCEAN_LAB_FLUID_TIER=auto` and
+  `OCEAN_LAB_CALIBRATED_FLUID_TIER=ultra`.
+- Gate: `G-FG-23`.
+- Evidence snapshot:
+  `docs/evidence/FG-23-adaptive-tier-2026-06-08.json`.
+- Recommendation: `ultra`, because local resolution scaling, ultra renderer
+  pacing, and ultra reference outcomes all passed.
+- Headroom: max ultra GPU p95 step `0.0903 ms`, max ultra/high p95 ratio
+  `2.0688`, max live p95 frame `9.3000 ms`, max live p99 frame `9.4000 ms`,
+  and max measured storage `18,841,600` bytes.
+- Runtime probe: selection mode `calibrated-auto`, requested tier `auto`,
+  selected tier `ultra`, grid `768 x 432`, renderer `webgpu-grid-primary-v1`,
+  context `webgpu`, and no Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -717,6 +741,10 @@ Latest ultra-tier live reference evidence:
     verify drop, splash, float, sink, and damping outcomes remain inside their
     accepted bands while pressure, particles, object-grid coupling, fixed-step
     telemetry, and no-full-grid-readback discipline stay intact.
+24. Adaptive local tier calibration: compose local resolution-scaling, ultra
+    renderer pacing, and ultra reference-outcome evidence into a conservative
+    tier recommendation, then prove the packaged app's `auto` path selects the
+    calibrated live tier while explicit user overrides remain intact.
 
 ## Resolution Ladder
 
@@ -727,7 +755,7 @@ The solver should scale by measured budget rather than hard-coded optimism.
 | Low | 128 x 72 | compatibility fallback | 30 FPS, nonblank, stable diagnostics |
 | Standard | 256 x 144 | default interactive mode | 45 FPS average on target desktop |
 | High | 512 x 288 | realism inspection | 30 FPS average with stable CFL |
-| Ultra | 768 x 432 or higher | benchmark and future hardware | opt-in only |
+| Ultra | 768 x 432 or higher | calibrated local realism mode | opt-in or calibrated-auto only |
 
 The app should expose the active tier and reason for fallback in diagnostics.
 

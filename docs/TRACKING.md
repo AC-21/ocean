@@ -30,6 +30,7 @@ and GitHub issue mapping.
 | FG-20 | Ultra-tier resolution scaling gate | Done | G-FG-20 |
 | FG-21 | Opt-in ultra-tier live renderer gate | Done | G-FG-21 |
 | FG-22 | Ultra-tier live reference outcome gate | Done | G-FG-22 |
+| FG-23 | Adaptive local GPU tier calibration selector | Done | G-FG-23 |
 
 ## Gates
 
@@ -58,6 +59,7 @@ and GitHub issue mapping.
 | G-FG-20 | FG-20 | `npm run fluid:resolution-scale`; `docs/evidence/FG-20-resolution-scaling-2026-06-08.json` | the packaged app benchmarks standard, high, and ultra WebGPU tiers across grid stepping, bounded pressure shallow water, and localized particle splash with timestamp-query timing, bounded memory growth, no full-grid readback, and stable ultra/high timing ratios |
 | G-FG-21 | FG-21 | `npm run fluid:ultra-renderer`; `docs/evidence/FG-21-ultra-renderer-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and sustains smooth idle and concrete-impact display pacing with pressure, particles, object-grid coupling, zero dropped simulation debt, and no Canvas fallback |
 | G-FG-22 | FG-22 | `npm run fluid:ultra-reference-outcomes`; `docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and passes live reference comparisons for drop, splash, float, sink, and damping with pressure, particles, object-grid coupling, fixed-step telemetry, and no full-grid readback |
+| G-FG-23 | FG-23 | `npm run fluid:adaptive-tier`; `docs/evidence/FG-23-adaptive-tier-2026-06-08.json` | the packaged app composes local resolution, ultra renderer, and ultra reference evidence into a calibrated auto tier recommendation, then launches with auto tier selection and proves calibrated-auto selects the live `768 x 432` ultra WebGPU renderer |
 
 ## Tasks
 
@@ -133,6 +135,9 @@ and GitHub issue mapping.
 | FG-22-T01 | FG-22 | Done | calibration | `fluidUltraReferenceOutcomes.ts` defines the FG-22 ultra reference outcome gate, required comparison IDs, required categories, and failure checks for tier, grid, telemetry, coupling, and frame-loop health |
 | FG-22-T02 | FG-22 | Done | verification | `fluidUltraReferenceOutcomes.report.ts` launches the packaged app with `OCEAN_LAB_FLUID_TIER=ultra` and drives concrete, ice, foam, sink, and leaky-drum live reference scenarios |
 | FG-22-T03 | FG-22 | Done | calibration | `npm run fluid:ultra-reference-outcomes` passes with selected tier `ultra`, grid `768 x 432`, 5 live cases, 10 reference comparisons, active pressure/particles/coupling during concrete impact, and no full-grid readback |
+| FG-23-T01 | FG-23 | Done | calibration | `fluidAdaptiveTier.ts` parses explicit, calibrated-auto, default-high, and auto-fallback-high modes while preserving explicit user tier overrides |
+| FG-23-T02 | FG-23 | Done | calibration | `fluidAdaptiveTier.ts` recommends ultra only when FG-20 resolution scaling, FG-21 ultra renderer pacing, and FG-22 ultra reference outcomes pass local headroom thresholds |
+| FG-23-T03 | FG-23 | Done | verification | `npm run fluid:adaptive-tier` passes with recommendation `ultra`, calibrated-auto runtime mode, selected grid `768 x 432`, WebGPU renderer, and committed FG-23 evidence |
 
 ## GitHub Labels
 
@@ -171,6 +176,7 @@ and GitHub issue mapping.
 | FG-20 | https://github.com/AC-21/ocean/issues/23 |
 | FG-21 | https://github.com/AC-21/ocean/issues/24 |
 | FG-22 | https://github.com/AC-21/ocean/issues/25 |
+| FG-23 | https://github.com/AC-21/ocean/issues/26 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

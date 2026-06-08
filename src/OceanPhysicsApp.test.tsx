@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor, preferredFluidTierFromSearch } from "./OceanPhysicsApp";
+import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor, preferredFluidTierFromSearch, runtimeFluidTierSelectionFromSearch } from "./OceanPhysicsApp";
 import { cloneObjectSpec, createSimulation, defaultOceanSettings, objectPresets, startDrop, stepSimulation } from "./physicsOcean";
 
 const calmSettings = {
@@ -14,8 +14,25 @@ describe("ocean physics live snapshot", () => {
   it("parses an explicit WebGPU fluid tier from the app URL", () => {
     expect(preferredFluidTierFromSearch("?fluidTier=ultra")).toBe("ultra");
     expect(preferredFluidTierFromSearch("?fluidTier=standard")).toBe("standard");
+    expect(preferredFluidTierFromSearch("?fluidTier=auto&calibratedFluidTier=ultra")).toBeUndefined();
     expect(preferredFluidTierFromSearch("?fluidTier=banana")).toBeUndefined();
     expect(preferredFluidTierFromSearch("")).toBeUndefined();
+
+    expect(runtimeFluidTierSelectionFromSearch("?fluidTier=standard&calibratedFluidTier=ultra")).toMatchObject({
+      mode: "explicit",
+      preferredTier: "standard",
+      requestedTier: "standard",
+    });
+    expect(runtimeFluidTierSelectionFromSearch("?fluidTier=auto&calibratedFluidTier=ultra")).toMatchObject({
+      mode: "calibrated-auto",
+      preferredTier: "ultra",
+      requestedTier: "auto",
+    });
+    expect(runtimeFluidTierSelectionFromSearch("")).toMatchObject({
+      mode: "default-high",
+      preferredTier: "high",
+      requestedTier: "default",
+    });
   });
 
   it("exposes reference-ready float prediction and diagnostic fields", () => {
