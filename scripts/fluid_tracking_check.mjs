@@ -30,6 +30,7 @@ const requiredFiles = [
   "docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-23-adaptive-tier-2026-06-08.json",
   "docs/evidence/FG-24-persisted-calibration-2026-06-08.json",
+  "docs/evidence/FG-25-installed-calibration-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -52,6 +53,9 @@ const requiredFiles = [
   "src/fluid/fluidPersistedCalibration.ts",
   "src/fluid/fluidPersistedCalibration.report.ts",
   "src/fluid/fluidPersistedCalibration.test.ts",
+  "src/fluid/fluidInstalledCalibration.ts",
+  "src/fluid/fluidInstalledCalibration.report.ts",
+  "src/fluid/fluidInstalledCalibration.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -73,8 +77,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -106,6 +110,9 @@ const adaptiveTierTest = files.get("src/fluid/fluidAdaptiveTier.test.ts") ?? "";
 const persistedCalibration = files.get("src/fluid/fluidPersistedCalibration.ts") ?? "";
 const persistedCalibrationReport = files.get("src/fluid/fluidPersistedCalibration.report.ts") ?? "";
 const persistedCalibrationTest = files.get("src/fluid/fluidPersistedCalibration.test.ts") ?? "";
+const installedCalibration = files.get("src/fluid/fluidInstalledCalibration.ts") ?? "";
+const installedCalibrationReport = files.get("src/fluid/fluidInstalledCalibration.report.ts") ?? "";
+const installedCalibrationTest = files.get("src/fluid/fluidInstalledCalibration.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -149,6 +156,7 @@ const fg21Evidence = files.get("docs/evidence/FG-21-ultra-renderer-2026-06-08.js
 const fg22Evidence = files.get("docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json") ?? "";
 const fg23Evidence = files.get("docs/evidence/FG-23-adaptive-tier-2026-06-08.json") ?? "";
 const fg24Evidence = files.get("docs/evidence/FG-24-persisted-calibration-2026-06-08.json") ?? "";
+const fg25Evidence = files.get("docs/evidence/FG-25-installed-calibration-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1346,6 +1354,85 @@ if (
   !fg24Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-24 evidence must record a passing packaged persisted calibration report with no calibrated env tier");
+}
+
+if (!packageJson.includes("\"fluid:installed-calibration\"") || !packageJson.includes("src/fluid/fluidInstalledCalibration.report.ts")) {
+  errors.push("package.json must expose the FG-25 packaged installed-calibration command");
+}
+
+if (!tracking.includes("FG-25-T03") || !tracking.includes("FG-25-installed-calibration-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/28")) {
+  errors.push("docs/TRACKING.md must record FG-25 installed calibration evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-25") ||
+  !contract.includes("G-FG-25") ||
+  !contract.includes("Installed local calibration profile reuse gate") ||
+  !contract.includes("npm run fluid:installed-calibration")
+) {
+  errors.push("fluidGridContract.ts must define the FG-25 installed calibration milestone, gate, and evidence command");
+}
+
+if (
+  !installedCalibration.includes("G-FG-25") ||
+  !installedCalibration.includes("installFluidCalibrationProfile") ||
+  !installedCalibration.includes("verificationReadMatched") ||
+  !installedCalibration.includes("OCEAN_LAB_FLUID_TIER must be absent") ||
+  !installedCalibration.includes("relaunchProbe") ||
+  !installedCalibration.includes("harborline-game")
+) {
+  errors.push("fluidInstalledCalibration.ts must define the FG-25 installer receipt and reuse gate checks");
+}
+
+if (
+  !installedCalibrationReport.includes("desktopStorageFiles.fluidCalibrationProfile") ||
+  !installedCalibrationReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !installedCalibrationReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER") ||
+  !installedCalibrationReport.includes("launchAndProbe") ||
+  !installedCalibrationReport.includes("FG-23-adaptive-tier") ||
+  !installedCalibrationReport.includes("window.__fluidGridTierSelection?.mode === \"calibrated-auto\"")
+) {
+  errors.push("fluidInstalledCalibration.report.ts must install the profile and prove two packaged env-free calibrated-auto launches");
+}
+
+if (
+  !installedCalibrationTest.includes("installed profile") ||
+  !installedCalibrationTest.includes("env-provided tier") ||
+  !installedCalibrationTest.includes("fallback-high") ||
+  !installedCalibrationTest.includes("G-FG-25") ||
+  !installedCalibrationTest.includes("did not round-trip")
+) {
+  errors.push("fluidInstalledCalibration.test.ts must cover FG-25 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-25") ||
+  !remap.includes("installed-calibration") ||
+  !remap.includes("fluid-calibration.v1.json") ||
+  !remap.includes("two clean packaged launches") ||
+  !remap.includes("no `OCEAN_LAB_FLUID_TIER`")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-25 installed calibration gate and evidence");
+}
+
+if (
+  !fg25Evidence.includes("\"gate\": \"G-FG-25\"") ||
+  !fg25Evidence.includes("\"pass\": true") ||
+  !fg25Evidence.includes("\"fileName\": \"fluid-calibration.v1.json\"") ||
+  !fg25Evidence.includes("\"sourceGate\": \"G-FG-23\"") ||
+  !fg25Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg25Evidence.includes("\"verificationReadMatched\": true") ||
+  !fg25Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg25Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg25Evidence.includes("\"reusedByMainProcess\": true") ||
+  !fg25Evidence.includes("\"requestedTier\": \"auto\"") ||
+  !fg25Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg25Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg25Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg25Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg25Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-25 evidence must record a passing packaged installed calibration report with env-free profile reuse");
 }
 
 if (errors.length > 0) {

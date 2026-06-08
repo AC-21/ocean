@@ -692,6 +692,29 @@ Latest persisted-calibration evidence:
   Canvas fallback.
 - Gate: passed.
 
+FG-25 is complete as of 2026-06-08. It turns the persisted calibration read path
+into an installed local calibration workflow. The installer writes a passing
+FG-23-derived `ocean-fluid-calibration-profile-v1` profile through the desktop
+storage helper, verifies the profile round-trips from app-owned
+`harborline-game` storage, then launches the packaged app twice from the same
+user data directory with no fluid-tier environment variables.
+
+Latest installed-calibration evidence:
+
+- Command: `npm run fluid:installed-calibration`.
+- Runtime: packaged macOS app launched twice with no `OCEAN_LAB_FLUID_TIER` and
+  no `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-25`.
+- Evidence snapshot:
+  `docs/evidence/FG-25-installed-calibration-2026-06-08.json`.
+- Install receipt: file `fluid-calibration.v1.json`, source gate `G-FG-23`,
+  installed tier `ultra`, nonempty persisted profile, and storage round-trip
+  match from the app-owned desktop storage directory.
+- Runtime and relaunch probes: selection mode `calibrated-auto`, requested tier
+  `auto`, selected tier `ultra`, grid `768 x 432`, renderer
+  `webgpu-grid-primary-v1`, context `webgpu`, and no Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -773,6 +796,10 @@ Latest persisted-calibration evidence:
     app-owned desktop storage, read it during Electron startup, and prove a
     normal packaged launch can select the calibrated tier without a calibrated
     tier environment variable.
+26. Installed calibration reuse: install the FG-23-derived calibration profile
+    through the desktop storage helper, then prove two clean packaged launches
+    from the same app-owned profile reuse the calibrated tier without fluid-tier
+    environment variables.
 
 ## Resolution Ladder
 

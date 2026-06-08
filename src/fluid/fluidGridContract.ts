@@ -25,7 +25,8 @@ export type FluidGridMilestoneId =
   | "FG-21"
   | "FG-22"
   | "FG-23"
-  | "FG-24";
+  | "FG-24"
+  | "FG-25";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -52,7 +53,8 @@ export type FluidGridGateId =
   | "G-FG-21"
   | "G-FG-22"
   | "G-FG-23"
-  | "G-FG-24";
+  | "G-FG-24"
+  | "G-FG-25";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -144,6 +146,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-22", title: "Ultra-tier live reference outcome gate", gate: "G-FG-22" },
   { id: "FG-23", title: "Adaptive local GPU tier calibration selector", gate: "G-FG-23" },
   { id: "FG-24", title: "Persisted local calibration profile runtime gate", gate: "G-FG-24" },
+  { id: "FG-25", title: "Installed local calibration profile reuse gate", gate: "G-FG-25" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -312,6 +315,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:persisted-calibration and docs/evidence/FG-24-persisted-calibration-2026-06-08.json",
     passBar:
       "the packaged app reads an app-owned local calibration profile without a calibrated-tier environment variable, auto-requests the saved calibrated tier, and proves calibrated-auto selects the live 768 x 432 ultra WebGPU renderer while explicit overrides remain supported",
+  },
+  {
+    id: "G-FG-25",
+    blocks: "FG-25",
+    evidence: "npm run fluid:installed-calibration and docs/evidence/FG-25-installed-calibration-2026-06-08.json",
+    passBar:
+      "the calibration installer writes a passing FG-23 profile through app-owned desktop storage, then two clean packaged launches reuse the installed profile without fluid-tier environment variables and select the live 768 x 432 ultra WebGPU renderer",
   },
 ];
 
@@ -895,6 +905,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify persisted calibration runtime behavior",
     exitProof:
       "npm run fluid:persisted-calibration passes with env calibrated tier absent, profile-selected ultra, main-process profile read, calibrated-auto runtime mode, selected grid 768 x 432, and WebGPU renderer",
+  },
+  {
+    id: "FG-25-T01",
+    milestone: "FG-25",
+    status: "done",
+    title: "Add a reusable calibration profile installer",
+    exitProof:
+      "fluidInstalledCalibration.ts installs a passing FG-23-derived ocean-fluid-calibration-profile-v1 profile through the desktop storage helper and records a round-trip receipt",
+  },
+  {
+    id: "FG-25-T02",
+    milestone: "FG-25",
+    status: "done",
+    title: "Verify env-free installed-profile reuse after relaunch",
+    exitProof:
+      "fluidInstalledCalibration.report.ts launches the packaged app twice from the same installed fluid-calibration.v1.json with OCEAN_LAB_FLUID_TIER and OCEAN_LAB_CALIBRATED_FLUID_TIER absent",
+  },
+  {
+    id: "FG-25-T03",
+    milestone: "FG-25",
+    status: "done",
+    title: "Close the installed calibration evidence gate",
+    exitProof:
+      "npm run fluid:installed-calibration passes with installed tier ultra, reused main-process profile selection, two calibrated-auto runtime probes, selected grid 768 x 432, and WebGPU renderer",
   },
 ];
 
