@@ -46,6 +46,11 @@ and GitHub issue mapping.
 | FG-36 | Installed calibrated reference outcome gate | Done | G-FG-36 |
 | FG-37 | Installed reference pacing envelope gate | Done | G-FG-37 |
 | FG-38 | Experimental high-resolution grid headroom gate | Done | G-FG-38 |
+| FG-39 | Experimental high-resolution live renderer gate | Done | G-FG-39 |
+| FG-40 | Experimental high-resolution reference outcomes gate | Done | G-FG-40 |
+| FG-41 | Persisted high-resolution runtime-grid calibration gate | Done | G-FG-41 |
+| FG-42 | Installed high-resolution reference pacing gate | Done | G-FG-42 |
+| FG-43 | Installed high-resolution float/sink envelope gate | Done | G-FG-43 |
 
 ## Gates
 
@@ -94,6 +99,7 @@ and GitHub issue mapping.
 | G-FG-40 | FG-40 | `npm run fluid:experimental-reference-outcomes`; `docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json` | the packaged Desktop app runs the experimental `1024 x 576` live WebGPU renderer through drop, splash, float, sink, and damping reference cases while capability selection remains capped at ultra `768 x 432` and no full-grid readback is used |
 | G-FG-41 | FG-41 | `npm run fluid:high-resolution-calibration`; `docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json` | a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live `1024 x 576` without `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` while capability selection remains capped at ultra `768 x 432` |
 | G-FG-42 | FG-42 | `npm run fluid:installed-high-resolution-reference-pacing`; `docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json` | the real installed Desktop app uses the default `fluid-calibration.v1.json` profile with a persisted FG-40 runtime grid, no fluid-tier, grid, or userData environment overrides, replays reference outcomes, and sustains smooth live `1024 x 576` WebGPU pacing |
+| G-FG-43 | FG-43 | `npm run fluid:installed-high-resolution-float-sink`; `docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json` | the real installed Desktop app uses the default high-resolution profile to exercise every object preset at live `1024 x 576`, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, and a nonblank/varied high-resolution viewport screenshot |
 
 ## Tasks
 
@@ -229,6 +235,9 @@ and GitHub issue mapping.
 | FG-42-T01 | FG-42 | Done | calibration | `fluidInstalledHighResolutionReferencePacing.report.ts` writes a provenance-valid FG-23 profile with FG-40 `runtimeGrid` into `/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game/fluid-calibration.v1.json` |
 | FG-42-T02 | FG-42 | Done | verification | `fluidInstalledHighResolutionReferencePacing.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without `OCEAN_LAB_FLUID_TIER`, `OCEAN_LAB_CALIBRATED_FLUID_TIER`, `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID`, or `HARBORLINE_USER_DATA_DIR` and replays concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink at live `1024 x 576` |
 | FG-42-T03 | FG-42 | Done | performance | `npm run fluid:installed-high-resolution-reference-pacing` passes with five reference pacing scenarios at ~`120 FPS`, max p95 `9.20 ms`, max p99 `9.30 ms`, zero dropped-frame ratio, active WebGPU pressure/particles/coupling, and no full-grid readback |
+| FG-43-T01 | FG-43 | Done | calibration | `fluidInstalledHighResolutionFloatSinkEnvelope.ts` requires every object preset, all three prediction outcomes, default high-resolution storage, calibrated-auto ultra runtime, live `1024 x 576` WebGPU samples, active pressure/particles/coupling, no full-grid readback, and nonblack viewport pixels |
+| FG-43-T02 | FG-43 | Done | verification | `fluidInstalledHighResolutionFloatSinkEnvelope.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier, grid, or userData env overrides, captures the high-resolution WebGPU canvas, and records float/sink prediction plus live phase evidence for foam, pine, ice, drum, hardwood, concrete, steel, and aluminum presets |
+| FG-43-T03 | FG-43 | Done | performance | `npm run fluid:installed-high-resolution-float-sink` passes with eight presets, stable floaters, immediate sinkers, accelerated waterlogging threshold proof, high-resolution viewport luma `124.27` with `27` color buckets, max p95 `9.20 ms`, max p99 `9.40 ms`, worst dropped-frame ratio `0.0011`, and committed FG-43 evidence |
 
 ## GitHub Labels
 
@@ -287,6 +296,7 @@ and GitHub issue mapping.
 | FG-40 | https://github.com/AC-21/ocean/issues/43 |
 | FG-41 | https://github.com/AC-21/ocean/issues/44 |
 | FG-42 | https://github.com/AC-21/ocean/issues/45 |
+| FG-43 | https://github.com/AC-21/ocean/issues/46 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

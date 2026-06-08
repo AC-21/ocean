@@ -1217,6 +1217,38 @@ Installed high-resolution reference pacing evidence:
   This gives the installed app explicit 1024 x 576 canvas/runtime-grid telemetry
   rather than a temporary experimental flag proof.
 
+FG-43 broadens the installed high-resolution path from reference cases to the
+full object-preset envelope. The gate answers the user-facing question "how long
+will this object float?" across foam, pine, ice, leaky drum, hardwood, concrete,
+steel, and aluminum presets while also capturing the high-resolution WebGPU
+canvas so a black ocean screen cannot pass on telemetry alone.
+
+Installed high-resolution float/sink envelope evidence:
+
+- Command: `npm run fluid:installed-high-resolution-float-sink`.
+- Gate: `G-FG-43`.
+- Evidence snapshot:
+  `docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json`.
+- Visual proof: the live `1024 x 576` WebGPU canvas screenshot
+  `reports/fluid-installed-high-resolution-float-sink-envelope-latest.png`
+  measured `nonblank` / `varied`, average luma `124.27`, and `27` color buckets.
+- Runtime proof: selection mode stayed `calibrated-auto`, selected tier stayed
+  `ultra`, capability grid stayed `768 x 432`, `window.__fluidRuntimeGridOverride`
+  reported `1024 x 576`, and the canvas reported `webgpu-grid-primary-v1` /
+  `webgpu` at live `1024 x 576`.
+- Outcome proof: the gate exercised all eight presets and covered
+  `floats-indefinitely`, `sinks-immediately`, and `waterlogs-then-sinks`.
+  Foam, pine, ice, and aluminum remained stable floaters; concrete and
+  steel sank immediately; leaky drum and hardwood crate predicted finite
+  waterlogging sink times.
+- Waterlogging proof: the leaky drum base prediction was `11260.5 s`, hardwood
+  crate was `3648.3 s`, and accelerated waterlogging drove each case across its
+  sink threshold in the installed high-resolution app.
+- Pacing proof: the full preset sweep held max p95 frame time `9.20 ms`, max p99
+  frame time `9.40 ms`, worst dropped-frame ratio `0.0011`, and worst
+  duplicate-water-frame ratio `0.0028` while preserving active pressure,
+  particles, coupling, and no-full-grid-readback telemetry.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1353,6 +1385,14 @@ Installed high-resolution reference pacing evidence:
     `1024 x 576` runtime grid in the local calibration profile only when FG-40
     passes, then prove packaged startup can recover that grid from storage
     without manual fluid/grid environment overrides.
+39. Installed high-resolution reference pacing: replay the reference outcome
+    packet through the real Desktop launcher and default high-resolution profile,
+    requiring smooth `1024 x 576` WebGPU pacing without fluid-tier, grid, or
+    userData environment overrides.
+40. Installed high-resolution float/sink envelope: exercise every object preset
+    through the installed default high-resolution profile, proving stable
+    floaters, immediate sinkers, waterlogging predictions, visible nonblack
+    canvas pixels, and smooth WebGPU pacing.
 
 ## Resolution Ladder
 

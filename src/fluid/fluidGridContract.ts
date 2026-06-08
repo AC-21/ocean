@@ -43,7 +43,8 @@ export type FluidGridMilestoneId =
   | "FG-39"
   | "FG-40"
   | "FG-41"
-  | "FG-42";
+  | "FG-42"
+  | "FG-43";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -88,7 +89,8 @@ export type FluidGridGateId =
   | "G-FG-39"
   | "G-FG-40"
   | "G-FG-41"
-  | "G-FG-42";
+  | "G-FG-42"
+  | "G-FG-43";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -198,6 +200,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-40", title: "Experimental high-resolution reference outcomes gate", gate: "G-FG-40" },
   { id: "FG-41", title: "Persisted high-resolution runtime-grid calibration gate", gate: "G-FG-41" },
   { id: "FG-42", title: "Installed high-resolution reference pacing gate", gate: "G-FG-42" },
+  { id: "FG-43", title: "Installed high-resolution float/sink envelope gate", gate: "G-FG-43" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -493,6 +496,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-reference-pacing and docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
     passBar:
       "the real installed Desktop app uses the default fluid-calibration.v1.json profile with a persisted FG-40 runtimeGrid, no fluid-tier, grid, or userData environment overrides, replays drop/splash, float, sink, and damping reference outcomes, and sustains smooth live 1024 x 576 WebGPU pacing",
+  },
+  {
+    id: "G-FG-43",
+    blocks: "FG-43",
+    evidence:
+      "npm run fluid:installed-high-resolution-float-sink and docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
+    passBar:
+      "the real installed Desktop app uses the default high-resolution calibration profile to exercise every object preset at live 1024 x 576, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, active coupling telemetry, no full-grid readback, and nonblank high-resolution viewport pixels",
   },
 ];
 
@@ -1508,6 +1519,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution reference pacing gate",
     exitProof:
       "npm run fluid:installed-high-resolution-reference-pacing passes with calibrated-auto ultra, capability grid 768 x 432, live canvas 1024 x 576, five reference pacing scenarios, p99 frame time under 10 ms, active pressure/particles/coupling, and no full-grid readback",
+  },
+  {
+    id: "FG-43-T01",
+    milestone: "FG-43",
+    status: "done",
+    title: "Define the installed high-resolution float/sink envelope gate",
+    exitProof:
+      "fluidInstalledHighResolutionFloatSinkEnvelope.ts requires every object preset, all three prediction outcomes, default high-resolution storage, calibrated-auto ultra runtime, live 1024 x 576 WebGPU samples, active pressure/particles/coupling, no full-grid readback, and nonblack viewport pixels",
+  },
+  {
+    id: "FG-43-T02",
+    milestone: "FG-43",
+    status: "done",
+    title: "Measure every object preset through the installed high-resolution app",
+    exitProof:
+      "fluidInstalledHighResolutionFloatSinkEnvelope.report.ts launches /Users/sasha/Desktop/Ocean Impact Lab.app without fluid-tier, grid, or userData env overrides, captures the high-resolution WebGPU canvas, and records float/sink prediction plus live phase evidence for foam, pine, ice, drum, hardwood, concrete, steel, and aluminum presets",
+  },
+  {
+    id: "FG-43-T03",
+    milestone: "FG-43",
+    status: "done",
+    title: "Close installed high-resolution float/sink envelope gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-float-sink passes with eight presets, stable floaters, immediate sinkers, accelerated waterlogging threshold proof, nonblank high-resolution viewport pixels, max p99 frame time under 10 ms, and committed FG-43 evidence",
   },
 ];
 

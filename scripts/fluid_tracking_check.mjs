@@ -48,6 +48,7 @@ const requiredFiles = [
   "docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
   "docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
+  "docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -132,6 +133,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionReferencePacing.ts",
   "src/fluid/fluidInstalledHighResolutionReferencePacing.report.ts",
   "src/fluid/fluidInstalledHighResolutionReferencePacing.test.ts",
+  "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.ts",
+  "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.report.ts",
+  "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -151,8 +155,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -247,6 +251,9 @@ const highResolutionCalibrationTest = files.get("src/fluid/fluidHighResolutionCa
 const installedHighResolutionReferencePacing = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.ts") ?? "";
 const installedHighResolutionReferencePacingReport = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.report.ts") ?? "";
 const installedHighResolutionReferencePacingTest = files.get("src/fluid/fluidInstalledHighResolutionReferencePacing.test.ts") ?? "";
+const installedHighResolutionFloatSinkEnvelope = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.ts") ?? "";
+const installedHighResolutionFloatSinkEnvelopeReport = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.report.ts") ?? "";
+const installedHighResolutionFloatSinkEnvelopeTest = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -305,6 +312,7 @@ const fg39Evidence = files.get("docs/evidence/FG-39-experimental-live-grid-2026-
 const fg40Evidence = files.get("docs/evidence/FG-40-experimental-reference-outcomes-2026-06-08.json") ?? "";
 const fg41Evidence = files.get("docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json") ?? "";
 const fg42Evidence = files.get("docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ?? "";
+const fg43Evidence = files.get("docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3240,6 +3248,120 @@ if (
   !fg42Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-42 evidence must record default-profile installed high-resolution reference pacing with live 1024 x 576 WebGPU telemetry and no-readback proof");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-float-sink\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.report.ts")
+) {
+  errors.push("package.json must expose the FG-43 installed high-resolution float/sink command");
+}
+
+if (
+  !tracking.includes("FG-43-T03") ||
+  !tracking.includes("FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/46") ||
+  !tracking.includes("nonblank/varied high-resolution viewport screenshot")
+) {
+  errors.push("docs/TRACKING.md must record FG-43 installed high-resolution float/sink evidence, visible viewport proof, and issue mapping");
+}
+
+if (
+  !contract.includes("FG-43") ||
+  !contract.includes("G-FG-43") ||
+  !contract.includes("Installed high-resolution float/sink envelope gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-float-sink") ||
+  !contract.includes("nonblank high-resolution viewport pixels")
+) {
+  errors.push("fluidGridContract.ts must define the FG-43 installed high-resolution float/sink milestone, gate, visual proof, and evidence command");
+}
+
+if (
+  !installedHighResolutionFloatSinkEnvelope.includes("G-FG-43") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("missing preset") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("waterlogs-then-sinks") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("accelerated waterlogging") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("samples did not all render 1024x576 canvas grid") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID must be absent") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("screen may appear black") ||
+  !installedHighResolutionFloatSinkEnvelope.includes("lowDraftStableFloaterConverged")
+) {
+  errors.push("fluidInstalledHighResolutionFloatSinkEnvelope.ts must define FG-43 preset, high-resolution, visual, waterlogging, and low-draft convergence checks");
+}
+
+if (
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_FLOAT_SINK_OUT") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_FLOAT_SINK_SCREENSHOT") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("calibrationProfileWithExperimentalRuntimeGrid") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("delete launchEnv.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("presetEnvelope") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("observedPhaseFromSamples") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("waterFillRatePerMinute: 30") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("summarizePng") ||
+  !installedHighResolutionFloatSinkEnvelopeReport.includes("page.locator(\".ocean-canvas\").screenshot")
+) {
+  errors.push("fluidInstalledHighResolutionFloatSinkEnvelope.report.ts must install the default high-resolution profile, capture the viewport, and measure every preset without env overrides");
+}
+
+if (
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("installed high-resolution float/sink envelope gate") ||
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("wrong outcome classes") ||
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("fallback renderer samples") ||
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("black high-resolution viewport") ||
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("very low-draft foam convergence") ||
+  !installedHighResolutionFloatSinkEnvelopeTest.includes("waterlogging cases")
+) {
+  errors.push("fluidInstalledHighResolutionFloatSinkEnvelope.test.ts must cover FG-43 pass, visual, low-draft, renderer, outcome, and waterlogging failure cases");
+}
+
+if (
+  !remap.includes("FG-43") ||
+  !remap.includes("Installed high-resolution float/sink envelope evidence") ||
+  !remap.includes("nonblank") ||
+  !remap.includes("leaky drum base prediction was `11260.5 s`") ||
+  !remap.includes("steel sank immediately") ||
+  !remap.includes("average luma `124.27`") ||
+  !remap.includes("Installed high-resolution float/sink envelope: exercise every object preset")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-43 installed high-resolution float/sink envelope, visual proof, and evidence");
+}
+
+if (
+  !fg43Evidence.includes("\"gate\": \"G-FG-43\"") ||
+  !fg43Evidence.includes("\"pass\": true") ||
+  !fg43Evidence.includes("\"failures\": []") ||
+  !fg43Evidence.includes("\"presetCount\": 8") ||
+  !fg43Evidence.includes("\"caseCount\": 8") ||
+  !fg43Evidence.includes("\"foam-rescue-block\"") ||
+  !fg43Evidence.includes("\"pine-log\"") ||
+  !fg43Evidence.includes("\"ice-block\"") ||
+  !fg43Evidence.includes("\"leaky-steel-drum\"") ||
+  !fg43Evidence.includes("\"hardwood-crate\"") ||
+  !fg43Evidence.includes("\"concrete-cube\"") ||
+  !fg43Evidence.includes("\"steel-sphere\"") ||
+  !fg43Evidence.includes("\"aluminum-canister\"") ||
+  !fg43Evidence.includes("\"floats-indefinitely\"") ||
+  !fg43Evidence.includes("\"sinks-immediately\"") ||
+  !fg43Evidence.includes("\"waterlogs-then-sinks\"") ||
+  !fg43Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg43Evidence.includes("\"runtimeGridOverride\"") ||
+  !fg43Evidence.includes("\"defaultStorage\": true") ||
+  !fg43Evidence.includes("\"readByMainProcess\": true") ||
+  !fg43Evidence.includes("\"maxP99FrameMs\"") ||
+  !fg43Evidence.includes("\"worstDroppedFrameRatio\": 0") ||
+  !fg43Evidence.includes("\"phase\": \"sank\"") ||
+  !fg43Evidence.includes("\"secondsUntilSink\": 11260") ||
+  !fg43Evidence.includes("\"secondsUntilSink\": 3648") ||
+  !fg43Evidence.includes("\"particlesActiveSeen\": true") ||
+  !fg43Evidence.includes("\"pressureActiveSeen\": true") ||
+  !fg43Evidence.includes("\"couplingActiveSeen\": true") ||
+  !fg43Evidence.includes("\"visual\"") ||
+  !fg43Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg43Evidence.includes("\"variety\": \"varied\"") ||
+  !fg43Evidence.includes("\"colorBuckets\": 27") ||
+  !fg43Evidence.includes("\"averageLuma\": 124.26511749359392")
+) {
+  errors.push("FG-43 evidence must record a passing installed high-resolution float/sink envelope with live 1024 x 576 WebGPU telemetry, visual pixels, all presets, and no-readback proof");
 }
 
 if (errors.length > 0) {
