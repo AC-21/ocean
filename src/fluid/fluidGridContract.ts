@@ -36,7 +36,8 @@ export type FluidGridMilestoneId =
   | "FG-32"
   | "FG-33"
   | "FG-34"
-  | "FG-35";
+  | "FG-35"
+  | "FG-36";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -74,7 +75,8 @@ export type FluidGridGateId =
   | "G-FG-32"
   | "G-FG-33"
   | "G-FG-34"
-  | "G-FG-35";
+  | "G-FG-35"
+  | "G-FG-36";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -177,6 +179,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-33", title: "Desktop launcher install reproducibility gate", gate: "G-FG-33" },
   { id: "FG-34", title: "Default-profile calibrated Desktop launch gate", gate: "G-FG-34" },
   { id: "FG-35", title: "Visible calibrated Desktop window gate", gate: "G-FG-35" },
+  { id: "FG-36", title: "Installed calibrated reference outcome gate", gate: "G-FG-36" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -422,6 +425,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:desktop-visibility and docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
     passBar:
       "a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface",
+  },
+  {
+    id: "G-FG-36",
+    blocks: "FG-36",
+    evidence: "npm run fluid:installed-reference-outcomes and docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json",
+    passBar:
+      "the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU",
   },
 ];
 
@@ -1269,6 +1279,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close visible calibrated Desktop window gate",
     exitProof:
       "npm run fluid:desktop-visibility passes with the installed calibrated process, a frontmost visible window, and committed nonblack ocean viewport evidence",
+  },
+  {
+    id: "FG-36-T01",
+    milestone: "FG-36",
+    status: "done",
+    title: "Define installed calibrated reference outcome checks",
+    exitProof:
+      "fluidInstalledReferenceOutcomes.ts wraps the FG-22 reference comparison packet with default-profile, no-env-override, calibrated-auto ultra, Desktop launcher, pressure, particles, coupling, and no-readback checks",
+  },
+  {
+    id: "FG-36-T02",
+    milestone: "FG-36",
+    status: "done",
+    title: "Drive reference outcomes through the installed Desktop profile",
+    exitProof:
+      "fluidInstalledReferenceOutcomes.report.ts launches /Users/sasha/Desktop/Ocean Impact Lab.app with no fluid-tier or userData env overrides and drives concrete, ice, foam, concrete sink, and leaky-drum scenarios",
+  },
+  {
+    id: "FG-36-T03",
+    milestone: "FG-36",
+    status: "done",
+    title: "Close installed calibrated reference outcome gate",
+    exitProof:
+      "npm run fluid:installed-reference-outcomes passes with calibrated-auto ultra, five live reference cases, ten comparisons, active WebGPU pressure/particles/coupling, and committed evidence",
   },
 ];
 

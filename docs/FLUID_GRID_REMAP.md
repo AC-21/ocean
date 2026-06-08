@@ -991,6 +991,37 @@ Latest desktop-visibility evidence:
   black surface in the ocean pane.
 - Gate: passed.
 
+FG-36 is complete as of 2026-06-08. FG-22 proved the explicit ultra packaged
+reference-outcome path, and FG-34/FG-35 proved the default Desktop app can
+select calibrated-auto ultra and show a visible nonblack ocean. FG-36 ties
+those threads together: the real installed Desktop app, launched through the
+Desktop launcher with no `OCEAN_LAB_FLUID_TIER`,
+`OCEAN_LAB_CALIBRATED_FLUID_TIER`, or `HARBORLINE_USER_DATA_DIR`, must still
+pass the live drop, splash, float, sink, and damping reference comparisons.
+
+Latest installed-reference evidence:
+
+- Command: `npm run fluid:installed-reference-outcomes`.
+- Gate: `G-FG-36`.
+- Evidence snapshot:
+  `docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json`.
+- Launch proof: `/Users/sasha/Desktop/Ocean Impact Lab.app` resolves to the
+  installed bundle under `/Users/sasha/Applications/Ocean Impact Lab Builds`,
+  and the launch environment has no fluid-tier or user-data override.
+- Runtime proof: selection mode `calibrated-auto`, requested tier `auto`,
+  selected tier `ultra`, renderer `webgpu-grid-primary-v1`, context `webgpu`,
+  and grid `768 x 432`.
+- Reference proof: five installed-profile live cases cover concrete
+  drop/splash, ice hydrostatic float, foam damping/settling, concrete sink
+  terminal behavior, and leaky-drum sink-time sensitivity.
+- Comparison proof: ten live comparisons pass for drop speed, splash height,
+  float fraction/draft, damping draft/buoyancy/equilibrium, sink terminal
+  speed/phase, and leak sensitivity.
+- Telemetry proof: WebGPU pressure, localized particles, object-grid coupling,
+  fixed-step frame-loop health, and no-full-grid-readback discipline remain
+  active during the installed-profile run.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1104,6 +1135,10 @@ Latest desktop-visibility evidence:
     launch path, prove the installed calibrated process owns a visible
     frontmost window, and sample the ocean viewport pixels so a black screen
     cannot pass through hidden renderer automation.
+34. Installed calibrated reference outcomes: run the live reference comparison
+    suite through the actual Desktop launcher and real default calibrated
+    profile, proving calibrated-auto ultra preserves drop, splash, float, sink,
+    and damping behavior without explicit tier environment overrides.
 
 ## Resolution Ladder
 

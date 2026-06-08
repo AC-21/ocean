@@ -41,6 +41,7 @@ const requiredFiles = [
   "docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
   "docs/evidence/FG-34-default-profile-calibration-2026-06-08.json",
   "docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
+  "docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -99,6 +100,9 @@ const requiredFiles = [
   "src/fluid/fluidDesktopVisibility.ts",
   "src/fluid/fluidDesktopVisibility.report.ts",
   "src/fluid/fluidDesktopVisibility.test.ts",
+  "src/fluid/fluidInstalledReferenceOutcomes.ts",
+  "src/fluid/fluidInstalledReferenceOutcomes.report.ts",
+  "src/fluid/fluidInstalledReferenceOutcomes.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -120,8 +124,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -189,6 +193,9 @@ const defaultProfileCalibrationTest = files.get("src/fluid/fluidDefaultProfileCa
 const desktopVisibility = files.get("src/fluid/fluidDesktopVisibility.ts") ?? "";
 const desktopVisibilityReport = files.get("src/fluid/fluidDesktopVisibility.report.ts") ?? "";
 const desktopVisibilityTest = files.get("src/fluid/fluidDesktopVisibility.test.ts") ?? "";
+const installedReferenceOutcomes = files.get("src/fluid/fluidInstalledReferenceOutcomes.ts") ?? "";
+const installedReferenceOutcomesReport = files.get("src/fluid/fluidInstalledReferenceOutcomes.report.ts") ?? "";
+const installedReferenceOutcomesTest = files.get("src/fluid/fluidInstalledReferenceOutcomes.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -243,6 +250,7 @@ const fg32Evidence = files.get("docs/evidence/FG-32-surface-recovery-2026-06-08.
 const fg33Evidence = files.get("docs/evidence/FG-33-desktop-launcher-2026-06-08.json") ?? "";
 const fg34Evidence = files.get("docs/evidence/FG-34-default-profile-calibration-2026-06-08.json") ?? "";
 const fg35Evidence = files.get("docs/evidence/FG-35-desktop-visibility-2026-06-08.json") ?? "";
+const fg36Evidence = files.get("docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2472,6 +2480,102 @@ if (
   !fg35Evidence.includes("\"variety\": \"varied\"")
 ) {
   errors.push("FG-35 evidence must record a normal visible calibrated Desktop launch with nonblack ocean viewport pixels");
+}
+
+if (!packageJson.includes("\"fluid:installed-reference-outcomes\"") || !packageJson.includes("src/fluid/fluidInstalledReferenceOutcomes.report.ts")) {
+  errors.push("package.json must expose the FG-36 installed reference outcomes command");
+}
+
+if (!tracking.includes("FG-36-T03") || !tracking.includes("FG-36-installed-reference-outcomes-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/39")) {
+  errors.push("docs/TRACKING.md must record FG-36 installed calibrated reference outcome evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-36") ||
+  !contract.includes("G-FG-36") ||
+  !contract.includes("Installed calibrated reference outcome gate") ||
+  !contract.includes("npm run fluid:installed-reference-outcomes")
+) {
+  errors.push("fluidGridContract.ts must define the FG-36 installed calibrated reference outcome milestone, gate, and evidence command");
+}
+
+if (
+  !installedReferenceOutcomes.includes("G-FG-36") ||
+  !installedReferenceOutcomes.includes("coreReference") ||
+  !installedReferenceOutcomes.includes("defaultProfileEvidence") ||
+  !installedReferenceOutcomes.includes("envUserDataOverridePresent") ||
+  !installedReferenceOutcomes.includes("calibrated-auto") ||
+  !installedReferenceOutcomes.includes("core reference pressure was not active") ||
+  !installedReferenceOutcomes.includes("core reference particles were not active")
+) {
+  errors.push("fluidInstalledReferenceOutcomes.ts must define FG-36 default-profile, no-env, core reference, and WebGPU telemetry checks");
+}
+
+if (
+  !installedReferenceOutcomesReport.includes("OCEAN_LAB_INSTALLED_REFERENCE_OUT") ||
+  !installedReferenceOutcomesReport.includes("reports/fluid-default-profile-calibration-latest.json") ||
+  !installedReferenceOutcomesReport.includes("delete launchEnv.HARBORLINE_USER_DATA_DIR") ||
+  !installedReferenceOutcomesReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !installedReferenceOutcomesReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER") ||
+  !installedReferenceOutcomesReport.includes("Desktop") ||
+  !installedReferenceOutcomesReport.includes("appName}.app") ||
+  !installedReferenceOutcomesReport.includes("presetId: \"concrete-cube\"") ||
+  !installedReferenceOutcomesReport.includes("presetId: \"ice-block\"") ||
+  !installedReferenceOutcomesReport.includes("presetId: \"foam-rescue-block\"") ||
+  !installedReferenceOutcomesReport.includes("presetId: \"leaky-steel-drum\"") ||
+  !installedReferenceOutcomesReport.includes("createFluidUltraReferenceOutcomesReport") ||
+  !installedReferenceOutcomesReport.includes("G-FG-36")
+) {
+  errors.push("fluidInstalledReferenceOutcomes.report.ts must launch the default-profile Desktop app without env overrides and drive all reference scenarios");
+}
+
+if (
+  !installedReferenceOutcomesTest.includes("conservative high fallback") ||
+  !installedReferenceOutcomesTest.includes("environment overrides") ||
+  !installedReferenceOutcomesTest.includes("every required physics category") ||
+  !installedReferenceOutcomesTest.includes("active pressure, particles, or consumed coupling") ||
+  !installedReferenceOutcomesTest.includes("G-FG-36")
+) {
+  errors.push("fluidInstalledReferenceOutcomes.test.ts must cover FG-36 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-36") ||
+  !remap.includes("installed-reference") ||
+  !remap.includes("no fluid-tier") ||
+  !remap.includes("drop, splash, float, sink, and damping") ||
+  !remap.includes("calibrated-auto ultra")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-36 installed calibrated reference outcome gate and evidence");
+}
+
+if (
+  !fg36Evidence.includes("\"gate\": \"G-FG-36\"") ||
+  !fg36Evidence.includes("\"pass\": true") ||
+  !fg36Evidence.includes("\"failures\": []") ||
+  !fg36Evidence.includes("\"sourcePath\": \"reports/fluid-default-profile-calibration-latest.json\"") ||
+  !fg36Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg36Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg36Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg36Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg36Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg36Evidence.includes("\"envUserDataOverridePresent\": false") ||
+  !fg36Evidence.includes("\"path\": \"/Users/sasha/Desktop/Ocean Impact Lab.app\"") ||
+  !fg36Evidence.includes("\"resolvesToInstalledBundle\": true") ||
+  !fg36Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg36Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg36Evidence.includes("\"caseCount\": 5") ||
+  !fg36Evidence.includes("\"comparisonCount\": 10") ||
+  !fg36Evidence.includes("\"damping\"") ||
+  !fg36Evidence.includes("\"drop\"") ||
+  !fg36Evidence.includes("\"float\"") ||
+  !fg36Evidence.includes("\"sink\"") ||
+  !fg36Evidence.includes("\"splash\"") ||
+  !fg36Evidence.includes("\"pressureActive\": true") ||
+  !fg36Evidence.includes("\"particlesActive\": true") ||
+  !fg36Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-36 evidence must record installed default-profile calibrated-auto reference outcomes with active WebGPU telemetry");
 }
 
 if (errors.length > 0) {

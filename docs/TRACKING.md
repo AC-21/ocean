@@ -43,6 +43,7 @@ and GitHub issue mapping.
 | FG-33 | Desktop launcher install reproducibility gate | Done | G-FG-33 |
 | FG-34 | Default-profile calibrated Desktop launch gate | Done | G-FG-34 |
 | FG-35 | Visible calibrated Desktop window gate | Done | G-FG-35 |
+| FG-36 | Installed calibrated reference outcome gate | Done | G-FG-36 |
 
 ## Gates
 
@@ -84,6 +85,7 @@ and GitHub issue mapping.
 | G-FG-33 | FG-33 | `npm run fluid:desktop-launcher`; `docs/evidence/FG-33-desktop-launcher-2026-06-08.json` | the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile |
 | G-FG-34 | FG-34 | `npm run fluid:default-profile-calibration`; `docs/evidence/FG-34-default-profile-calibration-2026-06-08.json` | the real default Ocean Impact Lab profile contains a provenance-valid local calibration profile and the exact Desktop launcher starts without fluid-tier environment overrides in calibrated-auto ultra on the live `768 x 432` WebGPU renderer |
 | G-FG-35 | FG-35 | `npm run fluid:desktop-visibility`; `docs/evidence/FG-35-desktop-visibility-2026-06-08.json` | a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface |
+| G-FG-36 | FG-36 | `npm run fluid:installed-reference-outcomes`; `docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json` | the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU |
 
 ## Tasks
 
@@ -198,6 +200,9 @@ and GitHub issue mapping.
 | FG-35-T01 | FG-35 | Done | release | `fluidDesktopVisibility.ts` requires FG-34 calibrated-auto ultra evidence, an installed-bundle process, a visible frontmost Ocean Impact Lab window, and nonblank/varied ocean viewport pixels |
 | FG-35-T02 | FG-35 | Done | verification | `fluidDesktopVisibility.report.ts` opens `/Users/sasha/Desktop/Ocean Impact Lab.app` through macOS `open`, foregrounds the app, captures the visible window, and samples the ocean viewport crop |
 | FG-35-T03 | FG-35 | Done | release | `npm run fluid:desktop-visibility` passes with the installed calibrated process, a frontmost visible window, and committed nonblack ocean viewport evidence |
+| FG-36-T01 | FG-36 | Done | calibration | `fluidInstalledReferenceOutcomes.ts` wraps the FG-22 reference comparison packet with default-profile, no-env-override, calibrated-auto ultra, Desktop launcher, pressure, particles, coupling, and no-readback checks |
+| FG-36-T02 | FG-36 | Done | verification | `fluidInstalledReferenceOutcomes.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` with no fluid-tier or userData env overrides and drives concrete, ice, foam, concrete sink, and leaky-drum scenarios |
+| FG-36-T03 | FG-36 | Done | calibration | `npm run fluid:installed-reference-outcomes` passes with calibrated-auto ultra, five live reference cases, ten comparisons, active WebGPU pressure/particles/coupling, and committed evidence |
 
 ## GitHub Labels
 
@@ -249,6 +254,7 @@ and GitHub issue mapping.
 | FG-33 | https://github.com/AC-21/ocean/issues/36 |
 | FG-34 | https://github.com/AC-21/ocean/issues/37 |
 | FG-35 | https://github.com/AC-21/ocean/issues/38 |
+| FG-36 | https://github.com/AC-21/ocean/issues/39 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

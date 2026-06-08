@@ -1,0 +1,1411 @@
+{
+  "coreReference": {
+    "capability": {
+      "grid": {
+        "cellsX": 768,
+        "cellsY": 432
+      },
+      "selectedTier": "ultra"
+    },
+    "cases": [
+      {
+        "category": "drop+splash",
+        "consumedCoupling": {
+          "active": true,
+          "gridVelocityMps": 0.024823099429281462,
+          "horizontalForceDeltaN": -2.1377515576003105,
+          "pressureHorizontalForceDeltaN": -0.9250146789541915,
+          "pressureVerticalForceDeltaN": 385.49201540580793,
+          "sampleTimeS": 1.441666666666664,
+          "verticalForceDeltaN": 1283.4337442715082
+        },
+        "frameLoop": {
+          "accumulatedSimS": 0.000933333321412556,
+          "droppedDebtS": 0,
+          "fixedStepS": 0.008333333333333333,
+          "frameCount": 174,
+          "interpolationAlpha": 0.11199999856950672,
+          "lastSubsteps": 1,
+          "maxAccumulatedS": 0.25,
+          "maxSubstepsObserved": 1,
+          "maxSubstepsPerFrame": 24,
+          "simulatedS": 0.008333333333333333,
+          "snapshotIntervalMs": 80,
+          "totalSubsteps": 173,
+          "caseId": "live-concrete-drop-splash-pressure"
+        },
+        "id": "live-concrete-drop-splash-pressure",
+        "pass": true,
+        "snapshot": {
+          "diagnostics": {
+            "buoyancyErrorRatio": 0.8434993032690016,
+            "buoyancyN": 1374.679433578751,
+            "displacedVolumeM3": 0.2999314285714267,
+            "effectiveDensityKgM3": 2400,
+            "equilibriumSubmergedFraction": 2.341463414634146,
+            "massKg": 895.7951999999999,
+            "netForceN": 12344.488438847438,
+            "submergedDepthM": 0.6799969755968707,
+            "submergedFraction": 0.8035714285714236,
+            "terminalVelocityMps": 7.813719976601196,
+            "weightN": 8784.749998079998
+          },
+          "dropHeightM": 8,
+          "equilibrium": {
+            "angleErrorRad": null,
+            "buoyancyErrorRatio": 0.8434993032690016,
+            "draftErrorM": null,
+            "verticalSpeedMps": 5.67150496082073,
+            "angularSpeedRadps": 3.5455740638490107,
+            "withinTolerance": false
+          },
+          "impact": {
+            "atS": 1.2738591877484153,
+            "ejectedWaterKg": 248.67647999999997,
+            "impactSpeedMps": 12.2987408697401,
+            "splashHeightM": 2.1240271407175224
+          },
+          "liveFloatDurationS": 0.14280747891824874,
+          "object": {
+            "centerYM": -0.9112538891026334,
+            "velocityYMps": -5.67150496082073,
+            "waterFillFraction": 0
+          },
+          "phase": "floating",
+          "prediction": {
+            "criticalWaterFillFraction": 0,
+            "initialSubmergedDepthM": null,
+            "outcome": "sinks-immediately",
+            "secondsUntilSink": 0
+          },
+          "releaseAngleRad": 0,
+          "selectedPresetId": "concrete-cube",
+          "settledAtS": null,
+          "settings": {
+            "currentSpeedMps": 0,
+            "gravity": 9.80665,
+            "waterDensityKgM3": 1025,
+            "waterDepthM": 5,
+            "waveHeightM": 0
+          },
+          "sankAtS": null,
+          "spec": {
+            "densityKgM3": 2400,
+            "id": "concrete-cube",
+            "maxWaterFillFraction": 0,
+            "name": "Concrete cube",
+            "waterFillRatePerMinute": 0
+          },
+          "timeS": 1.416666666666664,
+          "version": "ocean-physics-live-v1",
+          "waterRenderMode": "webgpu"
+        },
+        "stats": {
+          "context": "webgpu",
+          "frameCount": 186,
+          "gridCellsX": 768,
+          "gridCellsY": 432,
+          "lastCoupling": {
+            "active": true,
+            "appliedImpulseNs": 10.680667577715191,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 327,
+              "xEnd": 353,
+              "yStart": 210,
+              "yEnd": 230
+            },
+            "buoyancyDeltaN": 157.20318525342756,
+            "coupling": "object-grid-v1",
+            "dragDeltaN": -0.8422103762823567,
+            "footprintAreaM2": 0.9975000000000002,
+            "footprintCells": 399,
+            "forceDeltaN": 950.0797016360689,
+            "gridSampleCount": 399,
+            "gridVelocityMps": 0.5528680261069856,
+            "horizontalForceDeltaN": -0.8422103762823567,
+            "impulseCells": 399,
+            "impulseMagnitude": 1.2504196188544614,
+            "liftDeltaN": 25.068478831118284,
+            "sampleTimeS": 1.4333333333333307,
+            "slamDeltaN": 767.8080375515231,
+            "surfaceOffsetM": 1.0013806963181107,
+            "verticalForceDeltaN": 950.0797016360689
+          },
+          "lastParticleSplash": {
+            "active": true,
+            "boundedDiagnostics": true,
+            "coupling": "localized-particle-splash-live-v1",
+            "displacedWaterMassKg": 356.2280816326508,
+            "dropletDensity": 0.5992891613704525,
+            "gridFeedback": {
+              "bounds": {
+                "xEnd": 388,
+                "xStart": 380,
+                "yEnd": 211,
+                "yStart": 203
+              },
+              "energyJ": 67.15531689610842,
+              "foamInjection": 0.044410228258893666,
+              "impulseNs": 100.32735141816711,
+              "massKg": 29.180286588805814,
+              "sampleCount": 50
+            },
+            "impactMomentumNs": 11017.153037157006,
+            "massFractionOfDisplaced": 0.34,
+            "maxLaunchSpeedMps": 6.309676480980011,
+            "momentumFractionOfImpact": 0.032693455089820085,
+            "noFullGridReadbackPerFrame": true,
+            "particleCount": 1400,
+            "predictedCrownHeightM": 2.029847975334712,
+            "referenceSplashBand": {
+              "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+              "maxM": 3.578584361264341,
+              "minM": 0.8236857697731332
+            },
+            "reenteredMassKg": 29.180286588805814,
+            "reentryEnergyJ": 67.15531689610842,
+            "renderIntensity": 0.7564016255548978,
+            "sampleTimeS": 1.4333333333333307,
+            "sprayMassKg": 121.11754775510128
+          },
+          "lastPressure": {
+            "active": true,
+            "bufferRoles": [
+              "height",
+              "heightScratch",
+              "momentumX",
+              "momentumXScratch",
+              "momentumY",
+              "momentumYScratch",
+              "foam",
+              "obstacle",
+              "depth",
+              "impulse"
+            ],
+            "cfl": 0.565685424949238,
+            "coupling": "bounded-pressure-gradient-live-v1",
+            "estimatedStorageBytes": 13271040,
+            "forceBoundN": 1581.2549996543996,
+            "gridVelocityMps": 0.021612405074539365,
+            "horizontalForceDeltaN": -0.7361266784273269,
+            "impulseEnergyEstimateJ": 10174.264066561265,
+            "maxMomentumPerDepthMps": 1.15,
+            "noFullGridReadbackPerFrame": true,
+            "pressureGain": 0.06,
+            "pressureWorkEstimateJ": 137.68920826343003,
+            "sampleTimeS": 1.4333333333333307,
+            "slopeLimit": 0.34,
+            "verticalForceDeltaN": 376.55560567424203
+          },
+          "lastSplash": {
+            "active": true,
+            "accumulatedReentryEnergyJ": 0,
+            "accumulatedReentryMassKg": 0,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 291,
+              "xEnd": 389,
+              "yStart": 190,
+              "yEnd": 250
+            },
+            "coupling": "grid-splash-v1",
+            "crownHeightM": 1.5065231029905808,
+            "crownRadiusM": 2.4049783647654857,
+            "entrainedAirFraction": 0.7562537739992561,
+            "foamCells": 5627,
+            "foamEnergyJ": 5951.86563768693,
+            "foamInjection": 1,
+            "froudeNumber": 4.628433892975022,
+            "gridEnergyJ": 8266.480052342959,
+            "gridSampleCount": 5627,
+            "peakFoamEnergyJ": 6523.032236211906,
+            "reentryCoupledEnergyJ": 0,
+            "sampleTimeS": 1.4333333333333307,
+            "secondaryImpulseMagnitude": 0,
+            "sprayDropletCount": 180,
+            "sprayMassKg": 133.50292086664047,
+            "surfaceBreakupFactor": 1.236890960808472,
+            "weberNumber": 1529166.6015341019
+          },
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra"
+        },
+        "telemetry": {
+          "forceBoundN": 1581.255,
+          "frames": 186,
+          "grid": "768x432",
+          "noFullGridReadbackPerFrame": true,
+          "particles": "localized-particle-splash-live-v1",
+          "particlesActive": true,
+          "pressure": "bounded-pressure-gradient-live-v1",
+          "pressureActive": true,
+          "renderer": "webgpu-grid-primary-v1",
+          "status": "rendered",
+          "tier": "ultra",
+          "verticalPressureForceN": 376.5556,
+          "waterContext": "webgpu"
+        }
+      },
+      {
+        "category": "float",
+        "consumedCoupling": {
+          "active": true,
+          "gridVelocityMps": 0.008271300413048134,
+          "horizontalForceDeltaN": -0.0628876975208788,
+          "pressureHorizontalForceDeltaN": -0.06048009415984736,
+          "pressureVerticalForceDeltaN": 286.0965673057006,
+          "sampleTimeS": 1.549999999999997,
+          "verticalForceDeltaN": 310.7587745127858
+        },
+        "frameLoop": {
+          "accumulatedSimS": 0.004800000000000229,
+          "droppedDebtS": 0,
+          "fixedStepS": 0.008333333333333333,
+          "frameCount": 91,
+          "interpolationAlpha": 0.5760000000000275,
+          "lastSubsteps": 1,
+          "maxAccumulatedS": 0.25,
+          "maxSubstepsObserved": 12,
+          "maxSubstepsPerFrame": 24,
+          "simulatedS": 0.008333333333333333,
+          "snapshotIntervalMs": 80,
+          "totalSubsteps": 186,
+          "caseId": "live-ice-static-draft"
+        },
+        "id": "live-ice-static-draft",
+        "pass": true,
+        "snapshot": {
+          "diagnostics": {
+            "buoyancyErrorRatio": 0.14880423930740022,
+            "buoyancyN": 4879.586246233345,
+            "displacedVolumeM3": 0.48544323979592696,
+            "effectiveDensityKgM3": 917,
+            "equilibriumSubmergedFraction": 0.8946341463414634,
+            "massKg": 584.5875,
+            "netForceN": -1812.7157873421606,
+            "submergedDepthM": 0.6728194743802951,
+            "submergedFraction": 0.7614795918367482,
+            "terminalVelocityMps": 2.2355729415367156,
+            "weightN": 5732.845006875
+          },
+          "dropHeightM": 1,
+          "equilibrium": {
+            "angleErrorRad": -0.2617993877991494,
+            "buoyancyErrorRatio": 0.14880423930740022,
+            "draftErrorM": 0.002423979489861061,
+            "verticalSpeedMps": 0.18453111304305467,
+            "angularSpeedRadps": 0.11560470601584208,
+            "withinTolerance": false
+          },
+          "impact": {
+            "atS": 0.45000000000000057,
+            "ejectedWaterKg": 132.03461624335074,
+            "impactSpeedMps": 4.2239530547048485,
+            "splashHeightM": 0.47784480133413265
+          },
+          "liveFloatDurationS": 0.9499999999999968,
+          "object": {
+            "centerYM": -0.1299009129573608,
+            "velocityYMps": 0.18453111304305467,
+            "waterFillFraction": 0
+          },
+          "phase": "floating",
+          "prediction": {
+            "criticalWaterFillFraction": null,
+            "initialSubmergedDepthM": 0.6709541131434823,
+            "outcome": "floats-indefinitely",
+            "secondsUntilSink": null
+          },
+          "releaseAngleRad": 0,
+          "selectedPresetId": "ice-block",
+          "settledAtS": null,
+          "settings": {
+            "currentSpeedMps": 0,
+            "gravity": 9.80665,
+            "waterDensityKgM3": 1025,
+            "waterDepthM": 5,
+            "waveHeightM": 0
+          },
+          "sankAtS": null,
+          "spec": {
+            "densityKgM3": 917,
+            "id": "ice-block",
+            "maxWaterFillFraction": 0,
+            "name": "Fresh-water ice block",
+            "waterFillRatePerMinute": 0
+          },
+          "timeS": 1.3999999999999975,
+          "version": "ocean-physics-live-v1",
+          "waterRenderMode": "webgpu"
+        },
+        "stats": {
+          "context": "webgpu",
+          "frameCount": 286,
+          "gridCellsX": 768,
+          "gridCellsY": 432,
+          "lastCoupling": {
+            "active": true,
+            "appliedImpulseNs": 0,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 323,
+              "xEnd": 357,
+              "yStart": 200,
+              "yEnd": 216
+            },
+            "buoyancyDeltaN": 24.650327855620827,
+            "coupling": "object-grid-v1",
+            "dragDeltaN": -0.0024078648172130104,
+            "footprintAreaM2": 1.0475,
+            "footprintCells": 419,
+            "forceDeltaN": 24.650327855620827,
+            "gridSampleCount": 419,
+            "gridVelocityMps": -0.019526063867823434,
+            "horizontalForceDeltaN": -0.0024078648172130104,
+            "impulseCells": 0,
+            "impulseMagnitude": 0,
+            "liftDeltaN": 0,
+            "sampleTimeS": 1.5416666666666636,
+            "slamDeltaN": 0,
+            "surfaceOffsetM": 0.11809301994985379,
+            "verticalForceDeltaN": 24.650327855620827
+          },
+          "lastParticleSplash": {
+            "active": true,
+            "boundedDiagnostics": true,
+            "coupling": "localized-particle-splash-live-v1",
+            "displacedWaterMassKg": 481.46564094388606,
+            "dropletDensity": 0.3568230294083674,
+            "gridFeedback": {
+              "bounds": {
+                "xEnd": 386,
+                "xStart": 382,
+                "yEnd": 209,
+                "yStart": 205
+              },
+              "energyJ": 5.29311168841496,
+              "foamInjection": 0.028658907376620663,
+              "impulseNs": 16.195261876864812,
+              "massKg": 9.929161218872506,
+              "sampleCount": 13
+            },
+            "impactMomentumNs": 2661.6763313290985,
+            "massFractionOfDisplaced": 0.20622782550810786,
+            "maxLaunchSpeedMps": 2.9807367536800777,
+            "momentumFractionOfImpact": 0.05070508162543868,
+            "noFullGridReadbackPerFrame": true,
+            "particleCount": 1112,
+            "predictedCrownHeightM": 0.4529983019042817,
+            "referenceSplashBand": {
+              "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+              "maxM": 1.3016468462603372,
+              "minM": 0.2751268846406062
+            },
+            "reenteredMassKg": 9.929161218872506,
+            "reentryEnergyJ": 5.29311168841496,
+            "renderIntensity": 0.2554015695422538,
+            "sampleTimeS": 1.5416666666666636,
+            "sprayMassKg": 99.29161218872505
+          },
+          "lastPressure": {
+            "active": true,
+            "bufferRoles": [
+              "height",
+              "heightScratch",
+              "momentumX",
+              "momentumXScratch",
+              "momentumY",
+              "momentumYScratch",
+              "foam",
+              "obstacle",
+              "depth",
+              "impulse"
+            ],
+            "cfl": 0.565685424949238,
+            "coupling": "bounded-pressure-gradient-live-v1",
+            "estimatedStorageBytes": 13271040,
+            "forceBoundN": 1031.9121012374999,
+            "gridVelocityMps": 0.008265711464060644,
+            "horizontalForceDeltaN": -0.06047756203088811,
+            "impulseEnergyEstimateJ": 340.29693546874006,
+            "maxMomentumPerDepthMps": 1.15,
+            "noFullGridReadbackPerFrame": true,
+            "pressureGain": 0.06,
+            "pressureWorkEstimateJ": 8.684769240000001,
+            "sampleTimeS": 1.5416666666666636,
+            "slopeLimit": 0.34,
+            "verticalForceDeltaN": 285.87329646620606
+          },
+          "lastSplash": {
+            "active": true,
+            "accumulatedReentryEnergyJ": 5.612586182053715,
+            "accumulatedReentryMassKg": 0.8395467657302287,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 305,
+              "xEnd": 375,
+              "yStart": 191,
+              "yEnd": 225
+            },
+            "coupling": "grid-splash-v1",
+            "crownHeightM": 0.316834642934997,
+            "crownRadiusM": 1.7092701217117945,
+            "entrainedAirFraction": 0.46451599055422715,
+            "foamCells": 2301,
+            "foamEnergyJ": 105.51878999312287,
+            "foamInjection": 0.14154612096006136,
+            "froudeNumber": 1.4539363018341789,
+            "gridEnergyJ": 230.04616061345078,
+            "gridSampleCount": 2301,
+            "peakFoamEnergyJ": 6523.032236211906,
+            "reentryCoupledEnergyJ": 0,
+            "sampleTimeS": 1.5416666666666636,
+            "secondaryImpulseMagnitude": 0,
+            "sprayDropletCount": 43,
+            "sprayMassKg": 65.49127735500235,
+            "surfaceBreakupFactor": 1.066733180104593,
+            "weberNumber": 215608.51109395185
+          },
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra"
+        },
+        "telemetry": {
+          "forceBoundN": 1031.9121,
+          "frames": 286,
+          "grid": "768x432",
+          "noFullGridReadbackPerFrame": true,
+          "particles": "localized-particle-splash-live-v1",
+          "particlesActive": true,
+          "pressure": "bounded-pressure-gradient-live-v1",
+          "pressureActive": true,
+          "renderer": "webgpu-grid-primary-v1",
+          "status": "rendered",
+          "tier": "ultra",
+          "verticalPressureForceN": 285.8733,
+          "waterContext": "webgpu"
+        }
+      },
+      {
+        "category": "damping",
+        "consumedCoupling": {
+          "active": true,
+          "gridVelocityMps": 0.00940147196570316,
+          "horizontalForceDeltaN": -0.0008534893524352883,
+          "pressureHorizontalForceDeltaN": -0.0008373280111364732,
+          "pressureVerticalForceDeltaN": 13.39206528939328,
+          "sampleTimeS": 1.908333333333329,
+          "verticalForceDeltaN": 13.125888613741015
+        },
+        "frameLoop": {
+          "accumulatedSimS": 0.005233333333331215,
+          "droppedDebtS": 0,
+          "fixedStepS": 0.008333333333333333,
+          "frameCount": 111,
+          "interpolationAlpha": 0.6279999999997458,
+          "lastSubsteps": 1,
+          "maxAccumulatedS": 0.25,
+          "maxSubstepsObserved": 12,
+          "maxSubstepsPerFrame": 24,
+          "simulatedS": 0.008333333333333333,
+          "snapshotIntervalMs": 80,
+          "totalSubsteps": 230,
+          "caseId": "live-foam-damped-settling"
+        },
+        "id": "live-foam-damped-settling",
+        "pass": true,
+        "snapshot": {
+          "diagnostics": {
+            "buoyancyErrorRatio": 0.0326766622076643,
+            "buoyancyN": 222.73833304315403,
+            "displacedVolumeM3": 0.022159013605442104,
+            "effectiveDensityKgM3": 58,
+            "equilibriumSubmergedFraction": 0.05658536585365853,
+            "massKg": 22.011,
+            "netForceN": 15.523841692643401,
+            "submergedDepthM": 0.050830729378318396,
+            "submergedFraction": 0.05839002267573677,
+            "terminalVelocityMps": 3.0918880896640717,
+            "weightN": 215.85417314999998
+          },
+          "dropHeightM": 1.35,
+          "equilibrium": {
+            "angleErrorRad": 0.03396005514763735,
+            "buoyancyErrorRatio": 0.0326766622076643,
+            "draftErrorM": 0.016906056265284186,
+            "verticalSpeedMps": 0.022302980993946047,
+            "angularSpeedRadps": 0.14237329297153384,
+            "withinTolerance": true
+          },
+          "impact": {
+            "atS": 0.5035012768800761,
+            "ejectedWaterKg": 6.729007407647101,
+            "impactSpeedMps": 4.818105583294251,
+            "splashHeightM": 0.5109476385447959
+          },
+          "liveFloatDurationS": 1.2631653897865869,
+          "object": {
+            "centerYM": 0.2701552082286995,
+            "velocityYMps": 0.022302980993946047,
+            "waterFillFraction": 0
+          },
+          "phase": "floating",
+          "prediction": {
+            "criticalWaterFillFraction": null,
+            "initialSubmergedDepthM": 0.03392467311303421,
+            "outcome": "floats-indefinitely",
+            "secondsUntilSink": null
+          },
+          "releaseAngleRad": 0.18,
+          "selectedPresetId": "foam-rescue-block",
+          "settledAtS": null,
+          "settings": {
+            "currentSpeedMps": 0,
+            "gravity": 9.80665,
+            "waterDensityKgM3": 1025,
+            "waterDepthM": 5,
+            "waveHeightM": 0
+          },
+          "sankAtS": null,
+          "spec": {
+            "densityKgM3": 58,
+            "id": "foam-rescue-block",
+            "maxWaterFillFraction": 0,
+            "name": "Closed-cell foam block",
+            "waterFillRatePerMinute": 0
+          },
+          "timeS": 1.7666666666666628,
+          "version": "ocean-physics-live-v1",
+          "waterRenderMode": "webgpu"
+        },
+        "stats": {
+          "context": "webgpu",
+          "frameCount": 404,
+          "gridCellsX": 768,
+          "gridCellsY": 432,
+          "lastCoupling": {
+            "active": true,
+            "appliedImpulseNs": 0.0007719164600584014,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 321,
+              "xEnd": 359,
+              "yStart": 197,
+              "yEnd": 211
+            },
+            "buoyancyDeltaN": -0.266176675652265,
+            "coupling": "object-grid-v1",
+            "dragDeltaN": -0.000016161341298815137,
+            "footprintAreaM2": 1.0225000000000002,
+            "footprintCells": 409,
+            "forceDeltaN": -0.266176675652265,
+            "gridSampleCount": 409,
+            "gridVelocityMps": -0.001070025768116173,
+            "horizontalForceDeltaN": -0.000016161341298815137,
+            "impulseCells": 0,
+            "impulseMagnitude": 0.00009037070751903235,
+            "liftDeltaN": 0,
+            "sampleTimeS": 1.908333333333329,
+            "slamDeltaN": 0,
+            "surfaceOffsetM": -0.2768999902073543,
+            "verticalForceDeltaN": -0.266176675652265
+          },
+          "lastParticleSplash": {
+            "active": true,
+            "boundedDiagnostics": true,
+            "coupling": "localized-particle-splash-live-v1",
+            "displacedWaterMassKg": 22.547603103741427,
+            "dropletDensity": 0.17581000425630702,
+            "gridFeedback": {
+              "bounds": {
+                "xEnd": 386,
+                "xStart": 382,
+                "yEnd": 209,
+                "yStart": 205
+              },
+              "energyJ": 0.2890947605157914,
+              "foamInjection": 0.009409525572721325,
+              "impulseNs": 0.8565711390339382,
+              "massKg": 0.5069796162103696,
+              "sampleCount": 13
+            },
+            "impactMomentumNs": 133.65843656439287,
+            "massFractionOfDisplaced": 0.22484856322765595,
+            "maxLaunchSpeedMps": 3.082827582355741,
+            "momentumFractionOfImpact": 0.05340547898631065,
+            "noFullGridReadbackPerFrame": true,
+            "particleCount": 368,
+            "predictedCrownHeightM": 0.48456026790664214,
+            "referenceSplashBand": {
+              "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+              "maxM": 1.7494077074384278,
+              "minM": 0.3762018254459434
+            },
+            "reenteredMassKg": 0.5069796162103696,
+            "reentryEnergyJ": 0.2890947605157914,
+            "renderIntensity": 0.08441304284967668,
+            "sampleTimeS": 1.908333333333329,
+            "sprayMassKg": 5.069796162103696
+          },
+          "lastPressure": {
+            "active": true,
+            "bufferRoles": [
+              "height",
+              "heightScratch",
+              "momentumX",
+              "momentumXScratch",
+              "momentumY",
+              "momentumYScratch",
+              "foam",
+              "obstacle",
+              "depth",
+              "impulse"
+            ],
+            "cfl": 0.565685424949238,
+            "coupling": "bounded-pressure-gradient-live-v1",
+            "estimatedStorageBytes": 13271040,
+            "forceBoundN": 38.85375116699999,
+            "gridVelocityMps": 0.00940147196570316,
+            "horizontalForceDeltaN": -0.0008373280111364732,
+            "impulseEnergyEstimateJ": 18.54431380526828,
+            "maxMomentumPerDepthMps": 1.15,
+            "noFullGridReadbackPerFrame": true,
+            "pressureGain": 0.06,
+            "pressureWorkEstimateJ": 8.684769240000001,
+            "sampleTimeS": 1.908333333333329,
+            "slopeLimit": 0.34,
+            "verticalForceDeltaN": 13.39206528939328
+          },
+          "lastSplash": {
+            "active": true,
+            "accumulatedReentryEnergyJ": 6.313535974369343,
+            "accumulatedReentryMassKg": 0.9716714461977447,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 320,
+              "xEnd": 360,
+              "yStart": 193,
+              "yEnd": 215
+            },
+            "coupling": "grid-splash-v1",
+            "crownHeightM": 0.3375525954379978,
+            "crownRadiusM": 0.9536845469732925,
+            "entrainedAirFraction": 0.4520043429610985,
+            "foamCells": 370,
+            "foamEnergyJ": 5.832246093512571,
+            "foamInjection": 0.00801483757475804,
+            "froudeNumber": 1.8082036643334878,
+            "gridEnergyJ": 12.6545351886468,
+            "gridSampleCount": 464,
+            "peakFoamEnergyJ": 6523.032236211906,
+            "reentryCoupledEnergyJ": 0,
+            "sampleTimeS": 1.908333333333329,
+            "secondaryImpulseMagnitude": 0,
+            "sprayDropletCount": 16,
+            "sprayMassKg": 3.350364462930396,
+            "surfaceBreakupFactor": 1.0745781782038377,
+            "weberNumber": 235988.52783186687
+          },
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra"
+        },
+        "telemetry": {
+          "forceBoundN": 38.8538,
+          "frames": 404,
+          "grid": "768x432",
+          "noFullGridReadbackPerFrame": true,
+          "particles": "localized-particle-splash-live-v1",
+          "particlesActive": true,
+          "pressure": "bounded-pressure-gradient-live-v1",
+          "pressureActive": true,
+          "renderer": "webgpu-grid-primary-v1",
+          "status": "rendered",
+          "tier": "ultra",
+          "verticalPressureForceN": 13.3921,
+          "waterContext": "webgpu"
+        }
+      },
+      {
+        "category": "sink",
+        "consumedCoupling": {
+          "active": true,
+          "gridVelocityMps": 0.033193703972077125,
+          "horizontalForceDeltaN": -3.9396876231958107,
+          "pressureHorizontalForceDeltaN": -1.4965589361612015,
+          "pressureVerticalForceDeltaN": 251.87886225666878,
+          "sampleTimeS": 2.2499999999999947,
+          "verticalForceDeltaN": 478.13179023734784
+        },
+        "frameLoop": {
+          "accumulatedSimS": 0.00200000000000008,
+          "droppedDebtS": 0,
+          "fixedStepS": 0.008333333333333333,
+          "frameCount": 271,
+          "interpolationAlpha": 0.2400000000000096,
+          "lastSubsteps": 1,
+          "maxAccumulatedS": 0.25,
+          "maxSubstepsObserved": 1,
+          "maxSubstepsPerFrame": 24,
+          "simulatedS": 0.008333333333333333,
+          "snapshotIntervalMs": 80,
+          "totalSubsteps": 270,
+          "caseId": "live-concrete-sink-terminal-band"
+        },
+        "id": "live-concrete-sink-terminal-band",
+        "pass": true,
+        "snapshot": {
+          "diagnostics": {
+            "buoyancyErrorRatio": 0.5729166666666693,
+            "buoyancyN": 3751.8203116799764,
+            "displacedVolumeM3": 0.37324799999999764,
+            "effectiveDensityKgM3": 2400,
+            "equilibriumSubmergedFraction": 2.341463414634146,
+            "massKg": 895.7951999999999,
+            "netForceN": -425.62997952056867,
+            "submergedDepthM": 1.0161928661520314,
+            "submergedFraction": 0.9999999999999938,
+            "terminalVelocityMps": 3.372646153644989,
+            "weightN": 8784.749998079998
+          },
+          "dropHeightM": 1,
+          "equilibrium": {
+            "angleErrorRad": null,
+            "buoyancyErrorRatio": 0.5729166666666693,
+            "draftErrorM": null,
+            "verticalSpeedMps": 1.2796756790470694,
+            "angularSpeedRadps": 0.19523425207419784,
+            "withinTolerance": false
+          },
+          "impact": {
+            "atS": 0.44745734147222904,
+            "ejectedWaterKg": 246.92111219281503,
+            "impactSpeedMps": 4.327374430123333,
+            "splashHeightM": 0.4274856923953176
+          },
+          "liveFloatDurationS": 1.7942093251944322,
+          "object": {
+            "centerYM": -2.6411180561933296,
+            "velocityYMps": -1.2796756790470694,
+            "waterFillFraction": 0
+          },
+          "phase": "sinking",
+          "prediction": {
+            "criticalWaterFillFraction": 0,
+            "initialSubmergedDepthM": null,
+            "outcome": "sinks-immediately",
+            "secondsUntilSink": 0
+          },
+          "releaseAngleRad": 0,
+          "selectedPresetId": "concrete-cube",
+          "settledAtS": null,
+          "settings": {
+            "currentSpeedMps": 0,
+            "gravity": 9.80665,
+            "waterDensityKgM3": 1025,
+            "waterDepthM": 22,
+            "waveHeightM": 0
+          },
+          "sankAtS": null,
+          "spec": {
+            "densityKgM3": 2400,
+            "id": "concrete-cube",
+            "maxWaterFillFraction": 0,
+            "name": "Concrete cube",
+            "waterFillRatePerMinute": 0
+          },
+          "timeS": 2.2416666666666614,
+          "version": "ocean-physics-live-v1",
+          "waterRenderMode": "webgpu"
+        },
+        "stats": {
+          "context": "webgpu",
+          "frameCount": 676,
+          "gridCellsX": 768,
+          "gridCellsY": 432,
+          "lastCoupling": {
+            "active": true,
+            "appliedImpulseNs": 0.573862260340042,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 339,
+              "xEnd": 365,
+              "yStart": 224,
+              "yEnd": 240
+            },
+            "buoyancyDeltaN": 168.83191402559788,
+            "coupling": "object-grid-v1",
+            "dragDeltaN": -2.4431286870346094,
+            "footprintAreaM2": 0.8075000000000001,
+            "footprintCells": 323,
+            "forceDeltaN": 226.25292798067906,
+            "gridSampleCount": 323,
+            "gridVelocityMps": 0.0755301260537612,
+            "horizontalForceDeltaN": -2.4431286870346094,
+            "impulseCells": 323,
+            "impulseMagnitude": 0.06718387438127321,
+            "liftDeltaN": 9.588304877905706,
+            "sampleTimeS": 2.2499999999999947,
+            "slamDeltaN": 47.832709077175494,
+            "surfaceOffsetM": 2.6517792409414236,
+            "verticalForceDeltaN": 226.25292798067906
+          },
+          "lastParticleSplash": {
+            "active": true,
+            "boundedDiagnostics": true,
+            "coupling": "localized-particle-splash-live-v1",
+            "displacedWaterMassKg": 382.57919999999757,
+            "dropletDensity": 0.41646616921319735,
+            "gridFeedback": {
+              "bounds": {
+                "xEnd": 386,
+                "xStart": 382,
+                "yEnd": 209,
+                "yStart": 205
+              },
+              "energyJ": 6.200126350530437,
+              "foamInjection": 0.03480353393554762,
+              "impulseNs": 20.017378216516097,
+              "massKg": 13.00769279999992,
+              "sampleCount": 13
+            },
+            "impactMomentumNs": 3876.441243107217,
+            "massFractionOfDisplaced": 0.34,
+            "maxLaunchSpeedMps": 2.8185419880030804,
+            "momentumFractionOfImpact": 0.043032120100941866,
+            "noFullGridReadbackPerFrame": true,
+            "particleCount": 1360,
+            "predictedCrownHeightM": 0.4050404031007713,
+            "referenceSplashBand": {
+              "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+              "maxM": 1.0108121934720007,
+              "minM": 0.2155292037170528
+            },
+            "reenteredMassKg": 13.00769279999992,
+            "reentryEnergyJ": 6.200126350530437,
+            "renderIntensity": 0.3120035857450056,
+            "sampleTimeS": 2.2499999999999947,
+            "sprayMassKg": 130.07692799999919
+          },
+          "lastPressure": {
+            "active": true,
+            "bufferRoles": [
+              "height",
+              "heightScratch",
+              "momentumX",
+              "momentumXScratch",
+              "momentumY",
+              "momentumYScratch",
+              "foam",
+              "obstacle",
+              "depth",
+              "impulse"
+            ],
+            "cfl": 0.565685424949238,
+            "coupling": "bounded-pressure-gradient-live-v1",
+            "estimatedStorageBytes": 13271040,
+            "forceBoundN": 1581.2549996543996,
+            "gridVelocityMps": 0.033193703972077125,
+            "horizontalForceDeltaN": -1.4965589361612015,
+            "impulseEnergyEstimateJ": 569.3288259826727,
+            "maxMomentumPerDepthMps": 1.15,
+            "noFullGridReadbackPerFrame": true,
+            "pressureGain": 0.06,
+            "pressureWorkEstimateJ": 8.684769240000001,
+            "sampleTimeS": 2.2499999999999947,
+            "slopeLimit": 0.34,
+            "verticalForceDeltaN": 251.87886225666878
+          },
+          "lastSplash": {
+            "active": true,
+            "accumulatedReentryEnergyJ": 18.108335482122254,
+            "accumulatedReentryMassKg": 2.9403463257326137,
+            "boundedDiagnostics": true,
+            "bounds": {
+              "xStart": 312,
+              "xEnd": 392,
+              "yStart": 212,
+              "yEnd": 252
+            },
+            "coupling": "grid-splash-v1",
+            "crownHeightM": 0.28354120620865186,
+            "crownRadiusM": 1.9859238059064876,
+            "entrainedAirFraction": 0.5031045193081939,
+            "foamCells": 3081,
+            "foamEnergyJ": 202.86785585523273,
+            "foamInjection": 0.35301479678661946,
+            "froudeNumber": 1.6285379692205484,
+            "gridEnergyJ": 445.35227520108236,
+            "gridSampleCount": 3081,
+            "peakFoamEnergyJ": 6523.032236211906,
+            "reentryCoupledEnergyJ": 0,
+            "sampleTimeS": 2.2499999999999947,
+            "secondaryImpulseMagnitude": 0,
+            "sprayDropletCount": 67,
+            "sprayMassKg": 121.8073594063751,
+            "surfaceBreakupFactor": 1.0554364901649664,
+            "weberNumber": 189313.87753920697
+          },
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra"
+        },
+        "telemetry": {
+          "forceBoundN": 1581.255,
+          "frames": 676,
+          "grid": "768x432",
+          "noFullGridReadbackPerFrame": true,
+          "particles": "localized-particle-splash-live-v1",
+          "particlesActive": true,
+          "pressure": "bounded-pressure-gradient-live-v1",
+          "pressureActive": true,
+          "renderer": "webgpu-grid-primary-v1",
+          "status": "rendered",
+          "tier": "ultra",
+          "verticalPressureForceN": 251.8789,
+          "waterContext": "webgpu"
+        }
+      },
+      {
+        "category": "sink",
+        "id": "live-leaky-drum-sink-time-prediction",
+        "largeLeakSecondsUntilSink": 6756.292201841188,
+        "pass": true,
+        "smallLeakSecondsUntilSink": 30258.655433945667,
+        "snapshot": {
+          "diagnostics": {
+            "buoyancyErrorRatio": 1,
+            "buoyancyN": 0,
+            "displacedVolumeM3": 0,
+            "effectiveDensityKgM3": 210,
+            "equilibriumSubmergedFraction": 0.20487804878048782,
+            "massKg": 48.82562771244341,
+            "netForceN": -478.8158420062332,
+            "submergedDepthM": 0,
+            "submergedFraction": 0,
+            "terminalVelocityMps": 43.218426390922545,
+            "weightN": 478.8158420062332
+          },
+          "dropHeightM": 1,
+          "equilibrium": {
+            "angleErrorRad": 0,
+            "buoyancyErrorRatio": 1,
+            "draftErrorM": -0.1498597238394388,
+            "verticalSpeedMps": 0,
+            "angularSpeedRadps": 0,
+            "withinTolerance": false
+          },
+          "impact": null,
+          "liveFloatDurationS": null,
+          "object": {
+            "centerYM": 1.29,
+            "velocityYMps": 0,
+            "waterFillFraction": 0
+          },
+          "phase": "ready",
+          "prediction": {
+            "criticalWaterFillFraction": 0.7951219512195122,
+            "initialSubmergedDepthM": 0.1498597238394388,
+            "outcome": "waterlogs-then-sinks",
+            "secondsUntilSink": 6756.292201841188
+          },
+          "releaseAngleRad": 0,
+          "selectedPresetId": "leaky-steel-drum",
+          "settledAtS": null,
+          "settings": {
+            "currentSpeedMps": 0,
+            "gravity": 9.80665,
+            "waterDensityKgM3": 1025,
+            "waterDepthM": 5,
+            "waveHeightM": 0
+          },
+          "sankAtS": null,
+          "spec": {
+            "densityKgM3": 210,
+            "id": "leaky-steel-drum",
+            "maxWaterFillFraction": 0.92,
+            "name": "Leaky sealed steel drum",
+            "waterFillRatePerMinute": 0.021
+          },
+          "timeS": 0,
+          "version": "ocean-physics-live-v1",
+          "waterRenderMode": "webgpu"
+        },
+        "telemetry": {
+          "forceBoundN": 86.1869,
+          "frames": 686,
+          "grid": "768x432",
+          "noFullGridReadbackPerFrame": true,
+          "particles": "localized-particle-splash-live-v1",
+          "particlesActive": false,
+          "pressure": "bounded-pressure-gradient-live-v1",
+          "pressureActive": true,
+          "renderer": "webgpu-grid-primary-v1",
+          "status": "rendered",
+          "tier": "ultra",
+          "verticalPressureForceN": 0,
+          "waterContext": "webgpu"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "actual": 12.2987408697401,
+        "category": "drop",
+        "expected": {
+          "max": 12.526228482667877,
+          "min": 11.023081064747732
+        },
+        "id": "live-drop-speed-reference",
+        "pass": true,
+        "unit": "m/s"
+      },
+      {
+        "actual": 2.1240271407175224,
+        "category": "splash",
+        "expected": {
+          "max": 3.578584361264341,
+          "min": 0.8236857697731332
+        },
+        "id": "live-splash-height-reference",
+        "pass": true,
+        "unit": "m"
+      },
+      {
+        "actual": 0.8946341463414634,
+        "category": "float",
+        "expected": {
+          "max": 0.9296341463414635,
+          "min": 0.8596341463414634
+        },
+        "id": "live-ice-equilibrium-submerged-fraction-reference",
+        "pass": true,
+        "unit": "fraction"
+      },
+      {
+        "actual": 0.002423979489861061,
+        "category": "float",
+        "expected": {
+          "max": 0.055,
+          "min": 0
+        },
+        "id": "live-ice-hydrostatic-draft-error",
+        "pass": true,
+        "unit": "m"
+      },
+      {
+        "actual": 0.016906056265284186,
+        "category": "damping",
+        "expected": {
+          "max": 0.055,
+          "min": 0
+        },
+        "id": "live-foam-settled-draft-error",
+        "pass": true,
+        "unit": "m"
+      },
+      {
+        "actual": 0.0326766622076643,
+        "category": "damping",
+        "expected": {
+          "max": 0.08,
+          "min": 0
+        },
+        "id": "live-foam-settled-buoyancy-error",
+        "pass": true,
+        "unit": "ratio"
+      },
+      {
+        "actual": 1,
+        "category": "damping",
+        "expected": {
+          "max": 1,
+          "min": 1
+        },
+        "id": "live-foam-equilibrium-window",
+        "pass": true,
+        "unit": "boolean"
+      },
+      {
+        "actual": 3.372646153644989,
+        "category": "sink",
+        "expected": {
+          "max": 8,
+          "min": 1
+        },
+        "id": "live-concrete-terminal-speed-reference",
+        "pass": true,
+        "unit": "m/s"
+      },
+      {
+        "actual": 1,
+        "category": "sink",
+        "expected": {
+          "max": 1,
+          "min": 1
+        },
+        "id": "live-concrete-sink-phase",
+        "pass": true,
+        "unit": "boolean"
+      },
+      {
+        "actual": 0.2232846141029004,
+        "category": "sink",
+        "expected": {
+          "max": 0.55,
+          "min": 0
+        },
+        "id": "live-leaky-drum-sink-time-ratio-reference",
+        "pass": true,
+        "unit": "ratio"
+      }
+    ],
+    "consumedCoupling": {
+      "active": true,
+      "gridVelocityMps": 0,
+      "horizontalForceDeltaN": 0,
+      "pressureHorizontalForceDeltaN": 0,
+      "pressureVerticalForceDeltaN": 0,
+      "sampleTimeS": 0,
+      "verticalForceDeltaN": 0
+    },
+    "failures": [],
+    "finalStats": {
+      "context": "webgpu",
+      "frameCount": 687,
+      "gridCellsX": 768,
+      "gridCellsY": 432,
+      "lastCoupling": {
+        "active": false,
+        "appliedImpulseNs": 0,
+        "boundedDiagnostics": true,
+        "bounds": {
+          "xEnd": 0,
+          "xStart": 0,
+          "yEnd": 0,
+          "yStart": 0
+        },
+        "buoyancyDeltaN": 0,
+        "coupling": "object-grid-v1",
+        "dragDeltaN": 0,
+        "footprintAreaM2": 0,
+        "footprintCells": 0,
+        "forceDeltaN": 0,
+        "gridSampleCount": 0,
+        "gridVelocityMps": 0,
+        "horizontalForceDeltaN": 0,
+        "impulseCells": 0,
+        "impulseMagnitude": 0,
+        "liftDeltaN": 0,
+        "sampleTimeS": 0,
+        "slamDeltaN": 0,
+        "surfaceOffsetM": -1.29,
+        "verticalForceDeltaN": 0
+      },
+      "lastParticleSplash": {
+        "active": false,
+        "boundedDiagnostics": true,
+        "coupling": "localized-particle-splash-live-v1",
+        "displacedWaterMassKg": 0,
+        "dropletDensity": 0.01171875,
+        "gridFeedback": {
+          "bounds": {
+            "xEnd": 386,
+            "xStart": 382,
+            "yEnd": 209,
+            "yStart": 205
+          },
+          "energyJ": 0,
+          "foamInjection": 0.00046875,
+          "impulseNs": 0,
+          "massKg": 0,
+          "sampleCount": 13
+        },
+        "impactMomentumNs": 0.001,
+        "massFractionOfDisplaced": 0,
+        "maxLaunchSpeedMps": 2.6924107561811588,
+        "momentumFractionOfImpact": 0,
+        "noFullGridReadbackPerFrame": true,
+        "particleCount": 48,
+        "predictedCrownHeightM": 0.3696,
+        "referenceSplashBand": {
+          "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+          "maxM": 0.792,
+          "minM": 0.15839999999999999
+        },
+        "reenteredMassKg": 0,
+        "reentryEnergyJ": 0,
+        "renderIntensity": 0.009910456730769231,
+        "sampleTimeS": 0,
+        "sprayMassKg": 0
+      },
+      "lastPressure": {
+        "active": true,
+        "bufferRoles": [
+          "height",
+          "heightScratch",
+          "momentumX",
+          "momentumXScratch",
+          "momentumY",
+          "momentumYScratch",
+          "foam",
+          "obstacle",
+          "depth",
+          "impulse"
+        ],
+        "cfl": 0.565685424949238,
+        "coupling": "bounded-pressure-gradient-live-v1",
+        "estimatedStorageBytes": 13271040,
+        "forceBoundN": 86.18685156112197,
+        "gridVelocityMps": 0,
+        "horizontalForceDeltaN": 0,
+        "impulseEnergyEstimateJ": 0,
+        "maxMomentumPerDepthMps": 1.15,
+        "noFullGridReadbackPerFrame": true,
+        "pressureGain": 0.06,
+        "pressureWorkEstimateJ": 8.684769240000001,
+        "sampleTimeS": 0,
+        "slopeLimit": 0.34,
+        "verticalForceDeltaN": 0
+      },
+      "lastSplash": {
+        "active": false,
+        "accumulatedReentryEnergyJ": 18.108335482122254,
+        "accumulatedReentryMassKg": 2.9403463257326137,
+        "boundedDiagnostics": true,
+        "bounds": {
+          "xEnd": 0,
+          "xStart": 0,
+          "yEnd": 0,
+          "yStart": 0
+        },
+        "coupling": "grid-splash-v1",
+        "crownHeightM": 0,
+        "crownRadiusM": 0,
+        "entrainedAirFraction": 0,
+        "foamCells": 0,
+        "foamEnergyJ": 0,
+        "foamInjection": 0,
+        "froudeNumber": 0,
+        "gridEnergyJ": 0,
+        "gridSampleCount": 0,
+        "peakFoamEnergyJ": 6523.032236211906,
+        "reentryCoupledEnergyJ": 0,
+        "sampleTimeS": 0,
+        "secondaryImpulseMagnitude": 0,
+        "sprayDropletCount": 0,
+        "sprayMassKg": 0,
+        "surfaceBreakupFactor": 0,
+        "weberNumber": 0
+      },
+      "renderer": "webgpu-grid-primary-v1",
+      "tier": "ultra"
+    },
+    "frameLoop": {
+      "accumulatedSimS": 0,
+      "droppedDebtS": 0,
+      "fixedStepS": 0.008333333333333333,
+      "frameCount": 8,
+      "interpolationAlpha": 0,
+      "lastSubsteps": 0,
+      "maxAccumulatedS": 0.25,
+      "maxSubstepsObserved": 0,
+      "maxSubstepsPerFrame": 24,
+      "simulatedS": 0,
+      "snapshotIntervalMs": 80,
+      "totalSubsteps": 0
+    },
+    "gate": "G-FG-22",
+    "generatedAt": "2026-06-08T21:03:31.265Z",
+    "launchMode": "packaged-app",
+    "noFullGridReadbackPerFrame": true,
+    "pass": true,
+    "preferredTier": "ultra",
+    "selectedGrid": {
+      "cellsX": 768,
+      "cellsY": 432
+    },
+    "selectedTier": "ultra",
+    "summary": {
+      "caseCount": 5,
+      "categories": [
+        "damping",
+        "drop",
+        "float",
+        "sink",
+        "splash"
+      ],
+      "comparisonCount": 10,
+      "liveGrid": "768x432",
+      "pressureForceBoundN": 86.1869
+    },
+    "telemetry": {
+      "forceBoundN": 86.1869,
+      "frames": 687,
+      "grid": "768x432",
+      "noFullGridReadbackPerFrame": true,
+      "particles": "localized-particle-splash-live-v1",
+      "particlesActive": false,
+      "pressure": "bounded-pressure-gradient-live-v1",
+      "pressureActive": true,
+      "renderer": "webgpu-grid-primary-v1",
+      "status": "rendered",
+      "tier": "ultra",
+      "verticalPressureForceN": 0,
+      "waterContext": "webgpu"
+    }
+  },
+  "defaultProfileEvidence": {
+    "gate": "G-FG-34",
+    "grid": "768x432",
+    "mode": "calibrated-auto",
+    "pass": true,
+    "selectedTier": "ultra",
+    "sourcePath": "reports/fluid-default-profile-calibration-latest.json"
+  },
+  "generatedAt": "2026-06-08T21:03:31.266Z",
+  "launchEnv": {
+    "envCalibratedTierPresent": false,
+    "envRequestedTierPresent": false,
+    "envUserDataOverridePresent": false
+  },
+  "launcher": {
+    "executablePath": "/Users/sasha/Desktop/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "resolvesToInstalledBundle": true,
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "runtimeSelection": {
+    "capabilitySelectedTier": "ultra",
+    "grid": "768x432",
+    "renderer": "webgpu-grid-primary-v1",
+    "selectedGrid": {
+      "cellsX": 768,
+      "cellsY": 432
+    },
+    "selectedTier": "ultra",
+    "selection": {
+      "calibratedTier": "ultra",
+      "mode": "calibrated-auto",
+      "preferredTier": "ultra",
+      "reason": "local calibration selected tier",
+      "requestedTier": "auto"
+    },
+    "waterContext": "webgpu"
+  },
+  "failures": [],
+  "gate": "G-FG-36",
+  "pass": true,
+  "summary": {
+    "caseCount": 5,
+    "categories": [
+      "damping",
+      "drop",
+      "float",
+      "sink",
+      "splash"
+    ],
+    "comparisonCount": 10,
+    "grid": "768x432",
+    "mode": "calibrated-auto",
+    "selectedTier": "ultra"
+  }
+}
