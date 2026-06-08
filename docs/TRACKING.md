@@ -22,6 +22,7 @@ and GitHub issue mapping.
 | FG-12 | Localized particle splash and spray layer | Done | G-FG-12 |
 | FG-13 | Coupled packaged-app calibration against reference cases | Done | G-FG-13 |
 | FG-14 | Live particle splash feedback in packaged renderer | Done | G-FG-14 |
+| FG-15 | Bounded pressure-gradient broad-water acceleration | Done | G-FG-15 |
 
 ## Gates
 
@@ -42,6 +43,7 @@ and GitHub issue mapping.
 | G-FG-12 | FG-12 | `npm run fluid:particles`; `docs/evidence/FG-12-particle-splash-2026-06-08.json` | standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing |
 | G-FG-13 | FG-13 | `npm run fluid:coupled-calibrate`; `docs/evidence/FG-13-coupled-calibration-2026-06-08.json` | the packaged desktop app, reference replay, shallow-water evidence, and particle-splash evidence pass as one coupled calibration packet for drop, splash, float, sink, damping, frame pacing, and bounded GPU readback |
 | G-FG-14 | FG-14 | `npm run fluid:live-particles`; `docs/evidence/FG-14-live-particles-2026-06-08.json` | the packaged WebGPU renderer exposes and uses localized particle splash feedback with bounded mass, momentum, crown height, reentry energy, local grid feedback, and no Canvas fallback |
+| G-FG-15 | FG-15 | `npm run fluid:pressure`; `docs/evidence/FG-15-pressure-gradient-2026-06-08.json` | standard and high WebGPU tiers use bounded pressure-gradient acceleration with mass, wet/dry, energy, momentum-budget, slope-limiter, CFL, and timestamp-query evidence |
 
 ## Tasks
 
@@ -93,6 +95,9 @@ and GitHub issue mapping.
 | FG-14-T01 | FG-14 | Done | physics | `fluidParticleSplash.ts` derives localized-particle-splash-live-v1 from displaced mass, Weber/Froude state, splash reference bands, and reentry energy |
 | FG-14-T02 | FG-14 | Done | renderer | `FluidWaterRenderer` exposes `lastParticleSplash`, writes particle foam/impulse feedback into bounded grid rows, and passes particle crown/density/reentry into render uniforms |
 | FG-14-T03 | FG-14 | Done | verification | `npm run fluid:live-particles` launches the packaged app, drops the concrete cube, and records active localized-particle-splash-live-v1 telemetry with bounded mass/momentum and WebGPU renderer context |
+| FG-15-T01 | FG-15 | Done | physics | `fluidShallowWater.ts` exposes bounded-pressure-gradient-v1 with nonzero pressure gain, slope limiting, momentum limiting, and preserved conservative baseline mode |
+| FG-15-T02 | FG-15 | Done | diagnostics | `runShallowWaterBenchmark` reports pressure work estimate, energy drift, pressure momentum budget ratio, slope-limited cells, dry leakage, negative depths, and timestamp-query timing |
+| FG-15-T03 | FG-15 | Done | verification | `npm run fluid:pressure` passes standard and high WebGPU tiers and writes `docs/evidence/FG-15-pressure-gradient-2026-06-08.json` |
 
 ## GitHub Labels
 
@@ -123,6 +128,7 @@ and GitHub issue mapping.
 | FG-12 | https://github.com/AC-21/ocean/issues/15 |
 | FG-13 | https://github.com/AC-21/ocean/issues/16 |
 | FG-14 | https://github.com/AC-21/ocean/issues/17 |
+| FG-15 | https://github.com/AC-21/ocean/issues/18 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

@@ -15,7 +15,8 @@ export type FluidGridMilestoneId =
   | "FG-11"
   | "FG-12"
   | "FG-13"
-  | "FG-14";
+  | "FG-14"
+  | "FG-15";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -32,7 +33,8 @@ export type FluidGridGateId =
   | "G-FG-11"
   | "G-FG-12"
   | "G-FG-13"
-  | "G-FG-14";
+  | "G-FG-14"
+  | "G-FG-15";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -114,6 +116,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-12", title: "Localized particle splash and spray layer", gate: "G-FG-12" },
   { id: "FG-13", title: "Coupled packaged-app calibration against reference cases", gate: "G-FG-13" },
   { id: "FG-14", title: "Live particle splash feedback in packaged renderer", gate: "G-FG-14" },
+  { id: "FG-15", title: "Bounded pressure-gradient broad-water acceleration", gate: "G-FG-15" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -212,6 +215,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:live-particles and docs/evidence/FG-14-live-particles-2026-06-08.json",
     passBar:
       "the packaged WebGPU renderer exposes and uses localized particle splash feedback with bounded mass, momentum, crown height, reentry energy, local grid feedback, and no Canvas fallback",
+  },
+  {
+    id: "G-FG-15",
+    blocks: "FG-15",
+    evidence: "npm run fluid:pressure and docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
+    passBar:
+      "standard and high WebGPU tiers use bounded pressure-gradient acceleration with mass, wet/dry, energy, momentum-budget, slope-limiter, CFL, and timestamp-query evidence",
   },
 ];
 
@@ -555,6 +565,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify packaged live particle renderer evidence",
     exitProof:
       "npm run fluid:live-particles launches the packaged app, drops the concrete cube, and records active localized-particle-splash-live-v1 telemetry with bounded mass/momentum and WebGPU renderer context",
+  },
+  {
+    id: "FG-15-T01",
+    milestone: "FG-15",
+    status: "done",
+    title: "Add bounded pressure-gradient shallow-water mode",
+    exitProof:
+      "fluidShallowWater.ts exposes bounded-pressure-gradient-v1 with nonzero pressure gain, slope limiting, momentum limiting, and preserved conservative baseline mode",
+  },
+  {
+    id: "FG-15-T02",
+    milestone: "FG-15",
+    status: "done",
+    title: "Report pressure energy, work, momentum, and wet/dry diagnostics",
+    exitProof:
+      "runShallowWaterBenchmark reports pressure work estimate, energy drift, pressure momentum budget ratio, slope-limited cells, dry leakage, negative depths, and timestamp-query timing",
+  },
+  {
+    id: "FG-15-T03",
+    milestone: "FG-15",
+    status: "done",
+    title: "Verify pressure-gradient WebGPU evidence",
+    exitProof:
+      "npm run fluid:pressure passes standard and high WebGPU tiers and writes docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
   },
 ];
 

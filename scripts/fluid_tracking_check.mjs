@@ -20,6 +20,7 @@ const requiredFiles = [
   "docs/evidence/FG-12-particle-splash-2026-06-08.json",
   "docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
   "docs/evidence/FG-14-live-particles-2026-06-08.json",
+  "docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -37,8 +38,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -77,6 +78,7 @@ const fg11Evidence = files.get("docs/evidence/FG-11-shallow-water-2026-06-08.jso
 const fg12Evidence = files.get("docs/evidence/FG-12-particle-splash-2026-06-08.json") ?? "";
 const fg13Evidence = files.get("docs/evidence/FG-13-coupled-calibration-2026-06-08.json") ?? "";
 const fg14Evidence = files.get("docs/evidence/FG-14-live-particles-2026-06-08.json") ?? "";
+const fg15Evidence = files.get("docs/evidence/FG-15-pressure-gradient-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -532,6 +534,55 @@ if (
   !fg14Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-14 evidence must record a passing packaged live-particle renderer report");
+}
+
+if (!packageJson.includes("\"fluid:pressure\"") || !packageJson.includes("scripts/fluid_pressure_gradient_report.mjs")) {
+  errors.push("package.json must expose the FG-15 pressure-gradient command");
+}
+
+if (!tracking.includes("FG-15-T03") || !tracking.includes("FG-15-pressure-gradient-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/18")) {
+  errors.push("docs/TRACKING.md must record FG-15 pressure-gradient evidence and issue mapping");
+}
+
+if (
+  !shallowWater.includes("bounded-pressure-gradient-v1") ||
+  !shallowWater.includes("pressureGradient") ||
+  !shallowWater.includes("pressureWorkEstimateJ") ||
+  !shallowWater.includes("energyRelativeDrift") ||
+  !shallowWater.includes("slopeLimitedCells") ||
+  !shallowWater.includes("maxMomentumPerDepth")
+) {
+  errors.push("fluidShallowWater.ts must implement bounded pressure-gradient diagnostics, slope limiting, and momentum limiting");
+}
+
+if (
+  !remap.includes("FG-15") ||
+  !remap.includes("bounded-pressure-gradient-v1") ||
+  !remap.includes("pressure-gradient acceleration") ||
+  !remap.includes("slope-limited cells") ||
+  !remap.includes("pressure momentum budget ratio")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-15 pressure-gradient gate and measured evidence");
+}
+
+if (
+  !fg15Evidence.includes("\"gate\": \"G-FG-15\"") ||
+  !fg15Evidence.includes("\"pass\": true") ||
+  !fg15Evidence.includes("\"solver\": \"bounded-pressure-gradient-v1\"") ||
+  !fg15Evidence.includes("\"pressureGradient\": true") ||
+  !fg15Evidence.includes("\"pressureGain\": 0.06") ||
+  !fg15Evidence.includes("\"massRelativeDrift\"") ||
+  !fg15Evidence.includes("\"energyRelativeDrift\"") ||
+  !fg15Evidence.includes("\"pressureWorkEstimateJ\"") ||
+  !fg15Evidence.includes("\"slopeLimitedCells\"") ||
+  !fg15Evidence.includes("\"momentumGrowthRatio\"") ||
+  !fg15Evidence.includes("\"negativeDepthCells\": 0") ||
+  !fg15Evidence.includes("\"dryCellsWithWater\": 0") ||
+  !fg15Evidence.includes("\"timestampQueryEnabled\": true") ||
+  !fg15Evidence.includes("\"standard\"") ||
+  !fg15Evidence.includes("\"high\"")
+) {
+  errors.push("FG-15 evidence must record a passing bounded pressure-gradient WebGPU report for standard and high tiers");
 }
 
 if (errors.length > 0) {

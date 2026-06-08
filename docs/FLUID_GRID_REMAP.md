@@ -416,6 +416,33 @@ Latest live particle evidence:
   `0.0244`; no Canvas fallback and no per-frame full-grid readback.
 - Gate: passed.
 
+FG-15 is complete as of 2026-06-08. It reintroduces broad-water
+pressure-gradient acceleration after the FG-11 conservative baseline. This is
+not a silent replacement: `bounded-pressure-gradient-v1` remains an explicit
+solver mode with nonzero pressure gain, slope limiting, momentum limiting, and
+separate energy/momentum/wet-dry diagnostics.
+
+Latest pressure-gradient evidence:
+
+- Command: `npm run fluid:pressure`.
+- Solver: `bounded-pressure-gradient-v1`.
+- Report: `reports/fluid-pressure-gradient-latest.json`.
+- Gate: `G-FG-15`.
+- Evidence snapshot:
+  `docs/evidence/FG-15-pressure-gradient-2026-06-08.json`.
+- Standard tier: `256 x 144`, pressure gain `0.060`, mass drift `4.457e-8`,
+  pressure energy drift `0.0033`, pressure momentum budget ratio `0.1887`,
+  slope-limited cells `1642`, pressure work estimate `9347.76 J`, and
+  timestamp-query GPU average `0.0195 ms/step`.
+- High tier: `512 x 288`, pressure gain `0.060`, mass drift `3.912e-9`,
+  pressure energy drift `0.0009`, pressure momentum budget ratio `0.0766`,
+  slope-limited cells `4671`, pressure work estimate `13993.83 J`, and
+  timestamp-query GPU average `0.0324 ms/step`.
+- Stability: no negative depths, no dry-cell water or momentum leakage, bounded
+  CFL, bounded end-of-run diagnostics only, and no per-frame full-grid
+  readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -456,6 +483,10 @@ Latest live particle evidence:
 15. Live particle renderer feedback: drive packaged WebGPU splash uniforms and
     local grid foam/impulse rows from calibrated particle mass, momentum, crown,
     density, and reentry summaries during real drops.
+16. Bounded pressure-gradient acceleration: reintroduce broad-water pressure
+    forces with slope and momentum limiters, then verify mass, wet/dry, energy,
+    momentum-budget, CFL, and local GPU timing evidence before making stronger
+    wave-realism claims.
 
 ## Resolution Ladder
 

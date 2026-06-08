@@ -2,6 +2,7 @@ import { gridForTier, type FluidCapabilityReport } from "./webgpuCapability";
 import type { FluidGridTierId } from "./fluidGridContract";
 
 export type ShallowWaterBufferRole = "height" | "heightScratch" | "momentumX" | "momentumXScratch" | "momentumY" | "momentumYScratch" | "dryMask";
+export type ShallowWaterSolverId = "conservative-shallow-water-v1" | "bounded-pressure-gradient-v1";
 
 export type ShallowWaterStepPlan = {
   bytesPerField: number;
@@ -12,17 +13,42 @@ export type ShallowWaterStepPlan = {
   cellsX: number;
   cellsY: number;
   cfl: number;
+  damping: number;
   dispatchX: number;
   dispatchY: number;
   dtS: number;
   estimatedStorageBytes: number;
   gravityMps2: number;
+  maxMomentumPerDepthMps: number;
   maxDepthM: number;
+  minDepthM: number;
+  pressureGain: number;
+  pressureGradient: boolean;
+  slopeLimit: number;
+  solver: ShallowWaterSolverId;
   steps: number;
   tier: FluidGridTierId;
   waveSpeedMps: number;
   workgroupSizeX: number;
   workgroupSizeY: number;
+};
+
+export type ShallowWaterPressureDiagnostics = {
+  active: boolean;
+  energyRelativeDrift: number;
+  finalEnergyJ: number;
+  finalKineticEnergyJ: number;
+  finalPotentialEnergyJ: number;
+  initialEnergyJ: number;
+  initialKineticEnergyJ: number;
+  initialPotentialEnergyJ: number;
+  maxSurfaceSlope: number;
+  meanSurfaceSlope: number;
+  momentumGrowthRatio: number;
+  pressureGain: number;
+  pressureWorkEstimateJ: number;
+  slopeLimit: number;
+  slopeLimitedCells: number;
 };
 
 export type ShallowWaterDiagnostics = {
@@ -38,6 +64,7 @@ export type ShallowWaterDiagnostics = {
   minDepthM: number;
   momentumDampingRatio: number;
   negativeDepthCells: number;
+  pressure: ShallowWaterPressureDiagnostics;
   wetCellCount: number;
 };
 
@@ -61,9 +88,13 @@ export type ShallowWaterBenchmarkThreshold = {
   maxDryCellsWithWater: number;
   maxMassRelativeDrift: number;
   maxNegativeDepthCells: number;
+  maxPressureEnergyRelativeDrift: number;
+  maxPressureMomentumGrowthRatio: number;
   maxP95GpuStepMs: number;
   maxWetDryCellDelta: number;
   minMomentumDampingRatio: number;
+  minPressureSlopeLimitedCells: number;
+  minPressureWorkEstimateJ: number;
 };
 
 export type ShallowWaterBenchmarkReport = {
@@ -75,7 +106,7 @@ export type ShallowWaterBenchmarkReport = {
   noFullGridReadbackPerFrame: boolean;
   pass: boolean;
   plan: ShallowWaterStepPlan;
-  solver: "conservative-shallow-water-v1";
+  solver: ShallowWaterSolverId;
   stepTiming: ShallowWaterTiming;
   threshold: ShallowWaterBenchmarkThreshold;
 };
@@ -88,7 +119,10 @@ export type ShallowWaterBenchmarkOptions = {
   maxCfl?: number;
   maxMassRelativeDrift?: number;
   maxP95GpuStepMs?: number;
+  pressureGain?: number;
+  pressureGradient?: boolean;
   requestGpuTimestamps?: boolean;
+  slopeLimit?: number;
   steps?: number;
   tier?: FluidGridTierId;
 };
@@ -160,8 +194,14 @@ const workgroupSizeX = 8;
 const workgroupSizeY = 8;
 const defaultCellSizeM = 0.08;
 const defaultDtS = 1 / 120;
+const defaultDamping = 0.992;
 const defaultGravityMps2 = 9.80665;
 const defaultMaxDepthM = 1.15;
+const defaultMinDepthM = 0.001;
+const defaultPressureGain = 0.06;
+const defaultSlopeLimit = 0.34;
+const defaultMaxMomentumPerDepthMps = 1.15;
+const waterDensityKgM3 = 997;
 
 export const shallowWaterBufferRoles: ShallowWaterBufferRole[] = [
   "height",
@@ -178,6 +218,7 @@ export function createShallowWaterStepPlan(options: ShallowWaterBenchmarkOptions
   const grid = gridForTier(tier);
   const cellCount = grid.cellsX * grid.cellsY;
   const cellSizeM = options.cellSizeM ?? defaultCellSizeM;
+  const pressureGradient = options.pressureGradient === true;
   const gravityMps2 = defaultGravityMps2;
   const maxDepthM = defaultMaxDepthM;
   const waveSpeedMps = Math.sqrt(gravityMps2 * maxDepthM);
@@ -193,12 +234,19 @@ export function createShallowWaterStepPlan(options: ShallowWaterBenchmarkOptions
     cellsX: grid.cellsX,
     cellsY: grid.cellsY,
     cfl,
+    damping: defaultDamping,
     dispatchX: Math.ceil(grid.cellsX / workgroupSizeX),
     dispatchY: Math.ceil(grid.cellsY / workgroupSizeY),
     dtS,
     estimatedStorageBytes: bytesPerField * shallowWaterBufferRoles.length,
     gravityMps2,
+    maxMomentumPerDepthMps: defaultMaxMomentumPerDepthMps,
     maxDepthM,
+    minDepthM: defaultMinDepthM,
+    pressureGain: pressureGradient ? options.pressureGain ?? defaultPressureGain : 0,
+    pressureGradient,
+    slopeLimit: options.slopeLimit ?? defaultSlopeLimit,
+    solver: pressureGradient ? "bounded-pressure-gradient-v1" : "conservative-shallow-water-v1",
     steps: options.steps ?? 96,
     tier,
     waveSpeedMps,
@@ -231,9 +279,13 @@ export async function runShallowWaterBenchmark(options: ShallowWaterBenchmarkOpt
     maxDryCellsWithWater: 0,
     maxMassRelativeDrift: options.maxMassRelativeDrift ?? 0.004,
     maxNegativeDepthCells: 0,
+    maxPressureEnergyRelativeDrift: 0.08,
+    maxPressureMomentumGrowthRatio: 2.1,
     maxP95GpuStepMs: options.maxP95GpuStepMs ?? 0.65,
     maxWetDryCellDelta: 0,
     minMomentumDampingRatio: 0.08,
+    minPressureSlopeLimitedCells: plan.pressureGradient ? 1 : 0,
+    minPressureWorkEstimateJ: plan.pressureGradient ? 0.05 : 0,
   };
   const buffers: BufferLike[] = [];
 
@@ -339,7 +391,8 @@ export async function runShallowWaterBenchmark(options: ShallowWaterBenchmarkOpt
       diagnostics.dryCellsWithWater <= threshold.maxDryCellsWithWater &&
       Math.abs(diagnostics.finalDryCellCount - diagnostics.initialDryCellCount) <= threshold.maxWetDryCellDelta &&
       diagnostics.momentumDampingRatio >= threshold.minMomentumDampingRatio &&
-      diagnostics.momentumDampingRatio < 1;
+      (plan.pressureGradient ? diagnostics.pressure.momentumGrowthRatio < threshold.maxPressureMomentumGrowthRatio : diagnostics.momentumDampingRatio < 1) &&
+      pressureDiagnosticsPass(diagnostics.pressure, threshold, plan);
 
     return {
       backend: "webgpu-compute",
@@ -357,7 +410,7 @@ export async function runShallowWaterBenchmark(options: ShallowWaterBenchmarkOpt
       noFullGridReadbackPerFrame: true,
       pass,
       plan,
-      solver: "conservative-shallow-water-v1",
+      solver: plan.solver,
       stepTiming: {
         averageStepMs,
         totalMs,
@@ -380,6 +433,8 @@ struct Params {
   damping: f32,
   minDepth: f32,
   pressureGain: f32,
+  slopeLimit: f32,
+  maxMomentumPerDepth: f32,
 };
 
 @group(0) @binding(0) var<storage, read> hIn: array<f32>;
@@ -435,11 +490,18 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
   var nextH = h - params.dt * (dFluxX + dFluxY);
   nextH = max(0.0, nextH);
 
-  let surfaceGradX = (hRight - hLeft) / (2.0 * params.cellSize);
-  let surfaceGradY = (hUp - hDown) / (2.0 * params.cellSize);
+  let surfaceGradX = clamp((hRight - hLeft) / (2.0 * params.cellSize), -params.slopeLimit, params.slopeLimit);
+  let surfaceGradY = clamp((hUp - hDown) / (2.0 * params.cellSize), -params.slopeLimit, params.slopeLimit);
   let wetDepth = max(params.minDepth, h);
   var nextMx = (mxIn[index] - params.dt * params.gravity * wetDepth * surfaceGradX * params.pressureGain) * params.damping;
   var nextMy = (myIn[index] - params.dt * params.gravity * wetDepth * surfaceGradY * params.pressureGain) * params.damping;
+  let momentumLimit = max(params.minDepth, nextH) * params.maxMomentumPerDepth;
+  let momentumLength = length(vec2<f32>(nextMx, nextMy));
+  if (momentumLength > momentumLimit) {
+    let limitScale = momentumLimit / max(momentumLength, 0.000001);
+    nextMx = nextMx * limitScale;
+    nextMy = nextMy * limitScale;
+  }
 
   if (nextH <= params.minDepth) {
     nextMx = 0.0;
@@ -496,7 +558,7 @@ export function summarizeShallowWaterFields(
   momentumX: Float32Array,
   momentumY: Float32Array,
   dryMask: Float32Array,
-  initial: Pick<ShallowWaterDiagnostics, "initialDryCellCount" | "initialMassM3" | "initialMomentumAbsM3ps"> | null
+  initial: Pick<ShallowWaterDiagnostics, "initialDryCellCount" | "initialMassM3" | "initialMomentumAbsM3ps" | "pressure"> | null
 ): ShallowWaterDiagnostics {
   let dryCellsWithWater = 0;
   let dryCellCount = 0;
@@ -526,6 +588,7 @@ export function summarizeShallowWaterFields(
 
   const initialMassM3 = initial?.initialMassM3 ?? massM3;
   const initialMomentumAbsM3ps = initial?.initialMomentumAbsM3ps ?? momentumAbsM3ps;
+  const pressure = pressureDiagnosticsFor(plan, height, momentumX, momentumY, dryMask, initial?.pressure ?? null, momentumAbsM3ps, initialMomentumAbsM3ps);
   return {
     dryCellsWithWater,
     finalDryCellCount: dryCellCount,
@@ -539,8 +602,112 @@ export function summarizeShallowWaterFields(
     minDepthM: Number.isFinite(minDepthM) ? minDepthM : 0,
     momentumDampingRatio: momentumAbsM3ps / Math.max(1e-6, initialMomentumAbsM3ps),
     negativeDepthCells,
+    pressure,
     wetCellCount,
   };
+}
+
+function pressureDiagnosticsFor(
+  plan: ShallowWaterStepPlan,
+  height: Float32Array,
+  momentumX: Float32Array,
+  momentumY: Float32Array,
+  dryMask: Float32Array,
+  initial: ShallowWaterPressureDiagnostics | null,
+  momentumAbsM3ps: number,
+  initialMomentumAbsM3ps: number
+): ShallowWaterPressureDiagnostics {
+  let kineticEnergyJ = 0;
+  let maxSurfaceSlope = 0;
+  let potentialEnergyJ = 0;
+  let slopeLimitedCells = 0;
+  let slopeSum = 0;
+  let slopeWorkSum = 0;
+  let waterVolumeM3 = 0;
+  let wetCellCount = 0;
+
+  for (let y = 0; y < plan.cellsY; y += 1) {
+    for (let x = 0; x < plan.cellsX; x += 1) {
+      const index = y * plan.cellsX + x;
+      if (dryMask[index] > 0.5) continue;
+      const depth = Math.max(0, height[index]);
+      if (depth <= 1e-6) continue;
+      const left = wetHeightAt(plan, height, dryMask, Math.max(0, x - 1), y);
+      const right = wetHeightAt(plan, height, dryMask, Math.min(plan.cellsX - 1, x + 1), y);
+      const down = wetHeightAt(plan, height, dryMask, x, Math.max(0, y - 1));
+      const up = wetHeightAt(plan, height, dryMask, x, Math.min(plan.cellsY - 1, y + 1));
+      const gradX = (right - left) / (2 * plan.cellSizeM);
+      const gradY = (up - down) / (2 * plan.cellSizeM);
+      const limitedGradX = clamp(gradX, -plan.slopeLimit, plan.slopeLimit);
+      const limitedGradY = clamp(gradY, -plan.slopeLimit, plan.slopeLimit);
+      const surfaceSlope = Math.hypot(gradX, gradY);
+      const limitedSlope = Math.hypot(limitedGradX, limitedGradY);
+      if (Math.abs(gradX) > plan.slopeLimit || Math.abs(gradY) > plan.slopeLimit) slopeLimitedCells += 1;
+      maxSurfaceSlope = Math.max(maxSurfaceSlope, surfaceSlope);
+      slopeSum += surfaceSlope;
+      slopeWorkSum += limitedSlope * depth;
+      waterVolumeM3 += depth * plan.cellAreaM2;
+      kineticEnergyJ +=
+        0.5 *
+        waterDensityKgM3 *
+        plan.cellAreaM2 *
+        ((momentumX[index] * momentumX[index] + momentumY[index] * momentumY[index]) / Math.max(depth, plan.minDepthM));
+      potentialEnergyJ += 0.5 * waterDensityKgM3 * plan.gravityMps2 * plan.cellAreaM2 * depth * depth;
+      wetCellCount += 1;
+    }
+  }
+
+  const finalEnergyJ = kineticEnergyJ + potentialEnergyJ;
+  const initialEnergyJ = initial?.initialEnergyJ ?? finalEnergyJ;
+  const initialKineticEnergyJ = initial?.initialKineticEnergyJ ?? kineticEnergyJ;
+  const initialPotentialEnergyJ = initial?.initialPotentialEnergyJ ?? potentialEnergyJ;
+  // The seeded ocean is nearly still, so pressure momentum is bounded against a depth-speed budget instead of raw final/initial growth.
+  const momentumBudgetM3ps = Math.max(initialMomentumAbsM3ps, waterVolumeM3 * plan.maxMomentumPerDepthMps * 0.1);
+  const pressureWorkEstimateJ = plan.pressureGradient
+    ? plan.pressureGain * waterDensityKgM3 * plan.gravityMps2 * plan.cellAreaM2 * plan.dtS * plan.steps * slopeWorkSum
+    : 0;
+  return {
+    active: plan.pressureGradient,
+    energyRelativeDrift: Math.abs(finalEnergyJ - initialEnergyJ) / Math.max(1e-6, initialEnergyJ),
+    finalEnergyJ,
+    finalKineticEnergyJ: kineticEnergyJ,
+    finalPotentialEnergyJ: potentialEnergyJ,
+    initialEnergyJ,
+    initialKineticEnergyJ,
+    initialPotentialEnergyJ,
+    maxSurfaceSlope,
+    meanSurfaceSlope: slopeSum / Math.max(1, wetCellCount),
+    momentumGrowthRatio: momentumAbsM3ps / Math.max(1e-6, momentumBudgetM3ps),
+    pressureGain: plan.pressureGain,
+    pressureWorkEstimateJ,
+    slopeLimit: plan.slopeLimit,
+    slopeLimitedCells,
+  };
+}
+
+function pressureDiagnosticsPass(
+  pressure: ShallowWaterPressureDiagnostics,
+  threshold: ShallowWaterBenchmarkThreshold,
+  plan: ShallowWaterStepPlan
+): boolean {
+  if (!plan.pressureGradient) return true;
+  return (
+    pressure.active &&
+    pressure.pressureGain > 0 &&
+    pressure.pressureWorkEstimateJ >= threshold.minPressureWorkEstimateJ &&
+    pressure.slopeLimitedCells >= threshold.minPressureSlopeLimitedCells &&
+    pressure.energyRelativeDrift <= threshold.maxPressureEnergyRelativeDrift &&
+    pressure.momentumGrowthRatio <= threshold.maxPressureMomentumGrowthRatio
+  );
+}
+
+function wetHeightAt(plan: ShallowWaterStepPlan, height: Float32Array, dryMask: Float32Array, x: number, y: number): number {
+  const index = y * plan.cellsX + x;
+  return dryMask[index] > 0.5 ? 0 : Math.max(0, height[index]);
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, Number.isFinite(value) ? value : 0));
 }
 
 function browserGpu(): GpuLike | null {
@@ -607,7 +774,18 @@ function queryResolveBuffer(device: DeviceLike, queryCount: number, buffers: Buf
 }
 
 function uniformValues(plan: ShallowWaterStepPlan): Float32Array {
-  return new Float32Array([plan.cellsX, plan.cellsY, plan.dtS, plan.cellSizeM, plan.gravityMps2, 0.992, 0.001, 0]);
+  return new Float32Array([
+    plan.cellsX,
+    plan.cellsY,
+    plan.dtS,
+    plan.cellSizeM,
+    plan.gravityMps2,
+    plan.damping,
+    plan.minDepthM,
+    plan.pressureGain,
+    plan.slopeLimit,
+    plan.maxMomentumPerDepthMps,
+  ]);
 }
 
 async function mappedFloat32(buffer: BufferLike, length: number): Promise<Float32Array> {

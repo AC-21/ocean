@@ -65,4 +65,22 @@ describe("conservative shallow-water grid contract", () => {
     expect(shallowWaterStepShader).toContain("dFluxX");
     expect(shallowWaterStepShader).not.toMatch(/canvas|getContext|2d/i);
   });
+
+  it("plans bounded pressure-gradient acceleration with slope and momentum limiters", () => {
+    const plan = createShallowWaterStepPlan({ pressureGradient: true, tier: "standard" });
+    const fields = seededShallowWaterFields(plan);
+    const diagnostics = summarizeShallowWaterFields(plan, fields.height, fields.momentumX, fields.momentumY, fields.dryMask, null);
+
+    expect(plan.solver).toBe("bounded-pressure-gradient-v1");
+    expect(plan.pressureGradient).toBe(true);
+    expect(plan.pressureGain).toBeGreaterThan(0);
+    expect(plan.slopeLimit).toBeGreaterThan(0);
+    expect(plan.maxMomentumPerDepthMps).toBeGreaterThan(0);
+    expect(diagnostics.pressure.active).toBe(true);
+    expect(diagnostics.pressure.pressureWorkEstimateJ).toBeGreaterThan(0);
+    expect(diagnostics.pressure.slopeLimitedCells).toBeGreaterThan(0);
+    expect(shallowWaterStepShader).toContain("pressureGain");
+    expect(shallowWaterStepShader).toContain("slopeLimit");
+    expect(shallowWaterStepShader).toContain("maxMomentumPerDepth");
+  });
 });

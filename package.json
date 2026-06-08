@@ -37,6 +37,7 @@
     "fluid:architecture": "npm run build && vite-node src/fluid/fluidSolverArchitecture.report.ts",
     "fluid:references": "npm run build && vite-node src/fluid/fluidReferenceDataset.report.ts",
     "fluid:shallow-water": "npm run build && node scripts/fluid_shallow_water_report.mjs",
+    "fluid:pressure": "npm run build && node scripts/fluid_pressure_gradient_report.mjs",
     "fluid:particles": "npm run build && node scripts/fluid_particle_splash_report.mjs",
     "fluid:coupled-calibrate": "npm run desktop:package:mac && OCEAN_LAB_LOCAL_CALIBRATION_TARGET=packaged OCEAN_LAB_LOCAL_CALIBRATION_OUT=reports/fluid-local-calibration-fg13.json vite-node src/fluid/fluidLocalCalibration.report.ts && vite-node src/fluid/fluidCoupledCalibration.report.ts",
     "fluid:live-particles": "npm run desktop:package:mac && node scripts/fluid_live_particle_report.mjs",

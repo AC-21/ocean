@@ -95,6 +95,12 @@ Run the conservative WebGPU shallow-water gate:
 npm run fluid:shallow-water
 ```
 
+Run the bounded pressure-gradient broad-water gate:
+
+```sh
+npm run fluid:pressure
+```
+
 Run the localized WebGPU particle-splash gate:
 
 ```sh
@@ -143,7 +149,9 @@ gate packages the app and verifies packaged WebGPU frame pacing, reference
 drop/splash/float/sink/damping replay, shallow-water diagnostics, and particle
 splash diagnostics together. FG-14 moves calibrated particle feedback into the
 live packaged renderer so real drops expose particle mass, momentum, crown,
-reentry, and local grid-feedback telemetry.
+reentry, and local grid-feedback telemetry. FG-15 reintroduces broad-water
+pressure-gradient acceleration with slope and momentum limiters plus mass,
+energy, wet/dry, and local GPU timing evidence.
 
 ## Run
 
@@ -264,6 +272,9 @@ Current validation checks include:
   CPU-reference measurements.
 - Conservative WebGPU shallow-water stepping with height and x/y momentum
   buffers, mass drift diagnostics, wet/dry stability checks, bounded CFL, and
+  local GPU timing.
+- Bounded WebGPU pressure-gradient acceleration with slope limiting, momentum
+  limiting, pressure work, energy drift, mass drift, wet/dry stability, and
   local GPU timing.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
