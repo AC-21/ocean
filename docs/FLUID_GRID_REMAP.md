@@ -209,6 +209,26 @@ Research notes:
   full offline CFD: grid-based water for broad surface state, plus local
   particle/splash layers for high-energy impact detail.
 
+FG-08 is complete as of 2026-06-08. It hardens the simulation hot loop so
+future higher-resolution solver work has a bounded timing contract instead of
+variable render-sized physics steps.
+
+Latest frame-loop evidence:
+
+- Command: `npm run fluid:frame-loop`.
+- Report: `reports/fluid-frame-loop-latest.json`.
+- Gate: `G-FG-08`.
+- Evidence snapshot: `docs/evidence/FG-08-frame-loop-2026-06-08.json`.
+- Fixed physics step: `0.008333 s` (`120 Hz`).
+- Max substep guard: `24` per frame.
+- Concrete-cube drop sample: `420` active samples, `420` fixed physics steps,
+  and `421` WebGPU water frames.
+- Max observed substeps: `1 / 24` at normal speed.
+- Max accumulated simulation debt: `0.00817 s`, under one fixed step.
+- Dropped simulation debt: `0`.
+- Renderer remained `webgpu-grid-primary-v1` with `webgpu` context.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -227,6 +247,9 @@ Research notes:
    duration, and damping curves against reference footage or lab data.
 8. Local performance calibration: measure the real desktop app on the local GPU
    before accepting any near-realism claim.
+9. Frame-loop hardening: keep physics on a bounded fixed-step accumulator so
+   render cadence, UI updates, and future grid resolution changes cannot create
+   variable-timestep artifacts.
 
 ## Resolution Ladder
 

@@ -1,0 +1,32 @@
+{
+  "gate": "G-FG-08",
+  "generatedAt": "2026-06-08T01:23:05.878Z",
+  "pass": true,
+  "config": {
+    "fixedStepS": 0.008333333333333333,
+    "maxAccumulatedS": 0.25,
+    "maxSubstepsPerFrame": 24,
+    "maxWallDeltaS": 0.1,
+    "snapshotIntervalMs": 80
+  },
+  "failures": [],
+  "summary": {
+    "activeSampleCount": 420,
+    "droppedDebtS": 0,
+    "fixedStepS": 0.008333333333333333,
+    "maxAccumulatedSimS": 0.008166666630904122,
+    "maxInterpolationAlpha": 0.9799999957084946,
+    "maxLastSubsteps": 1,
+    "maxSubstepsObserved": 1,
+    "maxSubstepsPerFrame": 24,
+    "sampleCount": 422,
+    "totalSubstepsDelta": 420,
+    "waterFrameDelta": 421
+  },
+  "telemetry": {
+    "phase": "Sinking",
+    "renderMode": "webgpu",
+    "renderer": "webgpu-grid-primary-v1",
+    "waterContext": "webgpu"
+  }
+}

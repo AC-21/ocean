@@ -33,6 +33,7 @@
     "fluid:calibration": "npm run build && vite-node src/fluid/fluidCalibration.report.ts",
     "fluid:local-calibrate": "npm run build && vite-node src/fluid/fluidLocalCalibration.report.ts",
     "fluid:local-calibrate:packaged": "npm run desktop:package:mac && OCEAN_LAB_LOCAL_CALIBRATION_TARGET=packaged vite-node src/fluid/fluidLocalCalibration.report.ts",
+    "fluid:frame-loop": "npm run build && vite-node src/fluid/fluidFrameLoop.report.ts",
     "fluid:tracking": "node scripts/fluid_tracking_check.mjs",
     "balance:snapshot": "node scripts/balance_snapshot.mjs",
     "ocean:benchmark": "node scripts/ocean_benchmark.mjs",

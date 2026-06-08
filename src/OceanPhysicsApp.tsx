@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
+import { createFluidFrameLoopState, defaultFluidFrameLoopConfig, frameLoopStats, planFluidFrameStep } from "./fluid/fluidFrameLoop";
 import {
   createFluidWaterRenderer,
   legacyCanvasWaterTelemetry,
@@ -68,6 +69,7 @@ export default function OceanPhysicsApp() {
   const waterRendererRef = useRef<FluidWaterRenderer | null>(null);
   const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
   const gridCouplingRef = useRef<GridFluidCouplingForces | null>(null);
+  const frameLoopRef = useRef(createFluidFrameLoopState(typeof performance === "undefined" ? 0 : performance.now()));
 
   specRef.current = spec;
   settingsRef.current = settings;
@@ -138,20 +140,16 @@ export default function OceanPhysicsApp() {
 
   useEffect(() => {
     let animationFrame = 0;
-    let lastTime = performance.now();
     let lastSnapshot = 0;
+    frameLoopRef.current = createFluidFrameLoopState(performance.now());
 
     const tick = (now: number) => {
-      const realDt = Math.min(0.05, Math.max(0, (now - lastTime) / 1000));
-      lastTime = now;
       let current = simulationRef.current;
       const active = running && !paused && current.phase !== "sank";
+      const framePlan = planFluidFrameStep(frameLoopRef.current, now, { active, timeScale });
       if (active) {
-        const simulatedDt = realDt * timeScale;
-        const substeps = Math.max(1, Math.ceil(simulatedDt / 0.018));
-        const stepDt = simulatedDt / substeps;
-        for (let index = 0; index < substeps; index += 1) {
-          current = stepSimulation(current, specRef.current, settingsRef.current, stepDt, gridCouplingRef.current);
+        for (let index = 0; index < framePlan.substeps; index += 1) {
+          current = stepSimulation(current, specRef.current, settingsRef.current, framePlan.stepDtS, gridCouplingRef.current);
           if (current.phase === "sank") break;
         }
         simulationRef.current = current;
@@ -185,10 +183,11 @@ export default function OceanPhysicsApp() {
       if (chart) {
         renderHistoryChart(chart, current, settingsRef.current);
       }
-      if (now - lastSnapshot > 80) {
+      if (now - lastSnapshot > defaultFluidFrameLoopConfig.snapshotIntervalMs) {
         lastSnapshot = now;
         setSnapshot(current);
       }
+      window.__fluidFrameLoopStats = frameLoopStats(frameLoopRef.current, framePlan, defaultFluidFrameLoopConfig);
       animationFrame = window.requestAnimationFrame(tick);
     };
 

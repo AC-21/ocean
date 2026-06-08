@@ -71,6 +71,12 @@ Run the same gate against the packaged macOS app:
 npm run fluid:local-calibrate:packaged
 ```
 
+Run the fixed-step frame-loop gate:
+
+```sh
+npm run fluid:frame-loop
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -200,6 +206,8 @@ Current validation checks include:
   hydrostatic draft, float settling, splash-height band, leak sensitivity, and
   underwater terminal velocity.
 - Local GPU/frame-pacing calibration for idle and concrete-drop desktop runs.
+- Fixed-step `120 Hz` simulation-loop evidence with bounded substeps and no
+  dropped simulation debt at normal speed.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

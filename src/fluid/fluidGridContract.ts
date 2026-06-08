@@ -1,8 +1,8 @@
 export type FluidBackendKind = "webgpu-compute" | "cpu-deterministic-test" | "legacy-canvas-diagnostic";
 
-export type FluidGridMilestoneId = "FG-00" | "FG-01" | "FG-02" | "FG-03" | "FG-04" | "FG-05" | "FG-06" | "FG-07";
+export type FluidGridMilestoneId = "FG-00" | "FG-01" | "FG-02" | "FG-03" | "FG-04" | "FG-05" | "FG-06" | "FG-07" | "FG-08";
 
-export type FluidGridGateId = "G-FG-00" | "G-FG-01" | "G-FG-02" | "G-FG-03" | "G-FG-04" | "G-FG-05" | "G-FG-06" | "G-FG-07";
+export type FluidGridGateId = "G-FG-00" | "G-FG-01" | "G-FG-02" | "G-FG-03" | "G-FG-04" | "G-FG-05" | "G-FG-06" | "G-FG-07" | "G-FG-08";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -77,6 +77,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-05", title: "Splash, foam, and spray from grid state", gate: "G-FG-05" },
   { id: "FG-06", title: "Calibration and near-realism validation", gate: "G-FG-06" },
   { id: "FG-07", title: "Local GPU calibration and frame pacing", gate: "G-FG-07" },
+  { id: "FG-08", title: "Fixed-step simulation loop hardening", gate: "G-FG-08" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -127,6 +128,12 @@ export const fluidGridGates: FluidGridGate[] = [
     blocks: "FG-07",
     evidence: "npm run fluid:local-calibrate, npm run fluid:local-calibrate:packaged, and docs/evidence/FG-07-local-calibration-2026-06-08.json",
     passBar: "local desktop app records WebGPU renderer telemetry, timestamp-query GPU grid timing, and smooth idle/drop frame pacing with bounded p95/p99 frame times",
+  },
+  {
+    id: "G-FG-08",
+    blocks: "FG-08",
+    evidence: "npm run fluid:frame-loop and docs/evidence/FG-08-frame-loop-2026-06-08.json",
+    passBar: "the app advances rigid-body physics through a bounded fixed-step accumulator with WebGPU rendering active and no dropped simulation debt at normal speed",
   },
 ];
 
@@ -305,6 +312,27 @@ export const fluidGridTasks: FluidGridTask[] = [
     status: "done",
     title: "Close the local smoothness gate with passing evidence",
     exitProof: "packaged-app calibration passed with timestamp-query GPU samples, high-tier GPU p95 0.0271 ms, idle/drop p99 9.4 ms, and no dropped frames",
+  },
+  {
+    id: "FG-08-T01",
+    milestone: "FG-08",
+    status: "done",
+    title: "Define a bounded fixed-step frame-loop planner",
+    exitProof: "fluidFrameLoop.ts plans 1/120 s physics steps with interpolation alpha, accumulated-debt bounds, and a max-substep guard",
+  },
+  {
+    id: "FG-08-T02",
+    milestone: "FG-08",
+    status: "done",
+    title: "Integrate fixed-step planning into OceanPhysicsApp",
+    exitProof: "OceanPhysicsApp uses planFluidFrameStep instead of variable render-sized physics steps and exposes window.__fluidFrameLoopStats",
+  },
+  {
+    id: "FG-08-T03",
+    milestone: "FG-08",
+    status: "done",
+    title: "Verify frame-loop hardening in Electron",
+    exitProof: "npm run fluid:frame-loop records 420 fixed physics steps, 421 WebGPU water frames, max substeps 1/24, and zero dropped simulation debt",
   },
 ];
 

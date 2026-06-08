@@ -15,6 +15,7 @@ and GitHub issue mapping.
 | FG-05 | Splash, foam, and spray from grid state | Done | G-FG-05 |
 | FG-06 | Calibration and near-realism validation | Done | G-FG-06 |
 | FG-07 | Local GPU calibration and frame pacing | Done | G-FG-07 |
+| FG-08 | Fixed-step simulation loop hardening | Done | G-FG-08 |
 
 ## Gates
 
@@ -28,6 +29,7 @@ and GitHub issue mapping.
 | G-FG-05 | FG-05 | `npm run fluid:splash`; `docs/evidence/FG-05-fluid-splash-2026-06-07.json` | splash crown, foam, spray, and secondary impacts are driven by bounded local WebGPU grid energy |
 | G-FG-06 | FG-06 | `npm run fluid:calibration`; `docs/evidence/FG-06-fluid-calibration-2026-06-07.json` | reference cases and prior WebGPU gates match accepted error bounds for impact speed, splash height, damping, float behavior, and evidence completeness |
 | G-FG-07 | FG-07 | `npm run fluid:local-calibrate`; `npm run fluid:local-calibrate:packaged`; `docs/evidence/FG-07-local-calibration-2026-06-08.json` | local Electron and packaged desktop runs record WebGPU renderer telemetry, timestamp-query GPU grid timing, and smooth idle/drop frame pacing with bounded p95/p99 frame times |
+| G-FG-08 | FG-08 | `npm run fluid:frame-loop`; `docs/evidence/FG-08-frame-loop-2026-06-08.json` | the app advances rigid-body physics through a bounded fixed-step accumulator with WebGPU rendering active and no dropped simulation debt at normal speed |
 
 ## Tasks
 
@@ -58,6 +60,9 @@ and GitHub issue mapping.
 | FG-07-T01 | FG-07 | Done | calibration | `fluidLocalCalibration.ts` defines local smoothness thresholds for p95/p99 frame time, dropped-frame ratio, duplicate water-frame ratio, and WebGPU renderer telemetry |
 | FG-07-T02 | FG-07 | Done | calibration | `npm run fluid:local-calibrate` and `npm run fluid:local-calibrate:packaged` launch the desktop app paths, sample idle/drop frame pacing, and write `reports/fluid-local-calibration-latest.json` |
 | FG-07-T03 | FG-07 | Done | performance | Packaged-app calibration passed with timestamp-query GPU samples, high-tier GPU p95 `0.0271 ms`, idle/drop p99 `9.4 ms`, and no dropped frames |
+| FG-08-T01 | FG-08 | Done | performance | `fluidFrameLoop.ts` plans `1/120 s` fixed physics steps with interpolation alpha, accumulated-debt bounds, and a max-substep guard |
+| FG-08-T02 | FG-08 | Done | performance | `OceanPhysicsApp` uses `planFluidFrameStep` instead of variable render-sized physics steps and exposes `window.__fluidFrameLoopStats` |
+| FG-08-T03 | FG-08 | Done | verification | `npm run fluid:frame-loop` records `420` fixed physics steps, `421` WebGPU water frames, max substeps `1/24`, and zero dropped simulation debt |
 
 ## GitHub Labels
 
@@ -81,6 +86,7 @@ and GitHub issue mapping.
 | FG-05 | https://github.com/AC-21/ocean/issues/7 |
 | FG-06 | https://github.com/AC-21/ocean/issues/8 |
 | FG-07 | https://github.com/AC-21/ocean/issues/10 |
+| FG-08 | https://github.com/AC-21/ocean/issues/11 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
