@@ -1092,6 +1092,36 @@ Latest high-resolution headroom evidence:
   below local storage-buffer limits, and no full-grid readback.
 - Gate: passed.
 
+FG-39 moves one approved high-resolution candidate out of benchmark-only mode
+and into the actual packaged renderer under an explicit experimental live grid
+flag. The default calibrated capability selection remains capped at `768 x 432`
+and tier `ultra`; only launches with `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576`
+can allocate the live water renderer at `1024 x 576`.
+
+Experimental live grid evidence:
+
+- Command: `npm run fluid:experimental-live-grid`.
+- Gate: `G-FG-39`.
+- Evidence snapshot:
+  `docs/evidence/FG-39-experimental-live-grid-2026-06-08.json`.
+- Runtime invariant: capability selection remains `ultra` at `768 x 432`,
+  renderer `webgpu-grid-primary-v1`, context `webgpu`, while the live canvas
+  reports runtime grid `1024 x 576` only because the explicit experimental flag
+  was provided.
+- Pacing scope: idle water and an 8 m concrete-cube impact are sampled in the
+  packaged app at 1x time scale, with p95/p99 frame pacing, duplicate water
+  frames, fixed-step debt, and water-frame advancement checked through the
+  existing display-pacing envelope.
+- Measured live-grid pacing: idle ran at `120.2 FPS` with p95 `9.20 ms`, p99
+  `9.40 ms`, zero dropped-frame ratio, and `337` water frames advanced;
+  concrete impact ran at `120.1 FPS` with p95 `9.00 ms`, p99 `9.30 ms`, zero
+  dropped-frame ratio, duplicate water-frame ratio `0.00151`, and `660` water
+  frames advanced.
+- Telemetry proof: active pressure, localized particles, and object-grid
+  coupling must be observed where expected; pressure and particle telemetry must
+  report no full-grid readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1214,6 +1244,11 @@ Latest high-resolution headroom evidence:
     high-resolution grids beyond `768 x 432` for WebGPU grid, bounded-pressure,
     and localized-particle workloads using timestamp-query timing, bounded
     memory, and no full-grid readback.
+36. Experimental live high-resolution renderer: keep calibrated capability
+    selection capped at ultra, then allow one benchmark-approved grid to drive
+    the actual packaged WebGPU canvas through an explicit
+    `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` launch flag and require smooth live
+    pacing plus no full-grid readback.
 
 ## Resolution Ladder
 

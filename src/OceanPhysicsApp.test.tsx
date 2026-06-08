@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { oceanPhysicsLiveSnapshotFor, oceanPhysicsMotionSnapshotFor, preferredFluidTierFromSearch, runtimeFluidTierSelectionFromSearch } from "./OceanPhysicsApp";
+import {
+  experimentalFluidGridDimensionsFromSearch,
+  oceanPhysicsLiveSnapshotFor,
+  oceanPhysicsMotionSnapshotFor,
+  preferredFluidTierFromSearch,
+  runtimeFluidTierSelectionFromSearch,
+} from "./OceanPhysicsApp";
 import { cloneObjectSpec, createSimulation, defaultOceanSettings, objectPresets, startDrop, stepSimulation } from "./physicsOcean";
 
 const calmSettings = {
@@ -33,6 +39,15 @@ describe("ocean physics live snapshot", () => {
       preferredTier: "high",
       requestedTier: "default",
     });
+  });
+
+  it("parses only benchmark-approved experimental runtime grids", () => {
+    expect(experimentalFluidGridDimensionsFromSearch("?experimentalFluidGrid=1024x576")).toEqual({ cellsX: 1024, cellsY: 576 });
+    expect(experimentalFluidGridDimensionsFromSearch("?experimentalFluidGrid=1280x720")).toEqual({ cellsX: 1280, cellsY: 720 });
+    expect(experimentalFluidGridDimensionsFromSearch("?experimentalFluidGrid=768x432")).toBeNull();
+    expect(experimentalFluidGridDimensionsFromSearch("?experimentalFluidGrid=4096x4096")).toBeNull();
+    expect(experimentalFluidGridDimensionsFromSearch("?experimentalFluidGrid=banana")).toBeNull();
+    expect(experimentalFluidGridDimensionsFromSearch("")).toBeNull();
   });
 
   it("exposes reference-ready float prediction and diagnostic fields", () => {

@@ -74,6 +74,15 @@ export type FluidWaterRenderStats = {
   tier: FluidGridTierId;
 };
 
+export type FluidWaterRuntimeGridDimensions = {
+  cellsX: number;
+  cellsY: number;
+};
+
+export type FluidWaterRendererOptions = {
+  gridDimensions?: FluidWaterRuntimeGridDimensions;
+};
+
 export type FluidRendererPressureSummary = {
   active: boolean;
   bufferRoles: string[];
@@ -165,7 +174,11 @@ const textureUsageRenderAttachment = 0x0010;
 const bytesPerValue = 4;
 export const fluidWaterRendererRequiredStorageBuffers = 10;
 
-export async function createFluidWaterRenderer(canvas: HTMLCanvasElement, tier: FluidGridTierId): Promise<FluidWaterRenderer> {
+export async function createFluidWaterRenderer(
+  canvas: HTMLCanvasElement,
+  tier: FluidGridTierId,
+  options: FluidWaterRendererOptions = {}
+): Promise<FluidWaterRenderer> {
   const gpu = browserGpu();
   if (!gpu) throw new Error("navigator.gpu is unavailable for WebGPU water rendering.");
   const adapter = await gpu.requestAdapter({ powerPreference: "high-performance" });
@@ -181,7 +194,7 @@ export async function createFluidWaterRenderer(canvas: HTMLCanvasElement, tier: 
   const context = canvas.getContext("webgpu") as CanvasContextLike | null;
   if (!context) throw new Error("Canvas did not provide a webgpu context.");
   const format = gpu.getPreferredCanvasFormat?.() ?? "bgra8unorm";
-  return new FluidWaterRenderer(canvas, context, device, format, tier);
+  return new FluidWaterRenderer(canvas, context, device, format, tier, options);
 }
 
 export function fluidWaterRendererRequiredDeviceLimits(limits: AdapterLike["limits"]): { maxStorageBuffersPerShaderStage: number } | null {
@@ -228,9 +241,10 @@ export class FluidWaterRenderer {
     private readonly context: CanvasContextLike,
     private readonly device: DeviceLike,
     private readonly format: string,
-    tier: FluidGridTierId
+    tier: FluidGridTierId,
+    options: FluidWaterRendererOptions = {}
   ) {
-    this.plan = createFluidGridStepPlan({ tier, steps: 1 });
+    this.plan = createFluidGridStepPlan({ gridDimensions: options.gridDimensions, tier, steps: 1 });
     const seeded = seededRendererFields(this.plan);
     this.height = this.storageBuffer(seeded.height);
     this.heightScratch = this.storageBuffer(seeded.heightScratch);

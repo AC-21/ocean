@@ -14,6 +14,7 @@ import { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import {
   createFluidWaterRenderer,
   legacyCanvasWaterTelemetry,
+  type FluidWaterRuntimeGridDimensions,
   type FluidWaterRenderer,
   type FluidWaterRenderInput,
 } from "./fluid/fluidWaterRenderer";
@@ -66,6 +67,11 @@ const waterTypeOptions = [
   { label: "Sea", density: 1025 },
   { label: "Dense sea", density: 1030 },
 ];
+
+const experimentalFluidGridDimensions = [
+  { cellsX: 1024, cellsY: 576 },
+  { cellsX: 1280, cellsY: 720 },
+] as const;
 
 export type OceanPhysicsScenarioConfig = {
   dropHeightM?: number;
@@ -166,6 +172,7 @@ export default function OceanPhysicsApp() {
   const [snapshot, setSnapshot] = useState<SimulationState>(simulationRef.current);
   const [fluidCapability, setFluidCapability] = useState<FluidCapabilityReport>(() => pendingFluidCapabilityReport());
   const requestedFluidTierSelection = useMemo(() => fluidRuntimeTierSelectionFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
+  const runtimeGridOverride = useMemo(() => experimentalFluidGridDimensionsFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
   const expectedCalibratedFingerprint = useMemo(() => calibratedFluidCapabilityFingerprintFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
   const [fluidTierSelection, setFluidTierSelection] = useState<FluidRuntimeTierSelection>(requestedFluidTierSelection);
   const [waterRenderMode, setWaterRenderMode] = useState<"fallback" | "initializing" | "webgpu">("initializing");
@@ -189,6 +196,7 @@ export default function OceanPhysicsApp() {
     window.__runParticleSplashBenchmark = runParticleSplashBenchmark;
     window.__runShallowWaterBenchmark = runShallowWaterBenchmark;
     window.__fluidGridCapabilityReport = fluidCapability;
+    window.__fluidRuntimeGridOverride = runtimeGridOverride;
     detectFluidCapability({ preferredTier: requestedFluidTierSelection.preferredTier }).then((report) => {
       if (cancelled) return;
       const liveFingerprint = fluidCapabilityFingerprintForReport(report);
@@ -209,8 +217,9 @@ export default function OceanPhysicsApp() {
       delete window.__runFluidGridBenchmark;
       delete window.__runParticleSplashBenchmark;
       delete window.__runShallowWaterBenchmark;
+      delete window.__fluidRuntimeGridOverride;
     };
-  }, [expectedCalibratedFingerprint, requestedFluidTierSelection]);
+  }, [expectedCalibratedFingerprint, requestedFluidTierSelection, runtimeGridOverride]);
 
   useEffect(() => {
     let cancelled = false;
@@ -225,7 +234,7 @@ export default function OceanPhysicsApp() {
     }
 
     setWaterRenderMode("initializing");
-    createFluidWaterRenderer(canvas, fluidCapability.selectedTier)
+    createFluidWaterRenderer(canvas, fluidCapability.selectedTier, { gridDimensions: runtimeGridOverride ?? undefined })
       .then((renderer) => {
         if (cancelled) {
           renderer.destroy();
@@ -245,7 +254,7 @@ export default function OceanPhysicsApp() {
     return () => {
       cancelled = true;
     };
-  }, [fluidCapability.selectedTier, fluidCapability.status, fluidCapability.fallbackReason]);
+  }, [fluidCapability.selectedTier, fluidCapability.status, fluidCapability.fallbackReason, runtimeGridOverride]);
 
   const resetSimulation = useCallback(() => {
     const next = createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg));
@@ -676,6 +685,7 @@ export default function OceanPhysicsApp() {
         data-fluid-tier-requested={fluidTierSelection.requestedTier}
         data-fluid-tier-selection-mode={fluidTierSelection.mode}
         data-fluid-tier-selection-reason={fluidTierSelection.reason}
+        data-fluid-runtime-grid-override={runtimeGridOverride ? `${runtimeGridOverride.cellsX}x${runtimeGridOverride.cellsY}` : "none"}
         data-water-render-mode={waterRenderMode}
       >
         <div className="stage-toolbar">
@@ -1010,6 +1020,11 @@ export function preferredFluidTierFromSearch(search: string): FluidGridTierId | 
 
 export function runtimeFluidTierSelectionFromSearch(search: string): FluidRuntimeTierSelection {
   return fluidRuntimeTierSelectionFromSearch(search);
+}
+
+export function experimentalFluidGridDimensionsFromSearch(search: string): FluidWaterRuntimeGridDimensions | null {
+  const value = new URLSearchParams(search).get("experimentalFluidGrid");
+  return experimentalFluidGridDimensions.find((grid) => value === `${grid.cellsX}x${grid.cellsY}`) ?? null;
 }
 
 function formatBytes(bytes: number) {

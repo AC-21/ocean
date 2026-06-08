@@ -39,7 +39,8 @@ export type FluidGridMilestoneId =
   | "FG-35"
   | "FG-36"
   | "FG-37"
-  | "FG-38";
+  | "FG-38"
+  | "FG-39";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -80,7 +81,8 @@ export type FluidGridGateId =
   | "G-FG-35"
   | "G-FG-36"
   | "G-FG-37"
-  | "G-FG-38";
+  | "G-FG-38"
+  | "G-FG-39";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -186,6 +188,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-36", title: "Installed calibrated reference outcome gate", gate: "G-FG-36" },
   { id: "FG-37", title: "Installed reference pacing envelope gate", gate: "G-FG-37" },
   { id: "FG-38", title: "Experimental high-resolution grid headroom gate", gate: "G-FG-38" },
+  { id: "FG-39", title: "Experimental high-resolution live renderer gate", gate: "G-FG-39" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -452,6 +455,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:high-resolution-headroom and docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json",
     passBar:
       "the packaged Desktop app keeps production runtime selection capped at ultra while benchmark-only explicit high-resolution grids beyond 768 x 432 pass WebGPU grid, bounded pressure-gradient, and localized particle-splash timing, memory, no-readback, and diagnostic thresholds with timestamp-query evidence",
+  },
+  {
+    id: "G-FG-39",
+    blocks: "FG-39",
+    evidence: "npm run fluid:experimental-live-grid and docs/evidence/FG-39-experimental-live-grid-2026-06-08.json",
+    passBar:
+      "the packaged Desktop app keeps default calibrated capability selection capped at ultra 768 x 432 while an explicit experimental runtime flag drives the live WebGPU renderer at 1024 x 576 with smooth idle and concrete-impact pacing, active pressure/particles/coupling, and no full-grid readback",
   },
 ];
 
@@ -1371,6 +1381,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close experimental high-resolution headroom gate",
     exitProof:
       "npm run fluid:high-resolution-headroom passes with benchmark-only grids larger than ultra, bounded p95 GPU timing, bounded wall timing, memory below local storage limits, no full-grid readback, and committed evidence",
+  },
+  {
+    id: "FG-39-T01",
+    milestone: "FG-39",
+    status: "done",
+    title: "Add opt-in live renderer grid override",
+    exitProof:
+      "electron/main.cjs accepts only benchmark-approved OCEAN_LAB_EXPERIMENTAL_FLUID_GRID values and OceanPhysicsApp passes the parsed runtime grid override into createFluidWaterRenderer",
+  },
+  {
+    id: "FG-39-T02",
+    milestone: "FG-39",
+    status: "done",
+    title: "Measure experimental live high-resolution renderer",
+    exitProof:
+      "fluidExperimentalLiveGrid.report.ts launches the packaged app with OCEAN_LAB_FLUID_TIER=ultra and OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576, then waits for the canvas to report a live 1024 x 576 WebGPU grid",
+  },
+  {
+    id: "FG-39-T03",
+    milestone: "FG-39",
+    status: "done",
+    title: "Close experimental live high-resolution grid gate",
+    exitProof:
+      "npm run fluid:experimental-live-grid passes with smooth idle and concrete-impact display pacing on the live high-resolution grid plus committed FG-39 evidence",
   },
 ];
 

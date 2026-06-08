@@ -9,6 +9,7 @@ const appIconPath = path.join(appRoot, "dist", "app-icon.svg");
 const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
 const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
 const envCalibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
+const experimentalFluidGrid = validExperimentalFluidGrid(process.env.OCEAN_LAB_EXPERIMENTAL_FLUID_GRID);
 let storage;
 let mainWindow = null;
 let isQuitting = false;
@@ -129,6 +130,7 @@ function appendFluidTierQuery(searchParams, query) {
   if (query.fluidTier) searchParams.set("fluidTier", query.fluidTier);
   if (query.calibratedFluidTier) searchParams.set("calibratedFluidTier", query.calibratedFluidTier);
   if (query.calibratedFluidFingerprint) searchParams.set("calibratedFluidFingerprint", query.calibratedFluidFingerprint);
+  if (query.experimentalFluidGrid) searchParams.set("experimentalFluidGrid", query.experimentalFluidGrid);
 }
 
 async function fluidTierQueryObject() {
@@ -140,6 +142,7 @@ async function fluidTierQueryObject() {
     ...(fluidTier ? { fluidTier } : {}),
     ...(calibratedFluidTier ? { calibratedFluidTier } : {}),
     ...(!envTier && storedCalibration?.fingerprint ? { calibratedFluidFingerprint: storedCalibration.fingerprint } : {}),
+    ...(experimentalFluidGrid ? { experimentalFluidGrid } : {}),
   };
 }
 
@@ -183,6 +186,10 @@ function calibrationProfileFailures(profile, expectedAppVersion) {
 
 function validFluidTier(value) {
   return value === "low" || value === "standard" || value === "high" || value === "ultra" ? value : undefined;
+}
+
+function validExperimentalFluidGrid(value) {
+  return value === "1024x576" || value === "1280x720" ? value : undefined;
 }
 
 function capabilityFingerprint(capability) {

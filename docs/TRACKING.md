@@ -90,6 +90,7 @@ and GitHub issue mapping.
 | G-FG-36 | FG-36 | `npm run fluid:installed-reference-outcomes`; `docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json` | the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU |
 | G-FG-37 | FG-37 | `npm run fluid:installed-reference-pacing`; `docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json` | the real installed Desktop app composes passing FG-36 reference outcomes with smooth calibrated-auto ultra display pacing while exercising concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference scenarios without fluid-tier or userData environment overrides |
 | G-FG-38 | FG-38 | `npm run fluid:high-resolution-headroom`; `docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json` | the packaged Desktop app keeps production runtime selection capped at ultra while benchmark-only explicit high-resolution grids beyond `768 x 432` pass WebGPU grid, bounded pressure-gradient, and localized particle-splash timing, memory, no-readback, and diagnostic thresholds with timestamp-query evidence |
+| G-FG-39 | FG-39 | `npm run fluid:experimental-live-grid`; `docs/evidence/FG-39-experimental-live-grid-2026-06-08.json` | the packaged Desktop app keeps default calibrated capability selection capped at ultra `768 x 432` while an explicit experimental runtime flag drives the live WebGPU renderer at `1024 x 576` with smooth idle and concrete-impact pacing, active pressure/particles/coupling, and no full-grid readback |
 
 ## Tasks
 
@@ -213,6 +214,9 @@ and GitHub issue mapping.
 | FG-38-T01 | FG-38 | Done | compute | `fluidGridGpu`, `fluidShallowWater`, and `fluidParticleSplash` accept explicit benchmark `gridDimensions` while production `fluidGridTiers` and runtime selection remain capped at ultra |
 | FG-38-T02 | FG-38 | Done | verification | `fluidHighResolutionHeadroom.report.ts` launches the packaged app and benchmarks `1024 x 576` and `1280 x 720` WebGPU grid, pressure-gradient shallow-water, and particle-splash workloads with timestamp queries |
 | FG-38-T03 | FG-38 | Done | performance | `npm run fluid:high-resolution-headroom` passes with benchmark-only grids larger than ultra, bounded p95 GPU timing, bounded wall timing, memory below local storage limits, no full-grid readback, and committed evidence |
+| FG-39-T01 | FG-39 | Done | renderer | `electron/main.cjs` accepts only benchmark-approved `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` values and `OceanPhysicsApp` passes the parsed runtime grid override into `createFluidWaterRenderer` |
+| FG-39-T02 | FG-39 | Done | verification | `fluidExperimentalLiveGrid.report.ts` launches the packaged app with `OCEAN_LAB_FLUID_TIER=ultra` and `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID=1024x576`, then waits for the canvas to report a live `1024 x 576` WebGPU grid |
+| FG-39-T03 | FG-39 | Done | performance | `npm run fluid:experimental-live-grid` passes with smooth idle and concrete-impact display pacing on the live high-resolution grid plus committed FG-39 evidence |
 
 ## GitHub Labels
 
@@ -267,6 +271,7 @@ and GitHub issue mapping.
 | FG-36 | https://github.com/AC-21/ocean/issues/39 |
 | FG-37 | https://github.com/AC-21/ocean/issues/40 |
 | FG-38 | https://github.com/AC-21/ocean/issues/41 |
+| FG-39 | https://github.com/AC-21/ocean/issues/42 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
@@ -274,6 +279,6 @@ and GitHub issue mapping.
 Remote `origin` is configured as `https://github.com/AC-21/ocean.git`, and
 local `main` tracks `origin/main`.
 
-The `gh` CLI still reports invalid account tokens, so use Git credential-backed
-`git push` or re-authenticate with `gh auth login -h github.com` before using
-`gh issue`, `gh pr`, or `gh api` commands locally.
+The `gh` CLI can create and close issues for this repo in the current local
+session; use Git credential-backed `git push` for commits and `gh issue` for
+milestone gate tracking.
