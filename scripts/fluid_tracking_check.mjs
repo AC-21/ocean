@@ -32,6 +32,7 @@ const requiredFiles = [
   "docs/evidence/FG-24-persisted-calibration-2026-06-08.json",
   "docs/evidence/FG-25-installed-calibration-2026-06-08.json",
   "docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
+  "docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -60,6 +61,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledDisplayPacing.ts",
   "src/fluid/fluidInstalledDisplayPacing.report.ts",
   "src/fluid/fluidInstalledDisplayPacing.test.ts",
+  "src/fluid/fluidCalibrationFreshness.ts",
+  "src/fluid/fluidCalibrationFreshness.report.ts",
+  "src/fluid/fluidCalibrationFreshness.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -81,8 +85,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -120,6 +124,9 @@ const installedCalibrationTest = files.get("src/fluid/fluidInstalledCalibration.
 const installedDisplayPacing = files.get("src/fluid/fluidInstalledDisplayPacing.ts") ?? "";
 const installedDisplayPacingReport = files.get("src/fluid/fluidInstalledDisplayPacing.report.ts") ?? "";
 const installedDisplayPacingTest = files.get("src/fluid/fluidInstalledDisplayPacing.test.ts") ?? "";
+const calibrationFreshness = files.get("src/fluid/fluidCalibrationFreshness.ts") ?? "";
+const calibrationFreshnessReport = files.get("src/fluid/fluidCalibrationFreshness.report.ts") ?? "";
+const calibrationFreshnessTest = files.get("src/fluid/fluidCalibrationFreshness.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -165,6 +172,7 @@ const fg23Evidence = files.get("docs/evidence/FG-23-adaptive-tier-2026-06-08.jso
 const fg24Evidence = files.get("docs/evidence/FG-24-persisted-calibration-2026-06-08.json") ?? "";
 const fg25Evidence = files.get("docs/evidence/FG-25-installed-calibration-2026-06-08.json") ?? "";
 const fg26Evidence = files.get("docs/evidence/FG-26-installed-display-pacing-2026-06-08.json") ?? "";
+const fg27Evidence = files.get("docs/evidence/FG-27-calibration-freshness-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1303,7 +1311,7 @@ if (
   !electronMain.includes("calibratedFluidTierFromStorage") ||
   !electronMain.includes("desktopStorageFiles.fluidCalibrationProfile") ||
   !electronMain.includes("ocean-fluid-calibration-profile-v1") ||
-  !electronMain.includes("profile?.pass !== true") ||
+  !electronMain.includes("calibrationProfileFailures(profile, app.getVersion())") ||
   !electronMain.includes("!requestedFluidTier && calibratedFluidTier ? \"auto\"")
 ) {
   errors.push("electron/main.cjs must read and validate the FG-24 persisted calibration profile at startup");
@@ -1529,6 +1537,106 @@ if (
   !fg26Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-26 evidence must record a passing packaged installed-profile display pacing report with calibrated-auto ultra samples");
+}
+
+if (!packageJson.includes("\"fluid:calibration-freshness\"") || !packageJson.includes("src/fluid/fluidCalibrationFreshness.report.ts")) {
+  errors.push("package.json must expose the FG-27 packaged calibration-freshness command");
+}
+
+if (!tracking.includes("FG-27-T03") || !tracking.includes("FG-27-calibration-freshness-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/30")) {
+  errors.push("docs/TRACKING.md must record FG-27 calibration freshness evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-27") ||
+  !contract.includes("G-FG-27") ||
+  !contract.includes("Calibration profile freshness invalidation gate") ||
+  !contract.includes("npm run fluid:calibration-freshness")
+) {
+  errors.push("fluidGridContract.ts must define the FG-27 calibration freshness milestone, gate, and evidence command");
+}
+
+if (
+  !persistedCalibration.includes("appVersion") ||
+  !persistedCalibration.includes("source:") ||
+  !persistedCalibration.includes("validateFluidCalibrationProfile") ||
+  !persistedCalibration.includes("profile appVersion") ||
+  !persistedCalibration.includes("profile source tier")
+) {
+  errors.push("fluidPersistedCalibration.ts must write and validate FG-27 profile provenance");
+}
+
+if (
+  !electronMain.includes("calibrationProfileFailures") ||
+  !electronMain.includes("app.getVersion()") ||
+  !electronMain.includes("profile?.appVersion === expectedAppVersion") ||
+  !electronMain.includes("profile?.source?.adaptiveGate === \"G-FG-23\"") ||
+  !electronMain.includes("profile source tier did not match selected tier")
+) {
+  errors.push("electron/main.cjs must reject stale or malformed calibration profiles before setting calibratedFluidTier");
+}
+
+if (
+  !calibrationFreshness.includes("G-FG-27") ||
+  !calibrationFreshness.includes("validProfileReusedByMainProcess") ||
+  !calibrationFreshness.includes("staleProfileRejectedByMainProcess") ||
+  !calibrationFreshness.includes("stale profile must fail appVersion validation") ||
+  !calibrationFreshness.includes("default-high")
+) {
+  errors.push("fluidCalibrationFreshness.ts must define valid-profile reuse and stale-profile fallback checks");
+}
+
+if (
+  !calibrationFreshnessReport.includes("calibrationProfileForAdaptiveReport") ||
+  !calibrationFreshnessReport.includes("appVersion: \"0.0.0-stale\"") ||
+  !calibrationFreshnessReport.includes("expectedMode: \"calibrated-auto\"") ||
+  !calibrationFreshnessReport.includes("expectedMode: \"default-high\"") ||
+  !calibrationFreshnessReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !calibrationFreshnessReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER")
+) {
+  errors.push("fluidCalibrationFreshness.report.ts must prove current-profile reuse and stale-profile fallback without fluid-tier env vars");
+}
+
+if (
+  !calibrationFreshnessTest.includes("current profile is reused") ||
+  !calibrationFreshnessTest.includes("environment tier inputs") ||
+  !calibrationFreshnessTest.includes("stale profile that still reaches calibrated-auto ultra") ||
+  !calibrationFreshnessTest.includes("G-FG-27")
+) {
+  errors.push("fluidCalibrationFreshness.test.ts must cover FG-27 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-27") ||
+  !remap.includes("calibration-freshness") ||
+  !remap.includes("wrong-app-version") ||
+  !remap.includes("default-high") ||
+  !remap.includes("stale profiles")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-27 calibration freshness gate and evidence");
+}
+
+if (
+  !fg27Evidence.includes("\"gate\": \"G-FG-27\"") ||
+  !fg27Evidence.includes("\"pass\": true") ||
+  !fg27Evidence.includes("\"expectedAppVersion\": \"0.1.0\"") ||
+  !fg27Evidence.includes("\"appVersion\": \"0.1.0\"") ||
+  !fg27Evidence.includes("\"appVersion\": \"0.0.0-stale\"") ||
+  !fg27Evidence.includes("\"validationFailures\": []") ||
+  !fg27Evidence.includes("profile appVersion 0.0.0-stale did not match runtime 0.1.0") ||
+  !fg27Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg27Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg27Evidence.includes("\"validProfileReusedByMainProcess\": true") ||
+  !fg27Evidence.includes("\"staleProfileRejectedByMainProcess\": true") ||
+  !fg27Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg27Evidence.includes("\"mode\": \"default-high\"") ||
+  !fg27Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg27Evidence.includes("\"selectedTier\": \"high\"") ||
+  !fg27Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg27Evidence.includes("\"grid\": \"512x288\"") ||
+  !fg27Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-27 evidence must record a passing packaged calibration freshness report with stale-profile fallback");
 }
 
 if (errors.length > 0) {

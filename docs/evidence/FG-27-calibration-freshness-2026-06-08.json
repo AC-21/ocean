@@ -1,0 +1,95 @@
+{
+  "adaptiveSource": {
+    "gate": "G-FG-23",
+    "pass": true,
+    "recommendation": {
+      "failures": [],
+      "reason": "ultra has measured local headroom and live reference parity",
+      "selectedTier": "ultra",
+      "summary": {
+        "maxEstimatedStorageBytes": 18841600,
+        "maxLiveP95FrameMs": 9.300000000000182,
+        "maxLiveP99FrameMs": 9.399999999999636,
+        "maxUltraGpuP95StepMs": 0.09025,
+        "maxUltraToHighGpuP95Ratio": 2.0687679083094554,
+        "referenceCategories": [
+          "damping",
+          "drop",
+          "float",
+          "sink",
+          "splash"
+        ]
+      }
+    }
+  },
+  "expectedAppVersion": "0.1.0",
+  "failures": [],
+  "gate": "G-FG-27",
+  "generatedAt": "2026-06-08T05:41:11.674Z",
+  "launchMode": "packaged-app",
+  "pass": true,
+  "profiles": {
+    "stale": {
+      "appVersion": "0.0.0-stale",
+      "selectedTier": "ultra",
+      "validationFailures": [
+        "profile appVersion 0.0.0-stale did not match runtime 0.1.0."
+      ]
+    },
+    "valid": {
+      "appVersion": "0.1.0",
+      "selectedTier": "ultra",
+      "validationFailures": []
+    }
+  },
+  "runtime": {
+    "envCalibratedTierPresent": false,
+    "envRequestedTierPresent": false,
+    "staleProfileProbe": {
+      "grid": "512x288",
+      "launchMode": "packaged-app",
+      "renderer": "webgpu-grid-primary-v1",
+      "requestedTier": "default",
+      "selectedGrid": {
+        "cellsX": 512,
+        "cellsY": 288
+      },
+      "selectedTier": "high",
+      "selection": {
+        "mode": "default-high",
+        "preferredTier": "high",
+        "reason": "default high tier until local calibration is available",
+        "requestedTier": "default"
+      },
+      "tier": "high",
+      "waterContext": "webgpu",
+      "waterFrames": 13
+    },
+    "validProfileProbe": {
+      "grid": "768x432",
+      "launchMode": "packaged-app",
+      "renderer": "webgpu-grid-primary-v1",
+      "requestedTier": "auto",
+      "selectedGrid": {
+        "cellsX": 768,
+        "cellsY": 432
+      },
+      "selectedTier": "ultra",
+      "selection": {
+        "calibratedTier": "ultra",
+        "mode": "calibrated-auto",
+        "preferredTier": "ultra",
+        "reason": "local calibration selected tier",
+        "requestedTier": "auto"
+      },
+      "tier": "ultra",
+      "waterContext": "webgpu",
+      "waterFrames": 12
+    }
+  },
+  "storage": {
+    "fileName": "fluid-calibration.v1.json",
+    "staleProfileRejectedByMainProcess": true,
+    "validProfileReusedByMainProcess": true
+  }
+}

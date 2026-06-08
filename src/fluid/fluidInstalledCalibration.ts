@@ -2,6 +2,7 @@ import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./f
 import type { FluidGridTierId } from "./fluidGridContract";
 import {
   calibrationProfileForAdaptiveReport,
+  validateFluidCalibrationProfile,
   type FluidCalibrationProfile,
 } from "./fluidPersistedCalibration";
 
@@ -42,6 +43,7 @@ export type FluidInstalledCalibrationReport = {
 
 export type InstallFluidCalibrationProfileOptions = {
   adaptiveSource: FluidAdaptiveTierReport;
+  appVersion?: string;
   fileName: string;
   generatedAt?: string;
   storage: FluidCalibrationTextStorage;
@@ -63,7 +65,7 @@ export async function installFluidCalibrationProfile(
   options: InstallFluidCalibrationProfileOptions
 ): Promise<FluidCalibrationInstallReceipt> {
   const installedAt = options.generatedAt ?? new Date().toISOString();
-  const installedProfile = calibrationProfileForAdaptiveReport(options.adaptiveSource, installedAt);
+  const installedProfile = calibrationProfileForAdaptiveReport(options.adaptiveSource, installedAt, { appVersion: options.appVersion });
   const serializedProfile = `${JSON.stringify(installedProfile, null, 2)}\n`;
   await options.storage.writeText(options.fileName, serializedProfile);
   const persistedRaw = await options.storage.readText(options.fileName);
@@ -122,14 +124,7 @@ export function createFluidInstalledCalibrationReport(options: FluidInstalledCal
 }
 
 function profileFailures(profile: FluidCalibrationProfile): string[] {
-  return [
-    ...(profile.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["installed profile schema was invalid."]),
-    ...(profile.sourceGate === "G-FG-23" && profile.pass ? [] : ["installed profile must come from passing FG-23 evidence."]),
-    ...(profile.selectedTier === "ultra" ? [] : [`installed profile selected ${profile.selectedTier}, expected ultra.`]),
-    ...(profile.summary.maxLiveP95FrameMs !== null ? [] : ["installed profile is missing live frame-pacing summary."]),
-    ...(profile.summary.maxUltraGpuP95StepMs !== null ? [] : ["installed profile is missing ultra GPU timing summary."]),
-    ...(profile.summary.maxUltraToHighGpuP95Ratio !== null ? [] : ["installed profile is missing ultra/high timing ratio summary."]),
-  ];
+  return validateFluidCalibrationProfile(profile).map((failure) => `installed ${failure}`);
 }
 
 function runtimeProbeFailures(label: string, probe: FluidAdaptiveTierRuntimeProbe, expectedTier: FluidGridTierId): string[] {

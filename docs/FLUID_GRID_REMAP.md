@@ -741,6 +741,29 @@ Latest installed-display-pacing evidence:
   p95/p99 frame pacing.
 - Gate: passed.
 
+FG-27 is complete as of 2026-06-08. It closes a trust gap in the local
+calibration path. A copied or stale `fluid-calibration.v1.json` should not be
+able to silently select the high-resolution calibrated tier. Profiles now carry
+the packaged app version plus FG-23 source-evidence provenance, and Electron
+rejects missing, failed, malformed, or wrong-app-version profiles before
+passing `calibratedFluidTier` into the renderer.
+
+Latest calibration-freshness evidence:
+
+- Command: `npm run fluid:calibration-freshness`.
+- Runtime: packaged macOS app with no `OCEAN_LAB_FLUID_TIER` and no
+  `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-27`.
+- Evidence snapshot:
+  `docs/evidence/FG-27-calibration-freshness-2026-06-08.json`.
+- Current profile proof: `appVersion` matches the packaged app, source gate is
+  `G-FG-23`, validation failures are empty, runtime mode is `calibrated-auto`,
+  and selected tier/grid are `ultra` at `768 x 432`.
+- Stale profile proof: app-version validation fails, Electron does not pass a
+  calibrated tier, runtime mode is `default-high`, and selected tier/grid fall
+  back to `high` at `512 x 288`.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -831,6 +854,9 @@ Latest installed-display-pacing evidence:
     foam-damping scenarios, requiring calibrated-auto ultra sample provenance
     plus smooth frame pacing, long-task, pressure, particle, coupling, and
     fixed-step telemetry.
+28. Calibration freshness invalidation: persist app-version and source-evidence
+    provenance with the local profile, then prove Electron reuses only current
+    profiles and rejects stale profiles before selecting calibrated-auto.
 
 ## Resolution Ladder
 

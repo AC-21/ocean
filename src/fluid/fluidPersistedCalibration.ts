@@ -3,11 +3,19 @@ import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./f
 
 export type FluidPersistedCalibrationGate = "G-FG-24";
 
+export const defaultCalibrationProfileAppVersion = "0.1.0";
+
 export type FluidCalibrationProfile = {
+  appVersion: string;
   generatedAt: string;
   pass: boolean;
   schema: "ocean-fluid-calibration-profile-v1";
   selectedTier: FluidGridTierId;
+  source: {
+    adaptiveGeneratedAt: string;
+    adaptiveGate: "G-FG-23";
+    selectedTier: FluidGridTierId;
+  };
   sourceGate: "G-FG-23";
   summary: {
     maxLiveP95FrameMs: number | null;
@@ -43,15 +51,26 @@ export type FluidPersistedCalibrationOptions = {
   runtimeProbe: FluidAdaptiveTierRuntimeProbe;
 };
 
+export type FluidCalibrationProfileValidationOptions = {
+  expectedAppVersion?: string;
+};
+
 export function calibrationProfileForAdaptiveReport(
   adaptiveReport: FluidAdaptiveTierReport,
-  generatedAt = new Date().toISOString()
+  generatedAt = new Date().toISOString(),
+  options: { appVersion?: string } = {}
 ): FluidCalibrationProfile {
   return {
+    appVersion: options.appVersion ?? defaultCalibrationProfileAppVersion,
     generatedAt,
     pass: adaptiveReport.pass,
     schema: "ocean-fluid-calibration-profile-v1",
     selectedTier: adaptiveReport.recommendation.selectedTier,
+    source: {
+      adaptiveGeneratedAt: adaptiveReport.generatedAt,
+      adaptiveGate: "G-FG-23",
+      selectedTier: adaptiveReport.recommendation.selectedTier,
+    },
     sourceGate: "G-FG-23",
     summary: {
       maxLiveP95FrameMs: adaptiveReport.recommendation.summary.maxLiveP95FrameMs,
@@ -61,13 +80,40 @@ export function calibrationProfileForAdaptiveReport(
   };
 }
 
+export function validateFluidCalibrationProfile(
+  profile: FluidCalibrationProfile,
+  options: FluidCalibrationProfileValidationOptions = {}
+): string[] {
+  return [
+    ...(profile.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid."]),
+    ...(profile.pass === true ? [] : ["profile must be marked passing."]),
+    ...(profile.sourceGate === "G-FG-23" ? [] : ["profile must come from FG-23 evidence."]),
+    ...(profile.source?.adaptiveGate === "G-FG-23" ? [] : ["profile source must record adaptive gate G-FG-23."]),
+    ...(typeof profile.source?.adaptiveGeneratedAt === "string" && profile.source.adaptiveGeneratedAt.length > 0
+      ? []
+      : ["profile source must record adaptive evidence timestamp."]),
+    ...(profile.source?.selectedTier === profile.selectedTier
+      ? []
+      : [`profile source tier was ${profile.source?.selectedTier ?? "missing"}, expected ${profile.selectedTier}.`]),
+    ...(profile.selectedTier === "low" || profile.selectedTier === "standard" || profile.selectedTier === "high" || profile.selectedTier === "ultra"
+      ? []
+      : [`profile selected invalid tier ${String(profile.selectedTier)}.`]),
+    ...(typeof profile.appVersion === "string" && profile.appVersion.length > 0 ? [] : ["profile must record appVersion."]),
+    ...(options.expectedAppVersion === undefined || profile.appVersion === options.expectedAppVersion
+      ? []
+      : [`profile appVersion ${profile.appVersion} did not match runtime ${options.expectedAppVersion}.`]),
+    ...(profile.selectedTier === "ultra" ? [] : [`profile selected ${profile.selectedTier}, expected ultra.`]),
+    ...(profile.summary.maxLiveP95FrameMs !== null ? [] : ["profile is missing live frame-pacing summary."]),
+    ...(profile.summary.maxUltraGpuP95StepMs !== null ? [] : ["profile is missing ultra GPU timing summary."]),
+    ...(profile.summary.maxUltraToHighGpuP95Ratio !== null ? [] : ["profile is missing ultra/high timing ratio summary."]),
+  ];
+}
+
 export function createFluidPersistedCalibrationReport(options: FluidPersistedCalibrationOptions): FluidPersistedCalibrationReport {
   const failures = [
     ...(options.launchMode === "packaged-app" ? [] : [`launch mode must be packaged-app, got ${options.launchMode}`]),
     ...(options.adaptiveSource.gate === "G-FG-23" && options.adaptiveSource.pass ? [] : ["adaptive source must be a passing FG-23 report."]),
-    ...(options.profile.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid."]),
-    ...(options.profile.sourceGate === "G-FG-23" && options.profile.pass ? [] : ["profile must come from passing FG-23 evidence."]),
-    ...(options.profile.selectedTier === "ultra" ? [] : [`profile selected ${options.profile.selectedTier}, expected ultra.`]),
+    ...validateFluidCalibrationProfile(options.profile),
     ...(options.envCalibratedTierPresent ? ["OCEAN_LAB_CALIBRATED_FLUID_TIER must be absent for the persisted calibration gate."] : []),
     ...(options.runtimeProbe.launchMode === "packaged-app" ? [] : [`runtime launch mode was ${options.runtimeProbe.launchMode}`]),
     ...(options.runtimeProbe.requestedTier === "auto" ? [] : [`runtime requested tier was ${options.runtimeProbe.requestedTier}`]),

@@ -1,110 +1,81 @@
 import { describe, expect, it } from "vitest";
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
 import {
+  createFluidCalibrationFreshnessReport,
+} from "./fluidCalibrationFreshness";
+import {
   calibrationProfileForAdaptiveReport,
-  createFluidPersistedCalibrationReport,
-  validateFluidCalibrationProfile,
   type FluidCalibrationProfile,
 } from "./fluidPersistedCalibration";
 
-describe("persisted fluid calibration gate", () => {
-  it("creates a strict persisted profile from passing adaptive tier evidence", () => {
-    const profile = calibrationProfileForAdaptiveReport(adaptiveReport(), "2026-06-08T00:00:00.000Z");
-
-    expect(profile).toMatchObject({
-      appVersion: "0.1.0",
-      pass: true,
-      schema: "ocean-fluid-calibration-profile-v1",
-      selectedTier: "ultra",
-      source: {
-        adaptiveGeneratedAt: "2026-06-08T00:00:00.000Z",
-        adaptiveGate: "G-FG-23",
-        selectedTier: "ultra",
-      },
-      sourceGate: "G-FG-23",
-    });
-    expect(profile.summary.maxUltraGpuP95StepMs).toBe(0.09025);
-  });
-
-  it("validates app-version and source provenance before a profile can be trusted", () => {
-    const profile = calibrationProfileForAdaptiveReport(adaptiveReport(), "2026-06-08T00:00:00.000Z", {
-      appVersion: "0.1.0",
-    });
-
-    expect(validateFluidCalibrationProfile(profile, { expectedAppVersion: "0.1.0" })).toEqual([]);
-    expect(validateFluidCalibrationProfile({ ...profile, appVersion: "0.0.0-stale" }, { expectedAppVersion: "0.1.0" }).join(" ")).toContain(
-      "did not match"
-    );
-    expect(
-      validateFluidCalibrationProfile(
-        {
-          ...profile,
-          source: { ...profile.source, selectedTier: "high" },
-        },
-        { expectedAppVersion: "0.1.0" }
-      ).join(" ")
-    ).toContain("source tier");
-  });
-
-  it("passes when packaged runtime uses the saved profile without an env calibrated tier", () => {
+describe("fluid calibration freshness gate", () => {
+  it("passes when a current profile is reused and a stale profile falls back", () => {
     const adaptive = adaptiveReport();
-    const profile = calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z");
-    const report = createFluidPersistedCalibrationReport({
+    const report = createFluidCalibrationFreshnessReport({
       adaptiveSource: adaptive,
       envCalibratedTierPresent: false,
+      envRequestedTierPresent: false,
+      expectedAppVersion: "0.1.0",
       fileName: "fluid-calibration.v1.json",
       generatedAt: "2026-06-08T00:00:00.000Z",
       launchMode: "packaged-app",
-      profile,
-      runtimeProbe: runtimeProbe(),
+      staleProfile: profileFor(adaptive, "0.0.0-stale"),
+      staleProfileProbe: staleProbe(),
+      validProfile: profileFor(adaptive, "0.1.0"),
+      validProfileProbe: validProbe(),
     });
 
     expect(report.pass).toBe(true);
-    expect(report.gate).toBe("G-FG-24");
-    expect(report.storage.readByMainProcess).toBe(true);
+    expect(report.gate).toBe("G-FG-27");
+    expect(report.storage.validProfileReusedByMainProcess).toBe(true);
+    expect(report.storage.staleProfileRejectedByMainProcess).toBe(true);
   });
 
-  it("rejects an env-provided calibrated tier because the persisted gate must prove app-owned state", () => {
+  it("rejects freshness evidence that relies on environment tier inputs", () => {
     const adaptive = adaptiveReport();
-    const report = createFluidPersistedCalibrationReport({
+    const report = createFluidCalibrationFreshnessReport({
       adaptiveSource: adaptive,
       envCalibratedTierPresent: true,
+      envRequestedTierPresent: true,
+      expectedAppVersion: "0.1.0",
       fileName: "fluid-calibration.v1.json",
       launchMode: "packaged-app",
-      profile: calibrationProfileForAdaptiveReport(adaptive),
-      runtimeProbe: runtimeProbe(),
+      staleProfile: profileFor(adaptive, "0.0.0-stale"),
+      staleProfileProbe: staleProbe(),
+      validProfile: profileFor(adaptive, "0.1.0"),
+      validProfileProbe: validProbe(),
     });
 
     expect(report.pass).toBe(false);
-    expect(report.failures.join(" ")).toContain("must be absent");
+    expect(report.failures.join(" ")).toContain("OCEAN_LAB_CALIBRATED_FLUID_TIER must be absent");
+    expect(report.failures.join(" ")).toContain("OCEAN_LAB_FLUID_TIER must be absent");
   });
 
-  it("rejects a runtime that ignores the saved profile and falls back to high", () => {
+  it("rejects a stale profile that still reaches calibrated-auto ultra", () => {
     const adaptive = adaptiveReport();
-    const report = createFluidPersistedCalibrationReport({
+    const report = createFluidCalibrationFreshnessReport({
       adaptiveSource: adaptive,
       envCalibratedTierPresent: false,
+      envRequestedTierPresent: false,
+      expectedAppVersion: "0.1.0",
       fileName: "fluid-calibration.v1.json",
       launchMode: "packaged-app",
-      profile: calibrationProfileForAdaptiveReport(adaptive),
-      runtimeProbe: {
-        ...runtimeProbe(),
-        selectedGrid: { cellsX: 512, cellsY: 288 },
-        selectedTier: "high",
-        selection: {
-          mode: "auto-fallback-high",
-          preferredTier: "high",
-          reason: "auto requested without valid calibration",
-          requestedTier: "auto",
-        },
-      },
+      staleProfile: profileFor(adaptive, "0.0.0-stale"),
+      staleProfileProbe: validProbe(),
+      validProfile: profileFor(adaptive, "0.1.0"),
+      validProfileProbe: validProbe(),
     });
 
     expect(report.pass).toBe(false);
-    expect(report.failures.join(" ")).toContain("runtime selection mode");
-    expect(report.failures.join(" ")).toContain("runtime selected tier");
+    expect(report.failures.join(" ")).toContain("stale profile requested tier");
+    expect(report.failures.join(" ")).toContain("stale profile selection mode");
+    expect(report.failures.join(" ")).toContain("stale profile selected tier");
   });
 });
+
+function profileFor(adaptive: FluidAdaptiveTierReport, appVersion: string): FluidCalibrationProfile {
+  return calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z", { appVersion });
+}
 
 function adaptiveReport(): FluidAdaptiveTierReport {
   return {
@@ -125,7 +96,7 @@ function adaptiveReport(): FluidAdaptiveTierReport {
         referenceCategories: ["damping", "drop", "float", "sink", "splash"],
       },
     },
-    runtimeProbe: runtimeProbe(),
+    runtimeProbe: validProbe(),
     sources: {
       resolutionScaling: {
         gate: "G-FG-20",
@@ -178,7 +149,7 @@ function adaptiveReport(): FluidAdaptiveTierReport {
   };
 }
 
-function runtimeProbe(): FluidAdaptiveTierRuntimeProbe {
+function validProbe(): FluidAdaptiveTierRuntimeProbe {
   return {
     grid: "768x432",
     launchMode: "packaged-app",
@@ -194,6 +165,26 @@ function runtimeProbe(): FluidAdaptiveTierRuntimeProbe {
       requestedTier: "auto",
     },
     tier: "ultra",
+    waterContext: "webgpu",
+    waterFrames: 20,
+  };
+}
+
+function staleProbe(): FluidAdaptiveTierRuntimeProbe {
+  return {
+    grid: "512x288",
+    launchMode: "packaged-app",
+    renderer: "webgpu-grid-primary-v1",
+    requestedTier: "default",
+    selectedGrid: { cellsX: 512, cellsY: 288 },
+    selectedTier: "high",
+    selection: {
+      mode: "default-high",
+      preferredTier: "high",
+      reason: "default high tier until local calibration is available",
+      requestedTier: "default",
+    },
+    tier: "high",
     waterContext: "webgpu",
     waterFrames: 20,
   };

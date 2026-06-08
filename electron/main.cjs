@@ -104,12 +104,25 @@ async function calibratedFluidTierFromStorage() {
     const raw = await storage.readText(desktopStorageFiles.fluidCalibrationProfile);
     if (!raw) return undefined;
     const profile = JSON.parse(raw);
-    if (profile?.schema !== "ocean-fluid-calibration-profile-v1") return undefined;
-    if (profile?.pass !== true) return undefined;
+    if (calibrationProfileFailures(profile, app.getVersion()).length > 0) return undefined;
     return validFluidTier(profile?.selectedTier);
   } catch {
     return undefined;
   }
+}
+
+function calibrationProfileFailures(profile, expectedAppVersion) {
+  const selectedTier = validFluidTier(profile?.selectedTier);
+  return [
+    ...(profile?.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid"]),
+    ...(profile?.pass === true ? [] : ["profile did not pass"]),
+    ...(profile?.sourceGate === "G-FG-23" ? [] : ["profile source gate was invalid"]),
+    ...(profile?.source?.adaptiveGate === "G-FG-23" ? [] : ["profile adaptive source gate was invalid"]),
+    ...(typeof profile?.source?.adaptiveGeneratedAt === "string" && profile.source.adaptiveGeneratedAt.length > 0 ? [] : ["profile adaptive source timestamp was missing"]),
+    ...(profile?.source?.selectedTier === profile?.selectedTier ? [] : ["profile source tier did not match selected tier"]),
+    ...(selectedTier ? [] : ["profile selected tier was invalid"]),
+    ...(profile?.appVersion === expectedAppVersion ? [] : ["profile app version did not match runtime"]),
+  ];
 }
 
 function validFluidTier(value) {

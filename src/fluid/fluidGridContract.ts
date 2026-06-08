@@ -27,7 +27,8 @@ export type FluidGridMilestoneId =
   | "FG-23"
   | "FG-24"
   | "FG-25"
-  | "FG-26";
+  | "FG-26"
+  | "FG-27";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -56,7 +57,8 @@ export type FluidGridGateId =
   | "G-FG-23"
   | "G-FG-24"
   | "G-FG-25"
-  | "G-FG-26";
+  | "G-FG-26"
+  | "G-FG-27";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -150,6 +152,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-24", title: "Persisted local calibration profile runtime gate", gate: "G-FG-24" },
   { id: "FG-25", title: "Installed local calibration profile reuse gate", gate: "G-FG-25" },
   { id: "FG-26", title: "Installed calibration display pacing gate", gate: "G-FG-26" },
+  { id: "FG-27", title: "Calibration profile freshness invalidation gate", gate: "G-FG-27" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -332,6 +335,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:installed-display-pacing and docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
     passBar:
       "the normal installed-profile startup path selects calibrated-auto ultra without fluid-tier environment variables and sustains smooth idle, concrete-impact, and foam-damping display pacing with WebGPU pressure, particles, object-grid coupling, fixed-step debt, and long-task telemetry",
+  },
+  {
+    id: "G-FG-27",
+    blocks: "FG-27",
+    evidence: "npm run fluid:calibration-freshness and docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
+    passBar:
+      "calibration profiles include app-version and FG-23 source provenance; Electron reuses the current profile for calibrated-auto ultra but rejects a stale app-version profile and falls back to default high without fluid-tier environment variables",
   },
 ];
 
@@ -963,6 +973,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close the installed display pacing gate",
     exitProof:
       "npm run fluid:installed-display-pacing passes with calibrated-auto ultra samples, selected grid 768 x 432, WebGPU renderer, smooth frame pacing, and committed FG-26 evidence",
+  },
+  {
+    id: "FG-27-T01",
+    milestone: "FG-27",
+    status: "done",
+    title: "Add calibration profile provenance",
+    exitProof:
+      "fluidPersistedCalibration.ts writes appVersion plus FG-23 source evidence into ocean-fluid-calibration-profile-v1 profiles and validates that provenance",
+  },
+  {
+    id: "FG-27-T02",
+    milestone: "FG-27",
+    status: "done",
+    title: "Reject stale calibration profiles during Electron startup",
+    exitProof:
+      "electron/main.cjs refuses missing, failed, malformed, or wrong-app-version calibration profiles before setting calibratedFluidTier",
+  },
+  {
+    id: "FG-27-T03",
+    milestone: "FG-27",
+    status: "done",
+    title: "Verify valid and stale profile runtime behavior",
+    exitProof:
+      "npm run fluid:calibration-freshness passes with a current profile selecting calibrated-auto ultra and a stale app-version profile falling back to default high",
   },
 ];
 
