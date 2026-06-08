@@ -4,12 +4,14 @@ import {
   createFluidInstalledCalibrationReport,
   installFluidCalibrationProfile,
 } from "./fluidInstalledCalibration";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 
 describe("installed fluid calibration gate", () => {
   it("installs a profile through app-owned desktop storage", async () => {
     const writes = new Map<string, string>();
     const receipt = await installFluidCalibrationProfile({
       adaptiveSource: adaptiveReport(),
+      capabilitySource: capabilityReport(),
       fileName: "fluid-calibration.v1.json",
       generatedAt: "2026-06-08T00:00:00.000Z",
       storage: {
@@ -92,6 +94,7 @@ async function receiptFor(adaptive: FluidAdaptiveTierReport) {
   let saved = "";
   return installFluidCalibrationProfile({
     adaptiveSource: adaptive,
+    capabilitySource: capabilityReport(),
     fileName: "fluid-calibration.v1.json",
     generatedAt: "2026-06-08T00:00:00.000Z",
     storage: {
@@ -194,6 +197,30 @@ function runtimeProbe(): FluidAdaptiveTierRuntimeProbe {
     tier: "ultra",
     waterContext: "webgpu",
     waterFrames: 20,
+  };
+}
+
+function capabilityReport(): FluidCapabilityReport {
+  return {
+    adapterInfo: "apple / metal-3",
+    adapterName: "apple / metal-3",
+    backend: "webgpu-compute",
+    fallbackReason: null,
+    features: ["timestamp-query", "shader-f16"],
+    forbiddenProductionRenderers: ["canvas-2d", "per-pixel-cpu-water-draw", "visual-only-water"],
+    generatedAt: "2026-06-07T19:51:23.844Z",
+    grid: { cellsX: 512, cellsY: 288, estimatedBytes: 4_718_592, tier: "high" },
+    limits: {
+      maxBufferSize: 268_435_456,
+      maxComputeInvocationsPerWorkgroup: 256,
+      maxComputeWorkgroupSizeX: 256,
+      maxComputeWorkgroupSizeY: 256,
+      maxComputeWorkgroupsPerDimension: 65_535,
+      maxStorageBufferBindingSize: 134_217_728,
+    },
+    requiredBrowserApis: ["navigator.gpu", "GPUDevice", "GPUComputePassEncoder"],
+    selectedTier: "high",
+    status: "webgpu-ready",
   };
 }
 

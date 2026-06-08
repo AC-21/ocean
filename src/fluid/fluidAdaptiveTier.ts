@@ -5,7 +5,7 @@ import type { FluidUltraRendererReport } from "./fluidUltraRenderer";
 
 export type FluidAdaptiveTierGate = "G-FG-23";
 export type FluidRuntimeTierRequest = FluidGridTierId | "auto" | "default";
-export type FluidRuntimeTierSelectionMode = "auto-fallback-high" | "calibrated-auto" | "default-high" | "explicit";
+export type FluidRuntimeTierSelectionMode = "auto-fallback-high" | "calibrated-auto" | "calibration-provenance-fallback-high" | "default-high" | "explicit";
 
 export type FluidRuntimeTierSelection = {
   calibratedTier?: FluidGridTierId;
@@ -122,6 +122,28 @@ export function fluidRuntimeTierSelectionFromSearch(search: string): FluidRuntim
     preferredTier: "high",
     reason: "default high tier until local calibration is available",
     requestedTier: "default",
+  };
+}
+
+export function calibratedFluidCapabilityFingerprintFromSearch(search: string): string | null {
+  const fingerprint = new URLSearchParams(search).get("calibratedFluidFingerprint");
+  return fingerprint && fingerprint.length > 0 ? fingerprint : null;
+}
+
+export function fluidRuntimeTierSelectionForCapabilityProvenance(
+  selection: FluidRuntimeTierSelection,
+  liveFingerprint: string,
+  expectedFingerprint: string | null
+): FluidRuntimeTierSelection {
+  if (selection.mode !== "calibrated-auto" || !expectedFingerprint || liveFingerprint === expectedFingerprint) {
+    return selection;
+  }
+  return {
+    calibratedTier: selection.calibratedTier,
+    mode: "calibration-provenance-fallback-high",
+    preferredTier: "high",
+    reason: "local calibration profile WebGPU capability provenance did not match this runtime",
+    requestedTier: selection.requestedTier,
   };
 }
 

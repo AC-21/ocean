@@ -2,7 +2,13 @@ import { describe, expect, it } from "vitest";
 import type { FluidResolutionScalingReport } from "./fluidResolutionScaling";
 import type { FluidUltraReferenceOutcomesReport } from "./fluidUltraReferenceOutcomes";
 import type { FluidUltraRendererReport } from "./fluidUltraRenderer";
-import { createFluidAdaptiveTierReport, fluidRuntimeTierSelectionFromSearch, recommendAdaptiveFluidTier } from "./fluidAdaptiveTier";
+import {
+  calibratedFluidCapabilityFingerprintFromSearch,
+  createFluidAdaptiveTierReport,
+  fluidRuntimeTierSelectionForCapabilityProvenance,
+  fluidRuntimeTierSelectionFromSearch,
+  recommendAdaptiveFluidTier,
+} from "./fluidAdaptiveTier";
 
 describe("adaptive fluid tier calibration", () => {
   it("keeps explicit tier overrides ahead of calibrated auto recommendations", () => {
@@ -14,11 +20,25 @@ describe("adaptive fluid tier calibration", () => {
   });
 
   it("uses the calibrated tier when auto tier selection is requested", () => {
-    const selection = fluidRuntimeTierSelectionFromSearch("?fluidTier=auto&calibratedFluidTier=ultra");
+    const selection = fluidRuntimeTierSelectionFromSearch("?fluidTier=auto&calibratedFluidTier=ultra&calibratedFluidFingerprint=adapter:apple");
 
     expect(selection.mode).toBe("calibrated-auto");
     expect(selection.preferredTier).toBe("ultra");
     expect(selection.requestedTier).toBe("auto");
+    expect(calibratedFluidCapabilityFingerprintFromSearch("?fluidTier=auto&calibratedFluidTier=ultra&calibratedFluidFingerprint=adapter:apple")).toBe(
+      "adapter:apple"
+    );
+  });
+
+  it("falls back to high when calibrated profile capability provenance does not match the live runtime", () => {
+    const selection = fluidRuntimeTierSelectionFromSearch("?fluidTier=auto&calibratedFluidTier=ultra");
+    const fallback = fluidRuntimeTierSelectionForCapabilityProvenance(selection, "adapter:apple", "adapter:external");
+
+    expect(fallback.mode).toBe("calibration-provenance-fallback-high");
+    expect(fallback.preferredTier).toBe("high");
+    expect(fallback.calibratedTier).toBe("ultra");
+    expect(fallback.requestedTier).toBe("auto");
+    expect(fluidRuntimeTierSelectionForCapabilityProvenance(selection, "adapter:apple", "adapter:apple")).toBe(selection);
   });
 
   it("falls back to high when auto is requested without valid calibration", () => {

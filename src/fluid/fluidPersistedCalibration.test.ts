@@ -6,13 +6,22 @@ import {
   validateFluidCalibrationProfile,
   type FluidCalibrationProfile,
 } from "./fluidPersistedCalibration";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 
 describe("persisted fluid calibration gate", () => {
   it("creates a strict persisted profile from passing adaptive tier evidence", () => {
-    const profile = calibrationProfileForAdaptiveReport(adaptiveReport(), "2026-06-08T00:00:00.000Z");
+    const profile = calibrationProfileForAdaptiveReport(adaptiveReport(), "2026-06-08T00:00:00.000Z", {
+      capabilityReport: capabilityReport(),
+    });
 
     expect(profile).toMatchObject({
       appVersion: "0.1.0",
+      capability: {
+        adapterInfo: "apple / metal-3",
+        backend: "webgpu-compute",
+        sourceGate: "G-FG-01",
+        status: "webgpu-ready",
+      },
       pass: true,
       schema: "ocean-fluid-calibration-profile-v1",
       selectedTier: "ultra",
@@ -29,6 +38,7 @@ describe("persisted fluid calibration gate", () => {
   it("validates app-version and source provenance before a profile can be trusted", () => {
     const profile = calibrationProfileForAdaptiveReport(adaptiveReport(), "2026-06-08T00:00:00.000Z", {
       appVersion: "0.1.0",
+      capabilityReport: capabilityReport(),
     });
 
     expect(validateFluidCalibrationProfile(profile, { expectedAppVersion: "0.1.0" })).toEqual([]);
@@ -44,11 +54,22 @@ describe("persisted fluid calibration gate", () => {
         { expectedAppVersion: "0.1.0" }
       ).join(" ")
     ).toContain("source tier");
+    expect(
+      validateFluidCalibrationProfile(
+        {
+          ...profile,
+          capability: { ...profile.capability, adapterInfo: "external / copied-profile" },
+        },
+        { expectedAppVersion: "0.1.0" }
+      ).join(" ")
+    ).toContain("capability fingerprint");
   });
 
   it("passes when packaged runtime uses the saved profile without an env calibrated tier", () => {
     const adaptive = adaptiveReport();
-    const profile = calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z");
+    const profile = calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z", {
+      capabilityReport: capabilityReport(),
+    });
     const report = createFluidPersistedCalibrationReport({
       adaptiveSource: adaptive,
       envCalibratedTierPresent: false,
@@ -71,7 +92,7 @@ describe("persisted fluid calibration gate", () => {
       envCalibratedTierPresent: true,
       fileName: "fluid-calibration.v1.json",
       launchMode: "packaged-app",
-      profile: calibrationProfileForAdaptiveReport(adaptive),
+      profile: calibrationProfileForAdaptiveReport(adaptive, undefined, { capabilityReport: capabilityReport() }),
       runtimeProbe: runtimeProbe(),
     });
 
@@ -86,7 +107,7 @@ describe("persisted fluid calibration gate", () => {
       envCalibratedTierPresent: false,
       fileName: "fluid-calibration.v1.json",
       launchMode: "packaged-app",
-      profile: calibrationProfileForAdaptiveReport(adaptive),
+      profile: calibrationProfileForAdaptiveReport(adaptive, undefined, { capabilityReport: capabilityReport() }),
       runtimeProbe: {
         ...runtimeProbe(),
         selectedGrid: { cellsX: 512, cellsY: 288 },
@@ -196,5 +217,34 @@ function runtimeProbe(): FluidAdaptiveTierRuntimeProbe {
     tier: "ultra",
     waterContext: "webgpu",
     waterFrames: 20,
+  };
+}
+
+function capabilityReport(): FluidCapabilityReport {
+  return {
+    adapterInfo: "apple / metal-3",
+    adapterName: "apple / metal-3",
+    backend: "webgpu-compute",
+    fallbackReason: null,
+    features: ["timestamp-query", "shader-f16"],
+    forbiddenProductionRenderers: ["canvas-2d", "per-pixel-cpu-water-draw", "visual-only-water"],
+    generatedAt: "2026-06-07T19:51:23.844Z",
+    grid: {
+      cellsX: 512,
+      cellsY: 288,
+      estimatedBytes: 4_718_592,
+      tier: "high",
+    },
+    limits: {
+      maxBufferSize: 268_435_456,
+      maxComputeInvocationsPerWorkgroup: 256,
+      maxComputeWorkgroupSizeX: 256,
+      maxComputeWorkgroupSizeY: 256,
+      maxComputeWorkgroupsPerDimension: 65_535,
+      maxStorageBufferBindingSize: 134_217_728,
+    },
+    requiredBrowserApis: ["navigator.gpu", "GPUDevice", "GPUComputePassEncoder"],
+    selectedTier: "high",
+    status: "webgpu-ready",
   };
 }

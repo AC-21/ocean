@@ -33,6 +33,7 @@ const requiredFiles = [
   "docs/evidence/FG-25-installed-calibration-2026-06-08.json",
   "docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
   "docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
+  "docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -64,6 +65,9 @@ const requiredFiles = [
   "src/fluid/fluidCalibrationFreshness.ts",
   "src/fluid/fluidCalibrationFreshness.report.ts",
   "src/fluid/fluidCalibrationFreshness.test.ts",
+  "src/fluid/fluidCalibrationProvenance.ts",
+  "src/fluid/fluidCalibrationProvenance.report.ts",
+  "src/fluid/fluidCalibrationProvenance.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -85,8 +89,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -127,6 +131,9 @@ const installedDisplayPacingTest = files.get("src/fluid/fluidInstalledDisplayPac
 const calibrationFreshness = files.get("src/fluid/fluidCalibrationFreshness.ts") ?? "";
 const calibrationFreshnessReport = files.get("src/fluid/fluidCalibrationFreshness.report.ts") ?? "";
 const calibrationFreshnessTest = files.get("src/fluid/fluidCalibrationFreshness.test.ts") ?? "";
+const calibrationProvenance = files.get("src/fluid/fluidCalibrationProvenance.ts") ?? "";
+const calibrationProvenanceReport = files.get("src/fluid/fluidCalibrationProvenance.report.ts") ?? "";
+const calibrationProvenanceTest = files.get("src/fluid/fluidCalibrationProvenance.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -173,6 +180,7 @@ const fg24Evidence = files.get("docs/evidence/FG-24-persisted-calibration-2026-0
 const fg25Evidence = files.get("docs/evidence/FG-25-installed-calibration-2026-06-08.json") ?? "";
 const fg26Evidence = files.get("docs/evidence/FG-26-installed-display-pacing-2026-06-08.json") ?? "";
 const fg27Evidence = files.get("docs/evidence/FG-27-calibration-freshness-2026-06-08.json") ?? "";
+const fg28Evidence = files.get("docs/evidence/FG-28-calibration-provenance-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1308,11 +1316,12 @@ if (
 }
 
 if (
-  !electronMain.includes("calibratedFluidTierFromStorage") ||
+  !electronMain.includes("calibratedFluidCalibrationFromStorage") ||
   !electronMain.includes("desktopStorageFiles.fluidCalibrationProfile") ||
   !electronMain.includes("ocean-fluid-calibration-profile-v1") ||
   !electronMain.includes("calibrationProfileFailures(profile, app.getVersion())") ||
-  !electronMain.includes("!requestedFluidTier && calibratedFluidTier ? \"auto\"")
+  !electronMain.includes("!requestedFluidTier && calibratedFluidTier ? \"auto\"") ||
+  !electronMain.includes("calibratedFluidFingerprint")
 ) {
   errors.push("electron/main.cjs must read and validate the FG-24 persisted calibration profile at startup");
 }
@@ -1637,6 +1646,121 @@ if (
   !fg27Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-27 evidence must record a passing packaged calibration freshness report with stale-profile fallback");
+}
+
+if (!packageJson.includes("\"fluid:calibration-provenance\"") || !packageJson.includes("src/fluid/fluidCalibrationProvenance.report.ts")) {
+  errors.push("package.json must expose the FG-28 packaged calibration-provenance command");
+}
+
+if (!tracking.includes("FG-28-T03") || !tracking.includes("FG-28-calibration-provenance-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/31")) {
+  errors.push("docs/TRACKING.md must record FG-28 calibration provenance evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-28") ||
+  !contract.includes("G-FG-28") ||
+  !contract.includes("Calibration profile hardware provenance gate") ||
+  !contract.includes("npm run fluid:calibration-provenance")
+) {
+  errors.push("fluidGridContract.ts must define the FG-28 calibration provenance milestone, gate, and evidence command");
+}
+
+if (
+  !persistedCalibration.includes("capabilityProvenanceForReport") ||
+  !persistedCalibration.includes("capabilityProvenanceFailures") ||
+  !persistedCalibration.includes("profile capability fingerprint") ||
+  !persistedCalibration.includes("G-FG-01")
+) {
+  errors.push("fluidPersistedCalibration.ts must write and validate FG-28 WebGPU capability provenance");
+}
+
+if (
+  !electronMain.includes("calibratedFluidFingerprint") ||
+  !electronMain.includes("capabilityFingerprint") ||
+  !electronMain.includes("profile capability fingerprint did not match provenance")
+) {
+  errors.push("electron/main.cjs must pass valid calibration fingerprints and reject tampered profile capability provenance");
+}
+
+if (
+  !adaptiveTier.includes("calibration-provenance-fallback-high") ||
+  !adaptiveTier.includes("calibratedFluidCapabilityFingerprintFromSearch") ||
+  !adaptiveTier.includes("fluidRuntimeTierSelectionForCapabilityProvenance")
+) {
+  errors.push("fluidAdaptiveTier.ts must define the FG-28 provenance mismatch fallback selection mode");
+}
+
+if (
+  !oceanPhysicsApp.includes("fluidCapabilityFingerprintForReport") ||
+  !oceanPhysicsApp.includes("fluidRuntimeTierSelectionForCapabilityProvenance") ||
+  !oceanPhysicsApp.includes("expectedCalibratedFingerprint")
+) {
+  errors.push("OceanPhysicsApp must compare saved and live WebGPU capability fingerprints before using calibrated auto tier");
+}
+
+if (
+  !calibrationProvenance.includes("G-FG-28") ||
+  !calibrationProvenance.includes("mismatchedProfileDowngradedByRenderer") ||
+  !calibrationProvenance.includes("tamperedProfileRejectedByMainProcess") ||
+  !calibrationProvenance.includes("tampered profile must fail capability fingerprint validation") ||
+  !calibrationProvenance.includes("calibration-provenance-fallback-high")
+) {
+  errors.push("fluidCalibrationProvenance.ts must define matching, copied-profile, and tampered-profile provenance checks");
+}
+
+if (
+  !calibrationProvenanceReport.includes("external / copied-profile") ||
+  !calibrationProvenanceReport.includes("expectedMode: \"calibrated-auto\"") ||
+  !calibrationProvenanceReport.includes("expectedMode: \"calibration-provenance-fallback-high\"") ||
+  !calibrationProvenanceReport.includes("expectedMode: \"default-high\"") ||
+  !calibrationProvenanceReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !calibrationProvenanceReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER")
+) {
+  errors.push("fluidCalibrationProvenance.report.ts must prove matching, copied-profile, and tampered-profile packaged runtime behavior without fluid-tier env vars");
+}
+
+if (
+  !calibrationProvenanceTest.includes("copied-profile") ||
+  !calibrationProvenanceTest.includes("tampered profiles are rejected") ||
+  !calibrationProvenanceTest.includes("calibration-provenance-fallback-high") ||
+  !calibrationProvenanceTest.includes("G-FG-28")
+) {
+  errors.push("fluidCalibrationProvenance.test.ts must cover FG-28 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-28") ||
+  !remap.includes("calibration-provenance") ||
+  !remap.includes("calibratedFluidFingerprint") ||
+  !remap.includes("calibration-provenance-fallback-high") ||
+  !remap.includes("tampered-profile")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-28 calibration provenance gate and evidence");
+}
+
+if (
+  !fg28Evidence.includes("\"gate\": \"G-FG-28\"") ||
+  !fg28Evidence.includes("\"pass\": true") ||
+  !fg28Evidence.includes("\"expectedAppVersion\": \"0.1.0\"") ||
+  !fg28Evidence.includes("\"adapterInfo\": \"apple / metal-3\"") ||
+  !fg28Evidence.includes("\"adapterInfo\": \"external / copied-profile\"") ||
+  !fg28Evidence.includes("\"validationFailures\": []") ||
+  !fg28Evidence.includes("profile capability fingerprint tampered did not match recorded WebGPU capability provenance") ||
+  !fg28Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg28Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg28Evidence.includes("\"validProfileReusedByMainProcess\": true") ||
+  !fg28Evidence.includes("\"mismatchedProfileDowngradedByRenderer\": true") ||
+  !fg28Evidence.includes("\"tamperedProfileRejectedByMainProcess\": true") ||
+  !fg28Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg28Evidence.includes("\"mode\": \"calibration-provenance-fallback-high\"") ||
+  !fg28Evidence.includes("\"mode\": \"default-high\"") ||
+  !fg28Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg28Evidence.includes("\"selectedTier\": \"high\"") ||
+  !fg28Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg28Evidence.includes("\"grid\": \"512x288\"") ||
+  !fg28Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-28 evidence must record a passing packaged calibration provenance report with matching, copied-profile, and tampered-profile fallback behavior");
 }
 
 if (errors.length > 0) {

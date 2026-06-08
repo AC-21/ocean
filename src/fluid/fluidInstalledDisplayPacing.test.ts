@@ -3,6 +3,7 @@ import type { FluidAdaptiveTierReport } from "./fluidAdaptiveTier";
 import type { FluidGridTierId } from "./fluidGridContract";
 import { calibrationProfileForAdaptiveReport } from "./fluidPersistedCalibration";
 import type { FluidCalibrationInstallReceipt } from "./fluidInstalledCalibration";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 import {
   createFluidInstalledDisplayPacingReport,
   type FluidInstalledDisplayPacingScenarioInput,
@@ -181,7 +182,9 @@ function installReceipt(): FluidCalibrationInstallReceipt {
   return {
     fileName: "fluid-calibration.v1.json",
     installedAt: "2026-06-08T00:00:00.000Z",
-    installedProfile: calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z"),
+    installedProfile: calibrationProfileForAdaptiveReport(adaptive, "2026-06-08T00:00:00.000Z", {
+      capabilityReport: capabilityReport(),
+    }),
     persistedRawBytes: 321,
     storageBasePath: "/tmp/Ocean Impact Lab/harborline-game",
     verificationReadMatched: true,
@@ -268,5 +271,29 @@ function adaptiveReport(): FluidAdaptiveTierReport {
       maxUltraGpuP95StepMs: 1,
       maxUltraToHighGpuP95Ratio: 3,
     },
+  };
+}
+
+function capabilityReport(): FluidCapabilityReport {
+  return {
+    adapterInfo: "apple / metal-3",
+    adapterName: "apple / metal-3",
+    backend: "webgpu-compute",
+    fallbackReason: null,
+    features: ["timestamp-query", "shader-f16"],
+    forbiddenProductionRenderers: ["canvas-2d", "per-pixel-cpu-water-draw", "visual-only-water"],
+    generatedAt: "2026-06-07T19:51:23.844Z",
+    grid: { cellsX: 512, cellsY: 288, estimatedBytes: 4_718_592, tier: "high" },
+    limits: {
+      maxBufferSize: 268_435_456,
+      maxComputeInvocationsPerWorkgroup: 256,
+      maxComputeWorkgroupSizeX: 256,
+      maxComputeWorkgroupSizeY: 256,
+      maxComputeWorkgroupsPerDimension: 65_535,
+      maxStorageBufferBindingSize: 134_217_728,
+    },
+    requiredBrowserApis: ["navigator.gpu", "GPUDevice", "GPUComputePassEncoder"],
+    selectedTier: "high",
+    status: "webgpu-ready",
   };
 }

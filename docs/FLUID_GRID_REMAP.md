@@ -764,6 +764,35 @@ Latest calibration-freshness evidence:
   back to `high` at `512 x 288`.
 - Gate: passed.
 
+FG-28 is complete as of 2026-06-08. It closes the next trust gap in local GPU
+calibration: a profile can be current for the app version but still be copied
+from another GPU capability envelope. Profiles now bind to FG-01 WebGPU
+capability provenance: adapter info, feature list, device limits, backend,
+status, and a deterministic capability fingerprint. Electron rejects tampered
+fingerprints before passing `calibratedFluidTier`; the renderer compares the
+saved `calibratedFluidFingerprint` with the live `navigator.gpu` capability
+fingerprint and downgrades copied-profile hardware mismatches to high.
+
+Latest calibration-provenance evidence:
+
+- Command: `npm run fluid:calibration-provenance`.
+- Runtime: packaged macOS app with no `OCEAN_LAB_FLUID_TIER` and no
+  `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-28`.
+- Evidence snapshot:
+  `docs/evidence/FG-28-calibration-provenance-2026-06-08.json`.
+- Matching profile proof: FG-01 capability fingerprint matches the live WebGPU
+  envelope, runtime mode is `calibrated-auto`, and selected tier/grid are
+  `ultra` at `768 x 432`.
+- Copied-profile proof: the profile remains internally valid but carries a
+  different hardware fingerprint, so runtime mode becomes
+  `calibration-provenance-fallback-high` and tier/grid fall back to `high` at
+  `512 x 288`.
+- tampered-profile proof: capability fingerprint validation fails in Electron,
+  no calibrated tier reaches the renderer, runtime mode is `default-high`, and
+  selected tier/grid are `high` at `512 x 288`.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

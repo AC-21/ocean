@@ -28,7 +28,8 @@ export type FluidGridMilestoneId =
   | "FG-24"
   | "FG-25"
   | "FG-26"
-  | "FG-27";
+  | "FG-27"
+  | "FG-28";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -58,7 +59,8 @@ export type FluidGridGateId =
   | "G-FG-24"
   | "G-FG-25"
   | "G-FG-26"
-  | "G-FG-27";
+  | "G-FG-27"
+  | "G-FG-28";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -153,6 +155,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-25", title: "Installed local calibration profile reuse gate", gate: "G-FG-25" },
   { id: "FG-26", title: "Installed calibration display pacing gate", gate: "G-FG-26" },
   { id: "FG-27", title: "Calibration profile freshness invalidation gate", gate: "G-FG-27" },
+  { id: "FG-28", title: "Calibration profile hardware provenance gate", gate: "G-FG-28" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -342,6 +345,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:calibration-freshness and docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
     passBar:
       "calibration profiles include app-version and FG-23 source provenance; Electron reuses the current profile for calibrated-auto ultra but rejects a stale app-version profile and falls back to default high without fluid-tier environment variables",
+  },
+  {
+    id: "G-FG-28",
+    blocks: "FG-28",
+    evidence: "npm run fluid:calibration-provenance and docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
+    passBar:
+      "calibration profiles bind to FG-01 WebGPU capability provenance; the packaged app reuses a matching profile, downgrades a copied-profile hardware mismatch to high, and rejects a tampered capability fingerprint without fluid-tier environment variables",
   },
 ];
 
@@ -997,6 +1007,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify valid and stale profile runtime behavior",
     exitProof:
       "npm run fluid:calibration-freshness passes with a current profile selecting calibrated-auto ultra and a stale app-version profile falling back to default high",
+  },
+  {
+    id: "FG-28-T01",
+    milestone: "FG-28",
+    status: "done",
+    title: "Bind calibration profiles to WebGPU capability provenance",
+    exitProof:
+      "fluidPersistedCalibration.ts writes FG-01 adapter, feature, limit, backend, status, and fingerprint provenance into ocean-fluid-calibration-profile-v1 profiles",
+  },
+  {
+    id: "FG-28-T02",
+    milestone: "FG-28",
+    status: "done",
+    title: "Downgrade copied calibration profiles at renderer runtime",
+    exitProof:
+      "OceanPhysicsApp compares the saved calibratedFluidFingerprint with the live WebGPU capability fingerprint and selects calibration-provenance-fallback-high on mismatch",
+  },
+  {
+    id: "FG-28-T03",
+    milestone: "FG-28",
+    status: "done",
+    title: "Verify valid, mismatched, and tampered profile behavior",
+    exitProof:
+      "npm run fluid:calibration-provenance passes with matching calibrated-auto ultra, copied-profile high fallback, tampered-profile default-high fallback, and committed FG-28 evidence",
   },
 ];
 

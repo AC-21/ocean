@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { _electron as electron } from "playwright";
 import type { FluidAdaptiveTierReport } from "./fluidAdaptiveTier";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 import { installFluidCalibrationProfile } from "./fluidInstalledCalibration";
 import {
   createFluidInstalledDisplayPacingReport,
@@ -28,6 +29,7 @@ const timeoutMs = Number(process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_TIMEOUT_
 const root = process.cwd();
 const outPath = process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_OUT || "reports/fluid-installed-display-pacing-latest.json";
 const adaptiveTierPath = process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_ADAPTIVE_IN || "docs/evidence/FG-23-adaptive-tier-2026-06-08.json";
+const capabilityPath = process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_CAPABILITY_IN || "docs/evidence/FG-01-fluid-capability-2026-06-07.json";
 const idleDurationMs = Number(process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_IDLE_MS || 2_800);
 const impactDurationMs = Number(process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_IMPACT_MS || 5_500);
 const dampingDurationMs = Number(process.env.OCEAN_LAB_INSTALLED_DISPLAY_PACING_DAMPING_MS || 6_500);
@@ -49,6 +51,7 @@ const calmSeawater = {
 let electronApp: Awaited<ReturnType<typeof electron.launch>> | null = null;
 try {
   const adaptiveSource = await readJson<FluidAdaptiveTierReport>(adaptiveTierPath);
+  const capabilitySource = await readJson<FluidCapabilityReport>(capabilityPath);
   const storage = createHarborlineStorage({
     app: {
       getName: () => appName,
@@ -62,6 +65,7 @@ try {
   });
   const install = await installFluidCalibrationProfile({
     adaptiveSource,
+    capabilitySource,
     fileName: desktopStorageFiles.fluidCalibrationProfile,
     generatedAt: new Date().toISOString(),
     storage,

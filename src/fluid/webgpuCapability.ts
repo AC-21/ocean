@@ -39,6 +39,15 @@ export type FluidCapabilityReport = {
   status: FluidCapabilityStatus;
 };
 
+export type FluidCapabilityProvenance = {
+  adapterInfo: string | null;
+  backend: FluidBackendKind;
+  features: string[];
+  fingerprint: string;
+  limits: FluidCapabilityLimits;
+  status: FluidCapabilityStatus;
+};
+
 export type WebGpuDeviceLike = {
   features?: Iterable<string>;
   limits?: Partial<Record<keyof FluidCapabilityLimits, number>>;
@@ -146,6 +155,47 @@ export function gridForTier(tierId: FluidGridTierId): FluidCapabilityGrid {
     cellsY: tier.cellsY,
     estimatedBytes: estimateFluidGridBytes(tier),
     tier: tier.id,
+  };
+}
+
+export function capabilityProvenanceForReport(report: FluidCapabilityReport): FluidCapabilityProvenance {
+  const provenance = {
+    adapterInfo: report.adapterInfo,
+    backend: report.backend,
+    features: uniqueStrings(report.features).sort(),
+    fingerprint: "",
+    limits: { ...report.limits },
+    status: report.status,
+  };
+  return {
+    ...provenance,
+    fingerprint: fluidCapabilityFingerprintForProvenance(provenance),
+  };
+}
+
+export function fluidCapabilityFingerprintForReport(report: FluidCapabilityReport): string {
+  return capabilityProvenanceForReport(report).fingerprint;
+}
+
+export function fluidCapabilityFingerprintForProvenance(
+  provenance: Omit<FluidCapabilityProvenance, "fingerprint"> | FluidCapabilityProvenance
+): string {
+  const adapterInfo = provenance.adapterInfo ?? "";
+  const features = uniqueStrings(provenance.features).sort().join(",");
+  const limits = limitKeys.map((key) => `${key}:${provenance.limits[key] ?? "null"}`).join(",");
+  return [`adapter:${adapterInfo}`, `backend:${provenance.backend}`, `features:${features}`, `limits:${limits}`, `status:${provenance.status}`].join("|");
+}
+
+export function fluidCapabilityReportForPreferredTier(
+  report: FluidCapabilityReport,
+  preferredTier: FluidGridTierId
+): FluidCapabilityReport {
+  if (report.status !== "webgpu-ready") return report;
+  const selectedTier = selectFluidGridTier(report.limits, preferredTier);
+  return {
+    ...report,
+    grid: gridForTier(selectedTier),
+    selectedTier,
   };
 }
 

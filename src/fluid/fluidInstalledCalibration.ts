@@ -1,5 +1,6 @@
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
 import type { FluidGridTierId } from "./fluidGridContract";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 import {
   calibrationProfileForAdaptiveReport,
   validateFluidCalibrationProfile,
@@ -44,6 +45,7 @@ export type FluidInstalledCalibrationReport = {
 export type InstallFluidCalibrationProfileOptions = {
   adaptiveSource: FluidAdaptiveTierReport;
   appVersion?: string;
+  capabilitySource: FluidCapabilityReport;
   fileName: string;
   generatedAt?: string;
   storage: FluidCalibrationTextStorage;
@@ -65,7 +67,10 @@ export async function installFluidCalibrationProfile(
   options: InstallFluidCalibrationProfileOptions
 ): Promise<FluidCalibrationInstallReceipt> {
   const installedAt = options.generatedAt ?? new Date().toISOString();
-  const installedProfile = calibrationProfileForAdaptiveReport(options.adaptiveSource, installedAt, { appVersion: options.appVersion });
+  const installedProfile = calibrationProfileForAdaptiveReport(options.adaptiveSource, installedAt, {
+    appVersion: options.appVersion,
+    capabilityReport: options.capabilitySource,
+  });
   const serializedProfile = `${JSON.stringify(installedProfile, null, 2)}\n`;
   await options.storage.writeText(options.fileName, serializedProfile);
   const persistedRaw = await options.storage.readText(options.fileName);

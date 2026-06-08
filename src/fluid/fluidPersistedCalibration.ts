@@ -1,5 +1,11 @@
 import type { FluidGridTierId } from "./fluidGridContract";
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
+import {
+  capabilityProvenanceForReport,
+  fluidCapabilityFingerprintForProvenance,
+  type FluidCapabilityProvenance,
+  type FluidCapabilityReport,
+} from "./webgpuCapability";
 
 export type FluidPersistedCalibrationGate = "G-FG-24";
 
@@ -7,6 +13,7 @@ export const defaultCalibrationProfileAppVersion = "0.1.0";
 
 export type FluidCalibrationProfile = {
   appVersion: string;
+  capability: FluidCalibrationCapabilityProvenance;
   generatedAt: string;
   pass: boolean;
   schema: "ocean-fluid-calibration-profile-v1";
@@ -22,6 +29,10 @@ export type FluidCalibrationProfile = {
     maxUltraGpuP95StepMs: number | null;
     maxUltraToHighGpuP95Ratio: number | null;
   };
+};
+
+export type FluidCalibrationCapabilityProvenance = FluidCapabilityProvenance & {
+  sourceGate: "G-FG-01";
 };
 
 export type FluidPersistedCalibrationReport = {
@@ -58,10 +69,15 @@ export type FluidCalibrationProfileValidationOptions = {
 export function calibrationProfileForAdaptiveReport(
   adaptiveReport: FluidAdaptiveTierReport,
   generatedAt = new Date().toISOString(),
-  options: { appVersion?: string } = {}
+  options: { appVersion?: string; capabilityReport: FluidCapabilityReport }
 ): FluidCalibrationProfile {
+  const capability = capabilityProvenanceForReport(options.capabilityReport);
   return {
     appVersion: options.appVersion ?? defaultCalibrationProfileAppVersion,
+    capability: {
+      ...capability,
+      sourceGate: "G-FG-01",
+    },
     generatedAt,
     pass: adaptiveReport.pass,
     schema: "ocean-fluid-calibration-profile-v1",
@@ -84,6 +100,7 @@ export function validateFluidCalibrationProfile(
   profile: FluidCalibrationProfile,
   options: FluidCalibrationProfileValidationOptions = {}
 ): string[] {
+  const capabilityFailures = capabilityProvenanceFailures(profile.capability);
   return [
     ...(profile.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid."]),
     ...(profile.pass === true ? [] : ["profile must be marked passing."]),
@@ -102,10 +119,27 @@ export function validateFluidCalibrationProfile(
     ...(options.expectedAppVersion === undefined || profile.appVersion === options.expectedAppVersion
       ? []
       : [`profile appVersion ${profile.appVersion} did not match runtime ${options.expectedAppVersion}.`]),
+    ...capabilityFailures,
     ...(profile.selectedTier === "ultra" ? [] : [`profile selected ${profile.selectedTier}, expected ultra.`]),
     ...(profile.summary.maxLiveP95FrameMs !== null ? [] : ["profile is missing live frame-pacing summary."]),
     ...(profile.summary.maxUltraGpuP95StepMs !== null ? [] : ["profile is missing ultra GPU timing summary."]),
     ...(profile.summary.maxUltraToHighGpuP95Ratio !== null ? [] : ["profile is missing ultra/high timing ratio summary."]),
+  ];
+}
+
+export function capabilityProvenanceFailures(capability: FluidCalibrationCapabilityProvenance | undefined): string[] {
+  if (!capability) return ["profile must record WebGPU capability provenance."];
+  const expectedFingerprint = capability.limits ? fluidCapabilityFingerprintForProvenance(capability) : "";
+  return [
+    ...(capability.sourceGate === "G-FG-01" ? [] : ["profile capability source must record gate G-FG-01."]),
+    ...(capability.status === "webgpu-ready" ? [] : [`profile capability status was ${capability.status}.`]),
+    ...(capability.backend === "webgpu-compute" ? [] : [`profile capability backend was ${capability.backend}.`]),
+    ...(typeof capability.adapterInfo === "string" && capability.adapterInfo.length > 0 ? [] : ["profile capability must record adapterInfo."]),
+    ...(Array.isArray(capability.features) && capability.features.length > 0 ? [] : ["profile capability must record WebGPU features."]),
+    ...(typeof capability.limits?.maxStorageBufferBindingSize === "number" ? [] : ["profile capability must record storage buffer limit."]),
+    ...(capability.fingerprint === expectedFingerprint
+      ? []
+      : [`profile capability fingerprint ${capability.fingerprint ?? "missing"} did not match recorded WebGPU capability provenance.`]),
   ];
 }
 

@@ -86,26 +86,30 @@ async function createMainWindow() {
 function appendFluidTierQuery(searchParams, query) {
   if (query.fluidTier) searchParams.set("fluidTier", query.fluidTier);
   if (query.calibratedFluidTier) searchParams.set("calibratedFluidTier", query.calibratedFluidTier);
+  if (query.calibratedFluidFingerprint) searchParams.set("calibratedFluidFingerprint", query.calibratedFluidFingerprint);
 }
 
 async function fluidTierQueryObject() {
-  const storedCalibratedTier = await calibratedFluidTierFromStorage();
-  const calibratedFluidTier = validFluidTier(envCalibratedFluidTier) ?? storedCalibratedTier;
+  const storedCalibration = await calibratedFluidCalibrationFromStorage();
+  const envTier = validFluidTier(envCalibratedFluidTier);
+  const calibratedFluidTier = envTier ?? storedCalibration?.tier;
   const fluidTier = requestedFluidTier || (!requestedFluidTier && calibratedFluidTier ? "auto" : undefined);
   return {
     ...(fluidTier ? { fluidTier } : {}),
     ...(calibratedFluidTier ? { calibratedFluidTier } : {}),
+    ...(!envTier && storedCalibration?.fingerprint ? { calibratedFluidFingerprint: storedCalibration.fingerprint } : {}),
   };
 }
 
-async function calibratedFluidTierFromStorage() {
+async function calibratedFluidCalibrationFromStorage() {
   if (!storage) return undefined;
   try {
     const raw = await storage.readText(desktopStorageFiles.fluidCalibrationProfile);
     if (!raw) return undefined;
     const profile = JSON.parse(raw);
     if (calibrationProfileFailures(profile, app.getVersion()).length > 0) return undefined;
-    return validFluidTier(profile?.selectedTier);
+    const tier = validFluidTier(profile?.selectedTier);
+    return tier ? { fingerprint: profile.capability.fingerprint, tier } : undefined;
   } catch {
     return undefined;
   }
@@ -113,6 +117,7 @@ async function calibratedFluidTierFromStorage() {
 
 function calibrationProfileFailures(profile, expectedAppVersion) {
   const selectedTier = validFluidTier(profile?.selectedTier);
+  const capability = profile?.capability;
   return [
     ...(profile?.schema === "ocean-fluid-calibration-profile-v1" ? [] : ["profile schema was invalid"]),
     ...(profile?.pass === true ? [] : ["profile did not pass"]),
@@ -122,11 +127,35 @@ function calibrationProfileFailures(profile, expectedAppVersion) {
     ...(profile?.source?.selectedTier === profile?.selectedTier ? [] : ["profile source tier did not match selected tier"]),
     ...(selectedTier ? [] : ["profile selected tier was invalid"]),
     ...(profile?.appVersion === expectedAppVersion ? [] : ["profile app version did not match runtime"]),
+    ...(capability?.sourceGate === "G-FG-01" ? [] : ["profile capability source gate was invalid"]),
+    ...(capability?.status === "webgpu-ready" ? [] : ["profile capability status was invalid"]),
+    ...(capability?.backend === "webgpu-compute" ? [] : ["profile capability backend was invalid"]),
+    ...(typeof capability?.adapterInfo === "string" && capability.adapterInfo.length > 0 ? [] : ["profile capability adapter was missing"]),
+    ...(Array.isArray(capability?.features) && capability.features.length > 0 ? [] : ["profile capability features were missing"]),
+    ...(capability?.limits?.maxStorageBufferBindingSize !== undefined && capability.limits.maxStorageBufferBindingSize !== null
+      ? []
+      : ["profile capability storage limit was missing"]),
+    ...(capability?.fingerprint === capabilityFingerprint(capability) ? [] : ["profile capability fingerprint did not match provenance"]),
   ];
 }
 
 function validFluidTier(value) {
   return value === "low" || value === "standard" || value === "high" || value === "ultra" ? value : undefined;
+}
+
+function capabilityFingerprint(capability) {
+  if (!capability) return undefined;
+  const limitKeys = [
+    "maxBufferSize",
+    "maxComputeInvocationsPerWorkgroup",
+    "maxComputeWorkgroupSizeX",
+    "maxComputeWorkgroupSizeY",
+    "maxComputeWorkgroupsPerDimension",
+    "maxStorageBufferBindingSize",
+  ];
+  const features = Array.from(new Set(Array.isArray(capability.features) ? capability.features.filter((value) => typeof value === "string" && value.length > 0) : [])).sort().join(",");
+  const limits = limitKeys.map((key) => `${key}:${capability.limits?.[key] ?? "null"}`).join(",");
+  return [`adapter:${capability.adapterInfo ?? ""}`, `backend:${capability.backend}`, `features:${features}`, `limits:${limits}`, `status:${capability.status}`].join("|");
 }
 
 app.whenReady().then(async () => {

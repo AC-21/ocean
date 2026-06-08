@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { _electron as electron } from "playwright";
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 import {
   createFluidInstalledCalibrationReport,
   installFluidCalibrationProfile,
@@ -26,6 +27,7 @@ const timeoutMs = Number(process.env.OCEAN_LAB_INSTALLED_CALIBRATION_TIMEOUT_MS 
 const root = process.cwd();
 const outPath = process.env.OCEAN_LAB_INSTALLED_CALIBRATION_OUT || "reports/fluid-installed-calibration-latest.json";
 const adaptiveTierPath = process.env.OCEAN_LAB_INSTALLED_CALIBRATION_ADAPTIVE_IN || "docs/evidence/FG-23-adaptive-tier-2026-06-08.json";
+const capabilityPath = process.env.OCEAN_LAB_INSTALLED_CALIBRATION_CAPABILITY_IN || "docs/evidence/FG-01-fluid-capability-2026-06-07.json";
 const appName = "Ocean Impact Lab";
 const arch = process.env.OCEAN_LAB_PACKAGE_ARCH || process.arch;
 const packagedExecutablePath = path.resolve("release", `${appName}-darwin-${arch}`, `${appName}.app`, "Contents", "MacOS", appName);
@@ -35,6 +37,7 @@ const userDataPath = await realpath(userDataRoot);
 
 try {
   const adaptiveSource = await readJson<FluidAdaptiveTierReport>(adaptiveTierPath);
+  const capabilitySource = await readJson<FluidCapabilityReport>(capabilityPath);
   const storage = createHarborlineStorage({
     app: {
       getName: () => appName,
@@ -48,6 +51,7 @@ try {
   });
   const install = await installFluidCalibrationProfile({
     adaptiveSource,
+    capabilitySource,
     fileName: desktopStorageFiles.fluidCalibrationProfile,
     generatedAt: new Date().toISOString(),
     storage,

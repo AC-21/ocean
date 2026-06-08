@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { fluidRuntimeTierSelectionFromSearch, fluidTierIdFrom, type FluidRuntimeTierSelection } from "./fluid/fluidAdaptiveTier";
+import {
+  calibratedFluidCapabilityFingerprintFromSearch,
+  fluidRuntimeTierSelectionForCapabilityProvenance,
+  fluidRuntimeTierSelectionFromSearch,
+  fluidTierIdFrom,
+  type FluidRuntimeTierSelection,
+} from "./fluid/fluidAdaptiveTier";
 import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
 import { createFluidFrameLoopState, defaultFluidFrameLoopConfig, frameLoopStats, planFluidFrameStep } from "./fluid/fluidFrameLoop";
 import type { FluidGridTierId } from "./fluid/fluidGridContract";
@@ -11,7 +17,13 @@ import {
   type FluidWaterRenderer,
   type FluidWaterRenderInput,
 } from "./fluid/fluidWaterRenderer";
-import { detectFluidCapability, pendingFluidCapabilityReport, type FluidCapabilityReport } from "./fluid/webgpuCapability";
+import {
+  detectFluidCapability,
+  fluidCapabilityFingerprintForReport,
+  fluidCapabilityReportForPreferredTier,
+  pendingFluidCapabilityReport,
+  type FluidCapabilityReport,
+} from "./fluid/webgpuCapability";
 import {
   characteristicLengthM,
   cloneObjectSpec,
@@ -152,7 +164,9 @@ export default function OceanPhysicsApp() {
   const simulationRef = useRef<SimulationState>(createSimulation(spec, dropHeightM));
   const [snapshot, setSnapshot] = useState<SimulationState>(simulationRef.current);
   const [fluidCapability, setFluidCapability] = useState<FluidCapabilityReport>(() => pendingFluidCapabilityReport());
-  const fluidTierSelection = useMemo(() => fluidRuntimeTierSelectionFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
+  const requestedFluidTierSelection = useMemo(() => fluidRuntimeTierSelectionFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
+  const expectedCalibratedFingerprint = useMemo(() => calibratedFluidCapabilityFingerprintFromSearch(typeof window === "undefined" ? "" : window.location.search), []);
+  const [fluidTierSelection, setFluidTierSelection] = useState<FluidRuntimeTierSelection>(requestedFluidTierSelection);
   const [waterRenderMode, setWaterRenderMode] = useState<"fallback" | "initializing" | "webgpu">("initializing");
   const waterRendererRef = useRef<FluidWaterRenderer | null>(null);
   const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
@@ -174,12 +188,20 @@ export default function OceanPhysicsApp() {
     window.__runParticleSplashBenchmark = runParticleSplashBenchmark;
     window.__runShallowWaterBenchmark = runShallowWaterBenchmark;
     window.__fluidGridCapabilityReport = fluidCapability;
-    detectFluidCapability({ preferredTier: fluidTierSelection.preferredTier }).then((report) => {
+    detectFluidCapability({ preferredTier: requestedFluidTierSelection.preferredTier }).then((report) => {
       if (cancelled) return;
-      window.__fluidGridCapabilityReport = report;
-      window.__fluidGridPreferredTier = fluidTierSelection.preferredTier;
-      window.__fluidGridTierSelection = fluidTierSelection;
-      setFluidCapability(report);
+      const liveFingerprint = fluidCapabilityFingerprintForReport(report);
+      const effectiveSelection = fluidRuntimeTierSelectionForCapabilityProvenance(
+        requestedFluidTierSelection,
+        liveFingerprint,
+        expectedCalibratedFingerprint
+      );
+      const effectiveReport = fluidCapabilityReportForPreferredTier(report, effectiveSelection.preferredTier);
+      window.__fluidGridCapabilityReport = effectiveReport;
+      window.__fluidGridPreferredTier = effectiveSelection.preferredTier;
+      window.__fluidGridTierSelection = effectiveSelection;
+      setFluidTierSelection(effectiveSelection);
+      setFluidCapability(effectiveReport);
     });
     return () => {
       cancelled = true;
@@ -187,7 +209,7 @@ export default function OceanPhysicsApp() {
       delete window.__runParticleSplashBenchmark;
       delete window.__runShallowWaterBenchmark;
     };
-  }, [fluidTierSelection]);
+  }, [expectedCalibratedFingerprint, requestedFluidTierSelection]);
 
   useEffect(() => {
     let cancelled = false;

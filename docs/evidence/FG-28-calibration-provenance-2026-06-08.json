@@ -1,0 +1,164 @@
+{
+  "adaptiveSource": {
+    "gate": "G-FG-23",
+    "pass": true,
+    "recommendation": {
+      "failures": [],
+      "reason": "ultra has measured local headroom and live reference parity",
+      "selectedTier": "ultra",
+      "summary": {
+        "maxEstimatedStorageBytes": 18841600,
+        "maxLiveP95FrameMs": 9.300000000000182,
+        "maxLiveP99FrameMs": 9.399999999999636,
+        "maxUltraGpuP95StepMs": 0.09025,
+        "maxUltraToHighGpuP95Ratio": 2.0687679083094554,
+        "referenceCategories": [
+          "damping",
+          "drop",
+          "float",
+          "sink",
+          "splash"
+        ]
+      }
+    }
+  },
+  "capabilitySource": {
+    "adapterInfo": "apple / metal-3",
+    "backend": "webgpu-compute",
+    "features": [
+      "bgra8unorm-storage",
+      "clip-distances",
+      "core-features-and-limits",
+      "depth-clip-control",
+      "depth32float-stencil8",
+      "dual-source-blending",
+      "float32-blendable",
+      "float32-filterable",
+      "indirect-first-instance",
+      "primitive-index",
+      "rg11b10ufloat-renderable",
+      "shader-f16",
+      "subgroups",
+      "texture-component-swizzle",
+      "texture-compression-astc",
+      "texture-compression-astc-sliced-3d",
+      "texture-compression-bc",
+      "texture-compression-bc-sliced-3d",
+      "texture-compression-etc2",
+      "texture-formats-tier1",
+      "texture-formats-tier2",
+      "timestamp-query"
+    ],
+    "fingerprint": "adapter:apple / metal-3|backend:webgpu-compute|features:bgra8unorm-storage,clip-distances,core-features-and-limits,depth-clip-control,depth32float-stencil8,dual-source-blending,float32-blendable,float32-filterable,indirect-first-instance,primitive-index,rg11b10ufloat-renderable,shader-f16,subgroups,texture-component-swizzle,texture-compression-astc,texture-compression-astc-sliced-3d,texture-compression-bc,texture-compression-bc-sliced-3d,texture-compression-etc2,texture-formats-tier1,texture-formats-tier2,timestamp-query|limits:maxBufferSize:268435456,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupsPerDimension:65535,maxStorageBufferBindingSize:134217728|status:webgpu-ready",
+    "limits": {
+      "maxBufferSize": 268435456,
+      "maxComputeInvocationsPerWorkgroup": 256,
+      "maxComputeWorkgroupSizeX": 256,
+      "maxComputeWorkgroupSizeY": 256,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxStorageBufferBindingSize": 134217728
+    },
+    "selectedTier": "high",
+    "status": "webgpu-ready"
+  },
+  "expectedAppVersion": "0.1.0",
+  "failures": [],
+  "gate": "G-FG-28",
+  "generatedAt": "2026-06-08T06:01:45.437Z",
+  "launchMode": "packaged-app",
+  "pass": true,
+  "profiles": {
+    "mismatched": {
+      "adapterInfo": "external / copied-profile",
+      "fingerprint": "adapter:external / copied-profile|backend:webgpu-compute|features:bgra8unorm-storage,clip-distances,core-features-and-limits,depth-clip-control,depth32float-stencil8,dual-source-blending,float32-blendable,float32-filterable,indirect-first-instance,primitive-index,rg11b10ufloat-renderable,shader-f16,subgroups,texture-component-swizzle,texture-compression-astc,texture-compression-astc-sliced-3d,texture-compression-bc,texture-compression-bc-sliced-3d,texture-compression-etc2,texture-formats-tier1,texture-formats-tier2,timestamp-query|limits:maxBufferSize:268435456,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupsPerDimension:65535,maxStorageBufferBindingSize:134217728|status:webgpu-ready",
+      "selectedTier": "ultra",
+      "validationFailures": []
+    },
+    "tampered": {
+      "adapterInfo": "apple / metal-3",
+      "fingerprint": "tampered",
+      "selectedTier": "ultra",
+      "validationFailures": [
+        "profile capability fingerprint tampered did not match recorded WebGPU capability provenance."
+      ]
+    },
+    "valid": {
+      "adapterInfo": "apple / metal-3",
+      "fingerprint": "adapter:apple / metal-3|backend:webgpu-compute|features:bgra8unorm-storage,clip-distances,core-features-and-limits,depth-clip-control,depth32float-stencil8,dual-source-blending,float32-blendable,float32-filterable,indirect-first-instance,primitive-index,rg11b10ufloat-renderable,shader-f16,subgroups,texture-component-swizzle,texture-compression-astc,texture-compression-astc-sliced-3d,texture-compression-bc,texture-compression-bc-sliced-3d,texture-compression-etc2,texture-formats-tier1,texture-formats-tier2,timestamp-query|limits:maxBufferSize:268435456,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupsPerDimension:65535,maxStorageBufferBindingSize:134217728|status:webgpu-ready",
+      "selectedTier": "ultra",
+      "validationFailures": []
+    }
+  },
+  "runtime": {
+    "envCalibratedTierPresent": false,
+    "envRequestedTierPresent": false,
+    "mismatchedProfileProbe": {
+      "grid": "512x288",
+      "launchMode": "packaged-app",
+      "renderer": "webgpu-grid-primary-v1",
+      "requestedTier": "auto",
+      "selectedGrid": {
+        "cellsX": 512,
+        "cellsY": 288
+      },
+      "selectedTier": "high",
+      "selection": {
+        "calibratedTier": "ultra",
+        "mode": "calibration-provenance-fallback-high",
+        "preferredTier": "high",
+        "reason": "local calibration profile WebGPU capability provenance did not match this runtime",
+        "requestedTier": "auto"
+      },
+      "tier": "high",
+      "waterContext": "webgpu",
+      "waterFrames": 12
+    },
+    "tamperedProfileProbe": {
+      "grid": "512x288",
+      "launchMode": "packaged-app",
+      "renderer": "webgpu-grid-primary-v1",
+      "requestedTier": "default",
+      "selectedGrid": {
+        "cellsX": 512,
+        "cellsY": 288
+      },
+      "selectedTier": "high",
+      "selection": {
+        "mode": "default-high",
+        "preferredTier": "high",
+        "reason": "default high tier until local calibration is available",
+        "requestedTier": "default"
+      },
+      "tier": "high",
+      "waterContext": "webgpu",
+      "waterFrames": 13
+    },
+    "validProfileProbe": {
+      "grid": "768x432",
+      "launchMode": "packaged-app",
+      "renderer": "webgpu-grid-primary-v1",
+      "requestedTier": "auto",
+      "selectedGrid": {
+        "cellsX": 768,
+        "cellsY": 432
+      },
+      "selectedTier": "ultra",
+      "selection": {
+        "calibratedTier": "ultra",
+        "mode": "calibrated-auto",
+        "preferredTier": "ultra",
+        "reason": "local calibration selected tier",
+        "requestedTier": "auto"
+      },
+      "tier": "ultra",
+      "waterContext": "webgpu",
+      "waterFrames": 12
+    }
+  },
+  "storage": {
+    "fileName": "fluid-calibration.v1.json",
+    "mismatchedProfileDowngradedByRenderer": true,
+    "tamperedProfileRejectedByMainProcess": true,
+    "validProfileReusedByMainProcess": true
+  }
+}

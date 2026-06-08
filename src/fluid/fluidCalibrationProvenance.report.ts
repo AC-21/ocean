@@ -5,12 +5,14 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { _electron as electron } from "playwright";
 import type { FluidAdaptiveTierReport, FluidAdaptiveTierRuntimeProbe } from "./fluidAdaptiveTier";
-import type { FluidCapabilityReport } from "./webgpuCapability";
-import { createFluidCalibrationFreshnessReport } from "./fluidCalibrationFreshness";
+import {
+  createFluidCalibrationProvenanceReport,
+} from "./fluidCalibrationProvenance";
 import {
   calibrationProfileForAdaptiveReport,
   type FluidCalibrationProfile,
 } from "./fluidPersistedCalibration";
+import type { FluidCapabilityReport } from "./webgpuCapability";
 
 const require = createRequire(import.meta.url);
 const { createHarborlineStorage, desktopStorageFiles } = require("../../electron/storage.cjs") as {
@@ -23,18 +25,18 @@ const { createHarborlineStorage, desktopStorageFiles } = require("../../electron
   };
 };
 
-const timeoutMs = Number(process.env.OCEAN_LAB_CALIBRATION_FRESHNESS_TIMEOUT_MS || 90_000);
+const timeoutMs = Number(process.env.OCEAN_LAB_CALIBRATION_PROVENANCE_TIMEOUT_MS || 90_000);
 const root = process.cwd();
-const outPath = process.env.OCEAN_LAB_CALIBRATION_FRESHNESS_OUT || "reports/fluid-calibration-freshness-latest.json";
-const adaptiveTierPath = process.env.OCEAN_LAB_CALIBRATION_FRESHNESS_ADAPTIVE_IN || "docs/evidence/FG-23-adaptive-tier-2026-06-08.json";
-const capabilityPath = process.env.OCEAN_LAB_CALIBRATION_FRESHNESS_CAPABILITY_IN || "docs/evidence/FG-01-fluid-capability-2026-06-07.json";
+const outPath = process.env.OCEAN_LAB_CALIBRATION_PROVENANCE_OUT || "reports/fluid-calibration-provenance-latest.json";
+const adaptiveTierPath = process.env.OCEAN_LAB_CALIBRATION_PROVENANCE_ADAPTIVE_IN || "docs/evidence/FG-23-adaptive-tier-2026-06-08.json";
+const capabilityPath = process.env.OCEAN_LAB_CALIBRATION_PROVENANCE_CAPABILITY_IN || "docs/evidence/FG-01-fluid-capability-2026-06-07.json";
 const appPackage = await readJson<{ version: string }>("package.json");
 const appName = "Ocean Impact Lab";
 const appVersion = appPackage.version;
 const arch = process.env.OCEAN_LAB_PACKAGE_ARCH || process.arch;
 const packagedExecutablePath = path.resolve("release", `${appName}-darwin-${arch}`, `${appName}.app`, "Contents", "MacOS", appName);
-const launchMode = process.env.OCEAN_LAB_CALIBRATION_FRESHNESS_TARGET === "source" ? "electron-source" : "packaged-app";
-const userDataRoot = await mkdtemp(path.join(tmpdir(), "ocean-lab-calibration-freshness-"));
+const launchMode = process.env.OCEAN_LAB_CALIBRATION_PROVENANCE_TARGET === "source" ? "electron-source" : "packaged-app";
+const userDataRoot = await mkdtemp(path.join(tmpdir(), "ocean-lab-calibration-provenance-"));
 const userDataPath = await realpath(userDataRoot);
 
 try {
@@ -55,10 +57,21 @@ try {
     appVersion,
     capabilityReport: capabilitySource,
   });
-  const staleProfile = calibrationProfileForAdaptiveReport(adaptiveSource, new Date().toISOString(), {
-    appVersion: "0.0.0-stale",
-    capabilityReport: capabilitySource,
+  const mismatchedProfile = calibrationProfileForAdaptiveReport(adaptiveSource, new Date().toISOString(), {
+    appVersion,
+    capabilityReport: {
+      ...capabilitySource,
+      adapterInfo: "external / copied-profile",
+      adapterName: "external / copied-profile",
+    },
   });
+  const tamperedProfile: FluidCalibrationProfile = {
+    ...validProfile,
+    capability: {
+      ...validProfile.capability,
+      fingerprint: "tampered",
+    },
+  };
 
   if (launchMode === "packaged-app") {
     await access(packagedExecutablePath);
@@ -72,39 +85,53 @@ try {
   const validProfileProbe = await launchAndProbe(launchEnv, {
     expectedGrid: "768x432",
     expectedMode: "calibrated-auto",
+    expectedRequestedTier: "auto",
     expectedTier: "ultra",
   });
 
-  await writeProfile(storage, desktopStorageFiles.fluidCalibrationProfile, staleProfile);
-  const staleProfileProbe = await launchAndProbe(launchEnv, {
+  await writeProfile(storage, desktopStorageFiles.fluidCalibrationProfile, mismatchedProfile);
+  const mismatchedProfileProbe = await launchAndProbe(launchEnv, {
     expectedGrid: "512x288",
-    expectedMode: "default-high",
+    expectedMode: "calibration-provenance-fallback-high",
+    expectedRequestedTier: "auto",
     expectedTier: "high",
   });
 
-  const report = createFluidCalibrationFreshnessReport({
+  await writeProfile(storage, desktopStorageFiles.fluidCalibrationProfile, tamperedProfile);
+  const tamperedProfileProbe = await launchAndProbe(launchEnv, {
+    expectedGrid: "512x288",
+    expectedMode: "default-high",
+    expectedRequestedTier: "default",
+    expectedTier: "high",
+  });
+
+  const report = createFluidCalibrationProvenanceReport({
     adaptiveSource,
+    capabilitySource,
     envCalibratedTierPresent: Boolean(launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER),
     envRequestedTierPresent: Boolean(launchEnv.OCEAN_LAB_FLUID_TIER),
     expectedAppVersion: appVersion,
     fileName: desktopStorageFiles.fluidCalibrationProfile,
     generatedAt: new Date().toISOString(),
     launchMode,
-    staleProfile,
-    staleProfileProbe: { ...staleProfileProbe, launchMode },
+    mismatchedProfile,
+    mismatchedProfileProbe: { ...mismatchedProfileProbe, launchMode },
+    tamperedProfile,
+    tamperedProfileProbe: { ...tamperedProfileProbe, launchMode },
     validProfile,
     validProfileProbe: { ...validProfileProbe, launchMode },
   });
 
   await mkdir(path.dirname(outPath), { recursive: true });
   await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`);
-  console.log(`Fluid calibration freshness report written to ${outPath}`);
-  console.log(`- app version: ${report.expectedAppVersion}`);
+  console.log(`Fluid calibration provenance report written to ${outPath}`);
+  console.log(`- adapter: ${report.capabilitySource.adapterInfo}`);
   console.log(`- valid profile: ${report.runtime.validProfileProbe.selection?.mode ?? "missing"} -> ${report.runtime.validProfileProbe.selectedTier}`);
-  console.log(`- stale profile: ${report.runtime.staleProfileProbe.selection?.mode ?? "missing"} -> ${report.runtime.staleProfileProbe.selectedTier}`);
-  assert.equal(launchMode, "packaged-app", "FG-27 evidence must use the packaged app by default");
-  assert.equal(report.gate, "G-FG-27", "FG-27 evidence must use the calibration freshness gate id");
-  assert.deepEqual(report.failures, [], `FG-27 failures:\n${report.failures.join("\n")}`);
+  console.log(`- mismatched profile: ${report.runtime.mismatchedProfileProbe.selection?.mode ?? "missing"} -> ${report.runtime.mismatchedProfileProbe.selectedTier}`);
+  console.log(`- tampered profile: ${report.runtime.tamperedProfileProbe.selection?.mode ?? "missing"} -> ${report.runtime.tamperedProfileProbe.selectedTier}`);
+  assert.equal(launchMode, "packaged-app", "FG-28 evidence must use the packaged app by default");
+  assert.equal(report.gate, "G-FG-28", "FG-28 evidence must use the calibration provenance gate id");
+  assert.deepEqual(report.failures, [], `FG-28 failures:\n${report.failures.join("\n")}`);
 } finally {
   await rm(userDataPath, { force: true, recursive: true });
 }
@@ -121,7 +148,7 @@ async function writeProfile(
 
 async function launchAndProbe(
   launchEnv: Record<string, string>,
-  expected: { expectedGrid: string; expectedMode: string; expectedTier: string }
+  expected: { expectedGrid: string; expectedMode: string; expectedRequestedTier: string; expectedTier: string }
 ): Promise<FluidAdaptiveTierRuntimeProbe> {
   let electronApp: Awaited<ReturnType<typeof electron.launch>> | null = null;
   try {
@@ -144,6 +171,7 @@ async function launchAndProbe(
         const canvas = document.querySelector(".ocean-canvas");
         return (
           window.__fluidGridTierSelection?.mode === runtimeExpected.expectedMode &&
+          window.__fluidGridTierSelection?.requestedTier === runtimeExpected.expectedRequestedTier &&
           window.__fluidGridCapabilityReport?.selectedTier === runtimeExpected.expectedTier &&
           canvas?.getAttribute("data-water-renderer") === "webgpu-grid-primary-v1" &&
           canvas?.getAttribute("data-water-context") === "webgpu" &&
