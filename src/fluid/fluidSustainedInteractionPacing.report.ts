@@ -34,7 +34,8 @@ const capabilityPath = process.env.OCEAN_LAB_SUSTAINED_INTERACTION_CAPABILITY_IN
 const durationMs = Number(process.env.OCEAN_LAB_SUSTAINED_INTERACTION_DURATION_MS || 12_800);
 const appName = "Ocean Impact Lab";
 const arch = process.env.OCEAN_LAB_PACKAGE_ARCH || process.arch;
-const packagedExecutablePath = path.resolve("release", `${appName}-darwin-${arch}`, `${appName}.app`, "Contents", "MacOS", appName);
+const releaseDir = process.env.OCEAN_LAB_RELEASE_DIR || "release";
+const packagedExecutablePath = path.resolve(releaseDir, `${appName}-darwin-${arch}`, `${appName}.app`, "Contents", "MacOS", appName);
 const launchMode = process.env.OCEAN_LAB_SUSTAINED_INTERACTION_TARGET === "source" ? "electron-source" : "packaged-app";
 const userDataRoot = await mkdtemp(path.join(tmpdir(), "ocean-lab-sustained-interaction-"));
 const userDataPath = await realpath(userDataRoot);

@@ -35,6 +35,7 @@ const requiredFiles = [
   "docs/evidence/FG-27-calibration-freshness-2026-06-08.json",
   "docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
   "docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json",
+  "docs/evidence/FG-30-package-reproducibility-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -44,7 +45,10 @@ const requiredFiles = [
   "electron/storage.test.mjs",
   "package.json",
   "scripts/desktop_storage_smoke.mjs",
+  "scripts/electron_zip_cache.mjs",
+  "scripts/electron_zip_cache.test.mjs",
   "scripts/fluid_live_reference_outcomes_report.mjs",
+  "scripts/package_mac.mjs",
   "src/OceanPhysicsApp.tsx",
   "src/OceanPhysicsApp.test.tsx",
   "src/physicsOcean.ts",
@@ -72,6 +76,9 @@ const requiredFiles = [
   "src/fluid/fluidSustainedInteractionPacing.ts",
   "src/fluid/fluidSustainedInteractionPacing.report.ts",
   "src/fluid/fluidSustainedInteractionPacing.test.ts",
+  "src/fluid/fluidPackageReproducibility.ts",
+  "src/fluid/fluidPackageReproducibility.report.ts",
+  "src/fluid/fluidPackageReproducibility.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -93,8 +100,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -113,7 +120,10 @@ const electronStorage = files.get("electron/storage.cjs") ?? "";
 const electronStorageTest = files.get("electron/storage.test.mjs") ?? "";
 const packageJson = files.get("package.json") ?? "";
 const desktopStorageSmoke = files.get("scripts/desktop_storage_smoke.mjs") ?? "";
+const electronZipCache = files.get("scripts/electron_zip_cache.mjs") ?? "";
+const electronZipCacheTest = files.get("scripts/electron_zip_cache.test.mjs") ?? "";
 const liveReferenceScript = files.get("scripts/fluid_live_reference_outcomes_report.mjs") ?? "";
+const packageMac = files.get("scripts/package_mac.mjs") ?? "";
 const oceanPhysicsApp = files.get("src/OceanPhysicsApp.tsx") ?? "";
 const oceanPhysicsAppTest = files.get("src/OceanPhysicsApp.test.tsx") ?? "";
 const physicsOcean = files.get("src/physicsOcean.ts") ?? "";
@@ -141,6 +151,9 @@ const calibrationProvenanceTest = files.get("src/fluid/fluidCalibrationProvenanc
 const sustainedInteractionPacing = files.get("src/fluid/fluidSustainedInteractionPacing.ts") ?? "";
 const sustainedInteractionPacingReport = files.get("src/fluid/fluidSustainedInteractionPacing.report.ts") ?? "";
 const sustainedInteractionPacingTest = files.get("src/fluid/fluidSustainedInteractionPacing.test.ts") ?? "";
+const packageReproducibility = files.get("src/fluid/fluidPackageReproducibility.ts") ?? "";
+const packageReproducibilityReport = files.get("src/fluid/fluidPackageReproducibility.report.ts") ?? "";
+const packageReproducibilityTest = files.get("src/fluid/fluidPackageReproducibility.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -189,6 +202,7 @@ const fg26Evidence = files.get("docs/evidence/FG-26-installed-display-pacing-202
 const fg27Evidence = files.get("docs/evidence/FG-27-calibration-freshness-2026-06-08.json") ?? "";
 const fg28Evidence = files.get("docs/evidence/FG-28-calibration-provenance-2026-06-08.json") ?? "";
 const fg29Evidence = files.get("docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json") ?? "";
+const fg30Evidence = files.get("docs/evidence/FG-30-package-reproducibility-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1858,6 +1872,113 @@ if (
   !fg29Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-29 evidence must record a passing packaged sustained calibrated interaction pacing report");
+}
+
+if (!packageJson.includes("\"fluid:package-reproducibility\"") || !packageJson.includes("src/fluid/fluidPackageReproducibility.report.ts")) {
+  errors.push("package.json must expose the FG-30 package reproducibility command");
+}
+
+if (!tracking.includes("FG-30-T03") || !tracking.includes("FG-30-package-reproducibility-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/33")) {
+  errors.push("docs/TRACKING.md must record FG-30 package reproducibility evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-30") ||
+  !contract.includes("G-FG-30") ||
+  !contract.includes("Local cached packaging reproducibility gate") ||
+  !contract.includes("npm run fluid:package-reproducibility")
+) {
+  errors.push("fluidGridContract.ts must define the FG-30 package reproducibility milestone, gate, and evidence command");
+}
+
+if (
+  !electronZipCache.includes("electronZipFileName") ||
+  !electronZipCache.includes("findCachedElectronZip") ||
+  !electronZipCache.includes("electronZipDirArgs") ||
+  !electronZipCache.includes("Library\", \"Caches\", \"electron") ||
+  !electronZipCache.includes("OCEAN_LAB_ELECTRON_ZIP_DIR") ||
+  !electronZipCache.includes("--electron-zip-dir=")
+) {
+  errors.push("electron_zip_cache.mjs must discover exact local Electron zip artifacts from cache roots");
+}
+
+if (
+  !electronZipCacheTest.includes("nested @electron/get cache directories") ||
+  !electronZipCacheTest.includes("electron-v42.3.3-darwin-arm64.zip") ||
+  !electronZipCacheTest.includes("returns no packager args")
+) {
+  errors.push("electron_zip_cache.test.mjs must cover local Electron zip cache discovery and fallback");
+}
+
+if (
+  !packageMac.includes("electronZipDirArgs") ||
+  !packageMac.includes("Using cached Electron zip") ||
+  !packageMac.includes("electronPackageJson.version") ||
+  !packageMac.includes("OCEAN_LAB_RELEASE_DIR") ||
+  !packageMac.includes("xattr") ||
+  !packageMac.includes("-cr") ||
+  !packageMac.includes("codesign") ||
+  !packageMac.includes("--deep")
+) {
+  errors.push("package_mac.mjs must prefer the local cached Electron zip when packaging");
+}
+
+if (
+  !packageReproducibility.includes("G-FG-30") ||
+  !packageReproducibility.includes("packaging did not use a local cached Electron zip") ||
+  !packageReproducibility.includes("sustained interaction pacing report must pass") ||
+  !packageReproducibility.includes("representativeSamples")
+) {
+  errors.push("fluidPackageReproducibility.ts must define cached packaging and sustained interaction checks");
+}
+
+if (
+  !packageReproducibilityReport.includes("findCachedElectronZip") ||
+  !packageReproducibilityReport.includes("ocean-lab-package-reproducibility-release") ||
+  !packageReproducibilityReport.includes("OCEAN_LAB_RELEASE_DIR") ||
+  !packageReproducibilityReport.includes("scripts/package_mac.mjs") ||
+  !packageReproducibilityReport.includes("fluidSustainedInteractionPacing.report.ts") ||
+  !packageReproducibilityReport.includes("fluid-sustained-interaction-pacing-package-reproducibility.json")
+) {
+  errors.push("fluidPackageReproducibility.report.ts must package through the cached path and run sustained interaction evidence");
+}
+
+if (
+  !packageReproducibilityTest.includes("cached Electron packaging") ||
+  !packageReproducibilityTest.includes("local Electron cache") ||
+  !packageReproducibilityTest.includes("G-FG-30")
+) {
+  errors.push("fluidPackageReproducibility.test.ts must cover FG-30 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-30") ||
+  !remap.includes("package-reproducibility") ||
+  !remap.includes("ocean-lab-package-reproducibility-release") ||
+  !remap.includes("electron-v42.3.3-darwin-arm64.zip") ||
+  !remap.includes("electron-zip-dir") ||
+  !remap.includes("host execution context") ||
+  !remap.includes("freshly packaged app")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-30 cached package reproducibility gate and evidence");
+}
+
+if (
+  !fg30Evidence.includes("\"gate\": \"G-FG-30\"") ||
+  !fg30Evidence.includes("\"pass\": true") ||
+  !fg30Evidence.includes("\"cacheHit\": true") ||
+  !fg30Evidence.includes("\"electronVersion\": \"42.3.3\"") ||
+  !fg30Evidence.includes("\"zipFileName\": \"electron-v42.3.3-darwin-arm64.zip\"") ||
+  !fg30Evidence.includes("\"packageScript\": \"scripts/package_mac.mjs\"") ||
+  !fg30Evidence.includes("\"appBundlePath\": \"/private/tmp/ocean-lab-package-reproducibility-release/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app\"") ||
+  !fg30Evidence.includes("\"gate\": \"G-FG-29\"") ||
+  !fg30Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg30Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg30Evidence.includes("\"stability\": \"smooth\"") ||
+  !fg30Evidence.includes("\"maxDroppedDebtS\": 0") ||
+  !fg30Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-30 evidence must record cached local packaging plus passing sustained calibrated interaction evidence");
 }
 
 if (errors.length > 0) {

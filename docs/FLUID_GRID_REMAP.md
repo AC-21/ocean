@@ -818,6 +818,37 @@ Latest sustained-interaction-pacing evidence:
   fixed-step simulation debt remain inside thresholds.
 - Gate: passed.
 
+FG-30 is complete as of 2026-06-08. It closes a reproducibility gap exposed by
+the packaged evidence gates: Electron Packager can try to fetch remote
+checksum metadata even when the matching Electron zip already exists locally.
+`scripts/package_mac.mjs` now discovers the exact local cached Electron zip for
+the current version/platform/arch and passes `electron-zip-dir` to Packager.
+The package reproducibility gate rebuilds the app through that cached path in a
+neutral `/private/tmp/ocean-lab-package-reproducibility-release` staging root,
+then runs the sustained calibrated interaction report against the freshly
+packaged app. The temp staging root avoids File Provider metadata from the
+workspace's Documents folder invalidating macOS launch evidence.
+
+Latest package-reproducibility evidence:
+
+- Command: `npm run fluid:package-reproducibility`.
+- Runtime: local macOS packaging using cached
+  `electron-v42.3.3-darwin-arm64.zip`.
+- Gate: `G-FG-30`.
+- Evidence snapshot:
+  `docs/evidence/FG-30-package-reproducibility-2026-06-08.json`.
+- Cache proof: Electron zip cache hit is true, with `electron-zip-dir` pointing
+  at the local `~/Library/Caches/electron/...` artifact.
+- Package proof:
+  `/private/tmp/ocean-lab-package-reproducibility-release/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app`
+  is rebuilt by `scripts/package_mac.mjs`.
+- Runtime proof: the freshly packaged app passes sustained calibrated-auto
+  ultra interaction pacing on the `768 x 432` WebGPU grid.
+- Execution proof: because this gate launches a real macOS GUI app through
+  Playwright, it must run in the host execution context rather than the Codex
+  filesystem sandbox.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a

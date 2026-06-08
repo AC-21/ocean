@@ -30,7 +30,8 @@ export type FluidGridMilestoneId =
   | "FG-26"
   | "FG-27"
   | "FG-28"
-  | "FG-29";
+  | "FG-29"
+  | "FG-30";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -62,7 +63,8 @@ export type FluidGridGateId =
   | "G-FG-26"
   | "G-FG-27"
   | "G-FG-28"
-  | "G-FG-29";
+  | "G-FG-29"
+  | "G-FG-30";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -159,6 +161,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-27", title: "Calibration profile freshness invalidation gate", gate: "G-FG-27" },
   { id: "FG-28", title: "Calibration profile hardware provenance gate", gate: "G-FG-28" },
   { id: "FG-29", title: "Sustained calibrated interaction pacing gate", gate: "G-FG-29" },
+  { id: "FG-30", title: "Local cached packaging reproducibility gate", gate: "G-FG-30" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -362,6 +365,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:sustained-interaction-pacing and docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json",
     passBar:
       "a packaged installed-profile calibrated-auto ultra run drives a sustained mixed-object workload while the WebGPU renderer remains on 768 x 432, active pressure/particles/coupling are observed, display pacing stays smooth, and fixed-step simulation debt remains bounded",
+  },
+  {
+    id: "G-FG-30",
+    blocks: "FG-30",
+    evidence: "npm run fluid:package-reproducibility and docs/evidence/FG-30-package-reproducibility-2026-06-08.json",
+    passBar:
+      "the macOS package path uses the exact local cached Electron zip for the current version, rebuilds the packaged app without remote checksum dependency, and then passes sustained calibrated-auto ultra interaction evidence",
   },
 ];
 
@@ -1065,6 +1075,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close sustained interaction pacing gate",
     exitProof:
       "npm run fluid:sustained-interaction-pacing passes with calibrated-auto ultra, 768 x 432 WebGPU samples, active physics telemetry, smooth sustained pacing, and committed FG-29 evidence",
+  },
+  {
+    id: "FG-30-T01",
+    milestone: "FG-30",
+    status: "done",
+    title: "Discover local cached Electron package artifacts",
+    exitProof:
+      "electron_zip_cache.mjs finds the exact electron-v42.3.3-darwin-arm64.zip artifact in local Electron cache roots and package_mac.mjs passes electron-zip-dir when present",
+  },
+  {
+    id: "FG-30-T02",
+    milestone: "FG-30",
+    status: "done",
+    title: "Compose cached packaging with sustained calibrated evidence",
+    exitProof:
+      "fluidPackageReproducibility.report.ts rebuilds the package through scripts/package_mac.mjs, records the cached zip proof, and runs the sustained interaction report against the freshly packaged app",
+  },
+  {
+    id: "FG-30-T03",
+    milestone: "FG-30",
+    status: "done",
+    title: "Close local package reproducibility gate",
+    exitProof:
+      "npm run fluid:package-reproducibility passes with a local cached Electron zip, packaged app path, calibrated-auto ultra runtime, smooth sustained pacing, and committed FG-30 evidence",
   },
 ];
 

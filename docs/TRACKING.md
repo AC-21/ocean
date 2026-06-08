@@ -37,6 +37,7 @@ and GitHub issue mapping.
 | FG-27 | Calibration profile freshness invalidation gate | Done | G-FG-27 |
 | FG-28 | Calibration profile hardware provenance gate | Done | G-FG-28 |
 | FG-29 | Sustained calibrated interaction pacing gate | Done | G-FG-29 |
+| FG-30 | Local cached packaging reproducibility gate | Done | G-FG-30 |
 
 ## Gates
 
@@ -72,6 +73,7 @@ and GitHub issue mapping.
 | G-FG-27 | FG-27 | `npm run fluid:calibration-freshness`; `docs/evidence/FG-27-calibration-freshness-2026-06-08.json` | calibration profiles include app-version and FG-23 source provenance; Electron reuses the current profile for calibrated-auto ultra but rejects a stale app-version profile and falls back to default high without fluid-tier environment variables |
 | G-FG-28 | FG-28 | `npm run fluid:calibration-provenance`; `docs/evidence/FG-28-calibration-provenance-2026-06-08.json` | calibration profiles bind to FG-01 WebGPU capability provenance; the packaged app reuses a matching profile, downgrades a copied-profile hardware mismatch to high, and rejects a tampered capability fingerprint without fluid-tier environment variables |
 | G-FG-29 | FG-29 | `npm run fluid:sustained-interaction-pacing`; `docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json` | a packaged installed-profile calibrated-auto ultra run drives a sustained mixed-object workload while the WebGPU renderer remains on `768 x 432`, active pressure/particles/coupling are observed, display pacing stays smooth, and fixed-step simulation debt remains bounded |
+| G-FG-30 | FG-30 | `npm run fluid:package-reproducibility`; `docs/evidence/FG-30-package-reproducibility-2026-06-08.json` | the macOS package path uses the exact local cached Electron zip for the current version, rebuilds the packaged app without remote checksum dependency, and then passes sustained calibrated-auto ultra interaction evidence |
 
 ## Tasks
 
@@ -168,6 +170,9 @@ and GitHub issue mapping.
 | FG-29-T01 | FG-29 | Done | performance | `fluidSustainedInteractionPacing.ts` requires a multi-action mixed-object workload, calibrated-auto ultra samples, WebGPU pressure/particles/coupling telemetry, smooth frame pacing, and zero fixed-step debt |
 | FG-29-T02 | FG-29 | Done | verification | `fluidSustainedInteractionPacing.report.ts` installs the calibration profile, launches the packaged app with no fluid-tier environment variables, and samples concrete, foam, leaky-drum, and steel-sphere drops in one sustained run |
 | FG-29-T03 | FG-29 | Done | performance | `npm run fluid:sustained-interaction-pacing` passes with calibrated-auto ultra, `768 x 432` WebGPU samples, active physics telemetry, smooth sustained pacing, and committed FG-29 evidence |
+| FG-30-T01 | FG-30 | Done | packaging | `electron_zip_cache.mjs` finds the exact `electron-v42.3.3-darwin-arm64.zip` artifact in local Electron cache roots and `package_mac.mjs` passes `electron-zip-dir` when present |
+| FG-30-T02 | FG-30 | Done | verification | `fluidPackageReproducibility.report.ts` rebuilds the package through `scripts/package_mac.mjs`, records the cached zip proof, and runs the sustained interaction report against the freshly packaged app |
+| FG-30-T03 | FG-30 | Done | release | `npm run fluid:package-reproducibility` passes with a local cached Electron zip, packaged app path, calibrated-auto ultra runtime, smooth sustained pacing, and committed FG-30 evidence |
 
 ## GitHub Labels
 
@@ -213,6 +218,7 @@ and GitHub issue mapping.
 | FG-27 | https://github.com/AC-21/ocean/issues/30 |
 | FG-28 | https://github.com/AC-21/ocean/issues/31 |
 | FG-29 | https://github.com/AC-21/ocean/issues/32 |
+| FG-30 | https://github.com/AC-21/ocean/issues/33 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

@@ -1,0 +1,214 @@
+{
+  "failures": [],
+  "gate": "G-FG-30",
+  "generatedAt": "2026-06-08T19:03:42.421Z",
+  "package": {
+    "appBundlePath": "/private/tmp/ocean-lab-package-reproducibility-release/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app",
+    "cache": {
+      "arch": "arm64",
+      "cacheDirectory": "/Users/sasha/Library/Caches/electron/0398eab6ff3b10eeeae02ced94c086c2894afe98d8b58a4a1f6e485064ac1f7f",
+      "cacheHit": true,
+      "electronVersion": "42.3.3",
+      "platform": "darwin",
+      "zipFileName": "electron-v42.3.3-darwin-arm64.zip",
+      "zipPath": "/Users/sasha/Library/Caches/electron/0398eab6ff3b10eeeae02ced94c086c2894afe98d8b58a4a1f6e485064ac1f7f/electron-v42.3.3-darwin-arm64.zip"
+    },
+    "packageScript": "scripts/package_mac.mjs",
+    "productName": "Ocean Impact Lab",
+    "version": "0.1.0"
+  },
+  "pass": true,
+  "sustainedInteraction": {
+    "gate": "G-FG-29",
+    "pass": true,
+    "runtime": {
+      "envCalibratedTierPresent": false,
+      "envRequestedTierPresent": false,
+      "selectedGrid": {
+        "cellsX": 768,
+        "cellsY": 432
+      },
+      "selectedTier": "ultra",
+      "selection": {
+        "calibratedTier": "ultra",
+        "mode": "calibrated-auto",
+        "preferredTier": "ultra",
+        "reason": "local calibration selected tier",
+        "requestedTier": "auto"
+      }
+    },
+    "summary": {
+      "actionCount": 4,
+      "durationMs": 12800,
+      "maxDroppedDebtS": 0,
+      "p95FrameMs": 9.200000000000273,
+      "p99FrameMs": 9.399999999999636,
+      "sampleCount": 1538,
+      "stability": "smooth",
+      "waterFrameDelta": 1562,
+      "worstDroppedFrameRatio": 0,
+      "worstDuplicateWaterFrameRatio": 0.0006501950585175553
+    },
+    "workload": {
+      "actions": [
+        {
+          "atMs": 0,
+          "dropHeightM": 8,
+          "label": "Concrete cube dense impact",
+          "presetId": "concrete-cube",
+          "releaseAngleRad": 0
+        },
+        {
+          "atMs": 3200,
+          "dropHeightM": 1.35,
+          "label": "Foam block damping",
+          "presetId": "foam-rescue-block",
+          "releaseAngleRad": 0.18
+        },
+        {
+          "atMs": 6400,
+          "dropHeightM": 2.2,
+          "label": "Leaky drum float/fill",
+          "presetId": "leaky-steel-drum",
+          "releaseAngleRad": -0.14
+        },
+        {
+          "atMs": 9600,
+          "dropHeightM": 5.2,
+          "label": "Steel sphere compact sink",
+          "presetId": "steel-sphere",
+          "releaseAngleRad": 0.06
+        }
+      ],
+      "durationMs": 12800,
+      "expectedActivePhysics": true,
+      "framePacing": {
+        "averageFps": 120.02309937413172,
+        "averageFrameMs": 8.331729518855663,
+        "displayRefreshEstimateHz": 120.48192771084074,
+        "droppedFrameCount": 0,
+        "droppedFrameRatio": 0,
+        "duplicateWaterFrameCount": 1,
+        "duplicateWaterFrameRatio": 0.0006501950585175553,
+        "durationMs": 12804,
+        "longTaskCount": 0,
+        "longTaskDurationMs": 0,
+        "maxDroppedDebtS": 0,
+        "maxFrameMs": 10.399999999999636,
+        "maxSubstepsObserved": 12,
+        "minFrameMs": 6,
+        "p50FrameMs": 8.300000000000182,
+        "p95FrameMs": 9.200000000000273,
+        "p99FrameMs": 9.399999999999636,
+        "pass": true,
+        "sampleCount": 1538,
+        "simulatedTimeRatio": 1.0404198374353077,
+        "stability": "smooth",
+        "thresholds": {
+          "maxDroppedDebtS": 1e-9,
+          "maxDroppedFrameRatio": 0.08,
+          "maxDuplicateWaterFrameRatio": 0.16,
+          "maxLongTaskDurationMs": 160,
+          "maxP95FrameMs": 24,
+          "maxP99FrameMs": 36,
+          "maxSimTimeRatio": 1.25,
+          "minActiveSimTimeRatio": 0.72,
+          "minAverageFps": 55,
+          "minSamples": 600,
+          "minWaterFrameDelta": 240,
+          "targetFrameMs": 16.666666666666668
+        },
+        "waterFrameDelta": 1562
+      },
+      "id": "sustained-calibrated-mixed-drops",
+      "label": "Sustained calibrated mixed object drops",
+      "representativeSamples": [
+        {
+          "atMs": 0,
+          "capabilityGrid": "768x432",
+          "capabilitySelectedTier": "ultra",
+          "couplingActive": true,
+          "droppedDebtS": 0,
+          "dtMs": 0,
+          "longTaskCount": 0,
+          "longTaskDurationMs": 0,
+          "maxSubstepsObserved": 0,
+          "particlesActive": false,
+          "phase": "falling",
+          "physicsTimeS": 0,
+          "pressureActive": true,
+          "renderMode": "webgpu",
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra",
+          "tierSelectionMode": "calibrated-auto",
+          "tierSelectionPreferredTier": "ultra",
+          "tierSelectionRequestedTier": "auto",
+          "totalSubsteps": 0,
+          "waterContext": "webgpu",
+          "waterFrame": 13
+        },
+        {
+          "atMs": 6400,
+          "capabilityGrid": "768x432",
+          "capabilitySelectedTier": "ultra",
+          "couplingActive": true,
+          "droppedDebtS": 0,
+          "dtMs": 0,
+          "longTaskCount": 0,
+          "longTaskDurationMs": 0,
+          "maxSubstepsObserved": 12,
+          "particlesActive": false,
+          "phase": "falling",
+          "physicsTimeS": 6.849999999999982,
+          "pressureActive": true,
+          "renderMode": "webgpu",
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra",
+          "tierSelectionMode": "calibrated-auto",
+          "tierSelectionPreferredTier": "ultra",
+          "tierSelectionRequestedTier": "auto",
+          "totalSubsteps": 14,
+          "waterContext": "webgpu",
+          "waterFrame": 801
+        },
+        {
+          "atMs": 12804,
+          "capabilityGrid": "768x432",
+          "capabilitySelectedTier": "ultra",
+          "couplingActive": true,
+          "droppedDebtS": 0,
+          "dtMs": 8.200000000000728,
+          "longTaskCount": 0,
+          "longTaskDurationMs": 0,
+          "maxSubstepsObserved": 0,
+          "particlesActive": false,
+          "phase": "ready",
+          "physicsTimeS": 10.049999999999972,
+          "pressureActive": true,
+          "renderMode": "webgpu",
+          "renderer": "webgpu-grid-primary-v1",
+          "tier": "ultra",
+          "tierSelectionMode": "calibrated-auto",
+          "tierSelectionPreferredTier": "ultra",
+          "tierSelectionRequestedTier": "auto",
+          "totalSubsteps": 0,
+          "waterContext": "webgpu",
+          "waterFrame": 1575
+        }
+      ],
+      "sampleCount": 1542,
+      "telemetry": {
+        "couplingActiveSeen": true,
+        "finalPhase": "ready",
+        "firedActionCount": 4,
+        "longTaskSupported": true,
+        "particlesActiveSeen": true,
+        "pressureActiveSeen": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "timeScale": 1,
+        "waterContext": "webgpu"
+      }
+    }
+  }
+}
