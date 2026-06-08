@@ -13,7 +13,8 @@ export type FluidGridMilestoneId =
   | "FG-09"
   | "FG-10"
   | "FG-11"
-  | "FG-12";
+  | "FG-12"
+  | "FG-13";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -28,7 +29,8 @@ export type FluidGridGateId =
   | "G-FG-09"
   | "G-FG-10"
   | "G-FG-11"
-  | "G-FG-12";
+  | "G-FG-12"
+  | "G-FG-13";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -108,6 +110,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-10", title: "Reference dataset ingestion and measurement harness", gate: "G-FG-10" },
   { id: "FG-11", title: "Conservative GPU shallow-water upgrade", gate: "G-FG-11" },
   { id: "FG-12", title: "Localized particle splash and spray layer", gate: "G-FG-12" },
+  { id: "FG-13", title: "Coupled packaged-app calibration against reference cases", gate: "G-FG-13" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -192,6 +195,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:particles and docs/evidence/FG-12-particle-splash-2026-06-08.json",
     passBar:
       "standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing",
+  },
+  {
+    id: "G-FG-13",
+    blocks: "FG-13",
+    evidence: "npm run fluid:coupled-calibrate and docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
+    passBar:
+      "the packaged desktop app, reference replay, shallow-water evidence, and particle-splash evidence pass as one coupled calibration packet for drop, splash, float, sink, damping, frame pacing, and bounded GPU readback",
   },
 ];
 
@@ -487,6 +497,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify standard and high tier local particle evidence",
     exitProof:
       "npm run fluid:particles passes standard and high tiers with bounded mass/momentum, reference-band crown height, local reentry feedback, and committed FG-12 evidence",
+  },
+  {
+    id: "FG-13-T01",
+    milestone: "FG-13",
+    status: "done",
+    title: "Compose packaged runtime, references, and solver evidence",
+    exitProof:
+      "fluidCoupledCalibration.ts composes packaged-app local calibration, FG-10 reference replay, FG-11 shallow-water evidence, and FG-12 particle-splash evidence",
+  },
+  {
+    id: "FG-13-T02",
+    milestone: "FG-13",
+    status: "done",
+    title: "Check coupled calibration measurements and solver bounds",
+    exitProof:
+      "createFluidCoupledCalibrationReport verifies drop speed, CPU/particle splash crown agreement, float/sink/damping references, frame pacing, mass drift, spray mass, reentry, and readback discipline",
+  },
+  {
+    id: "FG-13-T03",
+    milestone: "FG-13",
+    status: "done",
+    title: "Verify packaged coupled calibration evidence",
+    exitProof:
+      "npm run fluid:coupled-calibrate packages the app, passes packaged WebGPU runtime calibration, and writes committed FG-13 coupled evidence",
   },
 ];
 

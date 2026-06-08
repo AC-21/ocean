@@ -18,6 +18,7 @@ const requiredFiles = [
   "docs/evidence/FG-10-reference-dataset-2026-06-08.json",
   "docs/evidence/FG-11-shallow-water-2026-06-08.json",
   "docs/evidence/FG-12-particle-splash-2026-06-08.json",
+  "docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -30,11 +31,12 @@ const requiredFiles = [
   "src/fluid/fluidReferenceDataset.ts",
   "src/fluid/fluidShallowWater.ts",
   "src/fluid/fluidParticleSplash.ts",
+  "src/fluid/fluidCoupledCalibration.ts",
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -56,6 +58,7 @@ const referenceDatasetCode = files.get("src/fluid/fluidReferenceDataset.ts") ?? 
 const referenceDataset = files.get("data/fluid-reference-cases.json") ?? "";
 const shallowWater = files.get("src/fluid/fluidShallowWater.ts") ?? "";
 const particleSplash = files.get("src/fluid/fluidParticleSplash.ts") ?? "";
+const coupledCalibration = files.get("src/fluid/fluidCoupledCalibration.ts") ?? "";
 const viteEnv = files.get("src/vite-env.d.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
@@ -69,6 +72,7 @@ const fg09Evidence = files.get("docs/evidence/FG-09-solver-architecture-2026-06-
 const fg10Evidence = files.get("docs/evidence/FG-10-reference-dataset-2026-06-08.json") ?? "";
 const fg11Evidence = files.get("docs/evidence/FG-11-shallow-water-2026-06-08.json") ?? "";
 const fg12Evidence = files.get("docs/evidence/FG-12-particle-splash-2026-06-08.json") ?? "";
+const fg13Evidence = files.get("docs/evidence/FG-13-coupled-calibration-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -417,6 +421,56 @@ if (
   !fg12Evidence.includes("\"high\"")
 ) {
   errors.push("FG-12 evidence must record a passing localized particle-splash WebGPU report for standard and high tiers");
+}
+
+if (!packageJson.includes("\"fluid:coupled-calibrate\"")) {
+  errors.push("package.json must expose the FG-13 coupled packaged-app calibration command");
+}
+
+if (!tracking.includes("FG-13-T03") || !tracking.includes("FG-13-coupled-calibration-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/16")) {
+  errors.push("docs/TRACKING.md must record FG-13 coupled calibration evidence and issue mapping");
+}
+
+if (
+  !coupledCalibration.includes("G-FG-13") ||
+  !coupledCalibration.includes("createFluidCoupledCalibrationReport") ||
+  !coupledCalibration.includes("packaged-app") ||
+  !coupledCalibration.includes("splash-crown-cpu-particle-agreement") ||
+  !coupledCalibration.includes("shallow-water-mass-drift") ||
+  !coupledCalibration.includes("particle-splash-mass-fraction") ||
+  !coupledCalibration.includes("noFullGridReadbackPerFrame")
+) {
+  errors.push("fluidCoupledCalibration.ts must compose packaged runtime, reference replay, shallow-water, and particle evidence");
+}
+
+if (
+  !remap.includes("FG-13") ||
+  !remap.includes("coupled packaged-app") ||
+  !remap.includes("CPU reference crown") ||
+  !remap.includes("particle crown") ||
+  !remap.includes("drop, splash, float, sink, and damping")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-13 coupled packaged-app calibration gate and evidence");
+}
+
+if (
+  !fg13Evidence.includes("\"gate\": \"G-FG-13\"") ||
+  !fg13Evidence.includes("\"pass\": true") ||
+  !fg13Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg13Evidence.includes("\"renderer\": [") ||
+  !fg13Evidence.includes("\"webgpu-grid-primary-v1\"") ||
+  !fg13Evidence.includes("\"drop-speed-reference\"") ||
+  !fg13Evidence.includes("\"splash-crown-cpu-particle-agreement\"") ||
+  !fg13Evidence.includes("\"float-static-draft-reference\"") ||
+  !fg13Evidence.includes("\"sink-terminal-speed-reference\"") ||
+  !fg13Evidence.includes("\"shallowWater\"") ||
+  !fg13Evidence.includes("\"massRelativeDrift\"") ||
+  !fg13Evidence.includes("\"particleSplash\"") ||
+  !fg13Evidence.includes("\"massFractionOfDisplaced\"") ||
+  !fg13Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg13Evidence.includes("\"failedMeasurements\": []")
+) {
+  errors.push("FG-13 evidence must record a passing coupled packaged-app calibration report");
 }
 
 if (errors.length > 0) {

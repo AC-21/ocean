@@ -101,6 +101,12 @@ Run the localized WebGPU particle-splash gate:
 npm run fluid:particles
 ```
 
+Run the coupled packaged-app calibration gate:
+
+```sh
+npm run fluid:coupled-calibrate
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -126,7 +132,10 @@ foam, spray, crown height, entrained air, and secondary droplet reentry from
 local grid energy and Weber/Froude impact state. Live diagnostics are calculated
 in `src/physicsOcean.ts` and rendered by the app. The latest FG-12 gate also
 steps localized splash particles in WebGPU, accounting for spray mass, launch
-momentum, crown height, foam, and secondary reentry feedback.
+momentum, crown height, foam, and secondary reentry feedback. The latest FG-13
+gate packages the app and verifies packaged WebGPU frame pacing, reference
+drop/splash/float/sink/damping replay, shallow-water diagnostics, and particle
+splash diagnostics together.
 
 ## Run
 
@@ -228,6 +237,9 @@ Current validation checks include:
   impulse, and finite force-feedback diagnostics for a concrete-cube drop.
 - WebGPU localized particle-splash stepping with bounded spray mass, bounded
   launch momentum, reference-band crown height, and nonzero reentry feedback.
+- Coupled packaged-app calibration across reference replay, WebGPU
+  shallow-water mass/momentum diagnostics, localized particle splash diagnostics,
+  and smooth local frame pacing.
 - WebGPU grid-splash coupling with bounded foam samples, spray count, crown
   height, and secondary droplet reentry energy for a concrete-cube drop.
 - Near-realism calibration covering impact speed, timestep convergence,

@@ -1,0 +1,193 @@
+{
+  "comparisons": [
+    {
+      "actual": 12.164074551941793,
+      "expected": {
+        "min": 11.023081064747732,
+        "max": 12.526228482667877
+      },
+      "id": "drop-speed-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "m/s"
+    },
+    {
+      "actual": 2.0805356807438717,
+      "expected": {
+        "min": 0.8085690604573332,
+        "max": 3.514758255264296
+      },
+      "id": "splash-crown-cpu-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "m"
+    },
+    {
+      "actual": 1.9613444680420467,
+      "expected": {
+        "min": 0.8085719013577521,
+        "max": 3.514770250177176
+      },
+      "id": "splash-crown-particle-reference-band",
+      "pass": true,
+      "source": "particle-splash",
+      "unit": "m"
+    },
+    {
+      "actual": 0.11919121270182509,
+      "expected": {
+        "min": 0,
+        "max": 0.21649513558455702
+      },
+      "id": "splash-crown-cpu-particle-agreement",
+      "pass": true,
+      "source": "coupled-comparison",
+      "unit": "m"
+    },
+    {
+      "actual": 0.894634146341463,
+      "expected": {
+        "min": 0.8596341463414634,
+        "max": 0.9296341463414635
+      },
+      "id": "float-static-draft-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "fraction"
+    },
+    {
+      "actual": 0.013496606773235775,
+      "expected": {
+        "min": 0,
+        "max": 0.055
+      },
+      "id": "damping-draft-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "m"
+    },
+    {
+      "actual": 0.052708858657742844,
+      "expected": {
+        "min": 0,
+        "max": 0.08
+      },
+      "id": "damping-buoyancy-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "ratio"
+    },
+    {
+      "actual": 0.2232846141029004,
+      "expected": {
+        "min": 0,
+        "max": 0.55
+      },
+      "id": "sink-leak-sensitivity-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "ratio"
+    },
+    {
+      "actual": 4.006729250768309,
+      "expected": {
+        "min": 1,
+        "max": 8
+      },
+      "id": "sink-terminal-speed-reference",
+      "pass": true,
+      "source": "reference-dataset",
+      "unit": "m/s"
+    },
+    {
+      "actual": 119.97600479904028,
+      "expected": {
+        "min": 55,
+        "max": 240
+      },
+      "id": "packaged-frame-pacing-min-fps",
+      "pass": true,
+      "source": "packaged-app",
+      "unit": "fps"
+    },
+    {
+      "actual": 1.3072960754055985e-9,
+      "expected": {
+        "min": 0,
+        "max": 0.004
+      },
+      "id": "shallow-water-mass-drift",
+      "pass": true,
+      "source": "shallow-water",
+      "unit": "ratio"
+    },
+    {
+      "actual": 0.21233658674286632,
+      "expected": {
+        "min": 0,
+        "max": 0.35
+      },
+      "id": "particle-splash-mass-fraction",
+      "pass": true,
+      "source": "particle-splash",
+      "unit": "ratio"
+    }
+  ],
+  "failures": [],
+  "gate": "G-FG-13",
+  "generatedAt": "2026-06-08T02:21:30.669Z",
+  "packagedRuntime": {
+    "averageFps": {
+      "idle-high-tier": 119.97600479904028,
+      "concrete-cube-drop": 120.09431700103907
+    },
+    "launchMode": "packaged-app",
+    "pass": true,
+    "renderer": [
+      "webgpu-grid-primary-v1"
+    ],
+    "scenarioCount": 2,
+    "waterContext": [
+      "webgpu"
+    ]
+  },
+  "pass": true,
+  "referenceReplay": {
+    "categories": [
+      "damping",
+      "drop",
+      "float",
+      "sink",
+      "splash"
+    ],
+    "datasetId": "ocean-impact-reference-v1",
+    "failedMeasurements": [],
+    "pass": true
+  },
+  "solverEvidence": {
+    "particleSplash": {
+      "highParticleCount": 4096,
+      "massFractionOfDisplaced": 0.21233658674286632,
+      "momentumFractionOfImpact": 0.007729454060145275,
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "predictedCrownHeightM": 1.9613444680420467,
+      "reentryEnergyJ": 179.17910576611757,
+      "timestampQueryEnabled": true
+    },
+    "shallowWater": {
+      "dryCellsWithWater": 0,
+      "massRelativeDrift": 1.3072960754055985e-9,
+      "momentumDampingRatio": 0.560841167993368,
+      "negativeDepthCells": 0,
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "timestampQueryEnabled": true
+    }
+  },
+  "sources": {
+    "localCalibrationPath": "reports/fluid-local-calibration-fg13.json",
+    "particleSplashPath": "docs/evidence/FG-12-particle-splash-2026-06-08.json",
+    "shallowWaterPath": "docs/evidence/FG-11-shallow-water-2026-06-08.json"
+  }
+}

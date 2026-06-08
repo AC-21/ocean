@@ -20,6 +20,7 @@ and GitHub issue mapping.
 | FG-10 | Reference dataset ingestion and measurement harness | Done | G-FG-10 |
 | FG-11 | Conservative GPU shallow-water upgrade | Done | G-FG-11 |
 | FG-12 | Localized particle splash and spray layer | Done | G-FG-12 |
+| FG-13 | Coupled packaged-app calibration against reference cases | Done | G-FG-13 |
 
 ## Gates
 
@@ -38,6 +39,7 @@ and GitHub issue mapping.
 | G-FG-10 | FG-10 | `npm run fluid:references`; `docs/evidence/FG-10-reference-dataset-2026-06-08.json` | drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements |
 | G-FG-11 | FG-11 | `npm run fluid:shallow-water`; `docs/evidence/FG-11-shallow-water-2026-06-08.json` | standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing |
 | G-FG-12 | FG-12 | `npm run fluid:particles`; `docs/evidence/FG-12-particle-splash-2026-06-08.json` | standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing |
+| G-FG-13 | FG-13 | `npm run fluid:coupled-calibrate`; `docs/evidence/FG-13-coupled-calibration-2026-06-08.json` | the packaged desktop app, reference replay, shallow-water evidence, and particle-splash evidence pass as one coupled calibration packet for drop, splash, float, sink, damping, frame pacing, and bounded GPU readback |
 
 ## Tasks
 
@@ -83,6 +85,9 @@ and GitHub issue mapping.
 | FG-12-T01 | FG-12 | Done | compute | `fluidParticleSplash.ts` defines localized-particle-splash-v1 with deterministic particle seeding from displaced water mass, Weber/Froude impact state, and reference splash bands |
 | FG-12-T02 | FG-12 | Done | diagnostics | `runParticleSplashBenchmark` reports mass fraction, momentum fraction, crown height, reentry energy, foam contribution, bounded feedback samples, and timestamp-query GPU timing |
 | FG-12-T03 | FG-12 | Done | verification | `npm run fluid:particles` passes standard and high tiers with bounded mass/momentum, reference-band crown height, local reentry feedback, and committed FG-12 evidence |
+| FG-13-T01 | FG-13 | Done | calibration | `fluidCoupledCalibration.ts` composes packaged-app local calibration, FG-10 reference replay, FG-11 shallow-water evidence, and FG-12 particle-splash evidence |
+| FG-13-T02 | FG-13 | Done | calibration | `createFluidCoupledCalibrationReport` verifies drop speed, CPU/particle splash crown agreement, float/sink/damping references, frame pacing, mass drift, spray mass, reentry, and readback discipline |
+| FG-13-T03 | FG-13 | Done | verification | `npm run fluid:coupled-calibrate` packages the app, passes packaged WebGPU runtime calibration, and writes committed FG-13 coupled evidence |
 
 ## GitHub Labels
 
@@ -111,6 +116,7 @@ and GitHub issue mapping.
 | FG-10 | https://github.com/AC-21/ocean/issues/13 |
 | FG-11 | https://github.com/AC-21/ocean/issues/14 |
 | FG-12 | https://github.com/AC-21/ocean/issues/15 |
+| FG-13 | https://github.com/AC-21/ocean/issues/16 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

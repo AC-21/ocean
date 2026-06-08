@@ -365,6 +365,33 @@ Latest particle-splash evidence:
   full-grid readback.
 - Gate: passed.
 
+FG-13 is complete as of 2026-06-08. It is the first coupled packaged-app
+calibration packet: the command packages the local macOS app, launches that
+packaged app for WebGPU/frame-pacing evidence, replays the source-backed
+reference dataset, and composes the latest shallow-water and particle-splash
+evidence into one pass/fail report.
+
+Latest coupled calibration evidence:
+
+- Command: `npm run fluid:coupled-calibrate`.
+- Report: `reports/fluid-coupled-calibration-latest.json`.
+- Gate: `G-FG-13`.
+- Evidence snapshot: `docs/evidence/FG-13-coupled-calibration-2026-06-08.json`.
+- Runtime: packaged macOS app with renderer `webgpu-grid-primary-v1` and
+  context `webgpu`.
+- Frame pacing: idle high-tier `119.98 FPS`; concrete-cube drop `120.09 FPS`;
+  both packaged scenarios passed smoothness thresholds.
+- Reference replay: drop, splash, float, sink, and damping categories passed
+  with `0` failed measurements.
+- Coupled splash check: CPU reference crown `2.0805 m`, particle crown
+  `1.9613 m`, agreement delta `0.1192 m` inside the accepted `0.2165 m` band.
+- Broad-water evidence: shallow-water high-tier mass drift `1.307e-9`,
+  momentum damping `0.5608`, no negative depths, no dry-cell leakage, and
+  timestamp-query timing.
+- Particle evidence: `4096` high-tier particles, spray mass fraction `0.2123`,
+  momentum fraction `0.00773`, reentry energy `179.18 J`, and bounded readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -399,6 +426,9 @@ Latest particle-splash evidence:
 13. Localized particle splash stepping: spawn bounded particles from energetic
     impact events, step them in WebGPU, and feed mass, momentum, foam, and
     secondary reentry summaries back into the grid contract.
+14. Coupled packaged-app calibration: package and launch the desktop app, then
+    verify reference replay, broad-water mass/momentum evidence, local particle
+    splash evidence, frame pacing, and bounded readback in one report.
 
 ## Resolution Ladder
 
