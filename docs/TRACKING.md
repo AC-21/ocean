@@ -24,6 +24,7 @@ and GitHub issue mapping.
 | FG-14 | Live particle splash feedback in packaged renderer | Done | G-FG-14 |
 | FG-15 | Bounded pressure-gradient broad-water acceleration | Done | G-FG-15 |
 | FG-16 | Live pressure-gradient broad-water renderer path | Done | G-FG-16 |
+| FG-17 | Pressure-informed rigid-body force feedback | Done | G-FG-17 |
 
 ## Gates
 
@@ -46,6 +47,7 @@ and GitHub issue mapping.
 | G-FG-14 | FG-14 | `npm run fluid:live-particles`; `docs/evidence/FG-14-live-particles-2026-06-08.json` | the packaged WebGPU renderer exposes and uses localized particle splash feedback with bounded mass, momentum, crown height, reentry energy, local grid feedback, and no Canvas fallback |
 | G-FG-15 | FG-15 | `npm run fluid:pressure`; `docs/evidence/FG-15-pressure-gradient-2026-06-08.json` | standard and high WebGPU tiers use bounded pressure-gradient acceleration with mass, wet/dry, energy, momentum-budget, slope-limiter, CFL, and timestamp-query evidence |
 | G-FG-16 | FG-16 | `npm run fluid:live-pressure`; `docs/evidence/FG-16-live-pressure-2026-06-08.json` | the packaged WebGPU renderer advances live broad water with bounded pressure-gradient momentum buffers and exposes pressure plus particle telemetry without Canvas fallback or full-grid readback |
+| G-FG-17 | FG-17 | `npm run fluid:live-pressure-feedback`; `docs/evidence/FG-17-pressure-feedback-2026-06-08.json` | the packaged app feeds bounded live pressure force deltas into the rigid-body grid coupling consumed by `stepSimulation` while retaining WebGPU pressure, object-grid, and particle telemetry |
 
 ## Tasks
 
@@ -103,6 +105,9 @@ and GitHub issue mapping.
 | FG-16-T01 | FG-16 | Done | renderer | `FluidWaterRenderer` allocates x/y momentum ping-pong buffers and runs `fluidWaterPressureStepShader` with pressure gain, slope limiting, momentum limiting, depth, obstacle, impulse, and foam state |
 | FG-16-T02 | FG-16 | Done | diagnostics | `FluidWaterRenderer` stats and canvas dataset expose bounded-pressure-gradient-live-v1, pressure gain, slope limit, momentum limit, CFL, storage, work, impulse energy, and no-full-grid-readback telemetry |
 | FG-16-T03 | FG-16 | Done | verification | `npm run fluid:live-pressure` launches the packaged app, drops the concrete cube, and records active live pressure plus live particle telemetry in `docs/evidence/FG-16-live-pressure-2026-06-08.json` |
+| FG-17-T01 | FG-17 | Done | physics | `livePressureSummaryFor` reports nonzero bounded vertical and horizontal pressure force deltas, pressure grid velocity, and force bounds from live pressure work, impulse, displaced volume, and object motion |
+| FG-17-T02 | FG-17 | Done | integration | `OceanPhysicsApp` combines pressure force deltas with object-grid force deltas in `gridCouplingRef` and exposes `window.__fluidGridCouplingForces` for the next fixed step consumed by `stepSimulation` |
+| FG-17-T03 | FG-17 | Done | verification | `npm run fluid:live-pressure-feedback` launches the packaged app, drops the concrete cube, and records active pressure force deltas plus combined consumed grid coupling in `docs/evidence/FG-17-pressure-feedback-2026-06-08.json` |
 
 ## GitHub Labels
 
@@ -135,6 +140,7 @@ and GitHub issue mapping.
 | FG-14 | https://github.com/AC-21/ocean/issues/17 |
 | FG-15 | https://github.com/AC-21/ocean/issues/18 |
 | FG-16 | https://github.com/AC-21/ocean/issues/19 |
+| FG-17 | https://github.com/AC-21/ocean/issues/20 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

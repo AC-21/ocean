@@ -147,6 +147,8 @@ export type GridFluidCouplingForces = {
   active: boolean;
   gridVelocityMps: number;
   horizontalForceDeltaN: number;
+  pressureHorizontalForceDeltaN?: number;
+  pressureVerticalForceDeltaN?: number;
   sampleTimeS: number;
   verticalForceDeltaN: number;
 };
@@ -3389,6 +3391,8 @@ function activeGridFluidCouplingFor(coupling: GridFluidCouplingForces | null | u
       active: false,
       gridVelocityMps: 0,
       horizontalForceDeltaN: 0,
+      pressureHorizontalForceDeltaN: 0,
+      pressureVerticalForceDeltaN: 0,
       sampleTimeS: timeS,
       verticalForceDeltaN: 0,
     };
@@ -3398,6 +3402,8 @@ function activeGridFluidCouplingFor(coupling: GridFluidCouplingForces | null | u
     active: true,
     gridVelocityMps: finiteClamp(coupling.gridVelocityMps, -12, 12),
     horizontalForceDeltaN: finiteClamp(coupling.horizontalForceDeltaN, -1_000_000, 1_000_000),
+    pressureHorizontalForceDeltaN: finiteClamp(coupling.pressureHorizontalForceDeltaN ?? 0, -1_000_000, 1_000_000),
+    pressureVerticalForceDeltaN: finiteClamp(coupling.pressureVerticalForceDeltaN ?? 0, -1_000_000, 1_000_000),
     sampleTimeS: coupling.sampleTimeS,
     verticalForceDeltaN: finiteClamp(coupling.verticalForceDeltaN, -1_000_000, 1_000_000),
   };

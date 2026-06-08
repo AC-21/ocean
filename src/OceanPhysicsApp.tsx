@@ -134,6 +134,7 @@ export default function OceanPhysicsApp() {
     const next = createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg));
     simulationRef.current = next;
     gridCouplingRef.current = null;
+    window.__fluidGridCouplingForces = undefined;
     setSnapshot(next);
     setRunning(false);
     setPaused(false);
@@ -169,18 +170,25 @@ export default function OceanPhysicsApp() {
         if (waterRendererRef.current && waterRenderMode === "webgpu") {
           const stats = waterRendererRef.current.render(fluidWaterInputFor(canvas, current, specRef.current, settingsRef.current, dropHeightM));
           window.__fluidWaterRenderStats = stats;
+          const coupling = stats.lastCoupling;
+          const pressure = stats.lastPressure;
+          const pressureActive = pressure?.active === true && pressure.noFullGridReadbackPerFrame === true;
           gridCouplingRef.current =
-            stats.lastCoupling?.active === true
+            coupling?.active === true || pressureActive
               ? {
                   active: true,
-                  gridVelocityMps: stats.lastCoupling.gridVelocityMps,
-                  horizontalForceDeltaN: stats.lastCoupling.horizontalForceDeltaN,
-                  sampleTimeS: stats.lastCoupling.sampleTimeS,
-                  verticalForceDeltaN: stats.lastCoupling.verticalForceDeltaN,
+                  gridVelocityMps: pressureActive ? pressure.gridVelocityMps : coupling?.gridVelocityMps ?? 0,
+                  horizontalForceDeltaN: (coupling?.horizontalForceDeltaN ?? 0) + (pressureActive ? pressure.horizontalForceDeltaN : 0),
+                  pressureHorizontalForceDeltaN: pressureActive ? pressure.horizontalForceDeltaN : 0,
+                  pressureVerticalForceDeltaN: pressureActive ? pressure.verticalForceDeltaN : 0,
+                  sampleTimeS: Math.max(coupling?.sampleTimeS ?? 0, pressureActive ? pressure.sampleTimeS : 0),
+                  verticalForceDeltaN: (coupling?.verticalForceDeltaN ?? 0) + (pressureActive ? pressure.verticalForceDeltaN : 0),
                 }
               : null;
+          window.__fluidGridCouplingForces = gridCouplingRef.current ?? undefined;
         } else if (waterRenderMode === "fallback") {
           gridCouplingRef.current = null;
+          window.__fluidGridCouplingForces = undefined;
           legacyCanvasWaterTelemetry(canvas, waterFallbackReasonRef.current);
           renderOcean(canvas, current, specRef.current, settingsRef.current, dropHeightM);
         }
@@ -219,6 +227,7 @@ export default function OceanPhysicsApp() {
     const next = startDrop(createSimulation(specRef.current, dropHeightM, degreesToRadians(releaseAngleDeg)));
     simulationRef.current = next;
     gridCouplingRef.current = null;
+    window.__fluidGridCouplingForces = undefined;
     setSnapshot(next);
     setRunning(true);
     setPaused(false);

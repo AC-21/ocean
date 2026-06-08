@@ -472,6 +472,33 @@ Latest live pressure evidence:
   stayed off Canvas 2D.
 - Gate: passed.
 
+FG-17 is complete as of 2026-06-08. It closes the next runtime loop: live
+pressure no longer stops at renderer telemetry. The app now derives bounded
+vertical and horizontal pressure force deltas from the live pressure summary,
+combines them with object-grid force feedback, exposes
+`window.__fluidGridCouplingForces`, and feeds that combined force packet into
+the next fixed `stepSimulation` call.
+
+Latest pressure force-feedback evidence:
+
+- Command: `npm run fluid:live-pressure-feedback`.
+- Runtime: packaged macOS app.
+- Gate: `G-FG-17`.
+- Evidence snapshot:
+  `docs/evidence/FG-17-pressure-feedback-2026-06-08.json`.
+- Pressure solver: `bounded-pressure-gradient-live-v1`, renderer
+  `webgpu-grid-primary-v1`, context `webgpu`, high tier.
+- Pressure force telemetry: vertical pressure force `107.78 N`, horizontal
+  pressure force `0.0047 N`, force bound `1581.25 N`, and pressure grid
+  velocity `0.1818 m/s`.
+- Consumed rigid-body coupling: combined vertical force `2520.91 N`, combined
+  horizontal force `0.1743 N`, pressure vertical contribution `107.78 N`, and
+  pressure horizontal contribution `0.0047 N`.
+- Coupled live path: object-grid coupling remained active, live particles
+  remained active with `468` droplets, and no Canvas fallback or per-frame
+  full-grid readback was used.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -520,6 +547,10 @@ Latest live pressure evidence:
     water through pressure-gradient height plus x/y momentum buffers and expose
     pressure work, impulse energy, CFL, slope limit, momentum limit, storage,
     and live particle coexistence without full-grid readback.
+18. Pressure-informed rigid-body feedback: derive bounded pressure force deltas
+    from the live pressure summary, combine them with object-grid coupling, and
+    prove the fixed-step physics loop consumes the combined force packet in the
+    packaged app.
 
 ## Resolution Ladder
 

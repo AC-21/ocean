@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { fluidWaterPressureStepShader, fluidWaterRenderShader, legacyCanvasWaterTelemetry } from "./fluidWaterRenderer";
+import { createFluidGridStepPlan } from "./fluidGridGpu";
+import { fluidWaterPressureStepShader, fluidWaterRenderShader, legacyCanvasWaterTelemetry, livePressureSummaryFor, type FluidWaterRenderInput } from "./fluidWaterRenderer";
 
 describe("WebGPU fluid water renderer contract", () => {
   it("renders from storage-backed height and foam grids through WebGPU", () => {
@@ -27,6 +28,20 @@ describe("WebGPU fluid water renderer contract", () => {
     expect(fluidWaterPressureStepShader).not.toMatch(/getContext|CanvasRenderingContext2D|fillRect|Path2D/);
   });
 
+  it("derives bounded pressure force feedback for rigid-body coupling", () => {
+    const plan = createFluidGridStepPlan({ tier: "high" });
+    const pressure = livePressureSummaryFor(exampleRenderInput, plan);
+
+    expect(pressure.coupling).toBe("bounded-pressure-gradient-live-v1");
+    expect(pressure.verticalForceDeltaN).not.toBe(0);
+    expect(pressure.horizontalForceDeltaN).not.toBe(0);
+    expect(Math.abs(pressure.verticalForceDeltaN)).toBeLessThanOrEqual(pressure.forceBoundN);
+    expect(Math.abs(pressure.horizontalForceDeltaN)).toBeLessThanOrEqual(pressure.forceBoundN * 0.55);
+    expect(pressure.bufferRoles).toContain("momentumX");
+    expect(pressure.bufferRoles).toContain("momentumY");
+    expect(pressure.noFullGridReadbackPerFrame).toBe(true);
+  });
+
   it("marks Canvas telemetry as diagnostic fallback only", () => {
     const canvas = { dataset: {} } as HTMLCanvasElement;
     legacyCanvasWaterTelemetry(canvas, "test fallback");
@@ -35,3 +50,45 @@ describe("WebGPU fluid water renderer contract", () => {
     expect(canvas.dataset.waterFallbackReason).toBe("test fallback");
   });
 });
+
+const exampleRenderInput: FluidWaterRenderInput = {
+  buoyancyN: 1800,
+  currentSpeedMps: 0.18,
+  displacedVolumeM3: 0.18,
+  displacedVolumeRateM3ps: 2.4,
+  dragForceXN: 12,
+  dragForceYN: 40,
+  ejectedWaterKg: 90,
+  froudeNumber: 3.2,
+  gravityMps2: 9.80665,
+  impactStrength: 0.82,
+  massKg: 895.8,
+  netForceN: -3600,
+  objectAngleRad: -0.1,
+  objectCenterXPx: 420,
+  objectCenterYPx: 250,
+  objectDepthM: 0.72,
+  objectHalfHeightPx: 42,
+  objectHalfWidthPx: 42,
+  objectHeightM: 0.72,
+  objectVxMps: -0.4,
+  objectVyMps: -8.8,
+  objectWidthM: 0.72,
+  scalePxPerM: 58,
+  shape: "box",
+  slamForceN: 9800,
+  sprayParticleCount: 220,
+  sprayReentryCount: 12,
+  sprayReentryEnergyJ: 3.2,
+  sprayReentryMassKg: 0.9,
+  splashEnergyJ: 8400,
+  splashHeightM: 2.1,
+  submergedFraction: 0.62,
+  surfaceTensionNpm: 0.073,
+  surfaceYPx: 280,
+  timeS: 1.25,
+  waterDensityKgM3: 1025,
+  waterDepthM: 22,
+  weberNumber: 120000,
+  waveHeightM: 0.85,
+};

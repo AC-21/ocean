@@ -80,6 +80,9 @@ export type FluidRendererPressureSummary = {
   cfl: number;
   coupling: "bounded-pressure-gradient-live-v1";
   estimatedStorageBytes: number;
+  forceBoundN: number;
+  gridVelocityMps: number;
+  horizontalForceDeltaN: number;
   impulseEnergyEstimateJ: number;
   maxMomentumPerDepthMps: number;
   noFullGridReadbackPerFrame: boolean;
@@ -87,6 +90,7 @@ export type FluidRendererPressureSummary = {
   pressureWorkEstimateJ: number;
   sampleTimeS: number;
   slopeLimit: number;
+  verticalForceDeltaN: number;
 };
 
 type GpuLike = {
@@ -528,12 +532,16 @@ export class FluidWaterRenderer {
     this.canvas.dataset.waterPressure = pressure?.coupling ?? "bounded-pressure-gradient-live-v1";
     this.canvas.dataset.waterPressureActive = String(pressure?.active ?? false);
     this.canvas.dataset.waterPressureCfl = String(Number((pressure?.cfl ?? this.plan.cfl).toFixed(6)));
+    this.canvas.dataset.waterPressureForceBound = String(Number((pressure?.forceBoundN ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureGridVelocity = String(Number((pressure?.gridVelocityMps ?? 0).toFixed(6)));
     this.canvas.dataset.waterPressureGain = String(Number((pressure?.pressureGain ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureHorizontalForce = String(Number((pressure?.horizontalForceDeltaN ?? 0).toFixed(4)));
     this.canvas.dataset.waterPressureImpulseEnergy = String(Number((pressure?.impulseEnergyEstimateJ ?? 0).toFixed(4)));
     this.canvas.dataset.waterPressureMomentumLimit = String(Number((pressure?.maxMomentumPerDepthMps ?? 0).toFixed(4)));
     this.canvas.dataset.waterPressureReadback = String(pressure?.noFullGridReadbackPerFrame ?? true);
     this.canvas.dataset.waterPressureSlopeLimit = String(Number((pressure?.slopeLimit ?? 0).toFixed(4)));
     this.canvas.dataset.waterPressureStorage = String(Math.round(pressure?.estimatedStorageBytes ?? this.plan.estimatedStorageBytes));
+    this.canvas.dataset.waterPressureVerticalForce = String(Number((pressure?.verticalForceDeltaN ?? 0).toFixed(4)));
     this.canvas.dataset.waterPressureWork = String(Number((pressure?.pressureWorkEstimateJ ?? 0).toFixed(4)));
   }
 }
@@ -943,7 +951,7 @@ function pressureSettingsFor(plan: FluidGridStepPlan) {
   };
 }
 
-function livePressureSummaryFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan): FluidRendererPressureSummary {
+export function livePressureSummaryFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan): FluidRendererPressureSummary {
   const pressure = pressureSettingsFor(plan);
   const impactEnergy = Math.max(0, input.splashEnergyJ + Math.abs(input.slamForceN * input.displacedVolumeRateM3ps) * plan.dtS);
   const slopeWorkEstimateJ =
@@ -954,12 +962,31 @@ function livePressureSummaryFor(input: FluidWaterRenderInput, plan: FluidGridSte
     plan.cellSizeM *
     Math.max(1, Math.sqrt(plan.cellCount)) *
     Math.max(0.01, input.waveHeightM + input.impactStrength * 0.18);
+  const forceBoundN = Math.max(1, input.massKg * input.gravityMps2 * 0.18);
+  const displacedPressureN = input.waterDensityKgM3 * input.gravityMps2 * Math.max(0, input.displacedVolumeM3) * pressure.pressureGain;
+  const verticalDampingN =
+    -Math.sign(input.objectVyMps) *
+    Math.min(forceBoundN * 0.38, Math.abs(input.objectVyMps) * input.waterDensityKgM3 * Math.max(0.001, input.displacedVolumeM3) * 0.045);
+  const impulseLiftN = Math.min(forceBoundN * 0.42, impactEnergy / Math.max(0.2, input.objectHeightM) * 0.006);
+  const verticalForceDeltaN = clamp(displacedPressureN + verticalDampingN + impulseLiftN, -forceBoundN, forceBoundN);
+  const horizontalRestoringN =
+    -input.objectVxMps * input.waterDensityKgM3 * Math.max(0.001, input.displacedVolumeM3) * pressure.pressureGain * 0.18 +
+    input.currentSpeedMps * input.waterDensityKgM3 * Math.max(0.001, input.displacedVolumeM3) * pressure.pressureGain * 0.035;
+  const horizontalForceDeltaN = clamp(horizontalRestoringN, -forceBoundN * 0.55, forceBoundN * 0.55);
+  const gridVelocityMps = clamp(
+    input.currentSpeedMps + input.objectVxMps * 0.08 + Math.sign(verticalForceDeltaN) * Math.min(0.35, Math.abs(verticalForceDeltaN) / Math.max(1, input.massKg) * 0.015),
+    -3,
+    3
+  );
   return {
     active: true,
     bufferRoles: pressure.stateBufferRoles,
     cfl: plan.cfl,
     coupling: "bounded-pressure-gradient-live-v1",
     estimatedStorageBytes: plan.bytesPerField * pressure.storageFieldCount,
+    forceBoundN,
+    gridVelocityMps,
+    horizontalForceDeltaN,
     impulseEnergyEstimateJ: impactEnergy,
     maxMomentumPerDepthMps: pressure.maxMomentumPerDepthMps,
     noFullGridReadbackPerFrame: true,
@@ -967,6 +994,7 @@ function livePressureSummaryFor(input: FluidWaterRenderInput, plan: FluidGridSte
     pressureWorkEstimateJ: slopeWorkEstimateJ,
     sampleTimeS: input.timeS,
     slopeLimit: pressure.slopeLimit,
+    verticalForceDeltaN,
   };
 }
 

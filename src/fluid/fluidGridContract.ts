@@ -17,7 +17,8 @@ export type FluidGridMilestoneId =
   | "FG-13"
   | "FG-14"
   | "FG-15"
-  | "FG-16";
+  | "FG-16"
+  | "FG-17";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -36,7 +37,8 @@ export type FluidGridGateId =
   | "G-FG-13"
   | "G-FG-14"
   | "G-FG-15"
-  | "G-FG-16";
+  | "G-FG-16"
+  | "G-FG-17";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -120,6 +122,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-14", title: "Live particle splash feedback in packaged renderer", gate: "G-FG-14" },
   { id: "FG-15", title: "Bounded pressure-gradient broad-water acceleration", gate: "G-FG-15" },
   { id: "FG-16", title: "Live pressure-gradient broad-water renderer path", gate: "G-FG-16" },
+  { id: "FG-17", title: "Pressure-informed rigid-body force feedback", gate: "G-FG-17" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -232,6 +235,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:live-pressure and docs/evidence/FG-16-live-pressure-2026-06-08.json",
     passBar:
       "the packaged WebGPU renderer advances live broad water with bounded pressure-gradient momentum buffers and exposes pressure plus particle telemetry without Canvas fallback or full-grid readback",
+  },
+  {
+    id: "G-FG-17",
+    blocks: "FG-17",
+    evidence: "npm run fluid:live-pressure-feedback and docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
+    passBar:
+      "the packaged app feeds bounded live pressure force deltas into the rigid-body grid coupling consumed by stepSimulation while retaining WebGPU pressure, object-grid, and particle telemetry",
   },
 ];
 
@@ -623,6 +633,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify packaged live pressure renderer evidence",
     exitProof:
       "npm run fluid:live-pressure launches the packaged app, drops the concrete cube, and records active live pressure plus live particle telemetry in docs/evidence/FG-16-live-pressure-2026-06-08.json",
+  },
+  {
+    id: "FG-17-T01",
+    milestone: "FG-17",
+    status: "done",
+    title: "Derive bounded pressure force feedback",
+    exitProof:
+      "livePressureSummaryFor reports nonzero bounded vertical and horizontal pressure force deltas, pressure grid velocity, and force bounds from live pressure work, impulse, displaced volume, and object motion",
+  },
+  {
+    id: "FG-17-T02",
+    milestone: "FG-17",
+    status: "done",
+    title: "Feed pressure forces into the rigid-body simulation loop",
+    exitProof:
+      "OceanPhysicsApp combines pressure force deltas with object-grid force deltas in gridCouplingRef and exposes window.__fluidGridCouplingForces for the next fixed step consumed by stepSimulation",
+  },
+  {
+    id: "FG-17-T03",
+    milestone: "FG-17",
+    status: "done",
+    title: "Verify packaged pressure force feedback evidence",
+    exitProof:
+      "npm run fluid:live-pressure-feedback launches the packaged app, drops the concrete cube, and records active pressure force deltas plus combined consumed grid coupling in docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
   },
 ];
 

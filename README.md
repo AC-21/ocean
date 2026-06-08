@@ -125,6 +125,12 @@ Run the packaged live pressure-gradient renderer gate:
 npm run fluid:live-pressure
 ```
 
+Run the packaged live pressure force-feedback gate:
+
+```sh
+npm run fluid:live-pressure-feedback
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -159,7 +165,8 @@ reentry, and local grid-feedback telemetry. FG-15 reintroduces broad-water
 pressure-gradient acceleration with slope and momentum limiters plus mass,
 energy, wet/dry, and local GPU timing evidence. FG-16 moves that pressure path
 into the packaged renderer with live x/y momentum buffers and bounded pressure
-telemetry during real drops.
+telemetry during real drops. FG-17 feeds bounded live pressure force deltas into
+the rigid-body coupling consumed by the fixed-step simulation loop.
 
 ## Run
 
@@ -287,6 +294,8 @@ Current validation checks include:
 - Packaged WebGPU live pressure-gradient rendering with x/y momentum buffers,
   bounded pressure telemetry, live impulse energy, CFL checks, and live particle
   feedback in the same drop path.
+- Packaged pressure-informed rigid-body feedback with bounded pressure force
+  deltas merged into the object-grid coupling consumed by `stepSimulation`.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,
