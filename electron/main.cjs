@@ -10,6 +10,8 @@ const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
 const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
 const envCalibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
 let storage;
+let mainWindow = null;
+let isQuitting = false;
 
 app.setName("Ocean Impact Lab");
 if (process.env.HARBORLINE_USER_DATA_DIR) app.setPath("userData", process.env.HARBORLINE_USER_DATA_DIR);
@@ -45,6 +47,11 @@ function isTrustedRendererUrl(url) {
 }
 
 async function createMainWindow() {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    revealMainWindow(mainWindow);
+    return mainWindow;
+  }
+
   const window = new BrowserWindow({
     backgroundColor: "#dce8e4",
     height: 900,
@@ -62,11 +69,20 @@ async function createMainWindow() {
     },
     width: 1360,
   });
+  mainWindow = window;
 
   const revealWindow = createMainWindowRevealer(window);
   const revealFallback = setTimeout(revealWindow, 1200);
   revealFallback.unref?.();
-  window.once("closed", () => clearTimeout(revealFallback));
+  window.on("close", (event) => {
+    if (process.platform !== "darwin" || isQuitting) return;
+    event.preventDefault();
+    window.hide();
+  });
+  window.once("closed", () => {
+    clearTimeout(revealFallback);
+    if (mainWindow === window) mainWindow = null;
+  });
   window.once("ready-to-show", revealWindow);
   window.webContents.once("did-finish-load", revealWindow);
   window.webContents.once("did-fail-load", revealWindow);
@@ -83,12 +99,13 @@ async function createMainWindow() {
     appendFluidTierQuery(url.searchParams, await fluidTierQueryObject());
     await window.loadURL(url.toString());
     revealWindow();
-    return;
+    return window;
   }
 
   const fluidTierQuery = await fluidTierQueryObject();
   await window.loadFile(path.join(appRoot, "dist", "index.html"), Object.keys(fluidTierQuery).length > 0 ? { query: fluidTierQuery } : undefined);
   revealWindow();
+  return window;
 }
 
 function createMainWindowRevealer(window) {
@@ -96,11 +113,16 @@ function createMainWindowRevealer(window) {
   return () => {
     if (revealed || window.isDestroyed()) return;
     revealed = true;
-    if (window.isMinimized()) window.restore();
-    if (!window.isVisible()) window.show();
-    window.focus();
-    app.focus({ steal: true });
+    revealMainWindow(window);
   };
+}
+
+function revealMainWindow(window) {
+  if (window.isDestroyed()) return;
+  if (window.isMinimized()) window.restore();
+  if (!window.isVisible()) window.show();
+  window.focus();
+  app.focus({ steal: true });
 }
 
 function appendFluidTierQuery(searchParams, query) {
@@ -186,8 +208,12 @@ app.whenReady().then(async () => {
   await createMainWindow();
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) void createMainWindow();
+    void createMainWindow();
   });
+});
+
+app.on("before-quit", () => {
+  isQuitting = true;
 });
 
 app.on("window-all-closed", () => {
