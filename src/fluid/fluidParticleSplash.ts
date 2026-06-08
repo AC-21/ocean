@@ -59,6 +59,54 @@ export type ParticleSplashGridFeedback = {
   sampleCount: number;
 };
 
+export type ParticleSplashLiveFeedbackInput = {
+  cellSizeM: number;
+  currentSpeedMps: number;
+  displacedVolumeM3: number;
+  ejectedWaterKg: number;
+  froudeNumber: number;
+  gravityMps2: number;
+  gridCellsX: number;
+  gridCellsY: number;
+  impactStrength: number;
+  localGridFeedbackLimit: number;
+  objectDiameterM: number;
+  objectMassKg: number;
+  objectVxMps: number;
+  objectVyMps: number;
+  sprayParticleCount: number;
+  sprayReentryEnergyJ: number;
+  sprayReentryMassKg: number;
+  splashEnergyJ: number;
+  splashHeightM: number;
+  surfaceTensionNpm: number;
+  timeS: number;
+  waterDensityKgM3: number;
+  weberNumber: number;
+};
+
+export type ParticleSplashLiveFeedbackSummary = {
+  active: boolean;
+  boundedDiagnostics: true;
+  coupling: "localized-particle-splash-live-v1";
+  displacedWaterMassKg: number;
+  dropletDensity: number;
+  gridFeedback: ParticleSplashGridFeedback;
+  impactMomentumNs: number;
+  massFractionOfDisplaced: number;
+  maxLaunchSpeedMps: number;
+  momentumFractionOfImpact: number;
+  noFullGridReadbackPerFrame: true;
+  particleCount: number;
+  predictedCrownHeightM: number;
+  referenceSplashBand: ParticleSplashReferenceBand;
+  reenteredMassKg: number;
+  reentryEnergyJ: number;
+  renderIntensity: number;
+  sampleTimeS: number;
+  sprayMassKg: number;
+};
+
 export type ParticleSplashDiagnostics = {
   activeFinalParticleCount: number;
   boundedDiagnostics: true;
@@ -221,6 +269,96 @@ export const defaultParticleSplashScenario: ParticleSplashScenario = {
   waterDensityKgM3: 1025,
   weberNumber: 1_460_000,
 };
+
+export function liveParticleSplashFeedbackFor(input: ParticleSplashLiveFeedbackInput): ParticleSplashLiveFeedbackSummary {
+  const objectDiameterM = Math.max(0.05, input.objectDiameterM);
+  const impactSpeedMps = Math.max(
+    Math.abs(input.objectVyMps),
+    input.froudeNumber * Math.sqrt(Math.max(0.001, input.gravityMps2 * objectDiameterM)),
+    Math.sqrt((2 * Math.max(0, input.splashEnergyJ)) / Math.max(1, input.objectMassKg)) * 0.42
+  );
+  const scenario: ParticleSplashScenario = {
+    displacedVolumeM3: input.displacedVolumeM3,
+    froudeNumber: input.froudeNumber,
+    gravityMps2: input.gravityMps2,
+    impactSpeedMps,
+    objectDiameterM,
+    objectMassKg: input.objectMassKg,
+    surfaceTensionNpm: input.surfaceTensionNpm,
+    waterDensityKgM3: input.waterDensityKgM3,
+    weberNumber: input.weberNumber,
+  };
+  const referenceSplashBand = referenceSplashBandFor(scenario);
+  const displacedWaterMassKg = displacedWaterMassFor(scenario);
+  const breakup = surfaceBreakupFactorFor(input.weberNumber);
+  const boundedMassFraction = clamp(0.08 + breakup * 0.065 + input.froudeNumber * 0.012 + input.impactStrength * 0.018, 0.08, 0.32);
+  const sprayMassKg = clamp(
+    Math.max(input.ejectedWaterKg * (0.56 + breakup * 0.18), displacedWaterMassKg * boundedMassFraction),
+    0,
+    Math.max(0.001, displacedWaterMassKg * 0.34)
+  );
+  const predictedCrownHeightM = clamp(
+    input.splashHeightM > 0
+      ? input.splashHeightM * (0.9 + breakup * 0.045)
+      : 0.11 * (impactSpeedMps ** 2 / Math.max(0.001, input.gravityMps2)) + 0.42 * objectDiameterM,
+    referenceSplashBand.minM,
+    referenceSplashBand.maxM
+  );
+  const maxLaunchSpeedMps = Math.sqrt(Math.max(0, 2 * input.gravityMps2 * predictedCrownHeightM));
+  const impactMomentumNs = Math.max(0.001, input.objectMassKg * impactSpeedMps);
+  const launchMomentumNs = sprayMassKg * maxLaunchSpeedMps * clamp(0.36 + breakup * 0.09, 0.28, 0.58);
+  const reentryEnergyJ = Math.max(
+    input.sprayReentryEnergyJ,
+    0.5 * Math.max(0, input.sprayReentryMassKg) * maxLaunchSpeedMps ** 2,
+    sprayMassKg * input.gravityMps2 * predictedCrownHeightM * clamp(0.012 + input.impactStrength * 0.018, 0.01, 0.04)
+  );
+  const reenteredMassKg = clamp(Math.max(input.sprayReentryMassKg, sprayMassKg * clamp(0.1 + input.impactStrength * 0.16, 0.08, 0.28)), 0, sprayMassKg);
+  const particleCount = clampInt(
+    Math.max(input.sprayParticleCount, 48 + sprayMassKg * 8 + input.froudeNumber * 24 + breakup * 220),
+    0,
+    4096
+  );
+  const gridFeedback = gridFeedbackFor(
+    {
+      gridCellsX: input.gridCellsX,
+      gridCellsY: input.gridCellsY,
+      localGridFeedbackLimit: input.localGridFeedbackLimit,
+    },
+    scenario,
+    reenteredMassKg,
+    reentryEnergyJ,
+    launchMomentumNs * clamp(0.12 + input.impactStrength * 0.18, 0.08, 0.32),
+    particleCount * clamp(0.04 + breakup * 0.06, 0.03, 0.18)
+  );
+  const active =
+    input.impactStrength > 0.015 ||
+    input.splashEnergyJ > 1 ||
+    input.sprayReentryEnergyJ > 0.001 ||
+    input.sprayParticleCount > 0 ||
+    input.splashHeightM > 0.01;
+
+  return {
+    active,
+    boundedDiagnostics: true,
+    coupling: "localized-particle-splash-live-v1",
+    displacedWaterMassKg,
+    dropletDensity: clamp(particleCount / 4096 + breakup * 0.08 + input.impactStrength * 0.18, 0, 1),
+    gridFeedback,
+    impactMomentumNs,
+    massFractionOfDisplaced: sprayMassKg / Math.max(0.001, displacedWaterMassKg),
+    maxLaunchSpeedMps,
+    momentumFractionOfImpact: launchMomentumNs / impactMomentumNs,
+    noFullGridReadbackPerFrame: true,
+    particleCount,
+    predictedCrownHeightM,
+    referenceSplashBand,
+    reenteredMassKg,
+    reentryEnergyJ,
+    renderIntensity: clamp(input.impactStrength * 0.48 + gridFeedback.foamInjection * 1.45 + particleCount / 5200, 0, 1),
+    sampleTimeS: input.timeS,
+    sprayMassKg,
+  };
+}
 
 export function createParticleSplashPlan(options: ParticleSplashBenchmarkOptions = {}): ParticleSplashPlan {
   const tier = options.tier ?? "standard";
@@ -597,7 +735,7 @@ export function referenceSplashBandFor(scenario: ParticleSplashScenario): Partic
 }
 
 function gridFeedbackFor(
-  plan: ParticleSplashPlan,
+  plan: Pick<ParticleSplashPlan, "gridCellsX" | "gridCellsY" | "localGridFeedbackLimit"> & { particleCapacity?: number },
   scenario: ParticleSplashScenario,
   reenteredMassKg: number,
   reentryEnergyJ: number,
@@ -620,7 +758,7 @@ function gridFeedbackFor(
       yStart: clampInt(centerY - radiusCells, 1, plan.gridCellsY - 2),
     },
     energyJ: reentryEnergyJ,
-    foamInjection: clamp(foamContribution / Math.max(1, plan.particleCapacity) + reentryEnergyJ * 0.00008, 0, 1),
+    foamInjection: clamp(foamContribution / Math.max(1, plan.particleCapacity ?? plan.localGridFeedbackLimit) + reentryEnergyJ * 0.00008, 0, 1),
     impulseNs: reentryImpulseNs,
     massKg: reenteredMassKg,
     sampleCount: clampInt(rawSampleCount, reentryEnergyJ > 0 ? 1 : 0, plan.localGridFeedbackLimit),

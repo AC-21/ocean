@@ -392,6 +392,30 @@ Latest coupled calibration evidence:
   momentum fraction `0.00773`, reentry energy `179.18 J`, and bounded readback.
 - Gate: passed.
 
+FG-14 is complete as of 2026-06-08. It moves particle splash accounting into
+the actual packaged WebGPU renderer path. The renderer now derives
+`localized-particle-splash-live-v1` feedback during object drops, exposes it in
+runtime telemetry, uses particle crown/density/reentry in render uniforms, and
+writes bounded particle foam/impulse feedback back into local grid rows.
+
+Latest live particle evidence:
+
+- Command: `npm run fluid:live-particles`.
+- Report: `reports/fluid-live-particles-latest.json`.
+- Gate: `G-FG-14`.
+- Evidence snapshot: `docs/evidence/FG-14-live-particles-2026-06-08.json`.
+- Runtime: packaged macOS app with renderer `webgpu-grid-primary-v1`, context
+  `webgpu`, and high tier.
+- Live coupling: `localized-particle-splash-live-v1`, active during the
+  concrete-cube drop.
+- Runtime telemetry: `468` live particles, particle crown `2.1219 m`, spray
+  mass fraction `0.34`, momentum fraction `0.001146`, reentry energy
+  `2.6228 J`, and `13` bounded grid feedback samples.
+- Reference band: live particle crown stayed inside `0.8537 m` to `3.7053 m`.
+- Renderer feedback: live particle render intensity `0.5982`; foam injection
+  `0.0244`; no Canvas fallback and no per-frame full-grid readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -429,6 +453,9 @@ Latest coupled calibration evidence:
 14. Coupled packaged-app calibration: package and launch the desktop app, then
     verify reference replay, broad-water mass/momentum evidence, local particle
     splash evidence, frame pacing, and bounded readback in one report.
+15. Live particle renderer feedback: drive packaged WebGPU splash uniforms and
+    local grid foam/impulse rows from calibrated particle mass, momentum, crown,
+    density, and reentry summaries during real drops.
 
 ## Resolution Ladder
 

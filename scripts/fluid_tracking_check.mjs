@@ -19,6 +19,7 @@ const requiredFiles = [
   "docs/evidence/FG-11-shallow-water-2026-06-08.json",
   "docs/evidence/FG-12-particle-splash-2026-06-08.json",
   "docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
+  "docs/evidence/FG-14-live-particles-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -32,11 +33,12 @@ const requiredFiles = [
   "src/fluid/fluidShallowWater.ts",
   "src/fluid/fluidParticleSplash.ts",
   "src/fluid/fluidCoupledCalibration.ts",
+  "src/fluid/fluidWaterRenderer.ts",
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -59,6 +61,7 @@ const referenceDataset = files.get("data/fluid-reference-cases.json") ?? "";
 const shallowWater = files.get("src/fluid/fluidShallowWater.ts") ?? "";
 const particleSplash = files.get("src/fluid/fluidParticleSplash.ts") ?? "";
 const coupledCalibration = files.get("src/fluid/fluidCoupledCalibration.ts") ?? "";
+const waterRenderer = files.get("src/fluid/fluidWaterRenderer.ts") ?? "";
 const viteEnv = files.get("src/vite-env.d.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
@@ -73,6 +76,7 @@ const fg10Evidence = files.get("docs/evidence/FG-10-reference-dataset-2026-06-08
 const fg11Evidence = files.get("docs/evidence/FG-11-shallow-water-2026-06-08.json") ?? "";
 const fg12Evidence = files.get("docs/evidence/FG-12-particle-splash-2026-06-08.json") ?? "";
 const fg13Evidence = files.get("docs/evidence/FG-13-coupled-calibration-2026-06-08.json") ?? "";
+const fg14Evidence = files.get("docs/evidence/FG-14-live-particles-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -471,6 +475,63 @@ if (
   !fg13Evidence.includes("\"failedMeasurements\": []")
 ) {
   errors.push("FG-13 evidence must record a passing coupled packaged-app calibration report");
+}
+
+if (!packageJson.includes("\"fluid:live-particles\"")) {
+  errors.push("package.json must expose the FG-14 packaged live-particle command");
+}
+
+if (!tracking.includes("FG-14-T03") || !tracking.includes("FG-14-live-particles-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/17")) {
+  errors.push("docs/TRACKING.md must record FG-14 live particle evidence and issue mapping");
+}
+
+if (
+  !particleSplash.includes("localized-particle-splash-live-v1") ||
+  !particleSplash.includes("liveParticleSplashFeedbackFor") ||
+  !particleSplash.includes("ParticleSplashLiveFeedbackSummary") ||
+  !particleSplash.includes("massFractionOfDisplaced") ||
+  !particleSplash.includes("momentumFractionOfImpact") ||
+  !particleSplash.includes("noFullGridReadbackPerFrame")
+) {
+  errors.push("fluidParticleSplash.ts must expose live particle splash feedback with bounded diagnostics");
+}
+
+if (
+  !waterRenderer.includes("lastParticleSplash") ||
+  !waterRenderer.includes("liveParticleSplashFeedbackFor") ||
+  !waterRenderer.includes("writeParticleFeedbackRow") ||
+  !waterRenderer.includes("waterParticles") ||
+  !waterRenderer.includes("waterParticlesMassFraction") ||
+  !waterRenderer.includes("waterParticlesReentryEnergy")
+) {
+  errors.push("fluidWaterRenderer.ts must integrate live particle feedback into renderer stats, telemetry, uniforms, and grid rows");
+}
+
+if (
+  !remap.includes("FG-14") ||
+  !remap.includes("localized-particle-splash-live-v1") ||
+  !remap.includes("Runtime telemetry") ||
+  !remap.includes("live particle render intensity") ||
+  !remap.includes("no per-frame full-grid readback")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-14 live particle renderer gate and evidence");
+}
+
+if (
+  !fg14Evidence.includes("\"gate\": \"G-FG-14\"") ||
+  !fg14Evidence.includes("\"pass\": true") ||
+  !fg14Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg14Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg14Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg14Evidence.includes("\"particles\": \"localized-particle-splash-live-v1\"") ||
+  !fg14Evidence.includes("\"particlesActive\": true") ||
+  !fg14Evidence.includes("\"massFraction\"") ||
+  !fg14Evidence.includes("\"momentumFraction\"") ||
+  !fg14Evidence.includes("\"reentryEnergyJ\"") ||
+  !fg14Evidence.includes("\"renderIntensity\"") ||
+  !fg14Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-14 evidence must record a passing packaged live-particle renderer report");
 }
 
 if (errors.length > 0) {

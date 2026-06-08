@@ -21,6 +21,7 @@ and GitHub issue mapping.
 | FG-11 | Conservative GPU shallow-water upgrade | Done | G-FG-11 |
 | FG-12 | Localized particle splash and spray layer | Done | G-FG-12 |
 | FG-13 | Coupled packaged-app calibration against reference cases | Done | G-FG-13 |
+| FG-14 | Live particle splash feedback in packaged renderer | Done | G-FG-14 |
 
 ## Gates
 
@@ -40,6 +41,7 @@ and GitHub issue mapping.
 | G-FG-11 | FG-11 | `npm run fluid:shallow-water`; `docs/evidence/FG-11-shallow-water-2026-06-08.json` | standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing |
 | G-FG-12 | FG-12 | `npm run fluid:particles`; `docs/evidence/FG-12-particle-splash-2026-06-08.json` | standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing |
 | G-FG-13 | FG-13 | `npm run fluid:coupled-calibrate`; `docs/evidence/FG-13-coupled-calibration-2026-06-08.json` | the packaged desktop app, reference replay, shallow-water evidence, and particle-splash evidence pass as one coupled calibration packet for drop, splash, float, sink, damping, frame pacing, and bounded GPU readback |
+| G-FG-14 | FG-14 | `npm run fluid:live-particles`; `docs/evidence/FG-14-live-particles-2026-06-08.json` | the packaged WebGPU renderer exposes and uses localized particle splash feedback with bounded mass, momentum, crown height, reentry energy, local grid feedback, and no Canvas fallback |
 
 ## Tasks
 
@@ -88,6 +90,9 @@ and GitHub issue mapping.
 | FG-13-T01 | FG-13 | Done | calibration | `fluidCoupledCalibration.ts` composes packaged-app local calibration, FG-10 reference replay, FG-11 shallow-water evidence, and FG-12 particle-splash evidence |
 | FG-13-T02 | FG-13 | Done | calibration | `createFluidCoupledCalibrationReport` verifies drop speed, CPU/particle splash crown agreement, float/sink/damping references, frame pacing, mass drift, spray mass, reentry, and readback discipline |
 | FG-13-T03 | FG-13 | Done | verification | `npm run fluid:coupled-calibrate` packages the app, passes packaged WebGPU runtime calibration, and writes committed FG-13 coupled evidence |
+| FG-14-T01 | FG-14 | Done | physics | `fluidParticleSplash.ts` derives localized-particle-splash-live-v1 from displaced mass, Weber/Froude state, splash reference bands, and reentry energy |
+| FG-14-T02 | FG-14 | Done | renderer | `FluidWaterRenderer` exposes `lastParticleSplash`, writes particle foam/impulse feedback into bounded grid rows, and passes particle crown/density/reentry into render uniforms |
+| FG-14-T03 | FG-14 | Done | verification | `npm run fluid:live-particles` launches the packaged app, drops the concrete cube, and records active localized-particle-splash-live-v1 telemetry with bounded mass/momentum and WebGPU renderer context |
 
 ## GitHub Labels
 
@@ -117,6 +122,7 @@ and GitHub issue mapping.
 | FG-11 | https://github.com/AC-21/ocean/issues/14 |
 | FG-12 | https://github.com/AC-21/ocean/issues/15 |
 | FG-13 | https://github.com/AC-21/ocean/issues/16 |
+| FG-14 | https://github.com/AC-21/ocean/issues/17 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

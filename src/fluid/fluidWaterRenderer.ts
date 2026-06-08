@@ -14,6 +14,7 @@ import {
   type FluidGridSplashSample,
   type FluidGridSplashSummary,
 } from "./fluidGridSplash";
+import { liveParticleSplashFeedbackFor, type ParticleSplashLiveFeedbackSummary } from "./fluidParticleSplash";
 import type { FluidGridTierId } from "./fluidGridContract";
 
 export type FluidWaterShape = "box" | "horizontalCylinder" | "sphere" | "verticalCylinder";
@@ -66,6 +67,7 @@ export type FluidWaterRenderStats = {
   gridCellsX: number;
   gridCellsY: number;
   lastCoupling: FluidGridObjectCouplingSummary | null;
+  lastParticleSplash: ParticleSplashLiveFeedbackSummary | null;
   lastSplash: FluidGridSplashSummary | null;
   renderer: "webgpu-grid-primary-v1";
   tier: FluidGridTierId;
@@ -174,6 +176,7 @@ export class FluidWaterRenderer {
   private frameCount = 0;
   private lastCoupling: FluidGridObjectCouplingSummary | null = null;
   private lastCouplingBounds: FluidGridObjectCouplingBounds | null = null;
+  private lastParticleSplash: ParticleSplashLiveFeedbackSummary | null = null;
   private lastSplash: FluidGridSplashSummary | null = null;
   private splashMemory: FluidGridSplashMemory = { accumulatedReentryEnergyJ: 0, accumulatedReentryMassKg: 0, peakFoamEnergyJ: 0 };
   private stepIndex = 0;
@@ -276,7 +279,7 @@ export class FluidWaterRenderer {
       usage: textureUsageRenderAttachment,
     });
     this.writeObjectCoupling(input, size);
-    this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size, this.lastSplash));
+    this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size, this.lastSplash, this.lastParticleSplash));
     const encoder = this.device.createCommandEncoder();
     const computePass = encoder.beginComputePass();
     computePass.setPipeline(this.computePipeline);
@@ -312,6 +315,7 @@ export class FluidWaterRenderer {
       gridCellsX: this.plan.cellsX,
       gridCellsY: this.plan.cellsY,
       lastCoupling: this.lastCoupling,
+      lastParticleSplash: this.lastParticleSplash,
       lastSplash: this.lastSplash,
       renderer: "webgpu-grid-primary-v1",
       tier: this.plan.tier,
@@ -365,10 +369,16 @@ export class FluidWaterRenderer {
     );
     this.lastSplash = splash.summary;
     this.splashMemory = nextSplashMemory(this.splashMemory, splash.summary);
-    if ((!coupling.summary.active || coupling.samples.length === 0) && (!splash.summary.active || splash.samples.length === 0)) return;
+    const particle = liveParticleSplashFeedbackFor(liveParticleInputFor(input, this.plan, splash.summary));
+    this.lastParticleSplash = particle;
+    const writeBounds = unionBounds(
+      unionBounds(coupling.summary.active ? coupling.summary.bounds : null, splash.summary.active ? splash.summary.bounds : null),
+      particle.active ? particle.gridFeedback.bounds : null
+    );
+    if ((!coupling.summary.active || coupling.samples.length === 0) && (!splash.summary.active || splash.samples.length === 0) && !particle.active) return;
 
-    this.writeCouplingAndSplashRows(coupling, splash);
-    this.lastCouplingBounds = coupling.summary.active ? coupling.summary.bounds : null;
+    this.writeCouplingAndSplashRows(coupling, splash, particle, writeBounds);
+    this.lastCouplingBounds = writeBounds;
   }
 
   private restoreBaseRows(bounds: FluidGridObjectCouplingBounds) {
@@ -381,10 +391,14 @@ export class FluidWaterRenderer {
     }
   }
 
-  private writeCouplingAndSplashRows(coupling: FluidGridObjectCoupling, splash: FluidGridSplashCoupling) {
+  private writeCouplingAndSplashRows(
+    coupling: FluidGridObjectCoupling,
+    splash: FluidGridSplashCoupling,
+    particle: ParticleSplashLiveFeedbackSummary | null,
+    bounds: FluidGridObjectCouplingBounds | null
+  ) {
     const couplingRows = couplingSamplesByRow(coupling.samples);
     const splashRows = splashSamplesByRow(splash.samples);
-    const bounds = unionBounds(coupling.summary.active ? coupling.summary.bounds : null, splash.summary.active ? splash.summary.bounds : null);
     if (!bounds) return;
     const width = bounds.xEnd - bounds.xStart + 1;
     for (let y = bounds.yStart; y <= bounds.yEnd; y += 1) {
@@ -407,6 +421,14 @@ export class FluidWaterRenderer {
         foamRow[column] = Math.max(foamRow[column], sample.foam);
         impulseRow[column] = Math.max(impulseRow[column], sample.impulseMps);
       }
+      writeParticleFeedbackRow({
+        bounds,
+        foamRow,
+        impulseRow,
+        particle,
+        plan: this.plan,
+        startY: y,
+      });
 
       this.device.queue.writeBuffer(this.depth, offset, depthRow);
       this.device.queue.writeBuffer(this.foam, offset, foamRow);
@@ -418,6 +440,7 @@ export class FluidWaterRenderer {
   private setCanvasTelemetry(status: "ready" | "rendered") {
     const coupling = this.lastCoupling;
     const splash = this.lastSplash;
+    const particle = this.lastParticleSplash;
     this.canvas.dataset.waterRenderer = "webgpu-grid-primary-v1";
     this.canvas.dataset.waterContext = "webgpu";
     this.canvas.dataset.waterGrid = `${this.plan.cellsX}x${this.plan.cellsY}`;
@@ -438,6 +461,44 @@ export class FluidWaterRenderer {
     this.canvas.dataset.waterSplashGridEnergy = String(Number((splash?.gridEnergyJ ?? 0).toFixed(4)));
     this.canvas.dataset.waterSplashReentryEnergy = String(Number((splash?.accumulatedReentryEnergyJ ?? 0).toFixed(6)));
     this.canvas.dataset.waterSplashSpray = String(splash?.sprayDropletCount ?? 0);
+    this.canvas.dataset.waterParticles = particle?.coupling ?? "localized-particle-splash-live-v1";
+    this.canvas.dataset.waterParticlesActive = String(particle?.active ?? false);
+    this.canvas.dataset.waterParticlesCount = String(particle?.particleCount ?? 0);
+    this.canvas.dataset.waterParticlesCrown = String(Number((particle?.predictedCrownHeightM ?? 0).toFixed(4)));
+    this.canvas.dataset.waterParticlesFeedbackSamples = String(particle?.gridFeedback.sampleCount ?? 0);
+    this.canvas.dataset.waterParticlesFoam = String(Number((particle?.gridFeedback.foamInjection ?? 0).toFixed(6)));
+    this.canvas.dataset.waterParticlesMassFraction = String(Number((particle?.massFractionOfDisplaced ?? 0).toFixed(6)));
+    this.canvas.dataset.waterParticlesMomentumFraction = String(Number((particle?.momentumFractionOfImpact ?? 0).toFixed(6)));
+    this.canvas.dataset.waterParticlesReadback = String(particle?.noFullGridReadbackPerFrame ?? true);
+    this.canvas.dataset.waterParticlesReentryEnergy = String(Number((particle?.reentryEnergyJ ?? 0).toFixed(6)));
+  }
+}
+
+function writeParticleFeedbackRow(input: {
+  bounds: FluidGridObjectCouplingBounds;
+  foamRow: Float32Array;
+  impulseRow: Float32Array;
+  particle: ParticleSplashLiveFeedbackSummary | null;
+  plan: FluidGridStepPlan;
+  startY: number;
+}) {
+  const particle = input.particle;
+  if (!particle?.active || particle.gridFeedback.sampleCount <= 0) return;
+  const feedbackBounds = particle.gridFeedback.bounds;
+  if (input.startY < feedbackBounds.yStart || input.startY > feedbackBounds.yEnd) return;
+  const centerX = (feedbackBounds.xStart + feedbackBounds.xEnd) * 0.5;
+  const centerY = (feedbackBounds.yStart + feedbackBounds.yEnd) * 0.5;
+  const radiusX = Math.max(1, (feedbackBounds.xEnd - feedbackBounds.xStart + 1) * 0.5);
+  const radiusY = Math.max(1, (feedbackBounds.yEnd - feedbackBounds.yStart + 1) * 0.5);
+  const yNorm = (input.startY - centerY) / radiusY;
+  for (let x = Math.max(input.bounds.xStart, feedbackBounds.xStart); x <= Math.min(input.bounds.xEnd, feedbackBounds.xEnd); x += 1) {
+    const xNorm = (x - centerX) / radiusX;
+    const radial = xNorm * xNorm + yNorm * yNorm;
+    if (radial > 1.25) continue;
+    const falloff = Math.max(0, 1 - radial / 1.25);
+    const column = x - input.bounds.xStart;
+    input.foamRow[column] = Math.max(input.foamRow[column], particle.gridFeedback.foamInjection * falloff);
+    input.impulseRow[column] = Math.max(input.impulseRow[column], clamp((particle.gridFeedback.impulseNs / Math.max(1, input.plan.cellCount)) * 0.045 * falloff, 0, 4.8));
   }
 }
 
@@ -678,13 +739,15 @@ function renderUniformValues(
   input: FluidWaterRenderInput,
   plan: FluidGridStepPlan,
   size: { ratio: number; width: number; height: number },
-  splash: FluidGridSplashSummary | null
+  splash: FluidGridSplashSummary | null,
+  particle: ParticleSplashLiveFeedbackSummary | null
 ): Float32Array {
   const ratio = size.ratio;
-  const splashIntensity = clamp((splash?.foamInjection ?? 0) * 0.82 + input.impactStrength * 0.34, 0, 1);
+  const splashIntensity = clamp(Math.max((splash?.foamInjection ?? 0) * 0.82 + input.impactStrength * 0.34, particle?.renderIntensity ?? 0), 0, 1);
   const splashAgeS = splash?.active ? Math.max(0, input.timeS - splash.sampleTimeS) + (1 - input.impactStrength) * 0.55 : 0;
   const splashRadiusPx = Math.max(0, (splash?.crownRadiusM ?? 0) * input.scalePxPerM * ratio);
-  const splashHeightPx = Math.max(0, (splash?.crownHeightM ?? 0) * input.scalePxPerM * ratio);
+  const particleCrownPx = Math.max(0, (particle?.predictedCrownHeightM ?? 0) * input.scalePxPerM * ratio);
+  const splashHeightPx = Math.max(0, (splash?.crownHeightM ?? 0) * input.scalePxPerM * ratio, particleCrownPx);
   return new Float32Array([
     size.width,
     size.height,
@@ -716,9 +779,37 @@ function renderUniformValues(
     splashHeightPx,
     splashIntensity,
     splashAgeS,
-    clamp((splash?.sprayDropletCount ?? 0) / 280, 0, 1),
-    clamp((splash?.accumulatedReentryEnergyJ ?? 0) / 80, 0, 1),
+    clamp(Math.max((splash?.sprayDropletCount ?? 0) / 280, particle?.dropletDensity ?? 0), 0, 1),
+    clamp(Math.max((splash?.accumulatedReentryEnergyJ ?? 0) / 80, (particle?.reentryEnergyJ ?? 0) / 180), 0, 1),
   ]);
+}
+
+function liveParticleInputFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan, splash: FluidGridSplashSummary) {
+  return {
+    cellSizeM: plan.cellSizeM,
+    currentSpeedMps: input.currentSpeedMps,
+    displacedVolumeM3: input.displacedVolumeM3,
+    ejectedWaterKg: input.ejectedWaterKg,
+    froudeNumber: input.froudeNumber,
+    gravityMps2: input.gravityMps2,
+    gridCellsX: plan.cellsX,
+    gridCellsY: plan.cellsY,
+    impactStrength: input.impactStrength,
+    localGridFeedbackLimit: clamp(Math.round(plan.cellCount * 0.015), 96, 4096),
+    objectDiameterM: Math.max(input.objectWidthM, input.objectHeightM, input.objectDepthM),
+    objectMassKg: input.massKg,
+    objectVxMps: input.objectVxMps,
+    objectVyMps: input.objectVyMps,
+    sprayParticleCount: Math.max(input.sprayParticleCount, splash.sprayDropletCount),
+    sprayReentryEnergyJ: Math.max(input.sprayReentryEnergyJ, splash.reentryCoupledEnergyJ),
+    sprayReentryMassKg: input.sprayReentryMassKg,
+    splashEnergyJ: input.splashEnergyJ,
+    splashHeightM: Math.max(input.splashHeightM, splash.crownHeightM),
+    surfaceTensionNpm: input.surfaceTensionNpm,
+    timeS: input.timeS,
+    waterDensityKgM3: input.waterDensityKgM3,
+    weberNumber: input.weberNumber,
+  };
 }
 
 function splashInputFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan) {

@@ -8,6 +8,8 @@ describe("WebGPU fluid water renderer contract", () => {
     expect(fluidWaterRenderShader).toContain("foamGrid");
     expect(fluidWaterRenderShader).toContain("sprayAt");
     expect(fluidWaterRenderShader).toContain("params.splash0");
+    expect(fluidWaterRenderShader).toContain("dropletDensity");
+    expect(fluidWaterRenderShader).toContain("reentryMist");
     expect(fluidWaterRenderShader).toContain("@group(0) @binding(1) var<storage, read>");
     expect(fluidWaterRenderShader).not.toMatch(/getContext|CanvasRenderingContext2D|fillRect|Path2D/);
   });

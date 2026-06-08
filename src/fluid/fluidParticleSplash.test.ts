@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createParticleSplashPlan,
   defaultParticleSplashScenario,
+  liveParticleSplashFeedbackFor,
   particleSplashBufferRoles,
   particleSplashStepShader,
   referenceSplashBandFor,
@@ -62,6 +63,46 @@ describe("localized particle splash gate", () => {
     expect(diagnostics.gridFeedback.sampleCount).toBeGreaterThan(0);
     expect(diagnostics.gridFeedback.energyJ).toBeCloseTo(diagnostics.reentryEnergyJ, 6);
     expect(diagnostics.massRelativeDrift).toBeLessThan(0.00001);
+  });
+
+  it("creates bounded live particle feedback for the renderer", () => {
+    const feedback = liveParticleSplashFeedbackFor({
+      cellSizeM: 0.05,
+      currentSpeedMps: 0.18,
+      displacedVolumeM3: 0.08,
+      ejectedWaterKg: 11.2,
+      froudeNumber: 4.35,
+      gravityMps2: 9.80665,
+      gridCellsX: 512,
+      gridCellsY: 288,
+      impactStrength: 0.74,
+      localGridFeedbackLimit: 2200,
+      objectDiameterM: 0.72,
+      objectMassKg: 895,
+      objectVxMps: 0.3,
+      objectVyMps: -6,
+      sprayParticleCount: 120,
+      sprayReentryEnergyJ: 14,
+      sprayReentryMassKg: 0.08,
+      splashEnergyJ: 2800,
+      splashHeightM: 2.08,
+      surfaceTensionNpm: 0.073,
+      timeS: 1.2,
+      waterDensityKgM3: 1025,
+      weberNumber: 1_460_000,
+    });
+
+    expect(feedback.coupling).toBe("localized-particle-splash-live-v1");
+    expect(feedback.active).toBe(true);
+    expect(feedback.noFullGridReadbackPerFrame).toBe(true);
+    expect(feedback.massFractionOfDisplaced).toBeGreaterThan(0);
+    expect(feedback.massFractionOfDisplaced).toBeLessThan(0.35);
+    expect(feedback.momentumFractionOfImpact).toBeLessThan(0.1);
+    expect(feedback.predictedCrownHeightM).toBeGreaterThanOrEqual(feedback.referenceSplashBand.minM);
+    expect(feedback.predictedCrownHeightM).toBeLessThanOrEqual(feedback.referenceSplashBand.maxM);
+    expect(feedback.gridFeedback.sampleCount).toBeGreaterThan(0);
+    expect(feedback.gridFeedback.sampleCount).toBeLessThanOrEqual(2200);
+    expect(feedback.renderIntensity).toBeGreaterThan(0);
   });
 
   it("contains a WebGPU particle integration shader with no Canvas dependency", () => {

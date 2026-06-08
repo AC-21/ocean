@@ -107,6 +107,12 @@ Run the coupled packaged-app calibration gate:
 npm run fluid:coupled-calibrate
 ```
 
+Run the packaged live particle renderer gate:
+
+```sh
+npm run fluid:live-particles
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -135,7 +141,9 @@ steps localized splash particles in WebGPU, accounting for spray mass, launch
 momentum, crown height, foam, and secondary reentry feedback. The latest FG-13
 gate packages the app and verifies packaged WebGPU frame pacing, reference
 drop/splash/float/sink/damping replay, shallow-water diagnostics, and particle
-splash diagnostics together.
+splash diagnostics together. FG-14 moves calibrated particle feedback into the
+live packaged renderer so real drops expose particle mass, momentum, crown,
+reentry, and local grid-feedback telemetry.
 
 ## Run
 
@@ -240,6 +248,9 @@ Current validation checks include:
 - Coupled packaged-app calibration across reference replay, WebGPU
   shallow-water mass/momentum diagnostics, localized particle splash diagnostics,
   and smooth local frame pacing.
+- Packaged WebGPU renderer live particle feedback with bounded spray mass,
+  bounded launch momentum, reference-band crown height, nonzero reentry energy,
+  and local foam/impulse grid feedback during a concrete-cube drop.
 - WebGPU grid-splash coupling with bounded foam samples, spray count, crown
   height, and secondary droplet reentry energy for a concrete-cube drop.
 - Near-realism calibration covering impact speed, timestep convergence,

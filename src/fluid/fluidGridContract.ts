@@ -14,7 +14,8 @@ export type FluidGridMilestoneId =
   | "FG-10"
   | "FG-11"
   | "FG-12"
-  | "FG-13";
+  | "FG-13"
+  | "FG-14";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -30,7 +31,8 @@ export type FluidGridGateId =
   | "G-FG-10"
   | "G-FG-11"
   | "G-FG-12"
-  | "G-FG-13";
+  | "G-FG-13"
+  | "G-FG-14";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -111,6 +113,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-11", title: "Conservative GPU shallow-water upgrade", gate: "G-FG-11" },
   { id: "FG-12", title: "Localized particle splash and spray layer", gate: "G-FG-12" },
   { id: "FG-13", title: "Coupled packaged-app calibration against reference cases", gate: "G-FG-13" },
+  { id: "FG-14", title: "Live particle splash feedback in packaged renderer", gate: "G-FG-14" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -202,6 +205,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:coupled-calibrate and docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
     passBar:
       "the packaged desktop app, reference replay, shallow-water evidence, and particle-splash evidence pass as one coupled calibration packet for drop, splash, float, sink, damping, frame pacing, and bounded GPU readback",
+  },
+  {
+    id: "G-FG-14",
+    blocks: "FG-14",
+    evidence: "npm run fluid:live-particles and docs/evidence/FG-14-live-particles-2026-06-08.json",
+    passBar:
+      "the packaged WebGPU renderer exposes and uses localized particle splash feedback with bounded mass, momentum, crown height, reentry energy, local grid feedback, and no Canvas fallback",
   },
 ];
 
@@ -521,6 +531,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify packaged coupled calibration evidence",
     exitProof:
       "npm run fluid:coupled-calibrate packages the app, passes packaged WebGPU runtime calibration, and writes committed FG-13 coupled evidence",
+  },
+  {
+    id: "FG-14-T01",
+    milestone: "FG-14",
+    status: "done",
+    title: "Add live particle feedback summary",
+    exitProof:
+      "fluidParticleSplash.ts derives localized-particle-splash-live-v1 from displaced mass, Weber/Froude state, splash reference bands, and reentry energy",
+  },
+  {
+    id: "FG-14-T02",
+    milestone: "FG-14",
+    status: "done",
+    title: "Feed live particles into WebGPU renderer telemetry and grid rows",
+    exitProof:
+      "FluidWaterRenderer exposes lastParticleSplash, writes particle foam/impulse feedback into bounded grid rows, and passes particle crown/density/reentry into render uniforms",
+  },
+  {
+    id: "FG-14-T03",
+    milestone: "FG-14",
+    status: "done",
+    title: "Verify packaged live particle renderer evidence",
+    exitProof:
+      "npm run fluid:live-particles launches the packaged app, drops the concrete cube, and records active localized-particle-splash-live-v1 telemetry with bounded mass/momentum and WebGPU renderer context",
   },
 ];
 
