@@ -89,6 +89,12 @@ Run the reference dataset ingestion and measurement gate:
 npm run fluid:references
 ```
 
+Run the conservative WebGPU shallow-water gate:
+
+```sh
+npm run fluid:shallow-water
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -223,6 +229,9 @@ Current validation checks include:
 - Source-backed reference dataset ingestion for drop, splash, float, sink, and
   damping behavior with units, uncertainty, resolved expected bands, and replayed
   CPU-reference measurements.
+- Conservative WebGPU shallow-water stepping with height and x/y momentum
+  buffers, mass drift diagnostics, wet/dry stability checks, bounded CFL, and
+  local GPU timing.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

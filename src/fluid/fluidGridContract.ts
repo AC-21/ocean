@@ -11,7 +11,8 @@ export type FluidGridMilestoneId =
   | "FG-07"
   | "FG-08"
   | "FG-09"
-  | "FG-10";
+  | "FG-10"
+  | "FG-11";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -24,7 +25,8 @@ export type FluidGridGateId =
   | "G-FG-07"
   | "G-FG-08"
   | "G-FG-09"
-  | "G-FG-10";
+  | "G-FG-10"
+  | "G-FG-11";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -102,6 +104,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-08", title: "Fixed-step simulation loop hardening", gate: "G-FG-08" },
   { id: "FG-09", title: "Research-backed solver architecture decision", gate: "G-FG-09" },
   { id: "FG-10", title: "Reference dataset ingestion and measurement harness", gate: "G-FG-10" },
+  { id: "FG-11", title: "Conservative GPU shallow-water upgrade", gate: "G-FG-11" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -172,6 +175,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:references and docs/evidence/FG-10-reference-dataset-2026-06-08.json",
     passBar:
       "drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements",
+  },
+  {
+    id: "G-FG-11",
+    blocks: "FG-11",
+    evidence: "npm run fluid:shallow-water and docs/evidence/FG-11-shallow-water-2026-06-08.json",
+    passBar:
+      "standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing",
   },
 ];
 
@@ -419,6 +429,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Replay CPU reference measurements against the dataset",
     exitProof:
       "npm run fluid:references evaluates entry speed, hydrostatic draft, damped settling, splash height, leak sensitivity, and terminal speed into FG-10 committed evidence",
+  },
+  {
+    id: "FG-11-T01",
+    milestone: "FG-11",
+    status: "done",
+    title: "Add conservative WebGPU shallow-water state",
+    exitProof:
+      "fluidShallowWater.ts defines conservative-shallow-water-v1 with ping-pong height, x/y momentum, and dry-mask buffers",
+  },
+  {
+    id: "FG-11-T02",
+    milestone: "FG-11",
+    status: "done",
+    title: "Track mass, momentum, CFL, and wet/dry diagnostics",
+    exitProof:
+      "runShallowWaterBenchmark reports massRelativeDrift, momentumDampingRatio, negativeDepthCells, dryCellsWithWater, wet/dry counts, CFL, wall timing, and timestamp-query GPU timing",
+  },
+  {
+    id: "FG-11-T03",
+    milestone: "FG-11",
+    status: "done",
+    title: "Verify standard and high tier local WebGPU shallow-water evidence",
+    exitProof:
+      "npm run fluid:shallow-water passes standard and high tiers with zero reported mass drift, stable wet/dry cells, no negative depths, and committed FG-11 evidence",
   },
 ];
 

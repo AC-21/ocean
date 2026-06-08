@@ -18,6 +18,7 @@ and GitHub issue mapping.
 | FG-08 | Fixed-step simulation loop hardening | Done | G-FG-08 |
 | FG-09 | Research-backed solver architecture decision | Done | G-FG-09 |
 | FG-10 | Reference dataset ingestion and measurement harness | Done | G-FG-10 |
+| FG-11 | Conservative GPU shallow-water upgrade | Done | G-FG-11 |
 
 ## Gates
 
@@ -34,6 +35,7 @@ and GitHub issue mapping.
 | G-FG-08 | FG-08 | `npm run fluid:frame-loop`; `docs/evidence/FG-08-frame-loop-2026-06-08.json` | the app advances rigid-body physics through a bounded fixed-step accumulator with WebGPU rendering active and no dropped simulation debt at normal speed |
 | G-FG-09 | FG-09 | `npm run fluid:architecture`; `docs/evidence/FG-09-solver-architecture-2026-06-08.json` | primary-source solver decision selects a hybrid GPU heightfield/free-surface grid plus localized particle splash layer, rejects incomplete immediate paths, and names the next calibration-backed gates |
 | G-FG-10 | FG-10 | `npm run fluid:references`; `docs/evidence/FG-10-reference-dataset-2026-06-08.json` | drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements |
+| G-FG-11 | FG-11 | `npm run fluid:shallow-water`; `docs/evidence/FG-11-shallow-water-2026-06-08.json` | standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing |
 
 ## Tasks
 
@@ -73,6 +75,9 @@ and GitHub issue mapping.
 | FG-10-T01 | FG-10 | Done | data | `data/fluid-reference-cases.json` records drop, splash, float, sink, and damping cases with source metadata, units, uncertainty, and explicit expected formulas or bands |
 | FG-10-T02 | FG-10 | Done | verification | `fluidReferenceDataset.ts` rejects missing categories, unsupported source locators, missing source IDs, missing units, and non-replayable measurement methods |
 | FG-10-T03 | FG-10 | Done | calibration | `npm run fluid:references` evaluates entry speed, hydrostatic draft, damped settling, splash height, leak sensitivity, and terminal speed into FG-10 committed evidence |
+| FG-11-T01 | FG-11 | Done | compute | `fluidShallowWater.ts` defines conservative-shallow-water-v1 with ping-pong height, x/y momentum, and dry-mask buffers |
+| FG-11-T02 | FG-11 | Done | diagnostics | `runShallowWaterBenchmark` reports mass drift, momentum damping, negative-depth count, dry-cell leakage, wet/dry counts, CFL, wall timing, and timestamp-query GPU timing |
+| FG-11-T03 | FG-11 | Done | verification | `npm run fluid:shallow-water` passes standard and high tiers with zero reported mass drift, stable wet/dry cells, no negative depths, and committed FG-11 evidence |
 
 ## GitHub Labels
 
@@ -99,6 +104,7 @@ and GitHub issue mapping.
 | FG-08 | https://github.com/AC-21/ocean/issues/11 |
 | FG-09 | https://github.com/AC-21/ocean/issues/12 |
 | FG-10 | https://github.com/AC-21/ocean/issues/13 |
+| FG-11 | https://github.com/AC-21/ocean/issues/14 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

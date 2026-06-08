@@ -2,6 +2,7 @@
 
 import type { FluidCapabilityReport } from "./fluid/webgpuCapability";
 import type { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
+import type { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import type { FluidFrameLoopStats } from "./fluid/fluidFrameLoop";
 import type { FluidWaterRenderStats } from "./fluid/fluidWaterRenderer";
 
@@ -11,5 +12,6 @@ declare global {
     __fluidFrameLoopStats?: FluidFrameLoopStats;
     __fluidWaterRenderStats?: FluidWaterRenderStats;
     __runFluidGridBenchmark?: typeof runFluidGridBenchmark;
+    __runShallowWaterBenchmark?: typeof runShallowWaterBenchmark;
   }
 }

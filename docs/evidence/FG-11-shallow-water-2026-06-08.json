@@ -1,0 +1,282 @@
+{
+  "generatedAt": "2026-06-08T01:57:22.967Z",
+  "gate": "G-FG-11",
+  "pass": true,
+  "capability": {
+    "adapterInfo": "apple / metal-3",
+    "adapterName": "apple / metal-3",
+    "backend": "webgpu-compute",
+    "fallbackReason": null,
+    "features": [
+      "bgra8unorm-storage",
+      "clip-distances",
+      "core-features-and-limits",
+      "depth-clip-control",
+      "depth32float-stencil8",
+      "dual-source-blending",
+      "float32-blendable",
+      "float32-filterable",
+      "indirect-first-instance",
+      "primitive-index",
+      "rg11b10ufloat-renderable",
+      "shader-f16",
+      "subgroups",
+      "texture-component-swizzle",
+      "texture-compression-astc",
+      "texture-compression-astc-sliced-3d",
+      "texture-compression-bc",
+      "texture-compression-bc-sliced-3d",
+      "texture-compression-etc2",
+      "texture-formats-tier1",
+      "texture-formats-tier2",
+      "timestamp-query"
+    ],
+    "forbiddenProductionRenderers": [
+      "canvas-2d",
+      "per-pixel-cpu-water-draw",
+      "visual-only-water"
+    ],
+    "generatedAt": "2026-06-08T01:57:22.776Z",
+    "grid": {
+      "cellsX": 512,
+      "cellsY": 288,
+      "estimatedBytes": 4718592,
+      "tier": "high"
+    },
+    "limits": {
+      "maxBufferSize": 268435456,
+      "maxComputeInvocationsPerWorkgroup": 256,
+      "maxComputeWorkgroupSizeX": 256,
+      "maxComputeWorkgroupSizeY": 256,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxStorageBufferBindingSize": 134217728
+    },
+    "requiredBrowserApis": [
+      "navigator.gpu",
+      "GPUDevice",
+      "GPUComputePassEncoder"
+    ],
+    "selectedTier": "high",
+    "status": "webgpu-ready"
+  },
+  "tiers": {
+    "standard": {
+      "backend": "webgpu-compute",
+      "capability": {
+        "adapterName": "apple / metal-3",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready"
+      },
+      "diagnostics": {
+        "dryCellsWithWater": 0,
+        "finalDryCellCount": 878,
+        "finalMassM3": 202.81932106474395,
+        "finalMomentumAbsM3ps": 0.019262545493213518,
+        "initialDryCellCount": 878,
+        "initialMassM3": 202.81932138784933,
+        "initialMomentumAbsM3ps": 0.04164796945757411,
+        "massRelativeDrift": 1.5930700302039446e-9,
+        "maxDepthM": 1.0377622842788696,
+        "minDepthM": 0.722237765789032,
+        "momentumDampingRatio": 0.4625086347327415,
+        "negativeDepthCells": 0,
+        "wetCellCount": 35986
+      },
+      "generatedAt": "2026-06-08T01:57:22.926Z",
+      "gpuTiming": {
+        "averageStepMs": 0.020439687499999998,
+        "maxStepMs": 0.2715,
+        "minStepMs": 0.014375,
+        "p95StepMs": 0.020084,
+        "sampleCount": 96,
+        "timestampQueryEnabled": true
+      },
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "plan": {
+        "bytesPerField": 147456,
+        "bufferRoles": [
+          "height",
+          "heightScratch",
+          "momentumX",
+          "momentumXScratch",
+          "momentumY",
+          "momentumYScratch",
+          "dryMask"
+        ],
+        "cellAreaM2": 0.0064,
+        "cellCount": 36864,
+        "cellSizeM": 0.08,
+        "cellsX": 256,
+        "cellsY": 144,
+        "cfl": 0.4947126581656321,
+        "dispatchX": 32,
+        "dispatchY": 18,
+        "dtS": 0.008333333333333333,
+        "estimatedStorageBytes": 1032192,
+        "gravityMps2": 9.80665,
+        "maxDepthM": 1.15,
+        "steps": 96,
+        "tier": "standard",
+        "waveSpeedMps": 3.3582208831463123,
+        "workgroupSizeX": 8,
+        "workgroupSizeY": 8
+      },
+      "solver": "conservative-shallow-water-v1",
+      "stepTiming": {
+        "averageStepMs": 0.07291666666666667,
+        "totalMs": 7
+      },
+      "threshold": {
+        "maxAverageStepMs": 4,
+        "maxCfl": 0.58,
+        "maxDryCellsWithWater": 0,
+        "maxMassRelativeDrift": 0.004,
+        "maxNegativeDepthCells": 0,
+        "maxP95GpuStepMs": 0.65,
+        "maxWetDryCellDelta": 0,
+        "minMomentumDampingRatio": 0.08
+      }
+    },
+    "high": {
+      "backend": "webgpu-compute",
+      "capability": {
+        "adapterName": "apple / metal-3",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready"
+      },
+      "diagnostics": {
+        "dryCellsWithWater": 0,
+        "finalDryCellCount": 1919,
+        "finalMassM3": 820.2502561933945,
+        "finalMomentumAbsM3ps": 0.09337630157649612,
+        "initialDryCellCount": 1919,
+        "initialMassM3": 820.2502572657045,
+        "initialMomentumAbsM3ps": 0.16649330845413313,
+        "massRelativeDrift": 1.3072960754055985e-9,
+        "maxDepthM": 1.0388849973678589,
+        "minDepthM": 0.721114993095398,
+        "momentumDampingRatio": 0.560841167993368,
+        "negativeDepthCells": 0,
+        "wetCellCount": 145537
+      },
+      "generatedAt": "2026-06-08T01:57:22.947Z",
+      "gpuTiming": {
+        "averageStepMs": 0.03290681944444444,
+        "maxStepMs": 0.209542,
+        "minStepMs": 0.029084,
+        "p95StepMs": 0.038375,
+        "sampleCount": 72,
+        "timestampQueryEnabled": true
+      },
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "plan": {
+        "bytesPerField": 589824,
+        "bufferRoles": [
+          "height",
+          "heightScratch",
+          "momentumX",
+          "momentumXScratch",
+          "momentumY",
+          "momentumYScratch",
+          "dryMask"
+        ],
+        "cellAreaM2": 0.0064,
+        "cellCount": 147456,
+        "cellSizeM": 0.08,
+        "cellsX": 512,
+        "cellsY": 288,
+        "cfl": 0.4947126581656321,
+        "dispatchX": 64,
+        "dispatchY": 36,
+        "dtS": 0.008333333333333333,
+        "estimatedStorageBytes": 4128768,
+        "gravityMps2": 9.80665,
+        "maxDepthM": 1.15,
+        "steps": 72,
+        "tier": "high",
+        "waveSpeedMps": 3.3582208831463123,
+        "workgroupSizeX": 8,
+        "workgroupSizeY": 8
+      },
+      "solver": "conservative-shallow-water-v1",
+      "stepTiming": {
+        "averageStepMs": 0.07777777810891469,
+        "totalMs": 5.600000023841858
+      },
+      "threshold": {
+        "maxAverageStepMs": 4,
+        "maxCfl": 0.58,
+        "maxDryCellsWithWater": 0,
+        "maxMassRelativeDrift": 0.004,
+        "maxNegativeDepthCells": 0,
+        "maxP95GpuStepMs": 0.65,
+        "maxWetDryCellDelta": 0,
+        "minMomentumDampingRatio": 0.08
+      }
+    }
+  }
+}

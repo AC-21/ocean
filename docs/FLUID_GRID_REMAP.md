@@ -307,6 +307,35 @@ Source families encoded in the FG-10 dataset:
 - [NOAA World Ocean Atlas density notes](https://www.nodc.noaa.gov/OC5/woa13/woa-info.html)
   for keeping seawater-density assumptions explicit.
 
+FG-11 is complete as of 2026-06-08. It upgrades the broad-water grid from a
+visual wave benchmark toward a conservative shallow-water state: water height,
+x momentum, y momentum, and dry-mask fields are stepped on WebGPU with bounded
+end-of-run diagnostics.
+
+Latest shallow-water evidence:
+
+- Command: `npm run fluid:shallow-water`.
+- Solver: `conservative-shallow-water-v1`.
+- Report: `reports/fluid-shallow-water-latest.json`.
+- Gate: `G-FG-11`.
+- Evidence snapshot: `docs/evidence/FG-11-shallow-water-2026-06-08.json`.
+- Standard tier: `256 x 144`, mass drift `0.000000`, momentum damping `0.463`,
+  timestamp-query GPU average `0.0204 ms/step`.
+- High tier: `512 x 288`, mass drift `0.000000`, momentum damping `0.561`,
+  timestamp-query GPU average `0.0329 ms/step`.
+- Wet/dry stability: dry-cell count stayed fixed, no dry cells leaked water,
+  and no negative depths appeared in either tier.
+- Readback: bounded end-of-run height/momentum diagnostics only; no per-frame
+  full-grid readback.
+- Gate: passed.
+
+This is deliberately the conservative transport and damping baseline. The first
+attempt with pressure-gradient acceleration failed the gate by creating large
+mass drift and momentum growth near dry boundaries. FG-11 keeps that failure
+useful by locking the stable conservative state first; a later gate should
+reintroduce pressure-gradient acceleration only with the same mass, momentum,
+wet/dry, and local timing evidence.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -335,6 +364,9 @@ Source families encoded in the FG-10 dataset:
 11. Reference dataset ingestion: require drop, splash, float, sink, and damping
     cases with source metadata, units, uncertainty, replayable measurement
     methods, and committed CPU-reference actuals before deeper solver changes.
+12. Conservative shallow-water stepping: move broad water state to WebGPU
+    height and x/y momentum buffers with mass-drift, momentum-damping, wet/dry,
+    CFL, and timestamp-query timing diagnostics.
 
 ## Resolution Ladder
 
