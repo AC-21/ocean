@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fluidWaterRenderShader, legacyCanvasWaterTelemetry } from "./fluidWaterRenderer";
+import { fluidWaterPressureStepShader, fluidWaterRenderShader, legacyCanvasWaterTelemetry } from "./fluidWaterRenderer";
 
 describe("WebGPU fluid water renderer contract", () => {
   it("renders from storage-backed height and foam grids through WebGPU", () => {
@@ -12,6 +12,19 @@ describe("WebGPU fluid water renderer contract", () => {
     expect(fluidWaterRenderShader).toContain("reentryMist");
     expect(fluidWaterRenderShader).toContain("@group(0) @binding(1) var<storage, read>");
     expect(fluidWaterRenderShader).not.toMatch(/getContext|CanvasRenderingContext2D|fillRect|Path2D/);
+  });
+
+  it("steps live renderer water with bounded pressure-gradient momentum state", () => {
+    expect(fluidWaterPressureStepShader).toContain("@compute");
+    expect(fluidWaterPressureStepShader).toContain("bounded-pressure-gradient-live-v1");
+    expect(fluidWaterPressureStepShader).toContain("mxIn");
+    expect(fluidWaterPressureStepShader).toContain("mxOut");
+    expect(fluidWaterPressureStepShader).toContain("myIn");
+    expect(fluidWaterPressureStepShader).toContain("myOut");
+    expect(fluidWaterPressureStepShader).toContain("pressureGain");
+    expect(fluidWaterPressureStepShader).toContain("slopeLimit");
+    expect(fluidWaterPressureStepShader).toContain("maxMomentumPerDepth");
+    expect(fluidWaterPressureStepShader).not.toMatch(/getContext|CanvasRenderingContext2D|fillRect|Path2D/);
   });
 
   it("marks Canvas telemetry as diagnostic fallback only", () => {

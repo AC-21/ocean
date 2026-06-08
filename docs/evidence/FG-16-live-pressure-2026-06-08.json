@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-06-08T02:56:58.134Z",
+  "gate": "G-FG-16",
+  "launchMode": "packaged-app",
+  "noFullGridReadbackPerFrame": true,
+  "pass": true,
+  "telemetry": {
+    "cfl": 0.565685,
+    "estimatedStorageBytes": 5898240,
+    "frames": 180,
+    "grid": "512x288",
+    "impulseEnergyJ": 10532.3079,
+    "momentumLimit": 1.15,
+    "noFullGridReadbackPerFrame": true,
+    "particleCount": 436,
+    "particles": "localized-particle-splash-live-v1",
+    "particlesActive": true,
+    "pressure": "bounded-pressure-gradient-live-v1",
+    "pressureActive": true,
+    "pressureGain": 0.06,
+    "pressureWorkJ": 595.4151,
+    "renderer": "webgpu-grid-primary-v1",
+    "slopeLimit": 0.34,
+    "status": "rendered",
+    "tier": "high",
+    "waterContext": "webgpu"
+  },
+  "pressure": {
+    "active": true,
+    "bufferRoles": [
+      "height",
+      "heightScratch",
+      "momentumX",
+      "momentumXScratch",
+      "momentumY",
+      "momentumYScratch",
+      "foam",
+      "obstacle",
+      "depth",
+      "impulse"
+    ],
+    "cfl": 0.565685424949238,
+    "coupling": "bounded-pressure-gradient-live-v1",
+    "estimatedStorageBytes": 5898240,
+    "impulseEnergyEstimateJ": 11295.292147765878,
+    "maxMomentumPerDepthMps": 1.15,
+    "noFullGridReadbackPerFrame": true,
+    "pressureGain": 0.06,
+    "pressureWorkEstimateJ": 594.7781865212283,
+    "sampleTimeS": 1.333333333333331,
+    "slopeLimit": 0.34
+  },
+  "particle": {
+    "active": true,
+    "boundedDiagnostics": true,
+    "coupling": "localized-particle-splash-live-v1",
+    "displacedWaterMassKg": 12.47069387755097,
+    "dropletDensity": 0.39078138866380413,
+    "gridFeedback": {
+      "bounds": {
+        "xEnd": 258,
+        "xStart": 254,
+        "yEnd": 140,
+        "yStart": 136
+      },
+      "energyJ": 2.6228207885320782,
+      "foamInjection": 0.024421028266305052,
+      "impulseNs": 3.835186215815901,
+      "massKg": 1.0921505196609085,
+      "sampleCount": 13
+    },
+    "impactMomentumNs": 11252.906621781627,
+    "massFractionOfDisplaced": 0.33999999999999997,
+    "maxLaunchSpeedMps": 6.451090252681151,
+    "momentumFractionOfImpact": 0.0011464599798149129,
+    "noFullGridReadbackPerFrame": true,
+    "particleCount": 468,
+    "predictedCrownHeightM": 2.1218543258012557,
+    "referenceSplashBand": {
+      "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+      "maxM": 3.7053481318284724,
+      "minM": 0.8537087680646382
+    },
+    "reenteredMassKg": 1.0921505196609085,
+    "reentryEnergyJ": 2.6228207885320782,
+    "renderIntensity": 0.5981519540453415,
+    "sampleTimeS": 1.333333333333331,
+    "sprayMassKg": 4.2400359183673295
+  }
+}

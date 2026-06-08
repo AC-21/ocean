@@ -119,6 +119,12 @@ Run the packaged live particle renderer gate:
 npm run fluid:live-particles
 ```
 
+Run the packaged live pressure-gradient renderer gate:
+
+```sh
+npm run fluid:live-pressure
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -151,7 +157,9 @@ splash diagnostics together. FG-14 moves calibrated particle feedback into the
 live packaged renderer so real drops expose particle mass, momentum, crown,
 reentry, and local grid-feedback telemetry. FG-15 reintroduces broad-water
 pressure-gradient acceleration with slope and momentum limiters plus mass,
-energy, wet/dry, and local GPU timing evidence.
+energy, wet/dry, and local GPU timing evidence. FG-16 moves that pressure path
+into the packaged renderer with live x/y momentum buffers and bounded pressure
+telemetry during real drops.
 
 ## Run
 
@@ -276,6 +284,9 @@ Current validation checks include:
 - Bounded WebGPU pressure-gradient acceleration with slope limiting, momentum
   limiting, pressure work, energy drift, mass drift, wet/dry stability, and
   local GPU timing.
+- Packaged WebGPU live pressure-gradient rendering with x/y momentum buffers,
+  bounded pressure telemetry, live impulse energy, CFL checks, and live particle
+  feedback in the same drop path.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

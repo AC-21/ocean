@@ -443,6 +443,35 @@ Latest pressure-gradient evidence:
   readback.
 - Gate: passed.
 
+FG-16 is complete as of 2026-06-08. It moves the pressure-gradient broad-water
+path into the actual packaged WebGPU renderer. The live renderer now allocates
+height plus x/y momentum ping-pong state, runs `fluidWaterPressureStepShader`
+with pressure gain, slope limiting, momentum limiting, depth/obstacle
+boundaries, impulse coupling, and foam, then exposes bounded pressure telemetry
+through canvas dataset fields and `window.__fluidWaterRenderStats`.
+
+Latest live pressure evidence:
+
+- Command: `npm run fluid:live-pressure`.
+- Runtime: packaged macOS app.
+- Solver: `bounded-pressure-gradient-live-v1`.
+- Gate: `G-FG-16`.
+- Evidence snapshot:
+  `docs/evidence/FG-16-live-pressure-2026-06-08.json`.
+- Renderer: `webgpu-grid-primary-v1`, context `webgpu`, high tier,
+  `512 x 288`, `180` observed frames.
+- Pressure telemetry: pressure gain `0.060`, slope limit `0.340`, momentum
+  limit `1.15`, CFL `0.565685`, estimated pressure-state storage
+  `5,898,240` bytes, pressure work telemetry `595.42 J`, and live impulse
+  energy telemetry `10532.31 J`.
+- State buffers: height, height scratch, x/y momentum ping-pong buffers, foam,
+  obstacle, depth, and impulse.
+- Coupled live path: the same concrete-cube packaged drop also reported
+  `localized-particle-splash-live-v1` with `436` live droplets.
+- Readback: pressure telemetry is bounded/no-full-grid-readback and the app
+  stayed off Canvas 2D.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -487,6 +516,10 @@ Latest pressure-gradient evidence:
     forces with slope and momentum limiters, then verify mass, wet/dry, energy,
     momentum-budget, CFL, and local GPU timing evidence before making stronger
     wave-realism claims.
+17. Live pressure-gradient renderer path: run the packaged renderer's broad
+    water through pressure-gradient height plus x/y momentum buffers and expose
+    pressure work, impulse energy, CFL, slope limit, momentum limit, storage,
+    and live particle coexistence without full-grid readback.
 
 ## Resolution Ladder
 

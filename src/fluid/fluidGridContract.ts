@@ -16,7 +16,8 @@ export type FluidGridMilestoneId =
   | "FG-12"
   | "FG-13"
   | "FG-14"
-  | "FG-15";
+  | "FG-15"
+  | "FG-16";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -34,7 +35,8 @@ export type FluidGridGateId =
   | "G-FG-12"
   | "G-FG-13"
   | "G-FG-14"
-  | "G-FG-15";
+  | "G-FG-15"
+  | "G-FG-16";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -117,6 +119,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-13", title: "Coupled packaged-app calibration against reference cases", gate: "G-FG-13" },
   { id: "FG-14", title: "Live particle splash feedback in packaged renderer", gate: "G-FG-14" },
   { id: "FG-15", title: "Bounded pressure-gradient broad-water acceleration", gate: "G-FG-15" },
+  { id: "FG-16", title: "Live pressure-gradient broad-water renderer path", gate: "G-FG-16" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -222,6 +225,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:pressure and docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
     passBar:
       "standard and high WebGPU tiers use bounded pressure-gradient acceleration with mass, wet/dry, energy, momentum-budget, slope-limiter, CFL, and timestamp-query evidence",
+  },
+  {
+    id: "G-FG-16",
+    blocks: "FG-16",
+    evidence: "npm run fluid:live-pressure and docs/evidence/FG-16-live-pressure-2026-06-08.json",
+    passBar:
+      "the packaged WebGPU renderer advances live broad water with bounded pressure-gradient momentum buffers and exposes pressure plus particle telemetry without Canvas fallback or full-grid readback",
   },
 ];
 
@@ -589,6 +599,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify pressure-gradient WebGPU evidence",
     exitProof:
       "npm run fluid:pressure passes standard and high WebGPU tiers and writes docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
+  },
+  {
+    id: "FG-16-T01",
+    milestone: "FG-16",
+    status: "done",
+    title: "Add live renderer pressure-gradient compute state",
+    exitProof:
+      "FluidWaterRenderer allocates x/y momentum ping-pong buffers and runs fluidWaterPressureStepShader with pressure gain, slope limiting, momentum limiting, depth, obstacle, impulse, and foam state",
+  },
+  {
+    id: "FG-16-T02",
+    milestone: "FG-16",
+    status: "done",
+    title: "Expose live pressure renderer telemetry",
+    exitProof:
+      "FluidWaterRenderer stats and canvas dataset expose bounded-pressure-gradient-live-v1, pressure gain, slope limit, momentum limit, CFL, storage, work, impulse energy, and no-full-grid-readback telemetry",
+  },
+  {
+    id: "FG-16-T03",
+    milestone: "FG-16",
+    status: "done",
+    title: "Verify packaged live pressure renderer evidence",
+    exitProof:
+      "npm run fluid:live-pressure launches the packaged app, drops the concrete cube, and records active live pressure plus live particle telemetry in docs/evidence/FG-16-live-pressure-2026-06-08.json",
   },
 ];
 

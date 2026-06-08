@@ -1,4 +1,4 @@
-import { createFluidGridStepPlan, fluidGridStepShader, type FluidGridStepPlan } from "./fluidGridGpu";
+import { createFluidGridStepPlan, type FluidGridStepPlan } from "./fluidGridGpu";
 import {
   gridObjectCouplingFor,
   type FluidGridObjectCoupling,
@@ -68,9 +68,25 @@ export type FluidWaterRenderStats = {
   gridCellsY: number;
   lastCoupling: FluidGridObjectCouplingSummary | null;
   lastParticleSplash: ParticleSplashLiveFeedbackSummary | null;
+  lastPressure: FluidRendererPressureSummary | null;
   lastSplash: FluidGridSplashSummary | null;
   renderer: "webgpu-grid-primary-v1";
   tier: FluidGridTierId;
+};
+
+export type FluidRendererPressureSummary = {
+  active: boolean;
+  bufferRoles: string[];
+  cfl: number;
+  coupling: "bounded-pressure-gradient-live-v1";
+  estimatedStorageBytes: number;
+  impulseEnergyEstimateJ: number;
+  maxMomentumPerDepthMps: number;
+  noFullGridReadbackPerFrame: boolean;
+  pressureGain: number;
+  pressureWorkEstimateJ: number;
+  sampleTimeS: number;
+  slopeLimit: number;
 };
 
 type GpuLike = {
@@ -165,6 +181,10 @@ export class FluidWaterRenderer {
   private readonly heightScratch: BufferLike;
   private readonly foam: BufferLike;
   private readonly impulse: BufferLike;
+  private readonly momentumX: BufferLike;
+  private readonly momentumXScratch: BufferLike;
+  private readonly momentumY: BufferLike;
+  private readonly momentumYScratch: BufferLike;
   private readonly obstacle: BufferLike;
   private readonly plan: FluidGridStepPlan;
   private readonly renderBindA: unknown;
@@ -177,6 +197,7 @@ export class FluidWaterRenderer {
   private lastCoupling: FluidGridObjectCouplingSummary | null = null;
   private lastCouplingBounds: FluidGridObjectCouplingBounds | null = null;
   private lastParticleSplash: ParticleSplashLiveFeedbackSummary | null = null;
+  private lastPressure: FluidRendererPressureSummary | null = null;
   private lastSplash: FluidGridSplashSummary | null = null;
   private splashMemory: FluidGridSplashMemory = { accumulatedReentryEnergyJ: 0, accumulatedReentryMassKg: 0, peakFoamEnergyJ: 0 };
   private stepIndex = 0;
@@ -192,7 +213,10 @@ export class FluidWaterRenderer {
     const seeded = seededRendererFields(this.plan);
     this.height = this.storageBuffer(seeded.height);
     this.heightScratch = this.storageBuffer(seeded.heightScratch);
-    const velocity = this.storageBuffer(seeded.velocity);
+    this.momentumX = this.storageBuffer(seeded.momentumX);
+    this.momentumXScratch = this.storageBuffer(seeded.momentumXScratch);
+    this.momentumY = this.storageBuffer(seeded.momentumY);
+    this.momentumYScratch = this.storageBuffer(seeded.momentumYScratch);
     this.foam = this.storageBuffer(seeded.foam);
     this.baseObstacle = seeded.obstacle.slice();
     this.baseDepth = seeded.depth.slice();
@@ -206,28 +230,55 @@ export class FluidWaterRenderer {
       entries: [
         storageBinding(0, "read-only-storage", shaderStage.compute),
         storageBinding(1, "storage", shaderStage.compute),
-        storageBinding(2, "storage", shaderStage.compute),
+        storageBinding(2, "read-only-storage", shaderStage.compute),
         storageBinding(3, "storage", shaderStage.compute),
         storageBinding(4, "read-only-storage", shaderStage.compute),
-        storageBinding(5, "read-only-storage", shaderStage.compute),
+        storageBinding(5, "storage", shaderStage.compute),
         storageBinding(6, "storage", shaderStage.compute),
-        { binding: 7, visibility: shaderStage.compute, buffer: { type: "uniform" } },
+        storageBinding(7, "read-only-storage", shaderStage.compute),
+        storageBinding(8, "read-only-storage", shaderStage.compute),
+        storageBinding(9, "storage", shaderStage.compute),
+        { binding: 10, visibility: shaderStage.compute, buffer: { type: "uniform" } },
       ],
     });
     this.computePipeline = this.device.createComputePipeline({
       layout: this.device.createPipelineLayout({ bindGroupLayouts: [computeLayout] }),
       compute: {
-        module: this.device.createShaderModule({ code: fluidGridStepShader }),
+        module: this.device.createShaderModule({ code: fluidWaterPressureStepShader }),
         entryPoint: "main",
       },
     });
     this.computeBindA = this.device.createBindGroup({
       layout: computeLayout,
-      entries: bindEntries(this.height, this.heightScratch, velocity, this.foam, this.obstacle, this.depth, this.impulse, this.stepUniform),
+      entries: bindEntries(
+        this.height,
+        this.heightScratch,
+        this.momentumX,
+        this.momentumXScratch,
+        this.momentumY,
+        this.momentumYScratch,
+        this.foam,
+        this.obstacle,
+        this.depth,
+        this.impulse,
+        this.stepUniform
+      ),
     });
     this.computeBindB = this.device.createBindGroup({
       layout: computeLayout,
-      entries: bindEntries(this.heightScratch, this.height, velocity, this.foam, this.obstacle, this.depth, this.impulse, this.stepUniform),
+      entries: bindEntries(
+        this.heightScratch,
+        this.height,
+        this.momentumXScratch,
+        this.momentumX,
+        this.momentumYScratch,
+        this.momentumY,
+        this.foam,
+        this.obstacle,
+        this.depth,
+        this.impulse,
+        this.stepUniform
+      ),
     });
 
     const renderLayout = this.device.createBindGroupLayout({
@@ -278,6 +329,7 @@ export class FluidWaterRenderer {
       format: this.format,
       usage: textureUsageRenderAttachment,
     });
+    this.lastPressure = livePressureSummaryFor(input, this.plan);
     this.writeObjectCoupling(input, size);
     this.device.queue.writeBuffer(this.renderUniform, 0, renderUniformValues(input, this.plan, size, this.lastSplash, this.lastParticleSplash));
     const encoder = this.device.createCommandEncoder();
@@ -316,6 +368,7 @@ export class FluidWaterRenderer {
       gridCellsY: this.plan.cellsY,
       lastCoupling: this.lastCoupling,
       lastParticleSplash: this.lastParticleSplash,
+      lastPressure: this.lastPressure,
       lastSplash: this.lastSplash,
       renderer: "webgpu-grid-primary-v1",
       tier: this.plan.tier,
@@ -441,6 +494,7 @@ export class FluidWaterRenderer {
     const coupling = this.lastCoupling;
     const splash = this.lastSplash;
     const particle = this.lastParticleSplash;
+    const pressure = this.lastPressure;
     this.canvas.dataset.waterRenderer = "webgpu-grid-primary-v1";
     this.canvas.dataset.waterContext = "webgpu";
     this.canvas.dataset.waterGrid = `${this.plan.cellsX}x${this.plan.cellsY}`;
@@ -471,6 +525,16 @@ export class FluidWaterRenderer {
     this.canvas.dataset.waterParticlesMomentumFraction = String(Number((particle?.momentumFractionOfImpact ?? 0).toFixed(6)));
     this.canvas.dataset.waterParticlesReadback = String(particle?.noFullGridReadbackPerFrame ?? true);
     this.canvas.dataset.waterParticlesReentryEnergy = String(Number((particle?.reentryEnergyJ ?? 0).toFixed(6)));
+    this.canvas.dataset.waterPressure = pressure?.coupling ?? "bounded-pressure-gradient-live-v1";
+    this.canvas.dataset.waterPressureActive = String(pressure?.active ?? false);
+    this.canvas.dataset.waterPressureCfl = String(Number((pressure?.cfl ?? this.plan.cfl).toFixed(6)));
+    this.canvas.dataset.waterPressureGain = String(Number((pressure?.pressureGain ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureImpulseEnergy = String(Number((pressure?.impulseEnergyEstimateJ ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureMomentumLimit = String(Number((pressure?.maxMomentumPerDepthMps ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureReadback = String(pressure?.noFullGridReadbackPerFrame ?? true);
+    this.canvas.dataset.waterPressureSlopeLimit = String(Number((pressure?.slopeLimit ?? 0).toFixed(4)));
+    this.canvas.dataset.waterPressureStorage = String(Math.round(pressure?.estimatedStorageBytes ?? this.plan.estimatedStorageBytes));
+    this.canvas.dataset.waterPressureWork = String(Number((pressure?.pressureWorkEstimateJ ?? 0).toFixed(4)));
   }
 }
 
@@ -539,6 +603,104 @@ export function legacyCanvasWaterTelemetry(canvas: HTMLCanvasElement, reason: st
   canvas.dataset.waterFallbackReason = reason;
   canvas.dataset.waterStatus = "fallback";
 }
+
+export const fluidWaterPressureStepShader = `
+// bounded-pressure-gradient-live-v1
+struct Params {
+  width: f32,
+  height: f32,
+  dt: f32,
+  cellSize: f32,
+  gravity: f32,
+  damping: f32,
+  minDepth: f32,
+  pressureGain: f32,
+  slopeLimit: f32,
+  maxMomentumPerDepth: f32,
+  impulseGain: f32,
+  foamDecay: f32,
+};
+
+@group(0) @binding(0) var<storage, read> heightIn: array<f32>;
+@group(0) @binding(1) var<storage, read_write> heightOut: array<f32>;
+@group(0) @binding(2) var<storage, read> mxIn: array<f32>;
+@group(0) @binding(3) var<storage, read_write> mxOut: array<f32>;
+@group(0) @binding(4) var<storage, read> myIn: array<f32>;
+@group(0) @binding(5) var<storage, read_write> myOut: array<f32>;
+@group(0) @binding(6) var<storage, read_write> foam: array<f32>;
+@group(0) @binding(7) var<storage, read> obstacle: array<f32>;
+@group(0) @binding(8) var<storage, read> depth: array<f32>;
+@group(0) @binding(9) var<storage, read_write> impulse: array<f32>;
+@group(0) @binding(10) var<uniform> params: Params;
+
+fn at(x: u32, y: u32, width: u32) -> u32 {
+  return y * width + x;
+}
+
+fn wetSurface(index: u32) -> f32 {
+  if (obstacle[index] > 0.5) {
+    return 0.0;
+  }
+  return heightIn[index];
+}
+
+@compute @workgroup_size(8, 8, 1)
+fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+  let width = u32(params.width);
+  let height = u32(params.height);
+  if (id.x >= width || id.y >= height) {
+    return;
+  }
+
+  let index = at(id.x, id.y, width);
+  if (obstacle[index] > 0.5) {
+    heightOut[index] = 0.0;
+    mxOut[index] = 0.0;
+    myOut[index] = 0.0;
+    foam[index] = 0.0;
+    impulse[index] = 0.0;
+    return;
+  }
+
+  let xL = max(id.x, 1u) - 1u;
+  let xR = min(id.x + 1u, width - 1u);
+  let yD = max(id.y, 1u) - 1u;
+  let yU = min(id.y + 1u, height - 1u);
+  let left = at(xL, id.y, width);
+  let right = at(xR, id.y, width);
+  let down = at(id.x, yD, width);
+  let up = at(id.x, yU, width);
+  let center = heightIn[index];
+  let wetDepth = max(params.minDepth, depth[index] + center);
+
+  let fluxR = select(0.5 * (mxIn[index] + mxIn[right]), 0.0, obstacle[right] > 0.5);
+  let fluxL = select(0.5 * (mxIn[left] + mxIn[index]), 0.0, obstacle[left] > 0.5);
+  let fluxU = select(0.5 * (myIn[index] + myIn[up]), 0.0, obstacle[up] > 0.5);
+  let fluxD = select(0.5 * (myIn[down] + myIn[index]), 0.0, obstacle[down] > 0.5);
+  let impulseKick = impulse[index] * params.impulseGain;
+  let dFluxX = (fluxR - fluxL) / params.cellSize;
+  let dFluxY = (fluxU - fluxD) / params.cellSize;
+  let nextSurface = center - params.dt * (dFluxX + dFluxY) + impulseKick * 0.014;
+
+  let surfaceGradX = clamp((wetSurface(right) - wetSurface(left)) / (2.0 * params.cellSize), -params.slopeLimit, params.slopeLimit);
+  let surfaceGradY = clamp((wetSurface(up) - wetSurface(down)) / (2.0 * params.cellSize), -params.slopeLimit, params.slopeLimit);
+  var nextMx = (mxIn[index] - params.dt * params.gravity * wetDepth * surfaceGradX * params.pressureGain) * params.damping;
+  var nextMy = (myIn[index] - params.dt * params.gravity * wetDepth * surfaceGradY * params.pressureGain) * params.damping;
+  let momentumLimit = max(params.minDepth, depth[index] + nextSurface) * params.maxMomentumPerDepth;
+  let momentumLength = length(vec2<f32>(nextMx, nextMy));
+  if (momentumLength > momentumLimit) {
+    let limitScale = momentumLimit / max(momentumLength, 0.000001);
+    nextMx = nextMx * limitScale;
+    nextMy = nextMy * limitScale;
+  }
+
+  heightOut[index] = clamp(nextSurface, -depth[index] + params.minDepth, depth[index] * 0.86);
+  mxOut[index] = nextMx;
+  myOut[index] = nextMy;
+  foam[index] = max(foam[index] * params.foamDecay, abs(impulseKick) * 0.015 + length(vec2<f32>(surfaceGradX, surfaceGradY)) * 0.018);
+  impulse[index] = 0.0;
+}
+`;
 
 export const fluidWaterRenderShader = `
 struct RenderParams {
@@ -703,7 +865,10 @@ function resizeCanvas(canvas: HTMLCanvasElement) {
 function seededRendererFields(plan: FluidGridStepPlan) {
   const height = new Float32Array(plan.cellCount);
   const heightScratch = new Float32Array(plan.cellCount);
-  const velocity = new Float32Array(plan.cellCount);
+  const momentumX = new Float32Array(plan.cellCount);
+  const momentumXScratch = new Float32Array(plan.cellCount);
+  const momentumY = new Float32Array(plan.cellCount);
+  const momentumYScratch = new Float32Array(plan.cellCount);
   const foam = new Float32Array(plan.cellCount);
   const obstacle = new Float32Array(plan.cellCount);
   const depth = new Float32Array(plan.cellCount);
@@ -723,16 +888,86 @@ function seededRendererFields(plan: FluidGridStepPlan) {
       const wake = Math.exp(-(dx * dx + dy * dy));
       const ripple = Math.sin(x * 0.17) * Math.sin(y * 0.09) * 0.006;
       height[index] = wake * 0.026 + ripple;
+      const swirl = Math.exp(-0.5 * (dx * dx + dy * dy));
+      momentumX[index] = 0.004 * depth[index] * (-dy) * swirl;
+      momentumY[index] = 0.003 * depth[index] * dx * swirl;
       impulse[index] = wake * 0.45;
       foam[index] = wake * 0.05;
     }
   }
 
-  return { depth, foam, height, heightScratch, impulse, obstacle, velocity };
+  return { depth, foam, height, heightScratch, impulse, momentumX, momentumXScratch, momentumY, momentumYScratch, obstacle };
 }
 
 function stepUniformValues(plan: FluidGridStepPlan): Float32Array {
-  return new Float32Array([plan.cellsX, plan.cellsY, plan.dtS, 0.994, plan.waveSpeedMps, plan.cellSizeM, 12, 0.992]);
+  const pressure = pressureSettingsFor(plan);
+  return new Float32Array([
+    plan.cellsX,
+    plan.cellsY,
+    plan.dtS,
+    plan.cellSizeM,
+    pressure.gravityMps2,
+    pressure.damping,
+    pressure.minDepthM,
+    pressure.pressureGain,
+    pressure.slopeLimit,
+    pressure.maxMomentumPerDepthMps,
+    pressure.impulseGain,
+    pressure.foamDecay,
+  ]);
+}
+
+function pressureSettingsFor(plan: FluidGridStepPlan) {
+  return {
+    damping: 0.992,
+    foamDecay: 0.992,
+    gravityMps2: 9.80665,
+    impulseGain: 12,
+    maxMomentumPerDepthMps: 1.15,
+    minDepthM: 0.001,
+    pressureGain: 0.06,
+    slopeLimit: 0.34,
+    storageFieldCount: 10,
+    stateBufferRoles: [
+      "height",
+      "heightScratch",
+      "momentumX",
+      "momentumXScratch",
+      "momentumY",
+      "momentumYScratch",
+      "foam",
+      "obstacle",
+      "depth",
+      "impulse",
+    ],
+  };
+}
+
+function livePressureSummaryFor(input: FluidWaterRenderInput, plan: FluidGridStepPlan): FluidRendererPressureSummary {
+  const pressure = pressureSettingsFor(plan);
+  const impactEnergy = Math.max(0, input.splashEnergyJ + Math.abs(input.slamForceN * input.displacedVolumeRateM3ps) * plan.dtS);
+  const slopeWorkEstimateJ =
+    pressure.pressureGain *
+    input.waterDensityKgM3 *
+    input.gravityMps2 *
+    plan.cellSizeM *
+    plan.cellSizeM *
+    Math.max(1, Math.sqrt(plan.cellCount)) *
+    Math.max(0.01, input.waveHeightM + input.impactStrength * 0.18);
+  return {
+    active: true,
+    bufferRoles: pressure.stateBufferRoles,
+    cfl: plan.cfl,
+    coupling: "bounded-pressure-gradient-live-v1",
+    estimatedStorageBytes: plan.bytesPerField * pressure.storageFieldCount,
+    impulseEnergyEstimateJ: impactEnergy,
+    maxMomentumPerDepthMps: pressure.maxMomentumPerDepthMps,
+    noFullGridReadbackPerFrame: true,
+    pressureGain: pressure.pressureGain,
+    pressureWorkEstimateJ: slopeWorkEstimateJ,
+    sampleTimeS: input.timeS,
+    slopeLimit: pressure.slopeLimit,
+  };
 }
 
 function renderUniformValues(
@@ -859,14 +1094,17 @@ function storageBinding(binding: number, type: "read-only-storage" | "storage", 
 function bindEntries(
   height: BufferLike,
   heightScratch: BufferLike,
-  velocity: BufferLike,
+  momentumX: BufferLike,
+  momentumXScratch: BufferLike,
+  momentumY: BufferLike,
+  momentumYScratch: BufferLike,
   foam: BufferLike,
   obstacle: BufferLike,
   depth: BufferLike,
   impulse: BufferLike,
   uniform: BufferLike
 ) {
-  return [height, heightScratch, velocity, foam, obstacle, depth, impulse, uniform].map((buffer, binding) => ({
+  return [height, heightScratch, momentumX, momentumXScratch, momentumY, momentumYScratch, foam, obstacle, depth, impulse, uniform].map((buffer, binding) => ({
     binding,
     resource: { buffer },
   }));

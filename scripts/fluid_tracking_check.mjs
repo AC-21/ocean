@@ -21,6 +21,7 @@ const requiredFiles = [
   "docs/evidence/FG-13-coupled-calibration-2026-06-08.json",
   "docs/evidence/FG-14-live-particles-2026-06-08.json",
   "docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
+  "docs/evidence/FG-16-live-pressure-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -38,8 +39,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -79,6 +80,7 @@ const fg12Evidence = files.get("docs/evidence/FG-12-particle-splash-2026-06-08.j
 const fg13Evidence = files.get("docs/evidence/FG-13-coupled-calibration-2026-06-08.json") ?? "";
 const fg14Evidence = files.get("docs/evidence/FG-14-live-particles-2026-06-08.json") ?? "";
 const fg15Evidence = files.get("docs/evidence/FG-15-pressure-gradient-2026-06-08.json") ?? "";
+const fg16Evidence = files.get("docs/evidence/FG-16-live-pressure-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -583,6 +585,59 @@ if (
   !fg15Evidence.includes("\"high\"")
 ) {
   errors.push("FG-15 evidence must record a passing bounded pressure-gradient WebGPU report for standard and high tiers");
+}
+
+if (!packageJson.includes("\"fluid:live-pressure\"") || !packageJson.includes("scripts/fluid_live_pressure_report.mjs")) {
+  errors.push("package.json must expose the FG-16 packaged live-pressure command");
+}
+
+if (!tracking.includes("FG-16-T03") || !tracking.includes("FG-16-live-pressure-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/19")) {
+  errors.push("docs/TRACKING.md must record FG-16 live pressure evidence and issue mapping");
+}
+
+if (
+  !waterRenderer.includes("bounded-pressure-gradient-live-v1") ||
+  !waterRenderer.includes("fluidWaterPressureStepShader") ||
+  !waterRenderer.includes("momentumX") ||
+  !waterRenderer.includes("momentumY") ||
+  !waterRenderer.includes("lastPressure") ||
+  !waterRenderer.includes("waterPressureGain") ||
+  !waterRenderer.includes("waterPressureImpulseEnergy") ||
+  !waterRenderer.includes("waterPressureWork")
+) {
+  errors.push("fluidWaterRenderer.ts must implement live pressure-gradient renderer state, stats, and telemetry");
+}
+
+if (
+  !remap.includes("FG-16") ||
+  !remap.includes("bounded-pressure-gradient-live-v1") ||
+  !remap.includes("fluidWaterPressureStepShader") ||
+  !remap.includes("x/y momentum") ||
+  !remap.includes("live impulse")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-16 live pressure renderer gate and evidence");
+}
+
+if (
+  !fg16Evidence.includes("\"gate\": \"G-FG-16\"") ||
+  !fg16Evidence.includes("\"pass\": true") ||
+  !fg16Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg16Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg16Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg16Evidence.includes("\"pressure\": \"bounded-pressure-gradient-live-v1\"") ||
+  !fg16Evidence.includes("\"pressureActive\": true") ||
+  !fg16Evidence.includes("\"pressureGain\": 0.06") ||
+  !fg16Evidence.includes("\"slopeLimit\": 0.34") ||
+  !fg16Evidence.includes("\"momentumLimit\": 1.15") ||
+  !fg16Evidence.includes("\"pressureWorkJ\"") ||
+  !fg16Evidence.includes("\"impulseEnergyJ\"") ||
+  !fg16Evidence.includes("\"particles\": \"localized-particle-splash-live-v1\"") ||
+  !fg16Evidence.includes("\"particlesActive\": true") ||
+  !fg16Evidence.includes("\"momentumX\"") ||
+  !fg16Evidence.includes("\"momentumY\"") ||
+  !fg16Evidence.includes("\"noFullGridReadbackPerFrame\": true")
+) {
+  errors.push("FG-16 evidence must record a passing packaged live pressure renderer report");
 }
 
 if (errors.length > 0) {
