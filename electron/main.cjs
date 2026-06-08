@@ -1,14 +1,14 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
-const { createHarborlineStorage } = require("./storage.cjs");
+const { createHarborlineStorage, desktopStorageFiles } = require("./storage.cjs");
 
 const appRoot = path.resolve(__dirname, "..");
 const distRootUrl = pathToFileURL(path.join(appRoot, "dist") + path.sep).href;
 const appIconPath = path.join(appRoot, "dist", "app-icon.svg");
 const devServerUrl = process.env.HARBORLINE_DEV_SERVER_URL;
 const requestedFluidTier = process.env.OCEAN_LAB_FLUID_TIER;
-const calibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
+const envCalibratedFluidTier = process.env.OCEAN_LAB_CALIBRATED_FLUID_TIER;
 let storage;
 
 app.setName("Ocean Impact Lab");
@@ -74,25 +74,46 @@ async function createMainWindow() {
 
   if (devServerUrl) {
     const url = new URL(devServerUrl);
-    appendFluidTierQuery(url.searchParams);
+    appendFluidTierQuery(url.searchParams, await fluidTierQueryObject());
     await window.loadURL(url.toString());
     return;
   }
 
-  const fluidTierQuery = fluidTierQueryObject();
+  const fluidTierQuery = await fluidTierQueryObject();
   await window.loadFile(path.join(appRoot, "dist", "index.html"), Object.keys(fluidTierQuery).length > 0 ? { query: fluidTierQuery } : undefined);
 }
 
-function appendFluidTierQuery(searchParams) {
-  if (requestedFluidTier) searchParams.set("fluidTier", requestedFluidTier);
-  if (calibratedFluidTier) searchParams.set("calibratedFluidTier", calibratedFluidTier);
+function appendFluidTierQuery(searchParams, query) {
+  if (query.fluidTier) searchParams.set("fluidTier", query.fluidTier);
+  if (query.calibratedFluidTier) searchParams.set("calibratedFluidTier", query.calibratedFluidTier);
 }
 
-function fluidTierQueryObject() {
+async function fluidTierQueryObject() {
+  const storedCalibratedTier = await calibratedFluidTierFromStorage();
+  const calibratedFluidTier = validFluidTier(envCalibratedFluidTier) ?? storedCalibratedTier;
+  const fluidTier = requestedFluidTier || (!requestedFluidTier && calibratedFluidTier ? "auto" : undefined);
   return {
-    ...(requestedFluidTier ? { fluidTier: requestedFluidTier } : {}),
+    ...(fluidTier ? { fluidTier } : {}),
     ...(calibratedFluidTier ? { calibratedFluidTier } : {}),
   };
+}
+
+async function calibratedFluidTierFromStorage() {
+  if (!storage) return undefined;
+  try {
+    const raw = await storage.readText(desktopStorageFiles.fluidCalibrationProfile);
+    if (!raw) return undefined;
+    const profile = JSON.parse(raw);
+    if (profile?.schema !== "ocean-fluid-calibration-profile-v1") return undefined;
+    if (profile?.pass !== true) return undefined;
+    return validFluidTier(profile?.selectedTier);
+  } catch {
+    return undefined;
+  }
+}
+
+function validFluidTier(value) {
+  return value === "low" || value === "standard" || value === "high" || value === "ultra" ? value : undefined;
 }
 
 app.whenReady().then(async () => {

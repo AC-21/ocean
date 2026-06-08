@@ -31,6 +31,7 @@ and GitHub issue mapping.
 | FG-21 | Opt-in ultra-tier live renderer gate | Done | G-FG-21 |
 | FG-22 | Ultra-tier live reference outcome gate | Done | G-FG-22 |
 | FG-23 | Adaptive local GPU tier calibration selector | Done | G-FG-23 |
+| FG-24 | Persisted local calibration profile runtime gate | Done | G-FG-24 |
 
 ## Gates
 
@@ -60,6 +61,7 @@ and GitHub issue mapping.
 | G-FG-21 | FG-21 | `npm run fluid:ultra-renderer`; `docs/evidence/FG-21-ultra-renderer-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and sustains smooth idle and concrete-impact display pacing with pressure, particles, object-grid coupling, zero dropped simulation debt, and no Canvas fallback |
 | G-FG-22 | FG-22 | `npm run fluid:ultra-reference-outcomes`; `docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json` | the packaged app honors an explicit ultra-tier request, selects the live `768 x 432` WebGPU renderer, and passes live reference comparisons for drop, splash, float, sink, and damping with pressure, particles, object-grid coupling, fixed-step telemetry, and no full-grid readback |
 | G-FG-23 | FG-23 | `npm run fluid:adaptive-tier`; `docs/evidence/FG-23-adaptive-tier-2026-06-08.json` | the packaged app composes local resolution, ultra renderer, and ultra reference evidence into a calibrated auto tier recommendation, then launches with auto tier selection and proves calibrated-auto selects the live `768 x 432` ultra WebGPU renderer |
+| G-FG-24 | FG-24 | `npm run fluid:persisted-calibration`; `docs/evidence/FG-24-persisted-calibration-2026-06-08.json` | the packaged app reads an app-owned local calibration profile without a calibrated-tier environment variable, auto-requests the saved calibrated tier, and proves calibrated-auto selects the live `768 x 432` ultra WebGPU renderer while explicit overrides remain supported |
 
 ## Tasks
 
@@ -138,6 +140,9 @@ and GitHub issue mapping.
 | FG-23-T01 | FG-23 | Done | calibration | `fluidAdaptiveTier.ts` parses explicit, calibrated-auto, default-high, and auto-fallback-high modes while preserving explicit user tier overrides |
 | FG-23-T02 | FG-23 | Done | calibration | `fluidAdaptiveTier.ts` recommends ultra only when FG-20 resolution scaling, FG-21 ultra renderer pacing, and FG-22 ultra reference outcomes pass local headroom thresholds |
 | FG-23-T03 | FG-23 | Done | verification | `npm run fluid:adaptive-tier` passes with recommendation `ultra`, calibrated-auto runtime mode, selected grid `768 x 432`, WebGPU renderer, and committed FG-23 evidence |
+| FG-24-T01 | FG-24 | Done | calibration | `electron/storage.cjs` allowlists `fluid-calibration.v1.json` and storage tests cover safe read/write behavior for the fluid calibration profile |
+| FG-24-T02 | FG-24 | Done | integration | `electron/main.cjs` reads a passing `ocean-fluid-calibration-profile-v1` profile and supplies `fluidTier=auto` plus `calibratedFluidTier` unless an explicit environment override is present |
+| FG-24-T03 | FG-24 | Done | verification | `npm run fluid:persisted-calibration` passes with env calibrated tier absent, profile-selected `ultra`, main-process profile read, calibrated-auto runtime mode, selected grid `768 x 432`, and WebGPU renderer |
 
 ## GitHub Labels
 
@@ -177,6 +182,7 @@ and GitHub issue mapping.
 | FG-21 | https://github.com/AC-21/ocean/issues/24 |
 | FG-22 | https://github.com/AC-21/ocean/issues/25 |
 | FG-23 | https://github.com/AC-21/ocean/issues/26 |
+| FG-24 | https://github.com/AC-21/ocean/issues/27 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

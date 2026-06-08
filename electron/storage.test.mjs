@@ -19,15 +19,18 @@ describe("Electron storage bridge filesystem", () => {
 
     await storage.writeText(desktopStorageFiles.save, "{\"version\":2}");
     await storage.writeText(desktopStorageFiles.best, "4200");
+    await storage.writeText(desktopStorageFiles.fluidCalibrationProfile, "{\"schema\":\"ocean-fluid-calibration-profile-v1\",\"selectedTier\":\"ultra\"}");
     await storage.writeText(desktopStorageFiles.playtestArtifact, "# Scorecard\n");
     await storage.writeText(desktopStorageFiles.playtestHistory, "{\"schema\":1,\"entries\":[]}");
 
     expect(await storage.readText(desktopStorageFiles.save)).toBe("{\"version\":2}");
     expect(await storage.readText(desktopStorageFiles.best)).toBe("4200");
+    expect(await storage.readText(desktopStorageFiles.fluidCalibrationProfile)).toBe("{\"schema\":\"ocean-fluid-calibration-profile-v1\",\"selectedTier\":\"ultra\"}");
     expect(await storage.readText(desktopStorageFiles.playtestArtifact)).toBe("# Scorecard\n");
     expect(await storage.readText(desktopStorageFiles.playtestHistory)).toBe("{\"schema\":1,\"entries\":[]}");
     expect(await readFile(path.join(root, "userData", "harborline-game", desktopStorageFiles.save), "utf8")).toBe("{\"version\":2}");
     expect(await readFile(path.join(root, "userData", "harborline-game", desktopStorageFiles.playtestArtifact), "utf8")).toBe("# Scorecard\n");
+    expect(await readFile(path.join(root, "userData", "harborline-game", desktopStorageFiles.fluidCalibrationProfile), "utf8")).toContain("\"selectedTier\":\"ultra\"");
     expect(await readFile(path.join(root, "userData", "harborline-game", desktopStorageFiles.playtestHistory), "utf8")).toBe("{\"schema\":1,\"entries\":[]}");
 
     const info = await storage.info();

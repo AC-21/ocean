@@ -668,6 +668,30 @@ Latest adaptive-tier evidence:
   context `webgpu`, and no Canvas fallback.
 - Gate: passed.
 
+FG-24 is complete as of 2026-06-08. It persists the adaptive calibration result
+as app-owned local state. The packaged app now allowlists
+`fluid-calibration.v1.json`, reads a passing
+`ocean-fluid-calibration-profile-v1` profile during Electron startup, and
+supplies `fluidTier=auto` plus the saved `calibratedFluidTier` before the
+renderer loads. Explicit environment tier overrides still take precedence.
+
+Latest persisted-calibration evidence:
+
+- Command: `npm run fluid:persisted-calibration`.
+- Runtime: packaged macOS app launched with no
+  `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-24`.
+- Evidence snapshot:
+  `docs/evidence/FG-24-persisted-calibration-2026-06-08.json`.
+- Profile: schema `ocean-fluid-calibration-profile-v1`, source gate
+  `G-FG-23`, selected tier `ultra`, pass `true`, stored as
+  `fluid-calibration.v1.json`.
+- Runtime probe: main process read the profile, selection mode
+  `calibrated-auto`, requested tier `auto`, selected tier `ultra`, grid
+  `768 x 432`, renderer `webgpu-grid-primary-v1`, context `webgpu`, and no
+  Canvas fallback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -745,6 +769,10 @@ Latest adaptive-tier evidence:
     renderer pacing, and ultra reference-outcome evidence into a conservative
     tier recommendation, then prove the packaged app's `auto` path selects the
     calibrated live tier while explicit user overrides remain intact.
+25. Persisted local calibration profile: save the adaptive tier decision in
+    app-owned desktop storage, read it during Electron startup, and prove a
+    normal packaged launch can select the calibrated tier without a calibrated
+    tier environment variable.
 
 ## Resolution Ladder
 

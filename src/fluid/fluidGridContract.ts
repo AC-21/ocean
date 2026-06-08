@@ -24,7 +24,8 @@ export type FluidGridMilestoneId =
   | "FG-20"
   | "FG-21"
   | "FG-22"
-  | "FG-23";
+  | "FG-23"
+  | "FG-24";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -50,7 +51,8 @@ export type FluidGridGateId =
   | "G-FG-20"
   | "G-FG-21"
   | "G-FG-22"
-  | "G-FG-23";
+  | "G-FG-23"
+  | "G-FG-24";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -141,6 +143,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-21", title: "Opt-in ultra-tier live renderer gate", gate: "G-FG-21" },
   { id: "FG-22", title: "Ultra-tier live reference outcome gate", gate: "G-FG-22" },
   { id: "FG-23", title: "Adaptive local GPU tier calibration selector", gate: "G-FG-23" },
+  { id: "FG-24", title: "Persisted local calibration profile runtime gate", gate: "G-FG-24" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -302,6 +305,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:adaptive-tier and docs/evidence/FG-23-adaptive-tier-2026-06-08.json",
     passBar:
       "the packaged app composes local resolution, ultra renderer, and ultra reference evidence into a calibrated auto tier recommendation, then launches with auto tier selection and proves calibrated-auto selects the live 768 x 432 ultra WebGPU renderer",
+  },
+  {
+    id: "G-FG-24",
+    blocks: "FG-24",
+    evidence: "npm run fluid:persisted-calibration and docs/evidence/FG-24-persisted-calibration-2026-06-08.json",
+    passBar:
+      "the packaged app reads an app-owned local calibration profile without a calibrated-tier environment variable, auto-requests the saved calibrated tier, and proves calibrated-auto selects the live 768 x 432 ultra WebGPU renderer while explicit overrides remain supported",
   },
 ];
 
@@ -861,6 +871,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify calibrated-auto packaged runtime selection",
     exitProof:
       "npm run fluid:adaptive-tier passes with recommendation ultra, calibrated-auto runtime mode, selected grid 768 x 432, WebGPU renderer, and committed FG-23 evidence",
+  },
+  {
+    id: "FG-24-T01",
+    milestone: "FG-24",
+    status: "done",
+    title: "Add a persisted calibration storage profile",
+    exitProof:
+      "electron/storage.cjs allowlists fluid-calibration.v1.json and storage tests cover safe read/write behavior for the fluid calibration profile",
+  },
+  {
+    id: "FG-24-T02",
+    milestone: "FG-24",
+    status: "done",
+    title: "Load saved calibration during packaged startup",
+    exitProof:
+      "electron/main.cjs reads a passing ocean-fluid-calibration-profile-v1 profile and supplies fluidTier=auto plus calibratedFluidTier unless an explicit environment override is present",
+  },
+  {
+    id: "FG-24-T03",
+    milestone: "FG-24",
+    status: "done",
+    title: "Verify persisted calibration runtime behavior",
+    exitProof:
+      "npm run fluid:persisted-calibration passes with env calibrated tier absent, profile-selected ultra, main-process profile read, calibrated-auto runtime mode, selected grid 768 x 432, and WebGPU renderer",
   },
 ];
 

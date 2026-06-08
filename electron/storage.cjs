@@ -4,6 +4,7 @@ const path = require("node:path");
 const desktopStorageFiles = Object.freeze({
   best: "best.v2.json",
   backup: "save.backup.v2.json",
+  fluidCalibrationProfile: "fluid-calibration.v1.json",
   playtestArtifact: "playtest.latest.md",
   playtestHistory: "playtest.history.v1.json",
   runtimeLog: "runtime.v1.ndjson",

@@ -24,12 +24,14 @@ try {
   await storage.writeText(desktopStorageFiles.save, "{\"version\":2,\"state\":{\"currentPort\":\"grayhaven\"}}");
   await storage.writeText(desktopStorageFiles.backup, "{\"version\":2,\"state\":{\"currentPort\":\"saffron\"}}");
   await storage.writeText(desktopStorageFiles.best, "3900");
+  await storage.writeText(desktopStorageFiles.fluidCalibrationProfile, "{\"schema\":\"ocean-fluid-calibration-profile-v1\",\"selectedTier\":\"ultra\",\"pass\":true}");
   await storage.writeText(desktopStorageFiles.playtestArtifact, "# Harborline Playtest Scorecard Draft\n");
   await storage.writeText(desktopStorageFiles.playtestHistory, "{\"schema\":1,\"entries\":[]}");
 
   assert.equal(await storage.readText(desktopStorageFiles.save), "{\"version\":2,\"state\":{\"currentPort\":\"grayhaven\"}}");
   assert.equal(await storage.readText(desktopStorageFiles.backup), "{\"version\":2,\"state\":{\"currentPort\":\"saffron\"}}");
   assert.equal(await storage.readText(desktopStorageFiles.best), "3900");
+  assert.equal(await storage.readText(desktopStorageFiles.fluidCalibrationProfile), "{\"schema\":\"ocean-fluid-calibration-profile-v1\",\"selectedTier\":\"ultra\",\"pass\":true}");
   assert.equal(await storage.readText(desktopStorageFiles.playtestArtifact), "# Harborline Playtest Scorecard Draft\n");
   assert.equal(await storage.readText(desktopStorageFiles.playtestHistory), "{\"schema\":1,\"entries\":[]}");
 
