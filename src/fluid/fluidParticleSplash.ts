@@ -177,6 +177,10 @@ export type ParticleSplashBenchmarkReport = {
 export type ParticleSplashBenchmarkOptions = {
   capability?: FluidCapabilityReport | null;
   generatedAt?: string;
+  gridDimensions?: {
+    cellsX: number;
+    cellsY: number;
+  };
   maxAverageStepMs?: number;
   maxMassFractionOfDisplaced?: number;
   maxMassRelativeDrift?: number;
@@ -362,7 +366,7 @@ export function liveParticleSplashFeedbackFor(input: ParticleSplashLiveFeedbackI
 
 export function createParticleSplashPlan(options: ParticleSplashBenchmarkOptions = {}): ParticleSplashPlan {
   const tier = options.tier ?? "standard";
-  const grid = gridForTier(tier);
+  const grid = options.gridDimensions ?? gridForTier(tier);
   const particleCapacity = options.particleCapacity ?? particleCapacityForTier(tier);
   const bytesPerParticle = particleStride * bytesPerValue;
   return {

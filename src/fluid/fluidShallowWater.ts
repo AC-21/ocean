@@ -115,6 +115,10 @@ export type ShallowWaterBenchmarkOptions = {
   capability?: FluidCapabilityReport | null;
   cellSizeM?: number;
   generatedAt?: string;
+  gridDimensions?: {
+    cellsX: number;
+    cellsY: number;
+  };
   maxAverageStepMs?: number;
   maxCfl?: number;
   maxMassRelativeDrift?: number;
@@ -215,7 +219,7 @@ export const shallowWaterBufferRoles: ShallowWaterBufferRole[] = [
 
 export function createShallowWaterStepPlan(options: ShallowWaterBenchmarkOptions = {}): ShallowWaterStepPlan {
   const tier = options.tier ?? "standard";
-  const grid = gridForTier(tier);
+  const grid = options.gridDimensions ?? gridForTier(tier);
   const cellCount = grid.cellsX * grid.cellsY;
   const cellSizeM = options.cellSizeM ?? defaultCellSizeM;
   const pressureGradient = options.pressureGradient === true;

@@ -1058,6 +1058,40 @@ Latest installed-reference pacing evidence:
   reference-category pacing windows are measured.
 - Gate: passed.
 
+FG-38 is complete as of 2026-06-08. FG-20 proved the existing production
+resolution ladder through the calibrated ultra tier, but the next realism push
+needs measured headroom beyond the live `768 x 432` grid before any production
+runtime tier is raised. The production runtime remains capped at `768 x 432`
+while FG-38 runs benchmark-only explicit high-resolution probes at `1024 x 576`
+and `1280 x 720` through the packaged Desktop app.
+
+Latest high-resolution headroom evidence:
+
+- Command: `npm run fluid:high-resolution-headroom`.
+- Gate: `G-FG-38`.
+- Evidence snapshot:
+  `docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json`.
+- Runtime invariant: the packaged app launches with the live production runtime
+  still capped at ultra, grid `768 x 432`, renderer `webgpu-grid-primary-v1`,
+  and context `webgpu`.
+- Benchmark scope: explicit `gridDimensions` are accepted only by benchmark
+  planners in `fluidGridGpu`, `fluidShallowWater`, and
+  `fluidParticleSplash`; the production `fluidGridTiers` ladder still stops at
+  ultra.
+- Candidate grids: `1024 x 576` and `1280 x 720`, both larger than production
+  ultra and monotonic in cell count and storage.
+- Measured headroom: `1024 x 576` ran at `1.78x` ultra cells with grid p95
+  `0.0764 ms`, pressure p95 `0.2853 ms`, particle p95 `0.0333 ms`, and
+  `31.75 MiB` combined benchmark storage.
+- Largest probe: `1280 x 720` ran at `2.78x` ultra cells with grid p95
+  `0.4052 ms`, pressure p95 `0.3492 ms`, particle p95 `0.0178 ms`, and
+  `49.47 MiB` combined benchmark storage.
+- Telemetry proof: WebGPU grid stepping, bounded-pressure-gradient shallow
+  water, and localized particle-splash benchmarks all require
+  `timestamp-query` timing, bounded wall timing, bounded GPU p95 timing, memory
+  below local storage-buffer limits, and no full-grid readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1175,6 +1209,11 @@ Latest installed-reference pacing evidence:
     suite through the actual Desktop launcher and real default calibrated
     profile, proving calibrated-auto ultra preserves drop, splash, float, sink,
     and damping behavior without explicit tier environment overrides.
+35. Experimental high-resolution headroom: launch the packaged app with the
+    production runtime still capped at ultra, then benchmark explicit
+    high-resolution grids beyond `768 x 432` for WebGPU grid, bounded-pressure,
+    and localized-particle workloads using timestamp-query timing, bounded
+    memory, and no full-grid readback.
 
 ## Resolution Ladder
 

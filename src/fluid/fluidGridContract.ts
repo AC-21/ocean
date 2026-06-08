@@ -38,7 +38,8 @@ export type FluidGridMilestoneId =
   | "FG-34"
   | "FG-35"
   | "FG-36"
-  | "FG-37";
+  | "FG-37"
+  | "FG-38";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -78,7 +79,8 @@ export type FluidGridGateId =
   | "G-FG-34"
   | "G-FG-35"
   | "G-FG-36"
-  | "G-FG-37";
+  | "G-FG-37"
+  | "G-FG-38";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -183,6 +185,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-35", title: "Visible calibrated Desktop window gate", gate: "G-FG-35" },
   { id: "FG-36", title: "Installed calibrated reference outcome gate", gate: "G-FG-36" },
   { id: "FG-37", title: "Installed reference pacing envelope gate", gate: "G-FG-37" },
+  { id: "FG-38", title: "Experimental high-resolution grid headroom gate", gate: "G-FG-38" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -442,6 +445,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:installed-reference-pacing and docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json",
     passBar:
       "the real installed Desktop app composes passing FG-36 reference outcomes with smooth calibrated-auto ultra display pacing while exercising concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference scenarios without fluid-tier or userData environment overrides",
+  },
+  {
+    id: "G-FG-38",
+    blocks: "FG-38",
+    evidence: "npm run fluid:high-resolution-headroom and docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json",
+    passBar:
+      "the packaged Desktop app keeps production runtime selection capped at ultra while benchmark-only explicit high-resolution grids beyond 768 x 432 pass WebGPU grid, bounded pressure-gradient, and localized particle-splash timing, memory, no-readback, and diagnostic thresholds with timestamp-query evidence",
   },
 ];
 
@@ -1337,6 +1347,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed reference pacing envelope gate",
     exitProof:
       "npm run fluid:installed-reference-pacing passes with composed FG-36 reference evidence, calibrated-auto ultra runtime, five reference-category pacing scenarios, smooth p95/p99 frame pacing, active WebGPU telemetry, and committed evidence",
+  },
+  {
+    id: "FG-38-T01",
+    milestone: "FG-38",
+    status: "done",
+    title: "Add benchmark-only explicit high-resolution grid dimensions",
+    exitProof:
+      "fluidGridGpu, fluidShallowWater, and fluidParticleSplash accept explicit benchmark gridDimensions while production fluidGridTiers and runtime selection remain capped at ultra",
+  },
+  {
+    id: "FG-38-T02",
+    milestone: "FG-38",
+    status: "done",
+    title: "Measure local high-resolution WebGPU headroom",
+    exitProof:
+      "fluidHighResolutionHeadroom.report.ts launches the packaged app and benchmarks 1024 x 576 and 1280 x 720 WebGPU grid, pressure-gradient shallow-water, and particle-splash workloads with timestamp queries",
+  },
+  {
+    id: "FG-38-T03",
+    milestone: "FG-38",
+    status: "done",
+    title: "Close experimental high-resolution headroom gate",
+    exitProof:
+      "npm run fluid:high-resolution-headroom passes with benchmark-only grids larger than ultra, bounded p95 GPU timing, bounded wall timing, memory below local storage limits, no full-grid readback, and committed evidence",
   },
 ];
 

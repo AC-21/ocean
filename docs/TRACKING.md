@@ -45,6 +45,7 @@ and GitHub issue mapping.
 | FG-35 | Visible calibrated Desktop window gate | Done | G-FG-35 |
 | FG-36 | Installed calibrated reference outcome gate | Done | G-FG-36 |
 | FG-37 | Installed reference pacing envelope gate | Done | G-FG-37 |
+| FG-38 | Experimental high-resolution grid headroom gate | Done | G-FG-38 |
 
 ## Gates
 
@@ -88,6 +89,7 @@ and GitHub issue mapping.
 | G-FG-35 | FG-35 | `npm run fluid:desktop-visibility`; `docs/evidence/FG-35-desktop-visibility-2026-06-08.json` | a normal macOS Desktop launch starts the installed calibrated app, exposes a visible frontmost Ocean Impact Lab window, and the captured ocean viewport is nonblank/varied instead of a black surface |
 | G-FG-36 | FG-36 | `npm run fluid:installed-reference-outcomes`; `docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json` | the real installed Desktop app uses the default calibrated profile with no fluid-tier environment overrides and passes drop, splash, float, sink, and damping reference outcomes on calibrated-auto ultra WebGPU |
 | G-FG-37 | FG-37 | `npm run fluid:installed-reference-pacing`; `docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json` | the real installed Desktop app composes passing FG-36 reference outcomes with smooth calibrated-auto ultra display pacing while exercising concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink reference scenarios without fluid-tier or userData environment overrides |
+| G-FG-38 | FG-38 | `npm run fluid:high-resolution-headroom`; `docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json` | the packaged Desktop app keeps production runtime selection capped at ultra while benchmark-only explicit high-resolution grids beyond `768 x 432` pass WebGPU grid, bounded pressure-gradient, and localized particle-splash timing, memory, no-readback, and diagnostic thresholds with timestamp-query evidence |
 
 ## Tasks
 
@@ -208,6 +210,9 @@ and GitHub issue mapping.
 | FG-37-T01 | FG-37 | Done | performance | `fluidInstalledReferencePacing.ts` requires passing FG-36 evidence, no fluid-tier or userData env overrides, calibrated-auto ultra `768 x 432` samples, WebGPU renderer/context, smooth frame pacing, pressure/particle/coupling telemetry where expected, and no full-grid readback |
 | FG-37-T02 | FG-37 | Done | verification | `fluidInstalledReferencePacing.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` with no fluid-tier or userData env overrides and samples concrete drop/splash, ice float, foam damping, concrete sink, and leaky-drum sink pacing windows |
 | FG-37-T03 | FG-37 | Done | calibration | `npm run fluid:installed-reference-pacing` passes with composed FG-36 reference evidence, calibrated-auto ultra runtime, five reference-category pacing scenarios, smooth p95/p99 frame pacing, active WebGPU telemetry, and committed evidence |
+| FG-38-T01 | FG-38 | Done | compute | `fluidGridGpu`, `fluidShallowWater`, and `fluidParticleSplash` accept explicit benchmark `gridDimensions` while production `fluidGridTiers` and runtime selection remain capped at ultra |
+| FG-38-T02 | FG-38 | Done | verification | `fluidHighResolutionHeadroom.report.ts` launches the packaged app and benchmarks `1024 x 576` and `1280 x 720` WebGPU grid, pressure-gradient shallow-water, and particle-splash workloads with timestamp queries |
+| FG-38-T03 | FG-38 | Done | performance | `npm run fluid:high-resolution-headroom` passes with benchmark-only grids larger than ultra, bounded p95 GPU timing, bounded wall timing, memory below local storage limits, no full-grid readback, and committed evidence |
 
 ## GitHub Labels
 
@@ -261,6 +266,7 @@ and GitHub issue mapping.
 | FG-35 | https://github.com/AC-21/ocean/issues/38 |
 | FG-36 | https://github.com/AC-21/ocean/issues/39 |
 | FG-37 | https://github.com/AC-21/ocean/issues/40 |
+| FG-38 | https://github.com/AC-21/ocean/issues/41 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

@@ -43,6 +43,7 @@ const requiredFiles = [
   "docs/evidence/FG-35-desktop-visibility-2026-06-08.json",
   "docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json",
   "docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json",
+  "docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -110,6 +111,9 @@ const requiredFiles = [
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
+  "src/fluid/fluidHighResolutionHeadroom.ts",
+  "src/fluid/fluidHighResolutionHeadroom.report.ts",
+  "src/fluid/fluidHighResolutionHeadroom.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -118,6 +122,7 @@ const requiredFiles = [
   "src/fluid/fluidUltraReferenceOutcomes.test.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
+  "src/fluid/fluidGridGpu.ts",
   "src/fluid/fluidLocalCalibration.ts",
   "src/fluid/fluidSolverArchitecture.ts",
   "src/fluid/fluidReferenceDataset.ts",
@@ -128,8 +133,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -143,6 +148,7 @@ const files = new Map(requiredFiles.map((filePath) => [filePath, readRequired(fi
 const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
+const fluidGridGpu = files.get("src/fluid/fluidGridGpu.ts") ?? "";
 const electronMain = files.get("electron/main.cjs") ?? "";
 const electronStorage = files.get("electron/storage.cjs") ?? "";
 const electronStorageTest = files.get("electron/storage.test.mjs") ?? "";
@@ -206,6 +212,9 @@ const installedReferencePacingTest = files.get("src/fluid/fluidInstalledReferenc
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
+const highResolutionHeadroom = files.get("src/fluid/fluidHighResolutionHeadroom.ts") ?? "";
+const highResolutionHeadroomReport = files.get("src/fluid/fluidHighResolutionHeadroom.report.ts") ?? "";
+const highResolutionHeadroomTest = files.get("src/fluid/fluidHighResolutionHeadroom.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -259,6 +268,7 @@ const fg34Evidence = files.get("docs/evidence/FG-34-default-profile-calibration-
 const fg35Evidence = files.get("docs/evidence/FG-35-desktop-visibility-2026-06-08.json") ?? "";
 const fg36Evidence = files.get("docs/evidence/FG-36-installed-reference-outcomes-2026-06-08.json") ?? "";
 const fg37Evidence = files.get("docs/evidence/FG-37-installed-reference-pacing-2026-06-08.json") ?? "";
+const fg38Evidence = files.get("docs/evidence/FG-38-high-resolution-headroom-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2684,6 +2694,101 @@ if (
   !fg37Evidence.includes("\"particlesNoFullGridReadback\": true")
 ) {
   errors.push("FG-37 evidence must record composed installed reference correctness plus smooth calibrated-auto ultra WebGPU pacing");
+}
+
+if (!packageJson.includes("\"fluid:high-resolution-headroom\"") || !packageJson.includes("src/fluid/fluidHighResolutionHeadroom.report.ts")) {
+  errors.push("package.json must expose the FG-38 high-resolution headroom command");
+}
+
+if (!tracking.includes("FG-38-T03") || !tracking.includes("FG-38-high-resolution-headroom-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/41")) {
+  errors.push("docs/TRACKING.md must record FG-38 high-resolution headroom evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-38") ||
+  !contract.includes("G-FG-38") ||
+  !contract.includes("Experimental high-resolution grid headroom gate") ||
+  !contract.includes("npm run fluid:high-resolution-headroom")
+) {
+  errors.push("fluidGridContract.ts must define the FG-38 high-resolution headroom milestone, gate, and evidence command");
+}
+
+if (!fluidGridGpu.includes("gridDimensions") || !shallowWater.includes("gridDimensions") || !particleSplash.includes("gridDimensions")) {
+  errors.push("FG-38 benchmark planners must accept explicit benchmark-only gridDimensions");
+}
+
+if (
+  !highResolutionHeadroom.includes("G-FG-38") ||
+  !highResolutionHeadroom.includes("headroom-1024x576") ||
+  !highResolutionHeadroom.includes("headroom-1280x720") ||
+  !highResolutionHeadroom.includes("productionTierUnchanged") ||
+  !highResolutionHeadroom.includes("runtimeGrid: string") ||
+  !highResolutionHeadroom.includes("minLargestScaleVsUltra") ||
+  !highResolutionHeadroom.includes("full-grid readback") ||
+  !highResolutionHeadroom.includes("timestamp") ||
+  !highResolutionHeadroom.includes("bounded-pressure-gradient-v1") ||
+  !highResolutionHeadroom.includes("localized-particle-splash-v1")
+) {
+  errors.push("fluidHighResolutionHeadroom.ts must define FG-38 candidates, production-tier invariants, timing, timestamp, solver, and no-readback checks");
+}
+
+if (
+  !highResolutionHeadroomReport.includes("OCEAN_LAB_HIGH_RESOLUTION_HEADROOM_OUT") ||
+  !highResolutionHeadroomReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !highResolutionHeadroomReport.includes("gridDimensions") ||
+  !highResolutionHeadroomReport.includes("__runFluidGridBenchmark") ||
+  !highResolutionHeadroomReport.includes("__runShallowWaterBenchmark") ||
+  !highResolutionHeadroomReport.includes("__runParticleSplashBenchmark") ||
+  !highResolutionHeadroomReport.includes("requestGpuTimestamps: true") ||
+  !highResolutionHeadroomReport.includes("G-FG-38")
+) {
+  errors.push("fluidHighResolutionHeadroom.report.ts must launch the packaged ultra runtime and drive explicit high-resolution grid, pressure, and particle benchmarks");
+}
+
+if (
+  !highResolutionHeadroomTest.includes("benchmark-only explicit grids") ||
+  !highResolutionHeadroomTest.includes("production tier selection") ||
+  !highResolutionHeadroomTest.includes("fallback runtime") ||
+  !highResolutionHeadroomTest.includes("full-grid readback") ||
+  !highResolutionHeadroomTest.includes("G-FG-38")
+) {
+  errors.push("fluidHighResolutionHeadroom.test.ts must cover FG-38 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-38") ||
+  !remap.includes("high-resolution headroom") ||
+  !remap.includes("1024 x 576") ||
+  !remap.includes("1280 x 720") ||
+  !remap.includes("production runtime remains capped at `768 x 432`") ||
+  !remap.includes("timestamp-query") ||
+  !remap.includes("no full-grid readback")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-38 experimental high-resolution headroom gate and evidence");
+}
+
+if (
+  !fg38Evidence.includes("\"gate\": \"G-FG-38\"") ||
+  !fg38Evidence.includes("\"pass\": true") ||
+  !fg38Evidence.includes("\"failures\": []") ||
+  !fg38Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg38Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg38Evidence.includes("\"runtimeGrid\": \"768x432\"") ||
+  !fg38Evidence.includes("\"maxRuntimeTier\": \"ultra\"") ||
+  !fg38Evidence.includes("\"headroom-1024x576\"") ||
+  !fg38Evidence.includes("\"headroom-1280x720\"") ||
+  !fg38Evidence.includes("\"cellsX\": 1024") ||
+  !fg38Evidence.includes("\"cellsX\": 1280") ||
+  !fg38Evidence.includes("\"largestGrid\": \"1280x720\"") ||
+  !fg38Evidence.includes("\"largestScaleVsUltra\"") ||
+  !fg38Evidence.includes("\"gridTimestampQueryEnabled\": true") ||
+  !fg38Evidence.includes("\"pressureTimestampQueryEnabled\": true") ||
+  !fg38Evidence.includes("\"particlesTimestampQueryEnabled\": true") ||
+  !fg38Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg38Evidence.includes("\"pressureSolver\": \"bounded-pressure-gradient-v1\"") ||
+  !fg38Evidence.includes("\"solver\": \"localized-particle-splash-v1\"")
+) {
+  errors.push("FG-38 evidence must record a passing packaged high-resolution headroom report with explicit grids, timestamp timing, no-readback, and solver diagnostics");
 }
 
 if (errors.length > 0) {

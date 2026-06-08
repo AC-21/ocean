@@ -59,6 +59,10 @@ export type FluidGridBenchmarkOptions = {
   capability?: FluidCapabilityReport | null;
   cellSizeM?: number;
   generatedAt?: string;
+  gridDimensions?: {
+    cellsX: number;
+    cellsY: number;
+  };
   maxAverageStepMs?: number;
   maxCfl?: number;
   minNonzeroHeightM?: number;
@@ -141,7 +145,7 @@ export const fluidGridBufferRoles: FluidGridBufferRole[] = ["height", "heightScr
 
 export function createFluidGridStepPlan(options: FluidGridBenchmarkOptions = {}): FluidGridStepPlan {
   const tier = options.tier ?? "standard";
-  const grid = gridForTier(tier);
+  const grid = options.gridDimensions ?? gridForTier(tier);
   const cellCount = grid.cellsX * grid.cellsY;
   const cellSizeM = options.cellSizeM ?? defaultCellSizeM;
   const waveSpeedMps = options.waveSpeedMps ?? defaultWaveSpeedMps;
