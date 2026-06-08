@@ -30,6 +30,7 @@ type WindowState = FluidDesktopVisibilityReport["window"];
 const execFileAsync = promisify(execFile);
 const appName = "Ocean Impact Lab";
 const timeoutMs = Number(process.env.OCEAN_LAB_DESKTOP_VISIBILITY_TIMEOUT_MS || 30_000);
+const stabilizationMs = Number(process.env.OCEAN_LAB_DESKTOP_VISIBILITY_STABILIZE_MS || 2_500);
 const outPath = process.env.OCEAN_LAB_DESKTOP_VISIBILITY_OUT || "reports/fluid-desktop-visibility-latest.json";
 const screenshotPath = process.env.OCEAN_LAB_DESKTOP_VISIBILITY_SCREENSHOT || "reports/fluid-desktop-visibility-latest.png";
 const defaultProfileEvidencePath =
@@ -46,6 +47,9 @@ await quitAppIfRunning();
 await runCommand("open", [launcherPath]);
 await waitForInstalledProcess();
 await waitForWindow();
+await activateApp();
+await waitForFrontmostWindow();
+await delay(stabilizationMs);
 await activateApp();
 const windowState = await waitForFrontmostWindow();
 await mkdir(path.dirname(screenshotPath), { recursive: true });

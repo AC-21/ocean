@@ -158,6 +158,7 @@ export default function OceanPhysicsApp() {
   const [paused, setPaused] = useState(false);
   const [running, setRunning] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const diagnosticCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const specRef = useRef(spec);
   const settingsRef = useRef(settings);
@@ -303,11 +304,15 @@ export default function OceanPhysicsApp() {
                 }
               : null;
           window.__fluidGridCouplingForces = gridCouplingRef.current ?? undefined;
-        } else if (waterRenderMode === "fallback") {
+        } else if (waterRenderMode === "fallback" || waterRenderMode === "initializing" || fluidCapability.status === "checking") {
           gridCouplingRef.current = null;
           window.__fluidGridCouplingForces = undefined;
-          legacyCanvasWaterTelemetry(canvas, waterFallbackReasonRef.current);
-          renderOcean(canvas, current, specRef.current, settingsRef.current, dropHeightM);
+          legacyCanvasWaterTelemetry(
+            canvas,
+            fluidCapability.status === "checking" ? "WebGPU capability probe is still checking." : waterFallbackReasonRef.current
+          );
+          const diagnosticCanvas = diagnosticCanvasRef.current;
+          if (diagnosticCanvas) renderOcean(diagnosticCanvas, current, specRef.current, settingsRef.current, dropHeightM);
         }
       }
       const chart = chartRef.current;
@@ -335,7 +340,7 @@ export default function OceanPhysicsApp() {
 
     animationFrame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [dropHeightM, paused, releaseAngleDeg, running, selectedPresetId, timeScale, waterRenderMode]);
+  }, [dropHeightM, fluidCapability.status, paused, releaseAngleDeg, running, selectedPresetId, timeScale, waterRenderMode]);
 
   const diagnostics = useMemo(() => diagnosticsFor(snapshot, spec, settings), [settings, snapshot, spec]);
   const prediction = useMemo(() => predictFloatOutcome(spec, settings), [settings, spec]);
@@ -690,7 +695,10 @@ export default function OceanPhysicsApp() {
             </button>
           </div>
         </div>
-        <canvas className="ocean-canvas" ref={canvasRef} />
+        <div className="ocean-canvas-stack">
+          <canvas aria-hidden="true" className="diagnostic-ocean-canvas" ref={diagnosticCanvasRef} />
+          <canvas className="ocean-canvas" ref={canvasRef} />
+        </div>
         <div className="stage-readout">
           <Metric label="Depth" value={`${Math.max(0, -snapshot.object.centerYM).toFixed(2)} m`} />
           <Metric label="Vertical speed" value={`${Math.abs(snapshot.object.vyMps).toFixed(2)} m/s ${snapshot.object.vyMps < 0 ? "down" : "up"}`} />
