@@ -1,0 +1,346 @@
+{
+  "generatedAt": "2026-06-08T02:11:39.019Z",
+  "gate": "G-FG-12",
+  "pass": true,
+  "capability": {
+    "adapterInfo": "apple / metal-3",
+    "adapterName": "apple / metal-3",
+    "backend": "webgpu-compute",
+    "fallbackReason": null,
+    "features": [
+      "bgra8unorm-storage",
+      "clip-distances",
+      "core-features-and-limits",
+      "depth-clip-control",
+      "depth32float-stencil8",
+      "dual-source-blending",
+      "float32-blendable",
+      "float32-filterable",
+      "indirect-first-instance",
+      "primitive-index",
+      "rg11b10ufloat-renderable",
+      "shader-f16",
+      "subgroups",
+      "texture-component-swizzle",
+      "texture-compression-astc",
+      "texture-compression-astc-sliced-3d",
+      "texture-compression-bc",
+      "texture-compression-bc-sliced-3d",
+      "texture-compression-etc2",
+      "texture-formats-tier1",
+      "texture-formats-tier2",
+      "timestamp-query"
+    ],
+    "forbiddenProductionRenderers": [
+      "canvas-2d",
+      "per-pixel-cpu-water-draw",
+      "visual-only-water"
+    ],
+    "generatedAt": "2026-06-08T02:11:38.595Z",
+    "grid": {
+      "cellsX": 512,
+      "cellsY": 288,
+      "estimatedBytes": 4718592,
+      "tier": "high"
+    },
+    "limits": {
+      "maxBufferSize": 268435456,
+      "maxComputeInvocationsPerWorkgroup": 256,
+      "maxComputeWorkgroupSizeX": 256,
+      "maxComputeWorkgroupSizeY": 256,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxStorageBufferBindingSize": 134217728
+    },
+    "requiredBrowserApis": [
+      "navigator.gpu",
+      "GPUDevice",
+      "GPUComputePassEncoder"
+    ],
+    "selectedTier": "high",
+    "status": "webgpu-ready"
+  },
+  "tiers": {
+    "standard": {
+      "backend": "webgpu-compute",
+      "capability": {
+        "adapterName": "apple / metal-3",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready"
+      },
+      "diagnostics": {
+        "activeFinalParticleCount": 0,
+        "boundedDiagnostics": true,
+        "displacedWaterMassKg": 82,
+        "entrainedAirMassKg": 3.28405555480369,
+        "finalAliveMassKg": 0,
+        "foamContribution": 105.8232994377613,
+        "gridFeedback": {
+          "bounds": {
+            "xEnd": 131,
+            "xStart": 125,
+            "yEnd": 72,
+            "yStart": 66
+          },
+          "energyJ": 179.0589828453958,
+          "foamInjection": 0.06599625155622606,
+          "impulseNs": 78.06732435854758,
+          "massKg": 17.41160011291504,
+          "sampleCount": 28
+        },
+        "impactEnergyJ": 66214.484642475,
+        "impactMomentumNs": 10886.869499999999,
+        "initialMomentumAbsNs": 84.15415988884719,
+        "initialParticleMassKg": 17.41160011291504,
+        "massAccountedKg": 17.41160011291504,
+        "massFractionOfDisplaced": 0.21233658674286632,
+        "massRelativeDrift": 0,
+        "maxBallisticHeightM": 1.9605613444987309,
+        "maxLaunchSpeedMps": 6.420678145681126,
+        "momentumFractionOfImpact": 0.007729876792299861,
+        "outsideLocalBoundsCount": 0,
+        "particleCount": 2048,
+        "predictedCrownHeightM": 1.9605613444987309,
+        "referenceSplashBand": {
+          "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+          "maxM": 3.514770250177176,
+          "minM": 0.8085719013577521
+        },
+        "reenteredMassKg": 17.41160011291504,
+        "reentryEnergyJ": 179.0589828453958,
+        "reentryImpulseNs": 78.06732435854758
+      },
+      "generatedAt": "2026-06-08T02:11:38.799Z",
+      "gpuTiming": {
+        "averageStepMs": 0.014296635416666674,
+        "maxStepMs": 0.197084,
+        "minStepMs": 0.008291,
+        "p95StepMs": 0.024875,
+        "sampleCount": 192,
+        "timestampQueryEnabled": true
+      },
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "plan": {
+        "bytesPerParticle": 32,
+        "bufferRoles": [
+          "particles"
+        ],
+        "dispatchX": 32,
+        "dtS": 0.008333333333333333,
+        "estimatedStorageBytes": 65536,
+        "gridCellsX": 256,
+        "gridCellsY": 144,
+        "localBoundsM": {
+          "xMax": 4.5,
+          "xMin": -4.5,
+          "yMax": 4.6,
+          "yMin": 0
+        },
+        "localGridFeedbackLimit": 553,
+        "particleCapacity": 2048,
+        "particleStride": 8,
+        "steps": 192,
+        "tier": "standard",
+        "workgroupSize": 64
+      },
+      "scenario": {
+        "displacedVolumeM3": 0.08,
+        "froudeNumber": 4.35,
+        "gravityMps2": 9.80665,
+        "impactSpeedMps": 12.1641,
+        "objectDiameterM": 0.72,
+        "objectMassKg": 895,
+        "surfaceTensionNpm": 0.073,
+        "waterDensityKgM3": 1025,
+        "weberNumber": 1460000
+      },
+      "solver": "localized-particle-splash-v1",
+      "stepTiming": {
+        "averageStepMs": 0.9442708333954215,
+        "totalMs": 181.30000001192093
+      },
+      "threshold": {
+        "maxAverageStepMs": 3,
+        "maxMassFractionOfDisplaced": 0.35,
+        "maxMassRelativeDrift": 0.00001,
+        "maxMomentumFractionOfImpact": 0.1,
+        "maxOutsideLocalBoundsCount": 0,
+        "maxP95GpuStepMs": 0.65,
+        "minFeedbackSampleCount": 1,
+        "minReentryEnergyJ": 0.5
+      }
+    },
+    "high": {
+      "backend": "webgpu-compute",
+      "capability": {
+        "adapterName": "apple / metal-3",
+        "features": [
+          "bgra8unorm-storage",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "shader-f16",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "limits": {
+          "maxBufferSize": 268435456,
+          "maxComputeInvocationsPerWorkgroup": 256,
+          "maxComputeWorkgroupSizeX": 256,
+          "maxComputeWorkgroupSizeY": 256,
+          "maxComputeWorkgroupsPerDimension": 65535,
+          "maxStorageBufferBindingSize": 134217728
+        },
+        "status": "webgpu-ready"
+      },
+      "diagnostics": {
+        "activeFinalParticleCount": 0,
+        "boundedDiagnostics": true,
+        "displacedWaterMassKg": 82,
+        "entrainedAirMassKg": 3.3018288210396025,
+        "finalAliveMassKg": 0,
+        "foamContribution": 222.09929966554046,
+        "gridFeedback": {
+          "bounds": {
+            "xEnd": 259,
+            "xStart": 253,
+            "yEnd": 141,
+            "yStart": 135
+          },
+          "energyJ": 179.17910576611757,
+          "foamInjection": 0.06855779029369674,
+          "impulseNs": 78.10068179287263,
+          "massKg": 17.41160011291504,
+          "sampleCount": 28
+        },
+        "impactEnergyJ": 66214.484642475,
+        "impactMomentumNs": 10886.869499999999,
+        "initialMomentumAbsNs": 84.14955765904675,
+        "initialParticleMassKg": 17.41160011291504,
+        "massAccountedKg": 17.41160011291504,
+        "massFractionOfDisplaced": 0.21233658674286632,
+        "massRelativeDrift": 0,
+        "maxBallisticHeightM": 1.9613444680420467,
+        "maxLaunchSpeedMps": 6.449337249537345,
+        "momentumFractionOfImpact": 0.007729454060145275,
+        "outsideLocalBoundsCount": 0,
+        "particleCount": 4096,
+        "predictedCrownHeightM": 1.9613444680420467,
+        "referenceSplashBand": {
+          "formula": "0.045..0.19 * impactSpeedMps^2 / gravityMps2 + 0.18..0.9 * objectDiameterM",
+          "maxM": 3.514770250177176,
+          "minM": 0.8085719013577521
+        },
+        "reenteredMassKg": 17.41160011291504,
+        "reentryEnergyJ": 179.17910576611757,
+        "reentryImpulseNs": 78.10068179287263
+      },
+      "generatedAt": "2026-06-08T02:11:39.008Z",
+      "gpuTiming": {
+        "averageStepMs": 0.005046777777777775,
+        "maxStepMs": 0.038125,
+        "minStepMs": 0.003875,
+        "p95StepMs": 0.006,
+        "sampleCount": 180,
+        "timestampQueryEnabled": true
+      },
+      "noFullGridReadbackPerFrame": true,
+      "pass": true,
+      "plan": {
+        "bytesPerParticle": 32,
+        "bufferRoles": [
+          "particles"
+        ],
+        "dispatchX": 64,
+        "dtS": 0.008333333333333333,
+        "estimatedStorageBytes": 131072,
+        "gridCellsX": 512,
+        "gridCellsY": 288,
+        "localBoundsM": {
+          "xMax": 4.5,
+          "xMin": -4.5,
+          "yMax": 4.6,
+          "yMin": 0
+        },
+        "localGridFeedbackLimit": 2212,
+        "particleCapacity": 4096,
+        "particleStride": 8,
+        "steps": 180,
+        "tier": "high",
+        "workgroupSize": 64
+      },
+      "scenario": {
+        "displacedVolumeM3": 0.08,
+        "froudeNumber": 4.35,
+        "gravityMps2": 9.80665,
+        "impactSpeedMps": 12.1641,
+        "objectDiameterM": 0.72,
+        "objectMassKg": 895,
+        "surfaceTensionNpm": 0.073,
+        "waterDensityKgM3": 1025,
+        "weberNumber": 1460000
+      },
+      "solver": "localized-particle-splash-v1",
+      "stepTiming": {
+        "averageStepMs": 0.03777777784400516,
+        "totalMs": 6.800000011920929
+      },
+      "threshold": {
+        "maxAverageStepMs": 3,
+        "maxMassFractionOfDisplaced": 0.35,
+        "maxMassRelativeDrift": 0.00001,
+        "maxMomentumFractionOfImpact": 0.1,
+        "maxOutsideLocalBoundsCount": 0,
+        "maxP95GpuStepMs": 0.65,
+        "minFeedbackSampleCount": 1,
+        "minReentryEnergyJ": 0.5
+      }
+    }
+  }
+}

@@ -12,7 +12,8 @@ export type FluidGridMilestoneId =
   | "FG-08"
   | "FG-09"
   | "FG-10"
-  | "FG-11";
+  | "FG-11"
+  | "FG-12";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -26,7 +27,8 @@ export type FluidGridGateId =
   | "G-FG-08"
   | "G-FG-09"
   | "G-FG-10"
-  | "G-FG-11";
+  | "G-FG-11"
+  | "G-FG-12";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -105,6 +107,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-09", title: "Research-backed solver architecture decision", gate: "G-FG-09" },
   { id: "FG-10", title: "Reference dataset ingestion and measurement harness", gate: "G-FG-10" },
   { id: "FG-11", title: "Conservative GPU shallow-water upgrade", gate: "G-FG-11" },
+  { id: "FG-12", title: "Localized particle splash and spray layer", gate: "G-FG-12" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -182,6 +185,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:shallow-water and docs/evidence/FG-11-shallow-water-2026-06-08.json",
     passBar:
       "standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing",
+  },
+  {
+    id: "G-FG-12",
+    blocks: "FG-12",
+    evidence: "npm run fluid:particles and docs/evidence/FG-12-particle-splash-2026-06-08.json",
+    passBar:
+      "standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing",
   },
 ];
 
@@ -453,6 +463,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify standard and high tier local WebGPU shallow-water evidence",
     exitProof:
       "npm run fluid:shallow-water passes standard and high tiers with zero reported mass drift, stable wet/dry cells, no negative depths, and committed FG-11 evidence",
+  },
+  {
+    id: "FG-12-T01",
+    milestone: "FG-12",
+    status: "done",
+    title: "Add localized WebGPU particle splash state",
+    exitProof:
+      "fluidParticleSplash.ts defines localized-particle-splash-v1 with deterministic particle seeding from displaced water mass, Weber/Froude impact state, and reference splash bands",
+  },
+  {
+    id: "FG-12-T02",
+    milestone: "FG-12",
+    status: "done",
+    title: "Track particle mass, momentum, reentry, foam, and grid feedback",
+    exitProof:
+      "runParticleSplashBenchmark reports mass fraction, momentum fraction, crown height, reentry energy, foam contribution, bounded feedback samples, and timestamp-query GPU timing",
+  },
+  {
+    id: "FG-12-T03",
+    milestone: "FG-12",
+    status: "done",
+    title: "Verify standard and high tier local particle evidence",
+    exitProof:
+      "npm run fluid:particles passes standard and high tiers with bounded mass/momentum, reference-band crown height, local reentry feedback, and committed FG-12 evidence",
   },
 ];
 

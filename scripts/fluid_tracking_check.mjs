@@ -17,6 +17,7 @@ const requiredFiles = [
   "docs/evidence/FG-09-solver-architecture-2026-06-08.json",
   "docs/evidence/FG-10-reference-dataset-2026-06-08.json",
   "docs/evidence/FG-11-shallow-water-2026-06-08.json",
+  "docs/evidence/FG-12-particle-splash-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -28,11 +29,12 @@ const requiredFiles = [
   "src/fluid/fluidSolverArchitecture.ts",
   "src/fluid/fluidReferenceDataset.ts",
   "src/fluid/fluidShallowWater.ts",
+  "src/fluid/fluidParticleSplash.ts",
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -53,6 +55,7 @@ const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? 
 const referenceDatasetCode = files.get("src/fluid/fluidReferenceDataset.ts") ?? "";
 const referenceDataset = files.get("data/fluid-reference-cases.json") ?? "";
 const shallowWater = files.get("src/fluid/fluidShallowWater.ts") ?? "";
+const particleSplash = files.get("src/fluid/fluidParticleSplash.ts") ?? "";
 const viteEnv = files.get("src/vite-env.d.ts") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
@@ -65,6 +68,7 @@ const fg08Evidence = files.get("docs/evidence/FG-08-frame-loop-2026-06-08.json")
 const fg09Evidence = files.get("docs/evidence/FG-09-solver-architecture-2026-06-08.json") ?? "";
 const fg10Evidence = files.get("docs/evidence/FG-10-reference-dataset-2026-06-08.json") ?? "";
 const fg11Evidence = files.get("docs/evidence/FG-11-shallow-water-2026-06-08.json") ?? "";
+const fg12Evidence = files.get("docs/evidence/FG-12-particle-splash-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -361,6 +365,58 @@ if (
   !fg11Evidence.includes("\"high\"")
 ) {
   errors.push("FG-11 evidence must record a passing conservative shallow-water WebGPU report for standard and high tiers");
+}
+
+if (!packageJson.includes("\"fluid:particles\"")) {
+  errors.push("package.json must expose the FG-12 particle-splash command");
+}
+
+if (!tracking.includes("FG-12-T03") || !tracking.includes("FG-12-particle-splash-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/15")) {
+  errors.push("docs/TRACKING.md must record FG-12 particle-splash evidence and issue mapping");
+}
+
+if (
+  !particleSplash.includes("localized-particle-splash-v1") ||
+  !particleSplash.includes("ParticleSplashGridFeedback") ||
+  !particleSplash.includes("massFractionOfDisplaced") ||
+  !particleSplash.includes("momentumFractionOfImpact") ||
+  !particleSplash.includes("referenceSplashBandFor") ||
+  !particleSplash.includes("reentryEnergyJ") ||
+  !particleSplash.includes("timestamp-query")
+) {
+  errors.push("fluidParticleSplash.ts must implement localized particle splash state, diagnostics, reference bands, and GPU timing");
+}
+
+if (!viteEnv.includes("__runParticleSplashBenchmark") || !packageJson.includes("scripts/fluid_particle_splash_report.mjs")) {
+  errors.push("FG-12 benchmark must be exposed to the Electron evidence runner");
+}
+
+if (
+  !remap.includes("FG-12") ||
+  !remap.includes("localized particle") ||
+  !remap.includes("spray mass") ||
+  !remap.includes("reference splash") ||
+  !remap.includes("secondary reentry")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-12 particle splash gate and evidence");
+}
+
+if (
+  !fg12Evidence.includes("\"gate\": \"G-FG-12\"") ||
+  !fg12Evidence.includes("\"pass\": true") ||
+  !fg12Evidence.includes("\"solver\": \"localized-particle-splash-v1\"") ||
+  !fg12Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg12Evidence.includes("\"massFractionOfDisplaced\"") ||
+  !fg12Evidence.includes("\"momentumFractionOfImpact\"") ||
+  !fg12Evidence.includes("\"predictedCrownHeightM\"") ||
+  !fg12Evidence.includes("\"referenceSplashBand\"") ||
+  !fg12Evidence.includes("\"reentryEnergyJ\"") ||
+  !fg12Evidence.includes("\"gridFeedback\"") ||
+  !fg12Evidence.includes("\"timestampQueryEnabled\": true") ||
+  !fg12Evidence.includes("\"standard\"") ||
+  !fg12Evidence.includes("\"high\"")
+) {
+  errors.push("FG-12 evidence must record a passing localized particle-splash WebGPU report for standard and high tiers");
 }
 
 if (errors.length > 0) {

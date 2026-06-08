@@ -336,6 +336,35 @@ useful by locking the stable conservative state first; a later gate should
 reintroduce pressure-gradient acceleration only with the same mass, momentum,
 wet/dry, and local timing evidence.
 
+FG-12 is complete as of 2026-06-08. It adds the first localized particle layer
+for impact splash detail on top of the broad WebGPU water state. The layer is
+not a visual-only spray counter: particles are deterministically seeded from
+displaced water mass, Weber/Froude impact state, and the FG-10 splash reference
+band, stepped in WebGPU, and summarized with bounded mass, momentum, reentry,
+foam, and local grid-feedback diagnostics.
+
+Latest particle-splash evidence:
+
+- Command: `npm run fluid:particles`.
+- Solver: `localized-particle-splash-v1`.
+- Report: `reports/fluid-particle-splash-latest.json`.
+- Gate: `G-FG-12`.
+- Evidence snapshot: `docs/evidence/FG-12-particle-splash-2026-06-08.json`.
+- Standard tier: `2048` particles, crown `1.9606 m`, reentry energy
+  `179.06 J`, timestamp-query GPU average `0.0143 ms/step`.
+- High tier: `4096` particles, crown `1.9613 m`, reentry energy `179.18 J`,
+  timestamp-query GPU average `0.0050 ms/step`.
+- Physical bounds: spray mass stayed at `0.2123` of displaced water mass,
+  particle launch momentum stayed below `0.008` of object impact momentum, mass
+  drift was `0`, and no particle left the local splash bounds.
+- Reference check: the predicted crown stayed inside the FG-10 reference splash
+  band, a ballistic range of `0.8086 m` to `3.5148 m`.
+- Grid feedback: both tiers wrote bounded secondary reentry summaries with
+  `28` local feedback samples and nonzero foam injection.
+- Readback: bounded end-of-run particle diagnostics only; no per-frame
+  full-grid readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -367,6 +396,9 @@ wet/dry, and local timing evidence.
 12. Conservative shallow-water stepping: move broad water state to WebGPU
     height and x/y momentum buffers with mass-drift, momentum-damping, wet/dry,
     CFL, and timestamp-query timing diagnostics.
+13. Localized particle splash stepping: spawn bounded particles from energetic
+    impact events, step them in WebGPU, and feed mass, momentum, foam, and
+    secondary reentry summaries back into the grid contract.
 
 ## Resolution Ladder
 

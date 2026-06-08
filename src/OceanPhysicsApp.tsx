@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { runFluidGridBenchmark } from "./fluid/fluidGridGpu";
 import { createFluidFrameLoopState, defaultFluidFrameLoopConfig, frameLoopStats, planFluidFrameStep } from "./fluid/fluidFrameLoop";
+import { runParticleSplashBenchmark } from "./fluid/fluidParticleSplash";
 import { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import {
   createFluidWaterRenderer,
@@ -78,6 +79,7 @@ export default function OceanPhysicsApp() {
   useEffect(() => {
     let cancelled = false;
     window.__runFluidGridBenchmark = runFluidGridBenchmark;
+    window.__runParticleSplashBenchmark = runParticleSplashBenchmark;
     window.__runShallowWaterBenchmark = runShallowWaterBenchmark;
     window.__fluidGridCapabilityReport = fluidCapability;
     detectFluidCapability().then((report) => {
@@ -88,6 +90,7 @@ export default function OceanPhysicsApp() {
     return () => {
       cancelled = true;
       delete window.__runFluidGridBenchmark;
+      delete window.__runParticleSplashBenchmark;
       delete window.__runShallowWaterBenchmark;
     };
   }, []);

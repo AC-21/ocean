@@ -95,6 +95,12 @@ Run the conservative WebGPU shallow-water gate:
 npm run fluid:shallow-water
 ```
 
+Run the localized WebGPU particle-splash gate:
+
+```sh
+npm run fluid:particles
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -118,7 +124,9 @@ impedance, and displacement impulses into the fluid grid, then feeds bounded
 grid force deltas back into the next rigid-body physics step. It also derives
 foam, spray, crown height, entrained air, and secondary droplet reentry from
 local grid energy and Weber/Froude impact state. Live diagnostics are calculated
-in `src/physicsOcean.ts` and rendered by the app.
+in `src/physicsOcean.ts` and rendered by the app. The latest FG-12 gate also
+steps localized splash particles in WebGPU, accounting for spray mass, launch
+momentum, crown height, foam, and secondary reentry feedback.
 
 ## Run
 
@@ -218,6 +226,8 @@ Current validation checks include:
 - Internal free-surface GM loss and slosh moment for partially flooded objects.
 - WebGPU object-grid coupling with bounded local samples, nonzero displacement
   impulse, and finite force-feedback diagnostics for a concrete-cube drop.
+- WebGPU localized particle-splash stepping with bounded spray mass, bounded
+  launch momentum, reference-band crown height, and nonzero reentry feedback.
 - WebGPU grid-splash coupling with bounded foam samples, spray count, crown
   height, and secondary droplet reentry energy for a concrete-cube drop.
 - Near-realism calibration covering impact speed, timestep convergence,

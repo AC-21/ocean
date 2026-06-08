@@ -19,6 +19,7 @@ and GitHub issue mapping.
 | FG-09 | Research-backed solver architecture decision | Done | G-FG-09 |
 | FG-10 | Reference dataset ingestion and measurement harness | Done | G-FG-10 |
 | FG-11 | Conservative GPU shallow-water upgrade | Done | G-FG-11 |
+| FG-12 | Localized particle splash and spray layer | Done | G-FG-12 |
 
 ## Gates
 
@@ -36,6 +37,7 @@ and GitHub issue mapping.
 | G-FG-09 | FG-09 | `npm run fluid:architecture`; `docs/evidence/FG-09-solver-architecture-2026-06-08.json` | primary-source solver decision selects a hybrid GPU heightfield/free-surface grid plus localized particle splash layer, rejects incomplete immediate paths, and names the next calibration-backed gates |
 | G-FG-10 | FG-10 | `npm run fluid:references`; `docs/evidence/FG-10-reference-dataset-2026-06-08.json` | drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements |
 | G-FG-11 | FG-11 | `npm run fluid:shallow-water`; `docs/evidence/FG-11-shallow-water-2026-06-08.json` | standard and high WebGPU tiers step conservative height and x/y momentum fields with bounded mass drift, momentum damping, wet/dry stability, CFL, and local GPU timing |
+| G-FG-12 | FG-12 | `npm run fluid:particles`; `docs/evidence/FG-12-particle-splash-2026-06-08.json` | standard and high WebGPU tiers step localized splash particles with bounded mass and momentum, splash crown inside the reference band, measurable reentry feedback, and local GPU timing |
 
 ## Tasks
 
@@ -78,6 +80,9 @@ and GitHub issue mapping.
 | FG-11-T01 | FG-11 | Done | compute | `fluidShallowWater.ts` defines conservative-shallow-water-v1 with ping-pong height, x/y momentum, and dry-mask buffers |
 | FG-11-T02 | FG-11 | Done | diagnostics | `runShallowWaterBenchmark` reports mass drift, momentum damping, negative-depth count, dry-cell leakage, wet/dry counts, CFL, wall timing, and timestamp-query GPU timing |
 | FG-11-T03 | FG-11 | Done | verification | `npm run fluid:shallow-water` passes standard and high tiers with zero reported mass drift, stable wet/dry cells, no negative depths, and committed FG-11 evidence |
+| FG-12-T01 | FG-12 | Done | compute | `fluidParticleSplash.ts` defines localized-particle-splash-v1 with deterministic particle seeding from displaced water mass, Weber/Froude impact state, and reference splash bands |
+| FG-12-T02 | FG-12 | Done | diagnostics | `runParticleSplashBenchmark` reports mass fraction, momentum fraction, crown height, reentry energy, foam contribution, bounded feedback samples, and timestamp-query GPU timing |
+| FG-12-T03 | FG-12 | Done | verification | `npm run fluid:particles` passes standard and high tiers with bounded mass/momentum, reference-band crown height, local reentry feedback, and committed FG-12 evidence |
 
 ## GitHub Labels
 
@@ -105,6 +110,7 @@ and GitHub issue mapping.
 | FG-09 | https://github.com/AC-21/ocean/issues/12 |
 | FG-10 | https://github.com/AC-21/ocean/issues/13 |
 | FG-11 | https://github.com/AC-21/ocean/issues/14 |
+| FG-12 | https://github.com/AC-21/ocean/issues/15 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
