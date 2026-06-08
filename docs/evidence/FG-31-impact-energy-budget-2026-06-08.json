@@ -1,0 +1,69 @@
+{
+  "budget": {
+    "accountedEnergyJ": 22101.540395255703,
+    "accountedEnergyRatio": 0.3262289556144377,
+    "ejectedToDisplacedMassRatio": 0.8088888888888939,
+    "foamEnergyJ": 6085.806778870425,
+    "foamEnergyRatio": 0.08982932203080021,
+    "impactKineticEnergyJ": 67748.55516313208,
+    "particleReentryEnergyJ": 58.422592761664745,
+    "particleReentryEnergyRatio": 0.0008623444827862187,
+    "pressureImpulseEnergyJ": 10741.702266941691,
+    "pressureImpulseEnergyRatio": 0.15855249224247944,
+    "pressureWorkEstimateJ": 139.636926077731,
+    "pressureWorkToImpulseRatio": 0.012999515589579597,
+    "reenteredToSprayMassRatio": 0.24291883714931523,
+    "splashCrownToReferenceRatio": 0.5935383733603217,
+    "splashGridEnergyJ": 8452.509415097813,
+    "splashGridEnergyRatio": 0.12476294726500031,
+    "splashPotentialEnergyJ": 2848.9061204545346,
+    "splashPotentialEnergyRatio": 0.042051171624171754
+  },
+  "failures": [],
+  "gate": "G-FG-31",
+  "generatedAt": "2026-06-08T19:42:08.955Z",
+  "liveCaseId": "live-concrete-drop-splash-pressure",
+  "pass": true,
+  "sourceTrace": {
+    "caseIds": [
+      "drop-speed-concrete-8m",
+      "high-weber-splash-height"
+    ],
+    "datasetId": "ocean-impact-reference-v1",
+    "missingSourceIds": [],
+    "sourceIds": [
+      "fg06-calibration-evidence",
+      "fg09-solver-architecture",
+      "nist-standard-gravity"
+    ]
+  },
+  "thresholds": {
+    "maxAccountedEnergyRatio": 0.62,
+    "maxEjectedToDisplacedMassRatio": 1.2,
+    "maxFoamEnergyRatio": 0.22,
+    "maxParticleReentryEnergyRatio": 0.025,
+    "maxPressureImpulseEnergyRatio": 0.34,
+    "maxPressureWorkToImpulseRatio": 0.12,
+    "maxReenteredToSprayMassRatio": 0.45,
+    "maxSplashGridEnergyRatio": 0.24,
+    "maxSplashPotentialEnergyRatio": 0.14,
+    "minAccountedEnergyRatio": 0.12,
+    "minEjectedToDisplacedMassRatio": 0.35,
+    "minFoamEnergyRatio": 0.025,
+    "minParticleReentryEnergyRatio": 0.0002,
+    "minPressureImpulseEnergyRatio": 0.045,
+    "minSplashCrownToReferenceRatio": 0.35,
+    "minSplashGridEnergyRatio": 0.035,
+    "minSplashPotentialEnergyRatio": 0.015
+  },
+  "telemetry": {
+    "couplingActive": true,
+    "grid": "768x432",
+    "noFullGridReadbackPerFrame": true,
+    "particleSplashActive": true,
+    "pressureActive": true,
+    "renderer": "webgpu-grid-primary-v1",
+    "splashActive": true,
+    "tier": "ultra"
+  }
+}

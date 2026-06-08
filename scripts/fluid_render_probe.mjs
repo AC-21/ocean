@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import { inflateSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -7,8 +7,10 @@ import path from "node:path";
 const timeoutMs = Number(process.env.OCEAN_LAB_FLUID_RENDER_TIMEOUT_MS || 30_000);
 const root = process.cwd();
 const outPath = process.env.OCEAN_LAB_FLUID_RENDER_OUT || "reports/fluid-render-probe-latest.json";
-const userDataRoot = await mkdtemp(path.join(tmpdir(), "ocean-lab-fluid-render-"));
-const userDataPath = await realpath(userDataRoot);
+const executablePath = process.env.OCEAN_LAB_FLUID_RENDER_EXECUTABLE;
+const useDefaultUserData = process.env.OCEAN_LAB_FLUID_RENDER_USER_DATA === "default";
+const userDataRoot = useDefaultUserData ? null : await mkdtemp(path.join(tmpdir(), "ocean-lab-fluid-render-"));
+const userDataPath = userDataRoot ? await realpath(userDataRoot) : null;
 
 let electron;
 try {
@@ -19,19 +21,25 @@ try {
 
 let electronApp;
 try {
+  if (executablePath) await access(executablePath);
   electronApp = await electron.launch({
-    args: [root],
+    ...(executablePath ? { executablePath } : { args: [root] }),
     env: {
       ...process.env,
-      HARBORLINE_USER_DATA_DIR: userDataPath,
+      ...(userDataPath ? { HARBORLINE_USER_DATA_DIR: userDataPath } : {}),
     },
     timeout: timeoutMs,
   });
 
   const page = await electronApp.firstWindow({ timeout: timeoutMs });
   const consoleErrors = [];
+  const webgpuValidationWarnings = [];
   page.on("console", (message) => {
-    if (message.type() === "error") consoleErrors.push(message.text());
+    const text = message.text();
+    if (message.type() === "error") consoleErrors.push(text);
+    if (message.type() === "warning" && /Invalid |storage buffers|CommandBuffer|ComputePipeline|BindGroupLayout/.test(text)) {
+      webgpuValidationWarnings.push(text);
+    }
   });
 
   await page.getByRole("heading", { name: "Physics ocean" }).waitFor({ state: "visible", timeout: timeoutMs });
@@ -62,13 +70,16 @@ try {
   assert.equal(summary.status, "nonblank", "WebGPU canvas should not be blank");
   assert.equal(summary.variety, "varied", "WebGPU canvas should have varied pixels");
   assert.deepEqual(consoleErrors, [], `Electron console errors: ${consoleErrors.join("\n")}`);
+  assert.deepEqual(webgpuValidationWarnings, [], `WebGPU validation warnings: ${webgpuValidationWarnings.join("\n")}`);
 
   const report = {
     generatedAt: new Date().toISOString(),
     gate: "G-FG-03",
+    launchMode: executablePath ? "packaged-executable" : "electron-source",
     pass: true,
     pixelProbe: summary,
     telemetry,
+    userData: userDataPath ? "temporary" : "default",
   };
   await mkdir(path.dirname(outPath), { recursive: true });
   await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`);
@@ -78,7 +89,7 @@ try {
   console.log(`- pixels: ${summary.status}/${summary.variety}, ${summary.colorBuckets} color buckets`);
 } finally {
   if (electronApp) await electronApp.close().catch(() => undefined);
-  await rm(userDataPath, { force: true, recursive: true });
+  if (userDataPath) await rm(userDataPath, { force: true, recursive: true });
 }
 
 function summarizePng(buffer) {

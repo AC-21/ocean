@@ -849,6 +849,90 @@ Latest package-reproducibility evidence:
   filesystem sandbox.
 - Gate: passed.
 
+FG-31 is complete as of 2026-06-08. It adds an impact energy-budget check on
+top of the ultra live reference evidence. The goal is not to claim perfect CFD;
+it is to stop accepting visually exciting splashes whose energy channels are
+unbounded or source-less. The gate consumes the FG-22 live concrete impact and
+accounts for pressure impulse energy, splash grid energy, foam energy, splash
+potential energy, particle reentry energy, ejected/displaced mass, and
+reentered/spray mass while requiring the source trace to include the reference
+gravity, calibration, and solver-architecture evidence.
+
+Latest impact-energy-budget evidence:
+
+- Command: `npm run fluid:impact-energy-budget`.
+- Input evidence:
+  `docs/evidence/FG-22-ultra-reference-outcomes-2026-06-08.json` and
+  `data/fluid-reference-cases.json`.
+- Gate: `G-FG-31`.
+- Evidence snapshot:
+  `docs/evidence/FG-31-impact-energy-budget-2026-06-08.json`.
+- Energy proof: the live concrete impact records 67.75 kJ of kinetic impact
+  energy, 32.6% accounted water energy, 15.86% pressure impulse energy, 12.48%
+  splash-grid energy, 4.21% splash potential energy, and 0.09% particle reentry
+  energy, all within the configured thresholds.
+- Telemetry proof: ultra `768 x 432` WebGPU renderer telemetry stays active for
+  pressure, particle splash, grid splash, object-grid coupling, and
+  no-full-grid-readback discipline.
+- Source proof: source trace includes `nist-standard-gravity`,
+  `fg06-calibration-evidence`, and `fg09-solver-architecture`.
+- Gate: passed.
+
+FG-32 is complete as of 2026-06-08. It closes the surface-recovery caveat in
+the migration strategy with a packaged ultra run rather than a still-frame
+claim. A shallower tank let the concrete cube reach bottom too early, so the
+gate uses a 22 m calm-water tank, drops the concrete cube from 8 m, and samples
+five WebGPU canvas screenshots across the post-impact recovery window. The
+surface must start visibly agitated and then recover in both visual metrics and
+live physics telemetry while the renderer stays on the `768 x 432` WebGPU grid.
+
+Latest surface-recovery evidence:
+
+- Command: `npm run fluid:surface-recovery`.
+- Runtime: packaged macOS app with `OCEAN_LAB_FLUID_TIER=ultra`.
+- Gate: `G-FG-32`.
+- Evidence snapshot:
+  `docs/evidence/FG-32-surface-recovery-2026-06-08.json`.
+- Scenario: `concrete-cube`, 8 m drop, 22 m calm-water depth.
+- Visual recovery proof: luma stddev falls from `30.9536` to `19.2649`
+  (`0.6224` ratio), color buckets fall from `57` to `23` (`0.4035` ratio),
+  and late bright foam fraction is `0`.
+- Physics recovery proof: pressure work ratio falls to `0.0780`, foam-energy
+  ratio falls to `0.6724`, and water frames advance by `449` over the sample
+  window.
+- Telemetry discipline: packaged ultra renderer `webgpu-grid-primary-v1`,
+  context `webgpu`, grid `768 x 432`, active pressure, particles, splash,
+  object-grid coupling, zero dropped fixed-step debt, and
+  no-full-grid-readback telemetry across all samples.
+- Gate: passed.
+
+FG-33 is complete as of 2026-06-08. It turns the user-facing Desktop button
+into a reproducible release gate. The prior black-screen investigation showed
+that a renderer can be healthy while a workspace-local app bundle is stale or
+fragile because of macOS signing metadata. FG-33 packages the app into a stable
+local install root outside the repo workspace, verifies the Desktop launcher
+points at that signed app bundle, then launches the exact Desktop target with
+the default user profile and runs the nonblank/varied WebGPU pixel probe.
+
+Latest desktop-launcher evidence:
+
+- Command: `npm run fluid:desktop-launcher`.
+- Gate: `G-FG-33`.
+- Evidence snapshot:
+  `docs/evidence/FG-33-desktop-launcher-2026-06-08.json`.
+- Install root:
+  `/Users/sasha/Applications/Ocean Impact Lab Builds`, outside
+  `/Users/sasha/Documents/New project`.
+- Desktop launcher:
+  `/Users/sasha/Desktop/Ocean Impact Lab.app`, a symlink resolving to the
+  installed app bundle.
+- Signing proof: `codesign --verify --deep --strict --verbose=4` passes, and
+  signing-relevant forbidden xattrs are empty.
+- Render proof: the exact Desktop launcher executable runs with default user
+  data, renderer `webgpu-grid-primary-v1`, context `webgpu`, `56` water frames,
+  nonblank/varied pixels, average luma `125.6693`, and `23` color buckets.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -942,6 +1026,18 @@ Latest package-reproducibility evidence:
 28. Calibration freshness invalidation: persist app-version and source-evidence
     provenance with the local profile, then prove Electron reuses only current
     profiles and rejects stale profiles before selecting calibrated-auto.
+29. Impact energy budgeting: require the live ultra concrete impact to account
+    for bounded pressure impulse, splash grid energy, foam/potential energy,
+    particle reentry, and mass-ratio channels against source-traced reference
+    evidence before treating splash realism as physically defensible.
+30. Surface recovery damping: sample the packaged ultra canvas and telemetry
+    after impact, requiring visible agitation, foam, and pressure work to
+    recover over the post-impact window while the WebGPU grid remains active
+    and no-full-grid-readback discipline holds.
+31. Desktop launcher reproducibility: package into a stable local install root
+    outside the repo workspace, verify the Desktop launcher resolves to the
+    signed app bundle, then launch that exact target with the default profile
+    and prove nonblank/varied WebGPU pixels.
 
 ## Resolution Ladder
 

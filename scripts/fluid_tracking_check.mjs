@@ -36,6 +36,9 @@ const requiredFiles = [
   "docs/evidence/FG-28-calibration-provenance-2026-06-08.json",
   "docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json",
   "docs/evidence/FG-30-package-reproducibility-2026-06-08.json",
+  "docs/evidence/FG-31-impact-energy-budget-2026-06-08.json",
+  "docs/evidence/FG-32-surface-recovery-2026-06-08.json",
+  "docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -79,6 +82,15 @@ const requiredFiles = [
   "src/fluid/fluidPackageReproducibility.ts",
   "src/fluid/fluidPackageReproducibility.report.ts",
   "src/fluid/fluidPackageReproducibility.test.ts",
+  "src/fluid/fluidImpactEnergyBudget.ts",
+  "src/fluid/fluidImpactEnergyBudget.report.ts",
+  "src/fluid/fluidImpactEnergyBudget.test.ts",
+  "src/fluid/fluidSurfaceRecovery.ts",
+  "src/fluid/fluidSurfaceRecovery.report.ts",
+  "src/fluid/fluidSurfaceRecovery.test.ts",
+  "src/fluid/fluidDesktopLauncher.ts",
+  "src/fluid/fluidDesktopLauncher.report.ts",
+  "src/fluid/fluidDesktopLauncher.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -100,8 +112,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -154,6 +166,15 @@ const sustainedInteractionPacingTest = files.get("src/fluid/fluidSustainedIntera
 const packageReproducibility = files.get("src/fluid/fluidPackageReproducibility.ts") ?? "";
 const packageReproducibilityReport = files.get("src/fluid/fluidPackageReproducibility.report.ts") ?? "";
 const packageReproducibilityTest = files.get("src/fluid/fluidPackageReproducibility.test.ts") ?? "";
+const impactEnergyBudget = files.get("src/fluid/fluidImpactEnergyBudget.ts") ?? "";
+const impactEnergyBudgetReport = files.get("src/fluid/fluidImpactEnergyBudget.report.ts") ?? "";
+const impactEnergyBudgetTest = files.get("src/fluid/fluidImpactEnergyBudget.test.ts") ?? "";
+const surfaceRecovery = files.get("src/fluid/fluidSurfaceRecovery.ts") ?? "";
+const surfaceRecoveryReport = files.get("src/fluid/fluidSurfaceRecovery.report.ts") ?? "";
+const surfaceRecoveryTest = files.get("src/fluid/fluidSurfaceRecovery.test.ts") ?? "";
+const desktopLauncher = files.get("src/fluid/fluidDesktopLauncher.ts") ?? "";
+const desktopLauncherReport = files.get("src/fluid/fluidDesktopLauncher.report.ts") ?? "";
+const desktopLauncherTest = files.get("src/fluid/fluidDesktopLauncher.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -203,6 +224,9 @@ const fg27Evidence = files.get("docs/evidence/FG-27-calibration-freshness-2026-0
 const fg28Evidence = files.get("docs/evidence/FG-28-calibration-provenance-2026-06-08.json") ?? "";
 const fg29Evidence = files.get("docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json") ?? "";
 const fg30Evidence = files.get("docs/evidence/FG-30-package-reproducibility-2026-06-08.json") ?? "";
+const fg31Evidence = files.get("docs/evidence/FG-31-impact-energy-budget-2026-06-08.json") ?? "";
+const fg32Evidence = files.get("docs/evidence/FG-32-surface-recovery-2026-06-08.json") ?? "";
+const fg33Evidence = files.get("docs/evidence/FG-33-desktop-launcher-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1979,6 +2003,261 @@ if (
   !fg30Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-30 evidence must record cached local packaging plus passing sustained calibrated interaction evidence");
+}
+
+if (!packageJson.includes("\"fluid:impact-energy-budget\"") || !packageJson.includes("src/fluid/fluidImpactEnergyBudget.report.ts")) {
+  errors.push("package.json must expose the FG-31 impact-energy-budget command");
+}
+
+if (!tracking.includes("FG-31-T03") || !tracking.includes("FG-31-impact-energy-budget-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/34")) {
+  errors.push("docs/TRACKING.md must record FG-31 impact energy budget evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-31") ||
+  !contract.includes("G-FG-31") ||
+  !contract.includes("Live impact energy budget gate") ||
+  !contract.includes("npm run fluid:impact-energy-budget")
+) {
+  errors.push("fluidGridContract.ts must define the FG-31 impact energy budget milestone, gate, and evidence command");
+}
+
+if (
+  !impactEnergyBudget.includes("G-FG-31") ||
+  !impactEnergyBudget.includes("impactKineticEnergyJ") ||
+  !impactEnergyBudget.includes("accountedEnergyRatio") ||
+  !impactEnergyBudget.includes("pressureImpulseEnergyRatio") ||
+  !impactEnergyBudget.includes("splashGridEnergyRatio") ||
+  !impactEnergyBudget.includes("particleReentryEnergyRatio") ||
+  !impactEnergyBudget.includes("ejectedToDisplacedMassRatio") ||
+  !impactEnergyBudget.includes("fg09-solver-architecture") ||
+  !impactEnergyBudget.includes("energy budget path lost no-full-grid-readback telemetry")
+) {
+  errors.push("fluidImpactEnergyBudget.ts must define the FG-31 source-traced live impact energy budget checks");
+}
+
+if (
+  !impactEnergyBudgetReport.includes("FG-22-ultra-reference-outcomes-2026-06-08.json") ||
+  !impactEnergyBudgetReport.includes("data/fluid-reference-cases.json") ||
+  !impactEnergyBudgetReport.includes("G-FG-31") ||
+  !impactEnergyBudgetReport.includes("accounted energy ratio") ||
+  !impactEnergyBudgetReport.includes("pressure/grid/potential/reentry ratios")
+) {
+  errors.push("fluidImpactEnergyBudget.report.ts must consume FG-22/reference evidence and write the FG-31 impact energy budget report");
+}
+
+if (
+  !impactEnergyBudgetTest.includes("createFluidImpactEnergyBudgetReport") ||
+  !impactEnergyBudgetTest.includes("too much accounted water energy") ||
+  !impactEnergyBudgetTest.includes("missing source trace") ||
+  !impactEnergyBudgetTest.includes("no-full-grid-readback") ||
+  !impactEnergyBudgetTest.includes("G-FG-31")
+) {
+  errors.push("fluidImpactEnergyBudget.test.ts must cover FG-31 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-31") ||
+  !remap.includes("impact-energy-budget") ||
+  !remap.includes("pressure impulse energy") ||
+  !remap.includes("splash-grid energy") ||
+  !remap.includes("nist-standard-gravity")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-31 impact energy budget gate and evidence");
+}
+
+if (
+  !fg31Evidence.includes("\"gate\": \"G-FG-31\"") ||
+  !fg31Evidence.includes("\"pass\": true") ||
+  !fg31Evidence.includes("\"liveCaseId\": \"live-concrete-drop-splash-pressure\"") ||
+  !fg31Evidence.includes("\"impactKineticEnergyJ\": 67748.55516313208") ||
+  !fg31Evidence.includes("\"accountedEnergyRatio\": 0.3262289556144377") ||
+  !fg31Evidence.includes("\"pressureImpulseEnergyRatio\": 0.15855249224247944") ||
+  !fg31Evidence.includes("\"splashGridEnergyRatio\": 0.12476294726500031") ||
+  !fg31Evidence.includes("\"particleReentryEnergyRatio\": 0.0008623444827862187") ||
+  !fg31Evidence.includes("\"ejectedToDisplacedMassRatio\": 0.8088888888888939") ||
+  !fg31Evidence.includes("\"reenteredToSprayMassRatio\": 0.24291883714931523") ||
+  !fg31Evidence.includes("\"datasetId\": \"ocean-impact-reference-v1\"") ||
+  !fg31Evidence.includes("\"fg06-calibration-evidence\"") ||
+  !fg31Evidence.includes("\"fg09-solver-architecture\"") ||
+  !fg31Evidence.includes("\"nist-standard-gravity\"") ||
+  !fg31Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg31Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg31Evidence.includes("\"pressureActive\": true") ||
+  !fg31Evidence.includes("\"particleSplashActive\": true") ||
+  !fg31Evidence.includes("\"splashActive\": true") ||
+  !fg31Evidence.includes("\"couplingActive\": true") ||
+  !fg31Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-31 evidence must record a passing source-traced live impact energy budget with bounded WebGPU energy and telemetry channels");
+}
+
+if (!packageJson.includes("\"fluid:surface-recovery\"") || !packageJson.includes("src/fluid/fluidSurfaceRecovery.report.ts")) {
+  errors.push("package.json must expose the FG-32 surface-recovery command");
+}
+
+if (!tracking.includes("FG-32-T03") || !tracking.includes("FG-32-surface-recovery-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/35")) {
+  errors.push("docs/TRACKING.md must record FG-32 surface recovery evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-32") ||
+  !contract.includes("G-FG-32") ||
+  !contract.includes("Live surface recovery damping gate") ||
+  !contract.includes("npm run fluid:surface-recovery")
+) {
+  errors.push("fluidGridContract.ts must define the FG-32 surface recovery milestone, gate, and evidence command");
+}
+
+if (
+  !surfaceRecovery.includes("G-FG-32") ||
+  !surfaceRecovery.includes("lumaStdDevLateToInitialRatio") ||
+  !surfaceRecovery.includes("visualBucketsLateToInitialRatio") ||
+  !surfaceRecovery.includes("pressureWorkLateToInitialRatio") ||
+  !surfaceRecovery.includes("foamEnergyLateToInitialRatio") ||
+  !surfaceRecovery.includes("no-full-grid-readback") ||
+  !surfaceRecovery.includes("visualRecovery")
+) {
+  errors.push("fluidSurfaceRecovery.ts must define the FG-32 visual, foam, pressure-work, and no-readback recovery checks");
+}
+
+if (
+  !surfaceRecoveryReport.includes("OCEAN_LAB_FLUID_TIER") ||
+  !surfaceRecoveryReport.includes("concrete-cube") ||
+  !surfaceRecoveryReport.includes("waterDepthM: 22") ||
+  !surfaceRecoveryReport.includes("recoveryOffsetsS") ||
+  !surfaceRecoveryReport.includes("summarizeCanvasPng") ||
+  !surfaceRecoveryReport.includes("data-water-pressure-work") ||
+  !surfaceRecoveryReport.includes("G-FG-32")
+) {
+  errors.push("fluidSurfaceRecovery.report.ts must drive the packaged ultra deep-water concrete recovery probe");
+}
+
+if (
+  !surfaceRecoveryTest.includes("createFluidSurfaceRecoveryReport") ||
+  !surfaceRecoveryTest.includes("visually turbulent") ||
+  !surfaceRecoveryTest.includes("lost WebGPU") ||
+  !surfaceRecoveryTest.includes("G-FG-32")
+) {
+  errors.push("fluidSurfaceRecovery.test.ts must cover FG-32 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-32") ||
+  !remap.includes("surface-recovery") ||
+  !remap.includes("luma stddev") ||
+  !remap.includes("pressure work ratio") ||
+  !remap.includes("no-full-grid-readback")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-32 surface recovery gate and evidence");
+}
+
+if (
+  !fg32Evidence.includes("\"gate\": \"G-FG-32\"") ||
+  !fg32Evidence.includes("\"pass\": true") ||
+  !fg32Evidence.includes("\"failures\": []") ||
+  !fg32Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg32Evidence.includes("\"objectPresetId\": \"concrete-cube\"") ||
+  !fg32Evidence.includes("\"waterDepthM\": 22") ||
+  !fg32Evidence.includes("\"lumaStdDevLateToInitialRatio\": 0.6223803787286891") ||
+  !fg32Evidence.includes("\"visualBucketsLateToInitialRatio\": 0.40350877192982454") ||
+  !fg32Evidence.includes("\"pressureWorkLateToInitialRatio\": 0.07796400197495398") ||
+  !fg32Evidence.includes("\"foamEnergyLateToInitialRatio\": 0.6723764010928198") ||
+  !fg32Evidence.includes("\"waterFrameDelta\": 449") ||
+  !fg32Evidence.includes("\"visualRecovery\": \"recovered\"") ||
+  !fg32Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg32Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg32Evidence.includes("\"grid\": \"768x432\"") ||
+  !fg32Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg32Evidence.includes("\"droppedDebtS\": 0")
+) {
+  errors.push("FG-32 evidence must record a passing packaged ultra surface recovery report with visual, pressure, foam, and no-readback telemetry");
+}
+
+if (!packageJson.includes("\"fluid:desktop-launcher\"") || !packageJson.includes("src/fluid/fluidDesktopLauncher.report.ts") || !packageJson.includes("OCEAN_LAB_RELEASE_DIR")) {
+  errors.push("package.json must expose the FG-33 desktop-launcher command with a stable local install root");
+}
+
+if (!tracking.includes("FG-33-T03") || !tracking.includes("FG-33-desktop-launcher-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/36")) {
+  errors.push("docs/TRACKING.md must record FG-33 desktop launcher evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-33") ||
+  !contract.includes("G-FG-33") ||
+  !contract.includes("Desktop launcher install reproducibility gate") ||
+  !contract.includes("npm run fluid:desktop-launcher")
+) {
+  errors.push("fluidGridContract.ts must define the FG-33 desktop launcher milestone, gate, and evidence command");
+}
+
+if (
+  !desktopLauncher.includes("G-FG-33") ||
+  !desktopLauncher.includes("installRootOutsideWorkspace") ||
+  !desktopLauncher.includes("resolvesToAppBundle") ||
+  !desktopLauncher.includes("codesignVerified") ||
+  !desktopLauncher.includes("forbiddenExtendedAttributes") ||
+  !desktopLauncher.includes("desktop render probe did not pass")
+) {
+  errors.push("fluidDesktopLauncher.ts must define the FG-33 desktop install, launcher, signing, and render checks");
+}
+
+if (
+  !desktopLauncherReport.includes("OCEAN_LAB_DESKTOP_LAUNCHER_WRITE") ||
+  !desktopLauncherReport.includes("OCEAN_LAB_FLUID_RENDER_EXECUTABLE") ||
+  !desktopLauncherReport.includes("scripts/fluid_render_probe.mjs") ||
+  !desktopLauncherReport.includes("codesign") ||
+  !desktopLauncherReport.includes("xattr") ||
+  !desktopLauncherReport.includes("Desktop") ||
+  !desktopLauncherReport.includes("Applications") ||
+  !desktopLauncherReport.includes("G-FG-33")
+) {
+  errors.push("fluidDesktopLauncher.report.ts must package, verify, and pixel-probe the exact Desktop launcher target");
+}
+
+if (
+  !desktopLauncherTest.includes("inside the workspace") ||
+  !desktopLauncherTest.includes("does not resolve") ||
+  !desktopLauncherTest.includes("black or flat") ||
+  !desktopLauncherTest.includes("G-FG-33")
+) {
+  errors.push("fluidDesktopLauncher.test.ts must cover FG-33 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-33") ||
+  !remap.includes("desktop-launcher") ||
+  !remap.includes("Desktop launcher") ||
+  !remap.includes("codesign") ||
+  !remap.includes("nonblank/varied")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-33 desktop launcher gate and evidence");
+}
+
+if (
+  !fg33Evidence.includes("\"gate\": \"G-FG-33\"") ||
+  !fg33Evidence.includes("\"pass\": true") ||
+  !fg33Evidence.includes("\"failures\": []") ||
+  !fg33Evidence.includes("\"installRootOutsideWorkspace\": true") ||
+  !fg33Evidence.includes("\"installRootPath\": \"/Users/sasha/Applications/Ocean Impact Lab Builds\"") ||
+  !fg33Evidence.includes("\"workspaceRoot\": \"/Users/sasha/Documents/New project\"") ||
+  !fg33Evidence.includes("\"kind\": \"symlink\"") ||
+  !fg33Evidence.includes("\"resolvesToAppBundle\": true") ||
+  !fg33Evidence.includes("\"targetPath\": \"/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app\"") ||
+  !fg33Evidence.includes("\"codesignVerified\": true") ||
+  !fg33Evidence.includes("\"forbiddenExtendedAttributes\": []") ||
+  !fg33Evidence.includes("\"launchMode\": \"packaged-executable\"") ||
+  !fg33Evidence.includes("\"userData\": \"default\"") ||
+  !fg33Evidence.includes("\"averageLuma\": 125.6693323792467") ||
+  !fg33Evidence.includes("\"colorBuckets\": 23") ||
+  !fg33Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg33Evidence.includes("\"variety\": \"varied\"") ||
+  !fg33Evidence.includes("\"frames\": 56") ||
+  !fg33Evidence.includes("\"grid\": \"512x288\"") ||
+  !fg33Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg33Evidence.includes("\"waterContext\": \"webgpu\"")
+) {
+  errors.push("FG-33 evidence must record a passing signed Desktop launcher install and default-profile WebGPU render probe");
 }
 
 if (errors.length > 0) {

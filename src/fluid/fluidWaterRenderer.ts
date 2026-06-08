@@ -99,7 +99,10 @@ type GpuLike = {
 };
 
 type AdapterLike = {
-  requestDevice: () => Promise<DeviceLike>;
+  limits?: {
+    maxStorageBuffersPerShaderStage?: number;
+  };
+  requestDevice: (descriptor?: { requiredLimits?: { maxStorageBuffersPerShaderStage?: number } }) => Promise<DeviceLike>;
 };
 
 type DeviceLike = {
@@ -160,17 +163,31 @@ const shaderStage = {
 };
 const textureUsageRenderAttachment = 0x0010;
 const bytesPerValue = 4;
+export const fluidWaterRendererRequiredStorageBuffers = 10;
 
 export async function createFluidWaterRenderer(canvas: HTMLCanvasElement, tier: FluidGridTierId): Promise<FluidWaterRenderer> {
   const gpu = browserGpu();
   if (!gpu) throw new Error("navigator.gpu is unavailable for WebGPU water rendering.");
   const adapter = await gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) throw new Error("WebGPU adapter is unavailable for water rendering.");
-  const device = await adapter.requestDevice();
+  const requiredLimits = fluidWaterRendererRequiredDeviceLimits(adapter.limits);
+  if (!requiredLimits) {
+    throw new Error(
+      `WebGPU water renderer requires ${fluidWaterRendererRequiredStorageBuffers} storage buffers per shader stage, ` +
+        `but the adapter reported ${adapter.limits?.maxStorageBuffersPerShaderStage ?? "unknown"}.`
+    );
+  }
+  const device = await adapter.requestDevice({ requiredLimits });
   const context = canvas.getContext("webgpu") as CanvasContextLike | null;
   if (!context) throw new Error("Canvas did not provide a webgpu context.");
   const format = gpu.getPreferredCanvasFormat?.() ?? "bgra8unorm";
   return new FluidWaterRenderer(canvas, context, device, format, tier);
+}
+
+export function fluidWaterRendererRequiredDeviceLimits(limits: AdapterLike["limits"]): { maxStorageBuffersPerShaderStage: number } | null {
+  const available = limits?.maxStorageBuffersPerShaderStage;
+  if (typeof available !== "number" || !Number.isFinite(available) || available < fluidWaterRendererRequiredStorageBuffers) return null;
+  return { maxStorageBuffersPerShaderStage: fluidWaterRendererRequiredStorageBuffers };
 }
 
 export class FluidWaterRenderer {

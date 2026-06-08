@@ -38,6 +38,9 @@ and GitHub issue mapping.
 | FG-28 | Calibration profile hardware provenance gate | Done | G-FG-28 |
 | FG-29 | Sustained calibrated interaction pacing gate | Done | G-FG-29 |
 | FG-30 | Local cached packaging reproducibility gate | Done | G-FG-30 |
+| FG-31 | Live impact energy budget gate | Done | G-FG-31 |
+| FG-32 | Live surface recovery damping gate | Done | G-FG-32 |
+| FG-33 | Desktop launcher install reproducibility gate | Done | G-FG-33 |
 
 ## Gates
 
@@ -74,6 +77,9 @@ and GitHub issue mapping.
 | G-FG-28 | FG-28 | `npm run fluid:calibration-provenance`; `docs/evidence/FG-28-calibration-provenance-2026-06-08.json` | calibration profiles bind to FG-01 WebGPU capability provenance; the packaged app reuses a matching profile, downgrades a copied-profile hardware mismatch to high, and rejects a tampered capability fingerprint without fluid-tier environment variables |
 | G-FG-29 | FG-29 | `npm run fluid:sustained-interaction-pacing`; `docs/evidence/FG-29-sustained-interaction-pacing-2026-06-08.json` | a packaged installed-profile calibrated-auto ultra run drives a sustained mixed-object workload while the WebGPU renderer remains on `768 x 432`, active pressure/particles/coupling are observed, display pacing stays smooth, and fixed-step simulation debt remains bounded |
 | G-FG-30 | FG-30 | `npm run fluid:package-reproducibility`; `docs/evidence/FG-30-package-reproducibility-2026-06-08.json` | the macOS package path uses the exact local cached Electron zip for the current version, rebuilds the packaged app without remote checksum dependency, and then passes sustained calibrated-auto ultra interaction evidence |
+| G-FG-31 | FG-31 | `npm run fluid:impact-energy-budget`; `docs/evidence/FG-31-impact-energy-budget-2026-06-08.json` | the ultra live concrete impact reports a source-traced, bounded energy budget across pressure impulse, splash grid energy, foam and potential energy, particle reentry, ejected mass, and WebGPU no-full-grid-readback telemetry |
+| G-FG-32 | FG-32 | `npm run fluid:surface-recovery`; `docs/evidence/FG-32-surface-recovery-2026-06-08.json` | the packaged ultra WebGPU renderer shows post-impact visible surface agitation, foam, and pressure-work recovery over a deep-water concrete drop while maintaining active pressure, particles, coupling, fixed-step pacing, and no full-grid readback |
+| G-FG-33 | FG-33 | `npm run fluid:desktop-launcher`; `docs/evidence/FG-33-desktop-launcher-2026-06-08.json` | the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile |
 
 ## Tasks
 
@@ -173,6 +179,15 @@ and GitHub issue mapping.
 | FG-30-T01 | FG-30 | Done | packaging | `electron_zip_cache.mjs` finds the exact `electron-v42.3.3-darwin-arm64.zip` artifact in local Electron cache roots and `package_mac.mjs` passes `electron-zip-dir` when present |
 | FG-30-T02 | FG-30 | Done | verification | `fluidPackageReproducibility.report.ts` rebuilds the package through `scripts/package_mac.mjs`, records the cached zip proof, and runs the sustained interaction report against the freshly packaged app |
 | FG-30-T03 | FG-30 | Done | release | `npm run fluid:package-reproducibility` passes with a local cached Electron zip, packaged app path, calibrated-auto ultra runtime, smooth sustained pacing, and committed FG-30 evidence |
+| FG-31-T01 | FG-31 | Done | diagnostics | `fluidImpactEnergyBudget.ts` computes impact kinetic energy and bounded pressure, splash, foam, potential, particle reentry, and mass-ratio channels from FG-22 live ultra telemetry |
+| FG-31-T02 | FG-31 | Done | calibration | FG-31 source trace requires the NIST gravity source plus FG-06 calibration and FG-09 solver-architecture evidence through the structured reference dataset |
+| FG-31-T03 | FG-31 | Done | verification | `npm run fluid:impact-energy-budget` passes with ultra `768 x 432` WebGPU telemetry, active pressure/particle/splash/coupling channels, no full-grid readback, and committed FG-31 evidence |
+| FG-32-T01 | FG-32 | Done | diagnostics | `fluidSurfaceRecovery.ts` measures post-impact visual luma variance, color-bucket complexity, bright foam fraction, pressure work, foam energy, water-frame delta, fixed-step debt, and no-readback telemetry |
+| FG-32-T02 | FG-32 | Done | verification | `fluidSurfaceRecovery.report.ts` launches the packaged ultra renderer, drops an 8 m concrete cube into a 22 m calm tank, and samples five post-impact WebGPU canvas screenshots |
+| FG-32-T03 | FG-32 | Done | physics | `npm run fluid:surface-recovery` passes with visual stddev, color-bucket, pressure-work, and foam-energy recovery ratios under thresholds plus committed FG-32 evidence |
+| FG-33-T01 | FG-33 | Done | release | `fluidDesktopLauncher.ts` requires an install root outside the workspace, a Desktop symlink that resolves to the app bundle, codesign verification, clean signing-relevant xattrs, and nonblank WebGPU render evidence |
+| FG-33-T02 | FG-33 | Done | verification | `fluidDesktopLauncher.report.ts` packages to `~/Applications/Ocean Impact Lab Builds`, verifies `/Users/sasha/Desktop/Ocean Impact Lab.app`, and runs `fluid_render_probe.mjs` through that exact launcher executable with default user data |
+| FG-33-T03 | FG-33 | Done | release | `npm run fluid:desktop-launcher` passes with a signed app bundle, clean Desktop symlink target, nonblank/varied WebGPU pixels, and committed FG-33 evidence |
 
 ## GitHub Labels
 
@@ -219,6 +234,9 @@ and GitHub issue mapping.
 | FG-28 | https://github.com/AC-21/ocean/issues/31 |
 | FG-29 | https://github.com/AC-21/ocean/issues/32 |
 | FG-30 | https://github.com/AC-21/ocean/issues/33 |
+| FG-31 | https://github.com/AC-21/ocean/issues/34 |
+| FG-32 | https://github.com/AC-21/ocean/issues/35 |
+| FG-33 | https://github.com/AC-21/ocean/issues/36 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

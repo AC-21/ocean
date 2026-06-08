@@ -31,7 +31,10 @@ export type FluidGridMilestoneId =
   | "FG-27"
   | "FG-28"
   | "FG-29"
-  | "FG-30";
+  | "FG-30"
+  | "FG-31"
+  | "FG-32"
+  | "FG-33";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -64,7 +67,10 @@ export type FluidGridGateId =
   | "G-FG-27"
   | "G-FG-28"
   | "G-FG-29"
-  | "G-FG-30";
+  | "G-FG-30"
+  | "G-FG-31"
+  | "G-FG-32"
+  | "G-FG-33";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -162,6 +168,9 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-28", title: "Calibration profile hardware provenance gate", gate: "G-FG-28" },
   { id: "FG-29", title: "Sustained calibrated interaction pacing gate", gate: "G-FG-29" },
   { id: "FG-30", title: "Local cached packaging reproducibility gate", gate: "G-FG-30" },
+  { id: "FG-31", title: "Live impact energy budget gate", gate: "G-FG-31" },
+  { id: "FG-32", title: "Live surface recovery damping gate", gate: "G-FG-32" },
+  { id: "FG-33", title: "Desktop launcher install reproducibility gate", gate: "G-FG-33" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -372,6 +381,27 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:package-reproducibility and docs/evidence/FG-30-package-reproducibility-2026-06-08.json",
     passBar:
       "the macOS package path uses the exact local cached Electron zip for the current version, rebuilds the packaged app without remote checksum dependency, and then passes sustained calibrated-auto ultra interaction evidence",
+  },
+  {
+    id: "G-FG-31",
+    blocks: "FG-31",
+    evidence: "npm run fluid:impact-energy-budget and docs/evidence/FG-31-impact-energy-budget-2026-06-08.json",
+    passBar:
+      "the ultra live concrete impact reports a source-traced, bounded energy budget across pressure impulse, splash grid energy, foam and potential energy, particle reentry, ejected mass, and WebGPU no-full-grid-readback telemetry",
+  },
+  {
+    id: "G-FG-32",
+    blocks: "FG-32",
+    evidence: "npm run fluid:surface-recovery and docs/evidence/FG-32-surface-recovery-2026-06-08.json",
+    passBar:
+      "the packaged ultra WebGPU renderer shows post-impact visible surface agitation, foam, and pressure-work recovery over a deep-water concrete drop while maintaining active pressure, particles, coupling, fixed-step pacing, and no full-grid readback",
+  },
+  {
+    id: "G-FG-33",
+    blocks: "FG-33",
+    evidence: "npm run fluid:desktop-launcher and docs/evidence/FG-33-desktop-launcher-2026-06-08.json",
+    passBar:
+      "the app packages into a stable local install root outside the workspace, the Desktop launcher resolves to the signed app bundle, and the exact Desktop target renders nonblank/varied WebGPU pixels with the default user profile",
   },
 ];
 
@@ -1099,6 +1129,78 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close local package reproducibility gate",
     exitProof:
       "npm run fluid:package-reproducibility passes with a local cached Electron zip, packaged app path, calibrated-auto ultra runtime, smooth sustained pacing, and committed FG-30 evidence",
+  },
+  {
+    id: "FG-31-T01",
+    milestone: "FG-31",
+    status: "done",
+    title: "Define live impact energy accounting",
+    exitProof:
+      "fluidImpactEnergyBudget.ts computes impact kinetic energy and bounded pressure, splash, foam, potential, particle reentry, and mass-ratio channels from FG-22 live ultra telemetry",
+  },
+  {
+    id: "FG-31-T02",
+    milestone: "FG-31",
+    status: "done",
+    title: "Trace impact budget to reference sources",
+    exitProof:
+      "FG-31 source trace requires the NIST gravity source plus FG-06 calibration and FG-09 solver-architecture evidence through the structured reference dataset",
+  },
+  {
+    id: "FG-31-T03",
+    milestone: "FG-31",
+    status: "done",
+    title: "Close live impact energy budget gate",
+    exitProof:
+      "npm run fluid:impact-energy-budget passes with ultra 768 x 432 WebGPU telemetry, active pressure/particle/splash/coupling channels, no full-grid readback, and committed FG-31 evidence",
+  },
+  {
+    id: "FG-32-T01",
+    milestone: "FG-32",
+    status: "done",
+    title: "Define post-impact surface recovery metrics",
+    exitProof:
+      "fluidSurfaceRecovery.ts measures visual luma variance, color-bucket complexity, bright foam fraction, pressure work, foam energy, water-frame delta, fixed-step debt, and no-readback telemetry",
+  },
+  {
+    id: "FG-32-T02",
+    milestone: "FG-32",
+    status: "done",
+    title: "Sample packaged ultra recovery screenshots",
+    exitProof:
+      "fluidSurfaceRecovery.report.ts launches the packaged ultra renderer, drops an 8 m concrete cube into a 22 m calm tank, and samples five post-impact WebGPU canvas screenshots",
+  },
+  {
+    id: "FG-32-T03",
+    milestone: "FG-32",
+    status: "done",
+    title: "Close live surface recovery damping gate",
+    exitProof:
+      "npm run fluid:surface-recovery passes with visual stddev, color-bucket, pressure-work, and foam-energy recovery ratios under thresholds plus committed FG-32 evidence",
+  },
+  {
+    id: "FG-33-T01",
+    milestone: "FG-33",
+    status: "done",
+    title: "Define desktop launcher install checks",
+    exitProof:
+      "fluidDesktopLauncher.ts requires an install root outside the workspace, a Desktop symlink that resolves to the app bundle, codesign verification, clean signing-relevant xattrs, and nonblank WebGPU render evidence",
+  },
+  {
+    id: "FG-33-T02",
+    milestone: "FG-33",
+    status: "done",
+    title: "Install and probe the Desktop launcher target",
+    exitProof:
+      "fluidDesktopLauncher.report.ts packages to ~/Applications/Ocean Impact Lab Builds, verifies /Users/sasha/Desktop/Ocean Impact Lab.app, and runs fluid_render_probe.mjs through that exact launcher executable with default user data",
+  },
+  {
+    id: "FG-33-T03",
+    milestone: "FG-33",
+    status: "done",
+    title: "Close desktop launcher reproducibility gate",
+    exitProof:
+      "npm run fluid:desktop-launcher passes with a signed app bundle, clean Desktop symlink target, nonblank/varied WebGPU pixels, and committed FG-33 evidence",
   },
 ];
 

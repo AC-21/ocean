@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { createFluidGridStepPlan } from "./fluidGridGpu";
-import { fluidWaterPressureStepShader, fluidWaterRenderShader, legacyCanvasWaterTelemetry, livePressureSummaryFor, type FluidWaterRenderInput } from "./fluidWaterRenderer";
+import {
+  fluidWaterPressureStepShader,
+  fluidWaterRendererRequiredDeviceLimits,
+  fluidWaterRendererRequiredStorageBuffers,
+  fluidWaterRenderShader,
+  legacyCanvasWaterTelemetry,
+  livePressureSummaryFor,
+  type FluidWaterRenderInput,
+} from "./fluidWaterRenderer";
 
 describe("WebGPU fluid water renderer contract", () => {
   it("renders from storage-backed height and foam grids through WebGPU", () => {
@@ -26,6 +34,13 @@ describe("WebGPU fluid water renderer contract", () => {
     expect(fluidWaterPressureStepShader).toContain("slopeLimit");
     expect(fluidWaterPressureStepShader).toContain("maxMomentumPerDepth");
     expect(fluidWaterPressureStepShader).not.toMatch(/getContext|CanvasRenderingContext2D|fillRect|Path2D/);
+  });
+
+  it("requests the storage-buffer device limit required by the live compute pipeline", () => {
+    expect(fluidWaterRendererRequiredStorageBuffers).toBe(10);
+    expect(fluidWaterRendererRequiredDeviceLimits({ maxStorageBuffersPerShaderStage: 10 })).toEqual({ maxStorageBuffersPerShaderStage: 10 });
+    expect(fluidWaterRendererRequiredDeviceLimits({ maxStorageBuffersPerShaderStage: 8 })).toBeNull();
+    expect(fluidWaterRendererRequiredDeviceLimits(undefined)).toBeNull();
   });
 
   it("derives bounded pressure force feedback for rigid-body coupling", () => {

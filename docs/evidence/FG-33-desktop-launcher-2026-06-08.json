@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-06-08T20:12:56.274Z",
+  "install": {
+    "appBundlePath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app",
+    "executablePath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "installRootOutsideWorkspace": true,
+    "installRootPath": "/Users/sasha/Applications/Ocean Impact Lab Builds",
+    "workspaceRoot": "/Users/sasha/Documents/New project"
+  },
+  "launcher": {
+    "executablePath": "/Users/sasha/Desktop/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "kind": "symlink",
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "resolvesToAppBundle": true,
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "renderProbe": {
+    "generatedAt": "2026-06-08T20:12:55.146Z",
+    "gate": "G-FG-03",
+    "launchMode": "packaged-executable",
+    "pass": true,
+    "pixelProbe": {
+      "averageLuma": 125.6693323792467,
+      "colorBuckets": 23,
+      "height": 1412,
+      "opaqueSamples": 2795,
+      "samples": 2795,
+      "status": "nonblank",
+      "variety": "varied",
+      "width": 1364
+    },
+    "telemetry": {
+      "frames": 56,
+      "grid": "512x288",
+      "renderer": "webgpu-grid-primary-v1",
+      "status": "rendered",
+      "tier": "high",
+      "waterContext": "webgpu"
+    },
+    "userData": "default"
+  },
+  "signing": {
+    "codesignVerified": true,
+    "forbiddenExtendedAttributes": [],
+    "verifyOutput": "--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (Plugin).app\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (Renderer).app\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper.app\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (GPU).app\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Mantle.framework/Versions/Current/.\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Squirrel.framework/Versions/Current/.\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current/.\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (Plugin).app\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (Renderer).app\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper.app\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Mantle.framework/Versions/Current/.\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Ocean Impact Lab Helper (GPU).app\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Squirrel.framework/Versions/Current/.\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current/.\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Electron Framework.framework/Versions/Current/.\n--prepared:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Electron Framework.framework/Versions/Current/Helpers/chrome_crashpad_handler\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Electron Framework.framework/Versions/Current/Helpers/chrome_crashpad_handler\n--validated:/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/Frameworks/Electron Framework.framework/Versions/Current/.\n/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app: valid on disk\n/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app: satisfies its Designated Requirement"
+  },
+  "failures": [],
+  "gate": "G-FG-33",
+  "pass": true
+}
