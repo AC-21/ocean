@@ -715,6 +715,32 @@ Latest installed-calibration evidence:
   `webgpu-grid-primary-v1`, context `webgpu`, and no Canvas fallback.
 - Gate: passed.
 
+FG-26 is complete as of 2026-06-08. It answers the remaining local smoothness
+question on the normal startup path. Earlier display-pacing gates used high or
+explicit ultra paths; FG-26 installs the calibration profile, launches the
+packaged app with no fluid-tier environment variables, verifies
+`calibrated-auto -> ultra`, then samples idle, concrete-impact, and
+foam-damping display pacing while every frame sample records installed-profile
+selection provenance.
+
+Latest installed-display-pacing evidence:
+
+- Command: `npm run fluid:installed-display-pacing`.
+- Runtime: packaged macOS app with installed `fluid-calibration.v1.json`, no
+  `OCEAN_LAB_FLUID_TIER`, and no `OCEAN_LAB_CALIBRATED_FLUID_TIER`.
+- Gate: `G-FG-26`.
+- Evidence snapshot:
+  `docs/evidence/FG-26-installed-display-pacing-2026-06-08.json`.
+- Startup proof: installed profile source gate `G-FG-23`, selected tier
+  `ultra`, storage round-trip verified, runtime mode `calibrated-auto`,
+  requested tier `auto`, selected grid `768 x 432`, and renderer
+  `webgpu-grid-primary-v1`.
+- Display proof: idle, concrete-impact, and foam-damping scenarios all carry
+  calibrated-auto ultra samples with WebGPU pressure, particles, object-grid
+  coupling where expected, fixed-step debt, long-task telemetry, and smooth
+  p95/p99 frame pacing.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -800,6 +826,11 @@ Latest installed-calibration evidence:
     through the desktop storage helper, then prove two clean packaged launches
     from the same app-owned profile reuse the calibrated tier without fluid-tier
     environment variables.
+27. Installed calibration display pacing: measure the normal env-free
+    installed-profile startup path across idle, concrete-impact, and
+    foam-damping scenarios, requiring calibrated-auto ultra sample provenance
+    plus smooth frame pacing, long-task, pressure, particle, coupling, and
+    fixed-step telemetry.
 
 ## Resolution Ladder
 

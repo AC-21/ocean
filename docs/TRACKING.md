@@ -33,6 +33,7 @@ and GitHub issue mapping.
 | FG-23 | Adaptive local GPU tier calibration selector | Done | G-FG-23 |
 | FG-24 | Persisted local calibration profile runtime gate | Done | G-FG-24 |
 | FG-25 | Installed local calibration profile reuse gate | Done | G-FG-25 |
+| FG-26 | Installed calibration display pacing gate | Done | G-FG-26 |
 
 ## Gates
 
@@ -64,6 +65,7 @@ and GitHub issue mapping.
 | G-FG-23 | FG-23 | `npm run fluid:adaptive-tier`; `docs/evidence/FG-23-adaptive-tier-2026-06-08.json` | the packaged app composes local resolution, ultra renderer, and ultra reference evidence into a calibrated auto tier recommendation, then launches with auto tier selection and proves calibrated-auto selects the live `768 x 432` ultra WebGPU renderer |
 | G-FG-24 | FG-24 | `npm run fluid:persisted-calibration`; `docs/evidence/FG-24-persisted-calibration-2026-06-08.json` | the packaged app reads an app-owned local calibration profile without a calibrated-tier environment variable, auto-requests the saved calibrated tier, and proves calibrated-auto selects the live `768 x 432` ultra WebGPU renderer while explicit overrides remain supported |
 | G-FG-25 | FG-25 | `npm run fluid:installed-calibration`; `docs/evidence/FG-25-installed-calibration-2026-06-08.json` | the calibration installer writes a passing FG-23 profile through app-owned desktop storage, then two clean packaged launches reuse the installed profile without fluid-tier environment variables and select the live `768 x 432` ultra WebGPU renderer |
+| G-FG-26 | FG-26 | `npm run fluid:installed-display-pacing`; `docs/evidence/FG-26-installed-display-pacing-2026-06-08.json` | the normal installed-profile startup path selects calibrated-auto ultra without fluid-tier environment variables and sustains smooth idle, concrete-impact, and foam-damping display pacing with WebGPU pressure, particles, object-grid coupling, fixed-step debt, and long-task telemetry |
 
 ## Tasks
 
@@ -148,6 +150,9 @@ and GitHub issue mapping.
 | FG-25-T01 | FG-25 | Done | calibration | `fluidInstalledCalibration.ts` installs a passing FG-23-derived `ocean-fluid-calibration-profile-v1` profile through the desktop storage helper and records a round-trip receipt |
 | FG-25-T02 | FG-25 | Done | integration | `fluidInstalledCalibration.report.ts` launches the packaged app twice from the same installed `fluid-calibration.v1.json` with `OCEAN_LAB_FLUID_TIER` and `OCEAN_LAB_CALIBRATED_FLUID_TIER` absent |
 | FG-25-T03 | FG-25 | Done | verification | `npm run fluid:installed-calibration` passes with installed tier `ultra`, reused main-process profile selection, two calibrated-auto runtime probes, selected grid `768 x 432`, and WebGPU renderer |
+| FG-26-T01 | FG-26 | Done | performance | `fluidInstalledDisplayPacing.ts` wraps the display pacing gate with installed-profile, env-free, calibrated-auto ultra sample provenance checks |
+| FG-26-T02 | FG-26 | Done | verification | `fluidInstalledDisplayPacing.report.ts` installs the calibration profile, launches the packaged app with no fluid-tier env vars, and samples idle, concrete-impact, and foam-damping pacing |
+| FG-26-T03 | FG-26 | Done | performance | `npm run fluid:installed-display-pacing` passes with calibrated-auto ultra samples, selected grid `768 x 432`, WebGPU renderer, smooth frame pacing, and committed FG-26 evidence |
 
 ## GitHub Labels
 
@@ -189,6 +194,7 @@ and GitHub issue mapping.
 | FG-23 | https://github.com/AC-21/ocean/issues/26 |
 | FG-24 | https://github.com/AC-21/ocean/issues/27 |
 | FG-25 | https://github.com/AC-21/ocean/issues/28 |
+| FG-26 | https://github.com/AC-21/ocean/issues/29 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

@@ -31,6 +31,7 @@ const requiredFiles = [
   "docs/evidence/FG-23-adaptive-tier-2026-06-08.json",
   "docs/evidence/FG-24-persisted-calibration-2026-06-08.json",
   "docs/evidence/FG-25-installed-calibration-2026-06-08.json",
+  "docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -56,6 +57,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledCalibration.ts",
   "src/fluid/fluidInstalledCalibration.report.ts",
   "src/fluid/fluidInstalledCalibration.test.ts",
+  "src/fluid/fluidInstalledDisplayPacing.ts",
+  "src/fluid/fluidInstalledDisplayPacing.report.ts",
+  "src/fluid/fluidInstalledDisplayPacing.test.ts",
   "src/fluid/fluidResolutionScaling.ts",
   "src/fluid/fluidResolutionScaling.report.ts",
   "src/fluid/fluidResolutionScaling.test.ts",
@@ -77,8 +81,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -113,6 +117,9 @@ const persistedCalibrationTest = files.get("src/fluid/fluidPersistedCalibration.
 const installedCalibration = files.get("src/fluid/fluidInstalledCalibration.ts") ?? "";
 const installedCalibrationReport = files.get("src/fluid/fluidInstalledCalibration.report.ts") ?? "";
 const installedCalibrationTest = files.get("src/fluid/fluidInstalledCalibration.test.ts") ?? "";
+const installedDisplayPacing = files.get("src/fluid/fluidInstalledDisplayPacing.ts") ?? "";
+const installedDisplayPacingReport = files.get("src/fluid/fluidInstalledDisplayPacing.report.ts") ?? "";
+const installedDisplayPacingTest = files.get("src/fluid/fluidInstalledDisplayPacing.test.ts") ?? "";
 const resolutionScaling = files.get("src/fluid/fluidResolutionScaling.ts") ?? "";
 const resolutionScalingReport = files.get("src/fluid/fluidResolutionScaling.report.ts") ?? "";
 const resolutionScalingTest = files.get("src/fluid/fluidResolutionScaling.test.ts") ?? "";
@@ -157,6 +164,7 @@ const fg22Evidence = files.get("docs/evidence/FG-22-ultra-reference-outcomes-202
 const fg23Evidence = files.get("docs/evidence/FG-23-adaptive-tier-2026-06-08.json") ?? "";
 const fg24Evidence = files.get("docs/evidence/FG-24-persisted-calibration-2026-06-08.json") ?? "";
 const fg25Evidence = files.get("docs/evidence/FG-25-installed-calibration-2026-06-08.json") ?? "";
+const fg26Evidence = files.get("docs/evidence/FG-26-installed-display-pacing-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -1433,6 +1441,94 @@ if (
   !fg25Evidence.includes("\"failures\": []")
 ) {
   errors.push("FG-25 evidence must record a passing packaged installed calibration report with env-free profile reuse");
+}
+
+if (!packageJson.includes("\"fluid:installed-display-pacing\"") || !packageJson.includes("src/fluid/fluidInstalledDisplayPacing.report.ts")) {
+  errors.push("package.json must expose the FG-26 packaged installed-display-pacing command");
+}
+
+if (!tracking.includes("FG-26-T03") || !tracking.includes("FG-26-installed-display-pacing-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/29")) {
+  errors.push("docs/TRACKING.md must record FG-26 installed display pacing evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-26") ||
+  !contract.includes("G-FG-26") ||
+  !contract.includes("Installed calibration display pacing gate") ||
+  !contract.includes("npm run fluid:installed-display-pacing")
+) {
+  errors.push("fluidGridContract.ts must define the FG-26 installed display pacing milestone, gate, and evidence command");
+}
+
+if (
+  !installedDisplayPacing.includes("G-FG-26") ||
+  !installedDisplayPacing.includes("createFluidDisplayPacingReport") ||
+  !installedDisplayPacing.includes("calibrated-auto") ||
+  !installedDisplayPacing.includes("display samples did not all observe calibrated-auto") ||
+  !installedDisplayPacing.includes("OCEAN_LAB_FLUID_TIER must be absent") ||
+  !installedDisplayPacing.includes("idle-installed-display-pacing")
+) {
+  errors.push("fluidInstalledDisplayPacing.ts must define the FG-26 installed-profile display pacing checks");
+}
+
+if (
+  !installedDisplayPacingReport.includes("installFluidCalibrationProfile") ||
+  !installedDisplayPacingReport.includes("desktopStorageFiles.fluidCalibrationProfile") ||
+  !installedDisplayPacingReport.includes("delete launchEnv.OCEAN_LAB_CALIBRATED_FLUID_TIER") ||
+  !installedDisplayPacingReport.includes("delete launchEnv.OCEAN_LAB_FLUID_TIER") ||
+  !installedDisplayPacingReport.includes("window.__fluidGridTierSelection?.mode === \"calibrated-auto\"") ||
+  !installedDisplayPacingReport.includes("concrete-installed-impact-display-pacing") ||
+  !installedDisplayPacingReport.includes("foam-installed-damping-display-pacing")
+) {
+  errors.push("fluidInstalledDisplayPacing.report.ts must install the profile and sample env-free calibrated-auto display pacing scenarios");
+}
+
+if (
+  !installedDisplayPacingTest.includes("env-provided tier") ||
+  !installedDisplayPacingTest.includes("fallback-high") ||
+  !installedDisplayPacingTest.includes("choppy") ||
+  !installedDisplayPacingTest.includes("G-FG-26") ||
+  !installedDisplayPacingTest.includes("display samples did not all observe calibrated-auto")
+) {
+  errors.push("fluidInstalledDisplayPacing.test.ts must cover FG-26 pass and failure cases");
+}
+
+if (
+  !remap.includes("FG-26") ||
+  !remap.includes("installed-display-pacing") ||
+  !remap.includes("calibrated-auto ultra samples") ||
+  !remap.includes("no `OCEAN_LAB_FLUID_TIER`") ||
+  !remap.includes("long-task telemetry")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-26 installed display pacing gate and evidence");
+}
+
+if (
+  !fg26Evidence.includes("\"gate\": \"G-FG-26\"") ||
+  !fg26Evidence.includes("\"pass\": true") ||
+  !fg26Evidence.includes("\"fileName\": \"fluid-calibration.v1.json\"") ||
+  !fg26Evidence.includes("\"sourceGate\": \"G-FG-23\"") ||
+  !fg26Evidence.includes("\"selectedTier\": \"ultra\"") ||
+  !fg26Evidence.includes("\"verificationReadMatched\": true") ||
+  !fg26Evidence.includes("\"envCalibratedTierPresent\": false") ||
+  !fg26Evidence.includes("\"envRequestedTierPresent\": false") ||
+  !fg26Evidence.includes("\"reusedByMainProcess\": true") ||
+  !fg26Evidence.includes("\"requestedTier\": \"auto\"") ||
+  !fg26Evidence.includes("\"mode\": \"calibrated-auto\"") ||
+  !fg26Evidence.includes("\"selectedGrid\"") ||
+  !fg26Evidence.includes("\"cellsX\": 768") ||
+  !fg26Evidence.includes("\"cellsY\": 432") ||
+  !fg26Evidence.includes("\"idle-installed-display-pacing\"") ||
+  !fg26Evidence.includes("\"concrete-installed-impact-display-pacing\"") ||
+  !fg26Evidence.includes("\"foam-installed-damping-display-pacing\"") ||
+  !fg26Evidence.includes("\"tierSelectionMode\": \"calibrated-auto\"") ||
+  !fg26Evidence.includes("\"capabilityGrid\": \"768x432\"") ||
+  !fg26Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg26Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg26Evidence.includes("\"stability\": \"smooth\"") ||
+  !fg26Evidence.includes("\"failures\": []")
+) {
+  errors.push("FG-26 evidence must record a passing packaged installed-profile display pacing report with calibrated-auto ultra samples");
 }
 
 if (errors.length > 0) {

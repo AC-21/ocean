@@ -51,6 +51,7 @@
     "fluid:adaptive-tier": "npm run desktop:package:mac && vite-node src/fluid/fluidAdaptiveTier.report.ts",
     "fluid:persisted-calibration": "npm run desktop:package:mac && vite-node src/fluid/fluidPersistedCalibration.report.ts",
     "fluid:installed-calibration": "npm run desktop:package:mac && vite-node src/fluid/fluidInstalledCalibration.report.ts",
+    "fluid:installed-display-pacing": "npm run desktop:package:mac && vite-node src/fluid/fluidInstalledDisplayPacing.report.ts",
     "fluid:tracking": "node scripts/fluid_tracking_check.mjs",
     "balance:snapshot": "node scripts/balance_snapshot.mjs",
     "ocean:benchmark": "node scripts/ocean_benchmark.mjs",

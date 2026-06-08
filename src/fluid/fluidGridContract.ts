@@ -26,7 +26,8 @@ export type FluidGridMilestoneId =
   | "FG-22"
   | "FG-23"
   | "FG-24"
-  | "FG-25";
+  | "FG-25"
+  | "FG-26";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -54,7 +55,8 @@ export type FluidGridGateId =
   | "G-FG-22"
   | "G-FG-23"
   | "G-FG-24"
-  | "G-FG-25";
+  | "G-FG-25"
+  | "G-FG-26";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -147,6 +149,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-23", title: "Adaptive local GPU tier calibration selector", gate: "G-FG-23" },
   { id: "FG-24", title: "Persisted local calibration profile runtime gate", gate: "G-FG-24" },
   { id: "FG-25", title: "Installed local calibration profile reuse gate", gate: "G-FG-25" },
+  { id: "FG-26", title: "Installed calibration display pacing gate", gate: "G-FG-26" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -322,6 +325,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:installed-calibration and docs/evidence/FG-25-installed-calibration-2026-06-08.json",
     passBar:
       "the calibration installer writes a passing FG-23 profile through app-owned desktop storage, then two clean packaged launches reuse the installed profile without fluid-tier environment variables and select the live 768 x 432 ultra WebGPU renderer",
+  },
+  {
+    id: "G-FG-26",
+    blocks: "FG-26",
+    evidence: "npm run fluid:installed-display-pacing and docs/evidence/FG-26-installed-display-pacing-2026-06-08.json",
+    passBar:
+      "the normal installed-profile startup path selects calibrated-auto ultra without fluid-tier environment variables and sustains smooth idle, concrete-impact, and foam-damping display pacing with WebGPU pressure, particles, object-grid coupling, fixed-step debt, and long-task telemetry",
   },
 ];
 
@@ -929,6 +939,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close the installed calibration evidence gate",
     exitProof:
       "npm run fluid:installed-calibration passes with installed tier ultra, reused main-process profile selection, two calibrated-auto runtime probes, selected grid 768 x 432, and WebGPU renderer",
+  },
+  {
+    id: "FG-26-T01",
+    milestone: "FG-26",
+    status: "done",
+    title: "Add installed-profile display pacing validation",
+    exitProof:
+      "fluidInstalledDisplayPacing.ts wraps the display pacing gate with installed-profile, env-free, calibrated-auto ultra sample provenance checks",
+  },
+  {
+    id: "FG-26-T02",
+    milestone: "FG-26",
+    status: "done",
+    title: "Sample normal installed-calibration startup smoothness",
+    exitProof:
+      "fluidInstalledDisplayPacing.report.ts installs the calibration profile, launches the packaged app with no fluid-tier env vars, and samples idle, concrete-impact, and foam-damping pacing",
+  },
+  {
+    id: "FG-26-T03",
+    milestone: "FG-26",
+    status: "done",
+    title: "Close the installed display pacing gate",
+    exitProof:
+      "npm run fluid:installed-display-pacing passes with calibrated-auto ultra samples, selected grid 768 x 432, WebGPU renderer, smooth frame pacing, and committed FG-26 evidence",
   },
 ];
 
