@@ -131,6 +131,12 @@ Run the packaged live pressure force-feedback gate:
 npm run fluid:live-pressure-feedback
 ```
 
+Run the packaged live reference-outcomes gate:
+
+```sh
+npm run fluid:live-reference-outcomes
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -166,7 +172,11 @@ pressure-gradient acceleration with slope and momentum limiters plus mass,
 energy, wet/dry, and local GPU timing evidence. FG-16 moves that pressure path
 into the packaged renderer with live x/y momentum buffers and bounded pressure
 telemetry during real drops. FG-17 feeds bounded live pressure force deltas into
-the rigid-body coupling consumed by the fixed-step simulation loop.
+the rigid-body coupling consumed by the fixed-step simulation loop. FG-18 drives
+the packaged app through live concrete, ice, foam, and leaky-drum reference
+cases and verifies drop, splash, float, sink, and damping outcomes from
+`window.__oceanPhysicsSnapshot` while WebGPU pressure, particle, object-grid,
+and frame-loop telemetry remain bounded.
 
 ## Run
 

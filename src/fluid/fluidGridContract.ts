@@ -18,7 +18,8 @@ export type FluidGridMilestoneId =
   | "FG-14"
   | "FG-15"
   | "FG-16"
-  | "FG-17";
+  | "FG-17"
+  | "FG-18";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -38,7 +39,8 @@ export type FluidGridGateId =
   | "G-FG-14"
   | "G-FG-15"
   | "G-FG-16"
-  | "G-FG-17";
+  | "G-FG-17"
+  | "G-FG-18";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -123,6 +125,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-15", title: "Bounded pressure-gradient broad-water acceleration", gate: "G-FG-15" },
   { id: "FG-16", title: "Live pressure-gradient broad-water renderer path", gate: "G-FG-16" },
   { id: "FG-17", title: "Pressure-informed rigid-body force feedback", gate: "G-FG-17" },
+  { id: "FG-18", title: "Live coupled reference outcome gate", gate: "G-FG-18" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -242,6 +245,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:live-pressure-feedback and docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
     passBar:
       "the packaged app feeds bounded live pressure force deltas into the rigid-body grid coupling consumed by stepSimulation while retaining WebGPU pressure, object-grid, and particle telemetry",
+  },
+  {
+    id: "G-FG-18",
+    blocks: "FG-18",
+    evidence: "npm run fluid:live-reference-outcomes and docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
+    passBar:
+      "the packaged app exposes live physics snapshots and passes reference-outcome comparisons for drop, splash, float, sink, and damping while WebGPU pressure, particle, object-grid, and fixed-step telemetry remain bounded",
   },
 ];
 
@@ -657,6 +667,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Verify packaged pressure force feedback evidence",
     exitProof:
       "npm run fluid:live-pressure-feedback launches the packaged app, drops the concrete cube, and records active pressure force deltas plus combined consumed grid coupling in docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
+  },
+  {
+    id: "FG-18-T01",
+    milestone: "FG-18",
+    status: "done",
+    title: "Expose live reference outcome snapshots",
+    exitProof:
+      "OceanPhysicsApp exposes window.__oceanPhysicsSnapshot and window.__oceanPhysicsScenarioControls with live drop, impact, float prediction, damping, sink, and diagnostic values",
+  },
+  {
+    id: "FG-18-T02",
+    milestone: "FG-18",
+    status: "done",
+    title: "Verify packaged live reference outcomes",
+    exitProof:
+      "npm run fluid:live-reference-outcomes drives the packaged app through concrete, ice, foam, and leaky-drum reference scenarios and compares live outcomes against accepted bands",
+  },
+  {
+    id: "FG-18-T03",
+    milestone: "FG-18",
+    status: "done",
+    title: "Preserve WebGPU telemetry during reference replay",
+    exitProof:
+      "FG-18 evidence records WebGPU renderer context, bounded pressure feedback, live particles, object-grid coupling, no full-grid readback, and fixed-step frame-loop health",
   },
 ];
 

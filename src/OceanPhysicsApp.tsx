@@ -30,6 +30,8 @@ import {
   resolvedSurfaceElevationAt,
   startDrop,
   stepSimulation,
+  type EquilibriumDeviation,
+  type FloatPrediction,
   type GridFluidCouplingForces,
   type ObjectSpec,
   type OceanSettings,
@@ -50,6 +52,86 @@ const waterTypeOptions = [
   { label: "Sea", density: 1025 },
   { label: "Dense sea", density: 1030 },
 ];
+
+export type OceanPhysicsScenarioConfig = {
+  dropHeightM?: number;
+  ocean?: Partial<OceanSettings>;
+  presetId?: string;
+  releaseAngleRad?: number;
+  specPatch?: Partial<ObjectSpec>;
+  timeScale?: number;
+};
+
+export type OceanPhysicsScenarioControls = {
+  configure: (config: OceanPhysicsScenarioConfig) => OceanPhysicsLiveSnapshot;
+  drop: () => OceanPhysicsLiveSnapshot;
+  reset: () => OceanPhysicsLiveSnapshot;
+};
+
+export type OceanPhysicsLiveSnapshot = {
+  diagnostics: {
+    buoyancyErrorRatio: number;
+    buoyancyN: number;
+    displacedVolumeM3: number;
+    effectiveDensityKgM3: number;
+    equilibriumSubmergedFraction: number;
+    massKg: number;
+    netForceN: number;
+    submergedDepthM: number;
+    submergedFraction: number;
+    terminalVelocityMps: number | null;
+    weightN: number;
+  };
+  dropHeightM: number;
+  equilibrium: {
+    angleErrorRad: number | null;
+    buoyancyErrorRatio: number;
+    draftErrorM: number | null;
+    verticalSpeedMps: number;
+    angularSpeedRadps: number;
+    withinTolerance: boolean;
+  };
+  impact: {
+    atS: number;
+    ejectedWaterKg: number;
+    impactSpeedMps: number;
+    splashHeightM: number;
+  } | null;
+  liveFloatDurationS: number | null;
+  object: {
+    centerYM: number;
+    velocityYMps: number;
+    waterFillFraction: number;
+  };
+  phase: SimulationState["phase"];
+  prediction: {
+    criticalWaterFillFraction: number | null;
+    initialSubmergedDepthM: number | null;
+    outcome: FloatPrediction["outcome"];
+    secondsUntilSink: number | null;
+  };
+  releaseAngleRad: number;
+  selectedPresetId: string;
+  settledAtS: number | null;
+  settings: {
+    currentSpeedMps: number;
+    gravity: number;
+    waterDensityKgM3: number;
+    waterDepthM: number;
+    waveHeightM: number;
+  };
+  sankAtS: number | null;
+  spec: {
+    densityKgM3: number;
+    id: string;
+    maxWaterFillFraction: number;
+    name: string;
+    waterFillRatePerMinute: number;
+  };
+  timeS: number;
+  version: "ocean-physics-live-v1";
+  waterRenderMode: "fallback" | "initializing" | "webgpu";
+};
 
 export default function OceanPhysicsApp() {
   const [selectedPresetId, setSelectedPresetId] = useState(objectPresets[0].id);
@@ -72,9 +154,13 @@ export default function OceanPhysicsApp() {
   const waterFallbackReasonRef = useRef("WebGPU water renderer is still initializing.");
   const gridCouplingRef = useRef<GridFluidCouplingForces | null>(null);
   const frameLoopRef = useRef(createFluidFrameLoopState(typeof performance === "undefined" ? 0 : performance.now()));
+  const dropHeightRef = useRef(dropHeightM);
+  const releaseAngleRadRef = useRef(degreesToRadians(releaseAngleDeg));
 
   specRef.current = spec;
   settingsRef.current = settings;
+  dropHeightRef.current = dropHeightM;
+  releaseAngleRadRef.current = degreesToRadians(releaseAngleDeg);
 
   useEffect(() => {
     let cancelled = false;
@@ -201,13 +287,22 @@ export default function OceanPhysicsApp() {
         lastSnapshot = now;
         setSnapshot(current);
       }
+      window.__oceanPhysicsSnapshot = oceanPhysicsLiveSnapshotFor({
+        dropHeightM: dropHeightRef.current,
+        releaseAngleRad: releaseAngleRadRef.current,
+        selectedPresetId,
+        settings: settingsRef.current,
+        spec: specRef.current,
+        state: current,
+        waterRenderMode,
+      });
       window.__fluidFrameLoopStats = frameLoopStats(frameLoopRef.current, framePlan, defaultFluidFrameLoopConfig);
       animationFrame = window.requestAnimationFrame(tick);
     };
 
     animationFrame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [dropHeightM, paused, running, timeScale, waterRenderMode]);
+  }, [dropHeightM, paused, releaseAngleDeg, running, selectedPresetId, timeScale, waterRenderMode]);
 
   const diagnostics = useMemo(() => diagnosticsFor(snapshot, spec, settings), [settings, snapshot, spec]);
   const prediction = useMemo(() => predictFloatOutcome(spec, settings), [settings, spec]);
@@ -217,6 +312,35 @@ export default function OceanPhysicsApp() {
   const currentDensity = useMemo(() => currentEffectiveDensityKgM3(spec, snapshot, settings), [settings, snapshot, spec]);
   const liveFloatDuration =
     snapshot.impact && snapshot.phase !== "sank" ? Math.max(0, snapshot.timeS - snapshot.impact.atS) : snapshot.sankAtS && snapshot.impact ? snapshot.sankAtS - snapshot.impact.atS : null;
+
+  const publishLiveSnapshot = useCallback(
+    (
+      state: SimulationState,
+      nextSpec = specRef.current,
+      nextSettings = settingsRef.current,
+      nextDropHeightM = dropHeightM,
+      nextReleaseAngleRad = degreesToRadians(releaseAngleDeg),
+      nextSelectedPresetId = selectedPresetId,
+      nextWaterRenderMode = waterRenderMode
+    ) => {
+      const nextSnapshot = oceanPhysicsLiveSnapshotFor({
+        dropHeightM: nextDropHeightM,
+        releaseAngleRad: nextReleaseAngleRad,
+        selectedPresetId: nextSelectedPresetId,
+        settings: nextSettings,
+        spec: nextSpec,
+        state,
+        waterRenderMode: nextWaterRenderMode,
+      });
+      window.__oceanPhysicsSnapshot = nextSnapshot;
+      return nextSnapshot;
+    },
+    [dropHeightM, releaseAngleDeg, selectedPresetId, waterRenderMode]
+  );
+
+  useEffect(() => {
+    publishLiveSnapshot(snapshot, spec, settings);
+  }, [publishLiveSnapshot, settings, snapshot, spec]);
 
   const selectPreset = (preset: ObjectSpec) => {
     setSelectedPresetId(preset.id);
@@ -228,10 +352,77 @@ export default function OceanPhysicsApp() {
     simulationRef.current = next;
     gridCouplingRef.current = null;
     window.__fluidGridCouplingForces = undefined;
+    publishLiveSnapshot(next);
     setSnapshot(next);
     setRunning(true);
     setPaused(false);
   };
+
+  const configureReferenceScenario = useCallback(
+    (config: OceanPhysicsScenarioConfig) => {
+      const baseSpec = config.presetId ? objectPresets.find((preset) => preset.id === config.presetId) : specRef.current;
+      const nextSpec = cloneObjectSpec(baseSpec ?? specRef.current);
+      const patchedSpec = { ...nextSpec, ...config.specPatch, dimensions: { ...nextSpec.dimensions, ...config.specPatch?.dimensions } };
+      const nextSettings = { ...settingsRef.current, ...config.ocean };
+      const nextDropHeightM = clamp(config.dropHeightM ?? dropHeightM, 0.25, 30);
+      const nextReleaseAngleRad = config.releaseAngleRad ?? degreesToRadians(releaseAngleDeg);
+      const nextReleaseAngleDeg = radiansToDegrees(nextReleaseAngleRad);
+      const nextSelectedPresetId = config.presetId ?? (config.specPatch ? "custom" : selectedPresetId);
+      const nextState = createSimulation(patchedSpec, nextDropHeightM, nextReleaseAngleRad);
+
+      specRef.current = patchedSpec;
+      settingsRef.current = nextSettings;
+      dropHeightRef.current = nextDropHeightM;
+      releaseAngleRadRef.current = nextReleaseAngleRad;
+      simulationRef.current = nextState;
+      gridCouplingRef.current = null;
+      window.__fluidGridCouplingForces = undefined;
+      setSelectedPresetId(nextSelectedPresetId);
+      setSpec(patchedSpec);
+      setSettings(nextSettings);
+      setDropHeightM(nextDropHeightM);
+      setReleaseAngleDeg(nextReleaseAngleDeg);
+      if (config.timeScale !== undefined) setTimeScale(clamp(config.timeScale, 0.25, 120));
+      setSnapshot(nextState);
+      setRunning(false);
+      setPaused(false);
+      return publishLiveSnapshot(nextState, patchedSpec, nextSettings, nextDropHeightM, nextReleaseAngleRad, nextSelectedPresetId);
+    },
+    [dropHeightM, publishLiveSnapshot, releaseAngleDeg, selectedPresetId]
+  );
+
+  useEffect(() => {
+    window.__oceanPhysicsScenarioControls = {
+      configure: configureReferenceScenario,
+      drop: () => {
+        const next = startDrop(
+          createSimulation(specRef.current, dropHeightRef.current, releaseAngleRadRef.current)
+        );
+        simulationRef.current = next;
+        gridCouplingRef.current = null;
+        window.__fluidGridCouplingForces = undefined;
+        setSnapshot(next);
+        setRunning(true);
+        setPaused(false);
+        return publishLiveSnapshot(next);
+      },
+      reset: () => {
+        const next = createSimulation(specRef.current, dropHeightRef.current, releaseAngleRadRef.current);
+        simulationRef.current = next;
+        gridCouplingRef.current = null;
+        window.__fluidGridCouplingForces = undefined;
+        setSnapshot(next);
+        setRunning(false);
+        setPaused(false);
+        return publishLiveSnapshot(next);
+      },
+    };
+    publishLiveSnapshot(simulationRef.current);
+    return () => {
+      delete window.__oceanPhysicsScenarioControls;
+      delete window.__oceanPhysicsSnapshot;
+    };
+  }, [configureReferenceScenario, dropHeightM, publishLiveSnapshot, releaseAngleDeg]);
 
   const updateSpec = (patch: Partial<ObjectSpec>) => {
     setSelectedPresetId("custom");
@@ -833,6 +1024,93 @@ function fluidWaterInputFor(
     waterDepthM: settings.waterDepthM,
     weberNumber: state.impact?.weberNumber ?? 0,
     waveHeightM: settings.waveHeightM,
+  };
+}
+
+export function oceanPhysicsLiveSnapshotFor(input: {
+  dropHeightM: number;
+  releaseAngleRad: number;
+  selectedPresetId: string;
+  settings: OceanSettings;
+  spec: ObjectSpec;
+  state: SimulationState;
+  waterRenderMode: "fallback" | "initializing" | "webgpu";
+}): OceanPhysicsLiveSnapshot {
+  const diagnostics = diagnosticsFor(input.state, input.spec, input.settings);
+  const prediction = predictFloatOutcome(input.spec, input.settings);
+  const equilibrium = equilibriumDeviationFor(input.state, input.spec, input.settings);
+  const liveFloatDurationS =
+    input.state.impact && input.state.phase !== "sank"
+      ? Math.max(0, input.state.timeS - input.state.impact.atS)
+      : input.state.sankAtS && input.state.impact
+        ? input.state.sankAtS - input.state.impact.atS
+        : null;
+
+  return {
+    diagnostics: {
+      buoyancyErrorRatio: equilibrium.buoyancyErrorRatio,
+      buoyancyN: diagnostics.buoyancyN,
+      displacedVolumeM3: diagnostics.displacedVolumeM3,
+      effectiveDensityKgM3: diagnostics.effectiveDensityKgM3,
+      equilibriumSubmergedFraction: diagnostics.equilibriumSubmergedFraction,
+      massKg: diagnostics.massKg,
+      netForceN: diagnostics.netForceN,
+      submergedDepthM: diagnostics.submergedDepthM,
+      submergedFraction: diagnostics.submergedFraction,
+      terminalVelocityMps: diagnostics.terminalVelocityMps,
+      weightN: diagnostics.weightN,
+    },
+    dropHeightM: input.dropHeightM,
+    equilibrium: {
+      angleErrorRad: equilibrium.angleErrorRad,
+      buoyancyErrorRatio: equilibrium.buoyancyErrorRatio,
+      draftErrorM: equilibrium.draftErrorM,
+      verticalSpeedMps: equilibrium.verticalSpeedMps,
+      angularSpeedRadps: equilibrium.angularSpeedRadps,
+      withinTolerance: equilibrium.withinTolerance,
+    },
+    impact: input.state.impact
+      ? {
+          atS: input.state.impact.atS,
+          ejectedWaterKg: input.state.impact.ejectedWaterKg,
+          impactSpeedMps: input.state.impact.impactSpeedMps,
+          splashHeightM: input.state.impact.splashHeightM,
+        }
+      : null,
+    liveFloatDurationS,
+    object: {
+      centerYM: input.state.object.centerYM,
+      velocityYMps: input.state.object.vyMps,
+      waterFillFraction: input.state.object.waterFillFraction,
+    },
+    phase: input.state.phase,
+    prediction: {
+      criticalWaterFillFraction: prediction.criticalWaterFillFraction,
+      initialSubmergedDepthM: prediction.initialEquilibrium?.submergedDepthM ?? null,
+      outcome: prediction.outcome,
+      secondsUntilSink: prediction.secondsUntilSink,
+    },
+    releaseAngleRad: input.releaseAngleRad,
+    selectedPresetId: input.selectedPresetId,
+    settledAtS: input.state.settledAtS,
+    settings: {
+      currentSpeedMps: input.settings.currentSpeedMps,
+      gravity: input.settings.gravity,
+      waterDensityKgM3: input.settings.waterDensityKgM3,
+      waterDepthM: input.settings.waterDepthM,
+      waveHeightM: input.settings.waveHeightM,
+    },
+    sankAtS: input.state.sankAtS,
+    spec: {
+      densityKgM3: input.spec.densityKgM3,
+      id: input.spec.id,
+      maxWaterFillFraction: input.spec.maxWaterFillFraction,
+      name: input.spec.name,
+      waterFillRatePerMinute: input.spec.waterFillRatePerMinute,
+    },
+    timeS: input.state.timeS,
+    version: "ocean-physics-live-v1",
+    waterRenderMode: input.waterRenderMode,
   };
 }
 

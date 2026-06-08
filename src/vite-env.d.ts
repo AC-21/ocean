@@ -6,6 +6,7 @@ import type { runParticleSplashBenchmark } from "./fluid/fluidParticleSplash";
 import type { runShallowWaterBenchmark } from "./fluid/fluidShallowWater";
 import type { FluidFrameLoopStats } from "./fluid/fluidFrameLoop";
 import type { FluidWaterRenderStats } from "./fluid/fluidWaterRenderer";
+import type { OceanPhysicsLiveSnapshot, OceanPhysicsScenarioControls } from "./OceanPhysicsApp";
 import type { GridFluidCouplingForces } from "./physicsOcean";
 
 declare global {
@@ -14,6 +15,8 @@ declare global {
     __fluidGridCouplingForces?: GridFluidCouplingForces;
     __fluidFrameLoopStats?: FluidFrameLoopStats;
     __fluidWaterRenderStats?: FluidWaterRenderStats;
+    __oceanPhysicsScenarioControls?: OceanPhysicsScenarioControls;
+    __oceanPhysicsSnapshot?: OceanPhysicsLiveSnapshot;
     __runFluidGridBenchmark?: typeof runFluidGridBenchmark;
     __runParticleSplashBenchmark?: typeof runParticleSplashBenchmark;
     __runShallowWaterBenchmark?: typeof runShallowWaterBenchmark;

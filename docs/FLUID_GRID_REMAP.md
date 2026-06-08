@@ -499,6 +499,42 @@ Latest pressure force-feedback evidence:
   full-grid readback was used.
 - Gate: passed.
 
+FG-18 is complete as of 2026-06-08. It turns the live packaged app into the
+reference-outcome evidence source instead of relying only on composite CPU and
+solver packets. `OceanPhysicsApp` now exposes `window.__oceanPhysicsSnapshot`
+for compact live physics state and `window.__oceanPhysicsScenarioControls` for
+precise automated reference-case setup. The gate drives the packaged app
+through concrete, ice, foam, and leaky-drum scenarios, then compares live
+outcomes against drop, splash, float, sink, and damping bands.
+
+Latest live reference-outcome evidence:
+
+- Command: `npm run fluid:live-reference-outcomes`.
+- Runtime: packaged macOS app.
+- Gate: `G-FG-18`.
+- Evidence snapshot:
+  `docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json`.
+- Coverage: `5` live packaged cases, `10` comparisons, and all reference
+  categories: drop, splash, float, sink, and damping.
+- Concrete `8 m` drop: live impact speed `12.299 m/s` inside the
+  `11.023..12.526 m/s` free-fall band; live splash crown `2.124 m` inside the
+  `0.824..3.579 m` reference band.
+- Ice float: reference hydrostatic fraction `0.8946` inside the
+  `0.8596..0.9296` band, with live draft error `0.0422 m` under the `0.055 m`
+  acceptance cap while the object was floating.
+- Foam damping: live draft error `0.0084 m` and buoyancy error `0.0350` passed
+  the damping bands. The app had not yet reported a formal `settledAtS`
+  timestamp, so this gate claims live damping equilibrium, not a settled-time
+  stamp.
+- Sink behavior: concrete terminal-speed diagnostic `3.373 m/s` stayed inside
+  the `1..8 m/s` band while the object was sinking; large/small leaky-drum
+  sink-time prediction ratio was `0.2233`, under the `0.55` sensitivity cap.
+- Telemetry discipline: WebGPU renderer `webgpu-grid-primary-v1`, context
+  `webgpu`, bounded pressure feedback, live particle feedback, object-grid
+  coupling during the concrete drop, `120 Hz` fixed-step loop, and no per-frame
+  full-grid readback.
+- Gate: passed.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -551,6 +587,10 @@ Latest pressure force-feedback evidence:
     from the live pressure summary, combine them with object-grid coupling, and
     prove the fixed-step physics loop consumes the combined force packet in the
     packaged app.
+19. Live reference-outcome replay: expose compact live physics snapshots, drive
+    packaged reference scenarios, and verify observed drop, splash, float, sink,
+    and damping outcomes while pressure, particles, object-grid coupling, and
+    frame-loop telemetry remain bounded.
 
 ## Resolution Ladder
 

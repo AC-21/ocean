@@ -23,12 +23,15 @@ const requiredFiles = [
   "docs/evidence/FG-15-pressure-gradient-2026-06-08.json",
   "docs/evidence/FG-16-live-pressure-2026-06-08.json",
   "docs/evidence/FG-17-pressure-feedback-2026-06-08.json",
+  "docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
   "package.json",
+  "scripts/fluid_live_reference_outcomes_report.mjs",
   "src/OceanPhysicsApp.tsx",
+  "src/OceanPhysicsApp.test.tsx",
   "src/physicsOcean.ts",
   "src/fluid/fluidGridContract.ts",
   "src/fluid/fluidFrameLoop.ts",
@@ -42,8 +45,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -58,7 +61,9 @@ const tracking = files.get("docs/TRACKING.md") ?? "";
 const remap = files.get("docs/FLUID_GRID_REMAP.md") ?? "";
 const contract = files.get("src/fluid/fluidGridContract.ts") ?? "";
 const packageJson = files.get("package.json") ?? "";
+const liveReferenceScript = files.get("scripts/fluid_live_reference_outcomes_report.mjs") ?? "";
 const oceanPhysicsApp = files.get("src/OceanPhysicsApp.tsx") ?? "";
+const oceanPhysicsAppTest = files.get("src/OceanPhysicsApp.test.tsx") ?? "";
 const physicsOcean = files.get("src/physicsOcean.ts") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
@@ -87,6 +92,7 @@ const fg14Evidence = files.get("docs/evidence/FG-14-live-particles-2026-06-08.js
 const fg15Evidence = files.get("docs/evidence/FG-15-pressure-gradient-2026-06-08.json") ?? "";
 const fg16Evidence = files.get("docs/evidence/FG-16-live-pressure-2026-06-08.json") ?? "";
 const fg17Evidence = files.get("docs/evidence/FG-17-pressure-feedback-2026-06-08.json") ?? "";
+const fg18Evidence = files.get("docs/evidence/FG-18-live-reference-outcomes-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -712,6 +718,90 @@ if (
   !fg17Evidence.includes("\"noFullGridReadbackPerFrame\": true")
 ) {
   errors.push("FG-17 evidence must record a passing packaged pressure-informed rigid-body force feedback report");
+}
+
+if (!packageJson.includes("\"fluid:live-reference-outcomes\"") || !packageJson.includes("scripts/fluid_live_reference_outcomes_report.mjs")) {
+  errors.push("package.json must expose the FG-18 packaged live-reference-outcomes command");
+}
+
+if (!tracking.includes("FG-18-T03") || !tracking.includes("FG-18-live-reference-outcomes-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/21")) {
+  errors.push("docs/TRACKING.md must record FG-18 live reference outcome evidence and issue mapping");
+}
+
+if (
+  !oceanPhysicsApp.includes("OceanPhysicsLiveSnapshot") ||
+  !oceanPhysicsApp.includes("oceanPhysicsLiveSnapshotFor") ||
+  !oceanPhysicsApp.includes("__oceanPhysicsSnapshot") ||
+  !oceanPhysicsApp.includes("__oceanPhysicsScenarioControls") ||
+  !oceanPhysicsApp.includes("prediction.secondsUntilSink") ||
+  !oceanPhysicsApp.includes("equilibriumSubmergedFraction") ||
+  !oceanPhysicsApp.includes("settledAtS") ||
+  !oceanPhysicsApp.includes("sankAtS")
+) {
+  errors.push("OceanPhysicsApp.tsx must expose live reference-ready physics snapshots and scenario controls for FG-18");
+}
+
+if (!viteEnv.includes("__oceanPhysicsSnapshot") || !viteEnv.includes("__oceanPhysicsScenarioControls")) {
+  errors.push("vite-env.d.ts must type the FG-18 live physics snapshot and scenario controls");
+}
+
+if (
+  !oceanPhysicsAppTest.includes("oceanPhysicsLiveSnapshotFor") ||
+  !oceanPhysicsAppTest.includes("floats-indefinitely") ||
+  !oceanPhysicsAppTest.includes("impactSpeedMps")
+) {
+  errors.push("OceanPhysicsApp.test.tsx must cover the FG-18 live snapshot helper");
+}
+
+if (
+  !liveReferenceScript.includes("G-FG-18") ||
+  !liveReferenceScript.includes("live-concrete-drop-splash-pressure") ||
+  !liveReferenceScript.includes("live-ice-static-draft") ||
+  !liveReferenceScript.includes("live-foam-damped-settling") ||
+  !liveReferenceScript.includes("live-concrete-sink-terminal-band") ||
+  !liveReferenceScript.includes("live-leaky-drum-sink-time-prediction") ||
+  !liveReferenceScript.includes("window.__oceanPhysicsScenarioControls") ||
+  !liveReferenceScript.includes("window.__oceanPhysicsSnapshot") ||
+  !liveReferenceScript.includes("noFullGridReadbackPerFrame")
+) {
+  errors.push("fluid_live_reference_outcomes_report.mjs must drive packaged live reference scenarios with snapshot and telemetry checks");
+}
+
+if (
+  !remap.includes("FG-18") ||
+  !remap.includes("window.__oceanPhysicsSnapshot") ||
+  !remap.includes("live reference-outcome") ||
+  !remap.includes("drop, splash, float, sink, and damping") ||
+  !remap.includes("live damping equilibrium")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-18 live reference outcome gate and evidence");
+}
+
+if (
+  !fg18Evidence.includes("\"gate\": \"G-FG-18\"") ||
+  !fg18Evidence.includes("\"pass\": true") ||
+  !fg18Evidence.includes("\"launchMode\": \"packaged-app\"") ||
+  !fg18Evidence.includes("\"caseCount\": 5") ||
+  !fg18Evidence.includes("\"comparisonCount\": 10") ||
+  !fg18Evidence.includes("\"drop\"") ||
+  !fg18Evidence.includes("\"splash\"") ||
+  !fg18Evidence.includes("\"float\"") ||
+  !fg18Evidence.includes("\"sink\"") ||
+  !fg18Evidence.includes("\"damping\"") ||
+  !fg18Evidence.includes("\"live-drop-speed-reference\"") ||
+  !fg18Evidence.includes("\"live-splash-height-reference\"") ||
+  !fg18Evidence.includes("\"live-ice-equilibrium-submerged-fraction-reference\"") ||
+  !fg18Evidence.includes("\"live-foam-settled-draft-error\"") ||
+  !fg18Evidence.includes("\"live-concrete-terminal-speed-reference\"") ||
+  !fg18Evidence.includes("\"live-leaky-drum-sink-time-ratio-reference\"") ||
+  !fg18Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg18Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg18Evidence.includes("\"pressureActive\": true") ||
+  !fg18Evidence.includes("\"particlesActive\": true") ||
+  !fg18Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg18Evidence.includes("\"fixedStepS\": 0.008333333333333333")
+) {
+  errors.push("FG-18 evidence must record a passing packaged live reference outcome report with all required categories and bounded telemetry");
 }
 
 if (errors.length > 0) {
