@@ -271,6 +271,42 @@ Primary sources encoded in the gate:
 - [Rigid Body Interaction for Large-Scale Real-Time Water Simulation](https://onlinelibrary.wiley.com/doi/10.1155/2014/580154)
   for keeping rigid-body interaction explicit in the large-water solver path.
 
+FG-10 is complete as of 2026-06-08. It creates the first source-backed
+reference dataset ingestion and measurement harness so future solver work can
+calibrate against a stable ledger instead of shifting visual expectations.
+
+Latest reference dataset evidence:
+
+- Command: `npm run fluid:references`.
+- Dataset: `data/fluid-reference-cases.json`.
+- Report: `reports/fluid-reference-dataset-latest.json`.
+- Gate: `G-FG-10`.
+- Evidence snapshot:
+  `docs/evidence/FG-10-reference-dataset-2026-06-08.json`.
+- Coverage: drop, splash, float, sink, and damping behavior.
+- Measurements: water-entry speed, hydrostatic draft, damped settling draft,
+  damped buoyancy error, splash crown height, leak-area sink-time sensitivity,
+  and underwater terminal speed.
+- Required metadata: source IDs, units, uncertainty notes, replay methods, and
+  resolved expected formulas or fixed bands.
+- Replay path: the current CPU reference model evaluates every measurement and
+  records actual values plus pass/fail.
+- Gate: passed.
+
+Source families encoded in the FG-10 dataset:
+
+- [NIST standard gravity](https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8)
+  for the standard free-fall acceleration.
+- [USGS water density](https://www.usgs.gov/water-science-school/science/water-density)
+  for fresh-water density and ice/floating-density context.
+- [OpenStax Archimedes' principle](https://openstax.org/books/university-physics-volume-1/pages/14-4-archimedes-principle-and-buoyancy)
+  for buoyancy and submerged-fraction relationships.
+- [NASA drag equation](https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/)
+  and [NASA flight equations with drag](https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/flight-equations-with-drag/)
+  for drag and terminal-velocity reference formulas.
+- [NOAA World Ocean Atlas density notes](https://www.nodc.noaa.gov/OC5/woa13/woa-info.html)
+  for keeping seawater-density assumptions explicit.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -296,6 +332,9 @@ Primary sources encoded in the gate:
     path on hybrid GPU heightfield/free-surface water plus local particles,
     rejecting demo-only or hardware-impractical paths before implementation
     cost grows.
+11. Reference dataset ingestion: require drop, splash, float, sink, and damping
+    cases with source metadata, units, uncertainty, replayable measurement
+    methods, and committed CPU-reference actuals before deeper solver changes.
 
 ## Resolution Ladder
 

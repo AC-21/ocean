@@ -83,6 +83,12 @@ Run the research-backed solver architecture gate:
 npm run fluid:architecture
 ```
 
+Run the reference dataset ingestion and measurement gate:
+
+```sh
+npm run fluid:references
+```
+
 The current model is engine-first TypeScript: Archimedes displacement,
 shape-aware submerged volume, center of buoyancy, waterplane inertia,
 metacentric height, hydrostatic righting moment, angular damping, quadratic
@@ -214,6 +220,9 @@ Current validation checks include:
 - Local GPU/frame-pacing calibration for idle and concrete-drop desktop runs.
 - Fixed-step `120 Hz` simulation-loop evidence with bounded substeps and no
   dropped simulation debt at normal speed.
+- Source-backed reference dataset ingestion for drop, splash, float, sink, and
+  damping behavior with units, uncertainty, resolved expected bands, and replayed
+  CPU-reference measurements.
 
 True near-real ocean fidelity would require a native or GPU fluid solver,
 validated material data, free-surface turbulence, full 6-DOF rigid body motion,

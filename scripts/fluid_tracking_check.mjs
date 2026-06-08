@@ -15,6 +15,8 @@ const requiredFiles = [
   "docs/evidence/FG-07-local-calibration-2026-06-08.json",
   "docs/evidence/FG-08-frame-loop-2026-06-08.json",
   "docs/evidence/FG-09-solver-architecture-2026-06-08.json",
+  "docs/evidence/FG-10-reference-dataset-2026-06-08.json",
+  "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -23,10 +25,11 @@ const requiredFiles = [
   "src/fluid/fluidFrameLoop.ts",
   "src/fluid/fluidLocalCalibration.ts",
   "src/fluid/fluidSolverArchitecture.ts",
+  "src/fluid/fluidReferenceDataset.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -44,6 +47,8 @@ const packageJson = files.get("package.json") ?? "";
 const frameLoop = files.get("src/fluid/fluidFrameLoop.ts") ?? "";
 const localCalibration = files.get("src/fluid/fluidLocalCalibration.ts") ?? "";
 const solverArchitecture = files.get("src/fluid/fluidSolverArchitecture.ts") ?? "";
+const referenceDatasetCode = files.get("src/fluid/fluidReferenceDataset.ts") ?? "";
+const referenceDataset = files.get("data/fluid-reference-cases.json") ?? "";
 const fg01Evidence = files.get("docs/evidence/FG-01-fluid-capability-2026-06-07.json") ?? "";
 const fg02Evidence = files.get("docs/evidence/FG-02-fluid-grid-benchmark-2026-06-07.json") ?? "";
 const fg03Evidence = files.get("docs/evidence/FG-03-fluid-render-probe-2026-06-07.json") ?? "";
@@ -53,6 +58,7 @@ const fg06Evidence = files.get("docs/evidence/FG-06-fluid-calibration-2026-06-07
 const fg07Evidence = files.get("docs/evidence/FG-07-local-calibration-2026-06-08.json") ?? "";
 const fg08Evidence = files.get("docs/evidence/FG-08-frame-loop-2026-06-08.json") ?? "";
 const fg09Evidence = files.get("docs/evidence/FG-09-solver-architecture-2026-06-08.json") ?? "";
+const fg10Evidence = files.get("docs/evidence/FG-10-reference-dataset-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -240,6 +246,65 @@ if (
   !fg09Evidence.includes("\"G-FG-13\"")
 ) {
   errors.push("FG-09 evidence must record a passing primary-source hybrid solver decision with rejected alternatives and follow-on gates");
+}
+
+if (!packageJson.includes("\"fluid:references\"")) {
+  errors.push("package.json must expose the FG-10 reference dataset command");
+}
+
+if (!tracking.includes("FG-10-T03") || !tracking.includes("FG-10-reference-dataset-2026-06-08.json") || !tracking.includes("https://github.com/AC-21/ocean/issues/13")) {
+  errors.push("docs/TRACKING.md must record FG-10 reference dataset evidence and issue mapping");
+}
+
+if (
+  !referenceDataset.includes("\"category\": \"drop\"") ||
+  !referenceDataset.includes("\"category\": \"splash\"") ||
+  !referenceDataset.includes("\"category\": \"float\"") ||
+  !referenceDataset.includes("\"category\": \"sink\"") ||
+  !referenceDataset.includes("\"category\": \"damping\"") ||
+  !referenceDataset.includes("nist-standard-gravity") ||
+  !referenceDataset.includes("nasa-drag-equation") ||
+  !referenceDataset.includes("openstax-archimedes") ||
+  !referenceDataset.includes("uncertainty")
+) {
+  errors.push("data/fluid-reference-cases.json must cover drop/splash/float/sink/damping with source metadata and uncertainty");
+}
+
+if (
+  !referenceDatasetCode.includes("createFluidReferenceDatasetReport") ||
+  !referenceDatasetCode.includes("fluidReferenceDatasetSchema") ||
+  !referenceDatasetCode.includes("impact-speed-vacuum-freefall-band") ||
+  !referenceDatasetCode.includes("splash-ballistic-head-band") ||
+  !referenceDatasetCode.includes("underwater-terminal-velocity-band")
+) {
+  errors.push("fluidReferenceDataset.ts must implement the FG-10 ingestion and replay harness");
+}
+
+if (
+  !remap.includes("FG-10") ||
+  !remap.includes("Reference dataset ingestion") ||
+  !remap.includes("drop, splash, float, sink, and damping") ||
+  !remap.includes("source metadata")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-10 reference dataset gate");
+}
+
+if (
+  !fg10Evidence.includes("\"gate\": \"G-FG-10\"") ||
+  !fg10Evidence.includes("\"pass\": true") ||
+  !fg10Evidence.includes("\"datasetId\": \"ocean-impact-reference-v1\"") ||
+  !fg10Evidence.includes("\"categories\"") ||
+  !fg10Evidence.includes("\"drop\"") ||
+  !fg10Evidence.includes("\"splash\"") ||
+  !fg10Evidence.includes("\"float\"") ||
+  !fg10Evidence.includes("\"sink\"") ||
+  !fg10Evidence.includes("\"damping\"") ||
+  !fg10Evidence.includes("\"water-entry-speed\"") ||
+  !fg10Evidence.includes("\"splash-crown-height\"") ||
+  !fg10Evidence.includes("\"underwater-terminal-speed\"") ||
+  !fg10Evidence.includes("\"failedMeasurements\": []")
+) {
+  errors.push("FG-10 evidence must record a passing source-backed reference dataset replay with required behavior categories");
 }
 
 if (errors.length > 0) {

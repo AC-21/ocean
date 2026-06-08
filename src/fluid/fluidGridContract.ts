@@ -10,7 +10,8 @@ export type FluidGridMilestoneId =
   | "FG-06"
   | "FG-07"
   | "FG-08"
-  | "FG-09";
+  | "FG-09"
+  | "FG-10";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -22,7 +23,8 @@ export type FluidGridGateId =
   | "G-FG-06"
   | "G-FG-07"
   | "G-FG-08"
-  | "G-FG-09";
+  | "G-FG-09"
+  | "G-FG-10";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -99,6 +101,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-07", title: "Local GPU calibration and frame pacing", gate: "G-FG-07" },
   { id: "FG-08", title: "Fixed-step simulation loop hardening", gate: "G-FG-08" },
   { id: "FG-09", title: "Research-backed solver architecture decision", gate: "G-FG-09" },
+  { id: "FG-10", title: "Reference dataset ingestion and measurement harness", gate: "G-FG-10" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -162,6 +165,13 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:architecture and docs/evidence/FG-09-solver-architecture-2026-06-08.json",
     passBar:
       "primary-source solver decision selects a hybrid GPU heightfield/free-surface grid plus localized particle splash layer, rejects incomplete immediate paths, and names the next calibration-backed gates",
+  },
+  {
+    id: "G-FG-10",
+    blocks: "FG-10",
+    evidence: "npm run fluid:references and docs/evidence/FG-10-reference-dataset-2026-06-08.json",
+    passBar:
+      "drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements",
   },
 ];
 
@@ -385,6 +395,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Define the next implementation gates from the selected architecture",
     exitProof:
       "FG-09 evidence names FG-10 through FG-13 gates for reference ingestion, conservative shallow-water upgrade, local particle splash, and coupled calibration",
+  },
+  {
+    id: "FG-10-T01",
+    milestone: "FG-10",
+    status: "done",
+    title: "Add a structured source-backed reference dataset",
+    exitProof:
+      "data/fluid-reference-cases.json records drop, splash, float, sink, and damping cases with source metadata, units, uncertainty, and explicit expected formulas or bands",
+  },
+  {
+    id: "FG-10-T02",
+    milestone: "FG-10",
+    status: "done",
+    title: "Validate dataset structure and replay methods",
+    exitProof:
+      "fluidReferenceDataset.ts rejects missing categories, unsupported source locators, missing source IDs, missing units, and non-replayable measurement methods",
+  },
+  {
+    id: "FG-10-T03",
+    milestone: "FG-10",
+    status: "done",
+    title: "Replay CPU reference measurements against the dataset",
+    exitProof:
+      "npm run fluid:references evaluates entry speed, hydrostatic draft, damped settling, splash height, leak sensitivity, and terminal speed into FG-10 committed evidence",
   },
 ];
 

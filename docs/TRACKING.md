@@ -17,6 +17,7 @@ and GitHub issue mapping.
 | FG-07 | Local GPU calibration and frame pacing | Done | G-FG-07 |
 | FG-08 | Fixed-step simulation loop hardening | Done | G-FG-08 |
 | FG-09 | Research-backed solver architecture decision | Done | G-FG-09 |
+| FG-10 | Reference dataset ingestion and measurement harness | Done | G-FG-10 |
 
 ## Gates
 
@@ -32,6 +33,7 @@ and GitHub issue mapping.
 | G-FG-07 | FG-07 | `npm run fluid:local-calibrate`; `npm run fluid:local-calibrate:packaged`; `docs/evidence/FG-07-local-calibration-2026-06-08.json` | local Electron and packaged desktop runs record WebGPU renderer telemetry, timestamp-query GPU grid timing, and smooth idle/drop frame pacing with bounded p95/p99 frame times |
 | G-FG-08 | FG-08 | `npm run fluid:frame-loop`; `docs/evidence/FG-08-frame-loop-2026-06-08.json` | the app advances rigid-body physics through a bounded fixed-step accumulator with WebGPU rendering active and no dropped simulation debt at normal speed |
 | G-FG-09 | FG-09 | `npm run fluid:architecture`; `docs/evidence/FG-09-solver-architecture-2026-06-08.json` | primary-source solver decision selects a hybrid GPU heightfield/free-surface grid plus localized particle splash layer, rejects incomplete immediate paths, and names the next calibration-backed gates |
+| G-FG-10 | FG-10 | `npm run fluid:references`; `docs/evidence/FG-10-reference-dataset-2026-06-08.json` | drop, splash, float, sink, and damping reference cases ingest with source metadata, units, uncertainty, resolved expected bands, and replayed CPU-reference measurements |
 
 ## Tasks
 
@@ -68,6 +70,9 @@ and GitHub issue mapping.
 | FG-09-T01 | FG-09 | Done | research | `fluidSolverArchitecture.ts` records Stable Fluids, SIGGRAPH fluid simulation notes, heightfield-plus-particle water, Position Based Fluids, GPU shallow-water validation, and rigid-body water interaction sources |
 | FG-09-T02 | FG-09 | Done | architecture | `npm run fluid:architecture` scores broad heightfield-only, full 3D Eulerian, particle-only, stable-fluids Eulerian, and hybrid heightfield-plus-particles options |
 | FG-09-T03 | FG-09 | Done | planning | FG-09 evidence names FG-10 through FG-13 gates for reference ingestion, conservative shallow-water upgrade, local particle splash, and coupled calibration |
+| FG-10-T01 | FG-10 | Done | data | `data/fluid-reference-cases.json` records drop, splash, float, sink, and damping cases with source metadata, units, uncertainty, and explicit expected formulas or bands |
+| FG-10-T02 | FG-10 | Done | verification | `fluidReferenceDataset.ts` rejects missing categories, unsupported source locators, missing source IDs, missing units, and non-replayable measurement methods |
+| FG-10-T03 | FG-10 | Done | calibration | `npm run fluid:references` evaluates entry speed, hydrostatic draft, damped settling, splash height, leak sensitivity, and terminal speed into FG-10 committed evidence |
 
 ## GitHub Labels
 
@@ -93,6 +98,7 @@ and GitHub issue mapping.
 | FG-07 | https://github.com/AC-21/ocean/issues/10 |
 | FG-08 | https://github.com/AC-21/ocean/issues/11 |
 | FG-09 | https://github.com/AC-21/ocean/issues/12 |
+| FG-10 | https://github.com/AC-21/ocean/issues/13 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

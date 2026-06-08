@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "ocean-impact-reference-v1",
+  "title": "Ocean Impact Lab reference cases v1",
+  "description": "Reference-case ledger for drop, splash, float, sink, and damping behavior. The first packet combines standards, official physics references, and committed internal calibration evidence; later packets can add measured footage with the same schema.",
+  "sources": [
+    {
+      "id": "nist-standard-gravity",
+      "title": "NIST Guide to the SI, standard acceleration of free fall",
+      "kind": "standard",
+      "locator": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8",
+      "usage": "Standard gravity value used for free-fall and hydrostatic expected bands."
+    },
+    {
+      "id": "usgs-water-density",
+      "title": "USGS Water Science School: Water Density",
+      "kind": "official-reference",
+      "locator": "https://www.usgs.gov/water-science-school/science/water-density",
+      "usage": "Fresh-water density and ice/floating-density context for hydrostatic draft references."
+    },
+    {
+      "id": "openstax-archimedes",
+      "title": "OpenStax University Physics: Archimedes' Principle and Buoyancy",
+      "kind": "textbook",
+      "locator": "https://openstax.org/books/university-physics-volume-1/pages/14-4-archimedes-principle-and-buoyancy",
+      "usage": "Buoyancy, displaced-fluid weight, and submerged-fraction formula source."
+    },
+    {
+      "id": "nasa-drag-equation",
+      "title": "NASA Glenn Research Center: Drag Equation",
+      "kind": "official-reference",
+      "locator": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
+      "usage": "Quadratic drag variables used by the terminal-velocity reference case."
+    },
+    {
+      "id": "nasa-terminal-velocity",
+      "title": "NASA Glenn Research Center: Flight Equations with Drag",
+      "kind": "official-reference",
+      "locator": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/flight-equations-with-drag/",
+      "usage": "Terminal velocity as the speed where weight and drag balance."
+    },
+    {
+      "id": "noaa-woa-density",
+      "title": "NOAA World Ocean Atlas density data notes",
+      "kind": "official-reference",
+      "locator": "https://www.nodc.noaa.gov/OC5/woa13/woa-info.html",
+      "usage": "Seawater density depends on temperature, salinity, and pressure; keeps ocean-density assumptions explicit."
+    },
+    {
+      "id": "fg06-calibration-evidence",
+      "title": "FG-06 committed near-realism calibration evidence",
+      "kind": "internal-evidence",
+      "locator": "docs/evidence/FG-06-fluid-calibration-2026-06-07.json",
+      "usage": "Existing accepted bands for impact, splash, float settling, leak sensitivity, and terminal speed."
+    },
+    {
+      "id": "fg09-solver-architecture",
+      "title": "FG-09 solver architecture decision evidence",
+      "kind": "internal-evidence",
+      "locator": "docs/evidence/FG-09-solver-architecture-2026-06-08.json",
+      "usage": "Selected hybrid solver path that future reference packets must calibrate."
+    }
+  ],
+  "cases": [
+    {
+      "id": "drop-speed-concrete-8m",
+      "category": "drop",
+      "title": "Concrete cube water-entry speed from 8 m",
+      "scenario": {
+        "objectPresetId": "concrete-cube",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 8,
+        "releaseAngleRad": 0,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "water-entry-speed",
+          "metric": "water entry speed compared with vacuum free-fall",
+          "unit": "m/s",
+          "method": "impact-speed-vacuum-freefall-band",
+          "sourceIds": ["nist-standard-gravity", "fg06-calibration-evidence"],
+          "uncertainty": "Allows up to 12% speed loss from air drag and numerical integration, with no overspeed above sqrt(2gh).",
+          "expected": {
+            "kind": "formula-band",
+            "formula": "sqrt(2 * gravity * dropHeightM)",
+            "lowerFactor": 0.88,
+            "upperFactor": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "ice-static-draft",
+      "category": "float",
+      "title": "Fresh-water ice block static draft in calm seawater",
+      "scenario": {
+        "objectPresetId": "ice-block",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 1,
+        "releaseAngleRad": 0,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "submerged-fraction",
+          "metric": "floating submerged fraction equals object density divided by water density",
+          "unit": "fraction",
+          "method": "hydrostatic-density-ratio-draft",
+          "sourceIds": ["openstax-archimedes", "usgs-water-density", "noaa-woa-density", "fg06-calibration-evidence"],
+          "uncertainty": "Tolerance allows shape discretization and seawater-density assumption drift.",
+          "expected": {
+            "kind": "formula-point",
+            "formula": "objectDensityKgM3 / waterDensityKgM3",
+            "tolerance": 0.035
+          }
+        }
+      ]
+    },
+    {
+      "id": "foam-damped-settling",
+      "category": "damping",
+      "title": "Closed-cell foam block settles near hydrostatic equilibrium after a drop",
+      "scenario": {
+        "objectPresetId": "foam-rescue-block",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 1.35,
+        "releaseAngleRad": 0.18,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "settled-draft-error",
+          "metric": "absolute draft error after damped settling",
+          "unit": "m",
+          "method": "damped-floating-settling-draft",
+          "sourceIds": ["openstax-archimedes", "fg06-calibration-evidence"],
+          "uncertainty": "Settling window allows transient waves and radiation damping before accepting final draft.",
+          "expected": {
+            "kind": "fixed-band",
+            "min": 0,
+            "max": 0.055
+          }
+        },
+        {
+          "id": "settled-buoyancy-error",
+          "metric": "remaining buoyancy-force error ratio after damped settling",
+          "unit": "ratio",
+          "method": "damped-floating-buoyancy-error",
+          "sourceIds": ["openstax-archimedes", "fg06-calibration-evidence"],
+          "uncertainty": "Allows 8% residual force error from discrete-time damping and finite settling window.",
+          "expected": {
+            "kind": "fixed-band",
+            "min": 0,
+            "max": 0.08
+          }
+        }
+      ]
+    },
+    {
+      "id": "high-weber-splash-height",
+      "category": "splash",
+      "title": "Concrete cube high-Weber splash crown band",
+      "scenario": {
+        "objectPresetId": "concrete-cube",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 8,
+        "releaseAngleRad": 0,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "splash-crown-height",
+          "metric": "splash crown height relative to ballistic head and object size",
+          "unit": "m",
+          "method": "splash-ballistic-head-band",
+          "sourceIds": ["fg06-calibration-evidence", "fg09-solver-architecture"],
+          "uncertainty": "Internal empirical band until measured drop footage is attached; formula is explicit to prevent hidden tuning.",
+          "expected": {
+            "kind": "formula-band",
+            "formula": "lower = 0.045 * (impactSpeedMps^2 / gravity) + 0.18 * objectHeightM; upper = 0.19 * (impactSpeedMps^2 / gravity) + 0.9 * objectHeightM"
+          }
+        }
+      ]
+    },
+    {
+      "id": "leaky-drum-sink-time-sensitivity",
+      "category": "sink",
+      "title": "Leaky sealed drum sink-time sensitivity to leak area",
+      "scenario": {
+        "objectPresetId": "leaky-steel-drum",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 1,
+        "releaseAngleRad": 0,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "large-vs-small-leak-sink-time-ratio",
+          "metric": "large leak sink-time ratio versus small leak",
+          "unit": "ratio",
+          "method": "leak-sensitivity-ratio",
+          "sourceIds": ["nist-standard-gravity", "fg06-calibration-evidence"],
+          "uncertainty": "Qualitative orifice-flow sensitivity gate; larger leak must materially shorten sink time.",
+          "expected": {
+            "kind": "fixed-band",
+            "min": 0,
+            "max": 0.55
+          },
+          "parameters": {
+            "smallLeakAreaM2": 0.000006,
+            "largeLeakAreaM2": 0.00003
+          }
+        }
+      ]
+    },
+    {
+      "id": "concrete-underwater-terminal-velocity",
+      "category": "sink",
+      "title": "Concrete cube finite underwater terminal velocity",
+      "scenario": {
+        "objectPresetId": "concrete-cube",
+        "oceanPresetId": "calm-seawater-tank",
+        "dropHeightM": 1,
+        "releaseAngleRad": 0,
+        "timeStepS": 0.01
+      },
+      "measurements": [
+        {
+          "id": "underwater-terminal-speed",
+          "metric": "finite dense-body underwater terminal speed",
+          "unit": "m/s",
+          "method": "underwater-terminal-velocity-band",
+          "sourceIds": ["nasa-drag-equation", "nasa-terminal-velocity", "fg06-calibration-evidence"],
+          "uncertainty": "Engineering band covers drag-coefficient and projected-area approximation for a compact dense body in water.",
+          "expected": {
+            "kind": "fixed-band",
+            "min": 1,
+            "max": 8
+          }
+        }
+      ]
+    }
+  ]
+}
