@@ -55,6 +55,7 @@ const requiredFiles = [
   "docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json",
   "docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
   "docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json",
+  "docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -160,6 +161,9 @@ const requiredFiles = [
   "src/fluid/fluidDesktopProbeIsolation.ts",
   "src/fluid/fluidDesktopProbeIsolation.report.ts",
   "src/fluid/fluidDesktopProbeIsolation.test.ts",
+  "src/fluid/fluidHighResolutionCalibrationFrontier.ts",
+  "src/fluid/fluidHighResolutionCalibrationFrontier.report.ts",
+  "src/fluid/fluidHighResolutionCalibrationFrontier.test.ts",
   "src/fluid/fluidVisualPixelProbe.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
@@ -180,8 +184,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48", "FG-49"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48", "G-FG-49"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48", "FG-49", "FG-50"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48", "G-FG-49", "G-FG-50"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -297,6 +301,9 @@ const installedHighResolutionTargetResidualsTest = files.get("src/fluid/fluidIns
 const desktopProbeIsolation = files.get("src/fluid/fluidDesktopProbeIsolation.ts") ?? "";
 const desktopProbeIsolationReport = files.get("src/fluid/fluidDesktopProbeIsolation.report.ts") ?? "";
 const desktopProbeIsolationTest = files.get("src/fluid/fluidDesktopProbeIsolation.test.ts") ?? "";
+const highResolutionCalibrationFrontier = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.ts") ?? "";
+const highResolutionCalibrationFrontierReport = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.report.ts") ?? "";
+const highResolutionCalibrationFrontierTest = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.test.ts") ?? "";
 const visualPixelProbe = files.get("src/fluid/fluidVisualPixelProbe.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
@@ -363,6 +370,7 @@ const fg46Evidence = files.get("docs/evidence/FG-46-installed-high-resolution-re
 const fg47Evidence = files.get("docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json") ?? "";
 const fg48Evidence = files.get("docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ?? "";
 const fg49Evidence = files.get("docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json") ?? "";
+const fg50Evidence = files.get("docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3979,6 +3987,87 @@ if (
   !fg49Evidence.includes("\"variety\": \"varied\"")
 ) {
   errors.push("FG-49 evidence must record passing Desktop probe isolation with source-order proof, temporary userData, live default app continuity, and nonblank varied WebGPU pixels");
+}
+
+if (
+  !packageJson.includes("\"fluid:high-resolution-calibration-frontier\"") ||
+  !packageJson.includes("src/fluid/fluidHighResolutionCalibrationFrontier.report.ts")
+) {
+  errors.push("package.json must expose the FG-50 high-resolution calibration frontier command");
+}
+
+if (
+  !tracking.includes("FG-50-T03") ||
+  !tracking.includes("FG-50-high-resolution-calibration-frontier-2026-06-09.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/54") ||
+  !tracking.includes("physics-tuning-candidate") ||
+  !tracking.includes("reference-target-review")
+) {
+  errors.push("docs/TRACKING.md must record FG-50 calibration frontier evidence, action classes, and issue mapping");
+}
+
+if (
+  !contract.includes("FG-50") ||
+  !contract.includes("G-FG-50") ||
+  !contract.includes("High-resolution calibration frontier gate") ||
+  !contract.includes("npm run fluid:high-resolution-calibration-frontier") ||
+  !contract.includes("foam settled buoyancy as a physics tuning candidate") ||
+  !contract.includes("concrete drop speed as a reference-target review")
+) {
+  errors.push("fluidGridContract.ts must define the FG-50 high-resolution calibration frontier milestone, gate, and pass bar");
+}
+
+if (
+  !highResolutionCalibrationFrontier.includes("G-FG-50") ||
+  !highResolutionCalibrationFrontier.includes("physics-tuning-candidate") ||
+  !highResolutionCalibrationFrontier.includes("reference-target-review") ||
+  !highResolutionCalibrationFrontier.includes("live-foam-settled-buoyancy-error") ||
+  !highResolutionCalibrationFrontier.includes("live-drop-speed-reference") ||
+  !highResolutionCalibrationFrontier.includes("before any blind drag tuning")
+) {
+  errors.push("fluidHighResolutionCalibrationFrontier.ts must define FG-50 frontier action classes for foam tuning and drop target review");
+}
+
+if (
+  !highResolutionCalibrationFrontierReport.includes("FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ||
+  !highResolutionCalibrationFrontierReport.includes("OCEAN_LAB_HIGH_RESOLUTION_CALIBRATION_FRONTIER_OUT") ||
+  !highResolutionCalibrationFrontierReport.includes("G-FG-50")
+) {
+  errors.push("fluidHighResolutionCalibrationFrontier.report.ts must consume FG-48 target residual evidence and write FG-50 evidence");
+}
+
+if (
+  !highResolutionCalibrationFrontierTest.includes("high-resolution calibration frontier gate") ||
+  !highResolutionCalibrationFrontierTest.includes("drop target semantics") ||
+  !highResolutionCalibrationFrontierTest.includes("foam tuning") ||
+  !highResolutionCalibrationFrontierTest.includes("blind physics tuning item")
+) {
+  errors.push("fluidHighResolutionCalibrationFrontier.test.ts must cover FG-50 pass, source weakness, required frontier residuals, and blind drop-tuning rejection");
+}
+
+if (
+  !remap.includes("FG-50") ||
+  !remap.includes("High-resolution calibration frontier evidence") ||
+  !remap.includes("physics-tuning-candidate") ||
+  !remap.includes("reference-target-review") ||
+  !remap.includes("fake air drag")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-50 calibration frontier gate and physical-action split");
+}
+
+if (
+  !fg50Evidence.includes("\"gate\": \"G-FG-50\"") ||
+  !fg50Evidence.includes("\"pass\": true") ||
+  !fg50Evidence.includes("\"failures\": []") ||
+  !fg50Evidence.includes("\"sourceGate\": \"G-FG-48\"") ||
+  !fg50Evidence.includes("\"sourceVisualGate\": \"G-FG-47\"") ||
+  !fg50Evidence.includes("\"sourceVisualLiveGrid\": \"1024x576\"") ||
+  !fg50Evidence.includes("\"live-foam-settled-buoyancy-error\"") ||
+  !fg50Evidence.includes("\"physics-tuning-candidate\"") ||
+  !fg50Evidence.includes("\"live-drop-speed-reference\"") ||
+  !fg50Evidence.includes("\"reference-target-review\"")
+) {
+  errors.push("FG-50 evidence must record passing calibration frontier classification with FG-48/FG-47 provenance, foam tuning, and drop target review");
 }
 
 if (errors.length > 0) {

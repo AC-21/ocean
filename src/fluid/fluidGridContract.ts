@@ -50,7 +50,8 @@ export type FluidGridMilestoneId =
   | "FG-46"
   | "FG-47"
   | "FG-48"
-  | "FG-49";
+  | "FG-49"
+  | "FG-50";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -102,7 +103,8 @@ export type FluidGridGateId =
   | "G-FG-46"
   | "G-FG-47"
   | "G-FG-48"
-  | "G-FG-49";
+  | "G-FG-49"
+  | "G-FG-50";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -219,6 +221,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-47", title: "Installed high-resolution visual watchdog gate", gate: "G-FG-47" },
   { id: "FG-48", title: "Target-aware high-resolution residual budget gate", gate: "G-FG-48" },
   { id: "FG-49", title: "Desktop probe isolation gate", gate: "G-FG-49" },
+  { id: "FG-50", title: "High-resolution calibration frontier gate", gate: "G-FG-50" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -569,6 +572,14 @@ export const fluidGridGates: FluidGridGate[] = [
     evidence: "npm run fluid:desktop-probe-isolation and docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json",
     passBar:
       "a normal packaged default-profile Desktop instance remains alive while a second packaged temporary-profile render probe starts with isolated userData, renders nonblank varied WebGPU pixels, and Electron source order applies HARBORLINE_USER_DATA_DIR before requestSingleInstanceLock so diagnostics cannot be bounced into a black or stale live app",
+  },
+  {
+    id: "G-FG-50",
+    blocks: "FG-50",
+    evidence:
+      "npm run fluid:high-resolution-calibration-frontier and docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json",
+    passBar:
+      "the FG-48 target-residual packet is ranked into a no-regression calibration frontier that preserves accepted drop, splash, float, sink, and damping bands, keeps live 1024 x 576 WebGPU visual provenance, classifies foam settled buoyancy as a physics tuning candidate, and classifies concrete drop speed as a reference-target review before any blind drag tuning",
   },
 ];
 
@@ -1752,6 +1763,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close Desktop probe isolation gate",
     exitProof:
       "npm run fluid:desktop-probe-isolation passes with default app WebGPU telemetry, temporary userData render evidence, source-order proof, and committed FG-49 evidence",
+  },
+  {
+    id: "FG-50-T01",
+    milestone: "FG-50",
+    status: "done",
+    title: "Rank the high-resolution calibration frontier from target residuals",
+    exitProof:
+      "fluidHighResolutionCalibrationFrontier.ts consumes FG-48 evidence, ranks targetErrorRatio values, preserves tolerance-margin no-regression guards, and identifies near-frontier comparison ids",
+  },
+  {
+    id: "FG-50-T02",
+    milestone: "FG-50",
+    status: "done",
+    title: "Separate physics tuning candidates from source-target reviews",
+    exitProof:
+      "fluidHighResolutionCalibrationFrontier.ts classifies live-foam-settled-buoyancy-error as a physics-tuning-candidate and live-drop-speed-reference as a reference-target-review before any free-fall drag tuning",
+  },
+  {
+    id: "FG-50-T03",
+    milestone: "FG-50",
+    status: "done",
+    title: "Close high-resolution calibration frontier gate",
+    exitProof:
+      "npm run fluid:high-resolution-calibration-frontier passes with committed FG-50 evidence, FG-48/G-FG-47 provenance, no-regression guards, and the next calibration action list",
   },
 ];
 

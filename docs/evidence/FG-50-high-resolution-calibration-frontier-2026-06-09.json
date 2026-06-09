@@ -1,0 +1,137 @@
+{
+  "actionSummary": {
+    "monitorCount": 8,
+    "physicsTuningCandidateIds": [
+      "live-foam-settled-buoyancy-error"
+    ],
+    "referenceTargetReviewIds": [
+      "live-drop-speed-reference"
+    ]
+  },
+  "failures": [],
+  "frontier": [
+    {
+      "actionKind": "reference-target-review",
+      "category": "drop",
+      "comparisonId": "live-drop-speed-reference",
+      "objective": "target-midpoint",
+      "priority": 1,
+      "reason": "Concrete entry speed is close to the vacuum free-fall upper bound; review the reference target or add measured drag footage before any blind drag tuning.",
+      "targetErrorRatio": 0.6973137466910289,
+      "toleranceMarginRatio": 0.3026862533089699
+    },
+    {
+      "actionKind": "physics-tuning-candidate",
+      "category": "damping",
+      "comparisonId": "live-foam-settled-buoyancy-error",
+      "objective": "lower-is-better",
+      "priority": 2,
+      "reason": "Foam damping is a lower-is-better equilibrium error with source-backed zero target; tune settling/damping or sampling only if all accepted bands remain preserved.",
+      "targetErrorRatio": 0.6873015062027468,
+      "toleranceMarginRatio": 0.31269849379725323
+    },
+    {
+      "actionKind": "monitor",
+      "category": "sink",
+      "comparisonId": "live-leaky-drum-sink-time-ratio-reference",
+      "objective": "lower-is-better",
+      "priority": 3,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0.4059720256416371,
+      "toleranceMarginRatio": 0.594027974358363
+    },
+    {
+      "actionKind": "monitor",
+      "category": "sink",
+      "comparisonId": "live-concrete-terminal-speed-reference",
+      "objective": "target-midpoint",
+      "priority": 4,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0.3221873497984048,
+      "toleranceMarginRatio": 0.6778126502015952
+    },
+    {
+      "actionKind": "monitor",
+      "category": "damping",
+      "comparisonId": "live-foam-settled-draft-error",
+      "objective": "lower-is-better",
+      "priority": 5,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0.2331256974278143,
+      "toleranceMarginRatio": 0.7668743025721857
+    },
+    {
+      "actionKind": "monitor",
+      "category": "float",
+      "comparisonId": "live-ice-hydrostatic-draft-error",
+      "objective": "lower-is-better",
+      "priority": 6,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0.0918622978184791,
+      "toleranceMarginRatio": 0.9081377021815209
+    },
+    {
+      "actionKind": "monitor",
+      "category": "splash",
+      "comparisonId": "live-splash-height-reference",
+      "objective": "target-midpoint",
+      "priority": 7,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0.05597887558366321,
+      "toleranceMarginRatio": 0.9440211244163368
+    },
+    {
+      "actionKind": "monitor",
+      "category": "float",
+      "comparisonId": "live-ice-equilibrium-submerged-fraction-reference",
+      "objective": "target-midpoint",
+      "priority": 8,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0,
+      "toleranceMarginRatio": 1
+    },
+    {
+      "actionKind": "monitor",
+      "category": "damping",
+      "comparisonId": "live-foam-equilibrium-window",
+      "objective": "exact",
+      "priority": 9,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0,
+      "toleranceMarginRatio": 1
+    },
+    {
+      "actionKind": "monitor",
+      "category": "sink",
+      "comparisonId": "live-concrete-sink-phase",
+      "objective": "exact",
+      "priority": 10,
+      "reason": "Residual is below the current frontier threshold; preserve as no-regression evidence.",
+      "targetErrorRatio": 0,
+      "toleranceMarginRatio": 1
+    }
+  ],
+  "gate": "G-FG-50",
+  "generatedAt": "2026-06-09T02:47:10.929Z",
+  "noRegressionGuard": {
+    "acceptedBandsPreserved": true,
+    "comparisonCount": 10,
+    "maxAllowedTargetErrorRatio": 0.85,
+    "minAllowedToleranceMarginRatio": 0.05,
+    "objectiveCounts": {
+      "exact": 2,
+      "lower-is-better": 4,
+      "target-midpoint": 4
+    },
+    "sourceGate": "G-FG-48",
+    "sourceVisualGate": "G-FG-47",
+    "sourceVisualLiveGrid": "1024x576"
+  },
+  "pass": true,
+  "sourcePath": "docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
+  "thresholds": {
+    "frontierTargetErrorRatio": 0.65,
+    "minFrontierItems": 2,
+    "minToleranceMarginRatio": 0.3
+  }
+}

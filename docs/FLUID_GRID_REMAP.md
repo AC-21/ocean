@@ -1407,6 +1407,27 @@ Desktop probe isolation evidence:
   packaged executable with temporary userData, and requires nonblank varied
   WebGPU pixels from the second instance while the first remains reachable.
 
+FG-50 turns FG-48's near-watch residuals into an explicit calibration frontier.
+The worst residual is concrete drop speed, but the reference band's upper edge
+is vacuum free-fall and the current dense-cube result is physically plausible.
+That means the right next action is not to add fake air drag just to hit a
+midpoint. The second frontier item, foam settled buoyancy error, is a
+lower-is-better hydrostatic/damping error and is the next physics tuning
+candidate as long as all accepted bands stay preserved.
+
+High-resolution calibration frontier evidence:
+
+- Command: `npm run fluid:high-resolution-calibration-frontier`.
+- Gate: `G-FG-50`.
+- Evidence snapshot:
+  `docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json`.
+- No-regression proof: the report consumes passing `G-FG-48` evidence,
+  preserving all 10 accepted comparisons, target objective counts, tolerance
+  margins, and `G-FG-47` live `1024 x 576` visual provenance.
+- Action proof: `live-foam-settled-buoyancy-error` is classified as a
+  `physics-tuning-candidate`, while `live-drop-speed-reference` is classified
+  as a `reference-target-review` before any blind free-fall drag tuning.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1576,6 +1597,10 @@ Desktop probe isolation evidence:
     while a second temporary-profile packaged probe renders, proving
     single-instance lock behavior cannot hide black-screen or stale-window
     failures from future calibration gates.
+47. High-resolution calibration frontier: rank FG-48 target residuals without
+    loosening accepted bands, split physics tuning candidates from source/target
+    review items, and make foam buoyancy the next tuning target while concrete
+    free-fall target semantics are reviewed.
 
 ## Resolution Ladder
 

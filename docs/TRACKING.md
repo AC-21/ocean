@@ -57,6 +57,7 @@ and GitHub issue mapping.
 | FG-47 | Installed high-resolution visual watchdog gate | Done | G-FG-47 |
 | FG-48 | Target-aware high-resolution residual budget gate | Done | G-FG-48 |
 | FG-49 | Desktop probe isolation gate | Done | G-FG-49 |
+| FG-50 | High-resolution calibration frontier gate | Done | G-FG-50 |
 
 ## Gates
 
@@ -112,6 +113,7 @@ and GitHub issue mapping.
 | G-FG-47 | FG-47 | `npm run fluid:installed-high-resolution-visual-watchdog`; `docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json` | the installed high-resolution Desktop app captures multiple idle and post-drop `1024 x 576` WebGPU canvas pixel probes over advancing water frames, rejecting black, flat, stale, fallback, or UI-only visual evidence while preserving FG-46 residual and no-readback provenance |
 | G-FG-48 | FG-48 | `npm run fluid:installed-high-resolution-target-residuals`; `docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json` | the installed high-resolution residual packet reclassifies each accepted comparison as `target-midpoint`, `lower-is-better`, or `exact`, computes target error separately from tolerance-edge margin, and consumes FG-46 residual plus FG-47 visual watchdog provenance before accepting live `1024 x 576` WebGPU behavior |
 | G-FG-49 | FG-49 | `npm run fluid:desktop-probe-isolation`; `docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json` | a normal packaged default-profile Desktop instance remains alive while a second packaged temporary-profile render probe starts with isolated userData, renders nonblank/varied WebGPU pixels, and proves Electron applies `HARBORLINE_USER_DATA_DIR` before `requestSingleInstanceLock` |
+| G-FG-50 | FG-50 | `npm run fluid:high-resolution-calibration-frontier`; `docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json` | FG-48 target residuals are ranked into a no-regression calibration frontier that keeps live `1024 x 576` WebGPU provenance, preserves accepted bands, marks foam settled buoyancy as a physics tuning candidate, and marks concrete drop speed as a reference-target review before any blind drag tuning |
 
 ## Tasks
 
@@ -268,6 +270,9 @@ and GitHub issue mapping.
 | FG-49-T01 | FG-49 | Done | release | `electron/main.cjs` applies `HARBORLINE_USER_DATA_DIR` before `app.requestSingleInstanceLock`, and `electron/main.test.mjs` fails if temporary-profile diagnostics can collide with the default-profile Desktop lock again |
 | FG-49-T02 | FG-49 | Done | verification | `fluidDesktopProbeIsolation.report.ts` keeps a default-profile packaged Ocean Impact Lab instance alive, launches `scripts/fluid_render_probe.mjs` against the same packaged executable with temporary userData, and records the temporary probe report path, exit code, telemetry, and pixel proof |
 | FG-49-T03 | FG-49 | Done | release | `npm run fluid:desktop-probe-isolation` passes with default app WebGPU telemetry, temporary userData render evidence, source-order proof, and committed FG-49 evidence |
+| FG-50-T01 | FG-50 | Done | calibration | `fluidHighResolutionCalibrationFrontier.ts` consumes FG-48 evidence, ranks `targetErrorRatio` values, preserves tolerance-margin no-regression guards, and identifies near-frontier comparison ids |
+| FG-50-T02 | FG-50 | Done | calibration | `fluidHighResolutionCalibrationFrontier.ts` classifies `live-foam-settled-buoyancy-error` as a `physics-tuning-candidate` and `live-drop-speed-reference` as a `reference-target-review` before any free-fall drag tuning |
+| FG-50-T03 | FG-50 | Done | verification | `npm run fluid:high-resolution-calibration-frontier` passes with committed FG-50 evidence, FG-48/G-FG-47 provenance, no-regression guards, and the next calibration action list |
 
 ## GitHub Labels
 
@@ -333,6 +338,7 @@ and GitHub issue mapping.
 | FG-47 | https://github.com/AC-21/ocean/issues/50 |
 | FG-48 | https://github.com/AC-21/ocean/issues/51 |
 | FG-49 | https://github.com/AC-21/ocean/issues/53 |
+| FG-50 | https://github.com/AC-21/ocean/issues/54 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status
