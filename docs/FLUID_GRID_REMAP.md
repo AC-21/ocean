@@ -1387,6 +1387,26 @@ Installed high-resolution target residual evidence:
   `toleranceMarginRatio` separately, so small hydrostatic/draft/buoyancy errors
   are judged against zero while broad physical ranges retain midpoint targets.
 
+FG-49 closes the diagnostic isolation gap exposed by the Desktop black-screen
+investigation. The app already had normal Desktop visibility and visual
+watchdog gates, but temporary-profile probes could still collide with the live
+default-profile app if Electron took the single-instance lock before applying
+the probe-specific `HARBORLINE_USER_DATA_DIR`. That made the next probe exit
+early and left the operator staring at a stale or black live window.
+
+Desktop probe isolation evidence:
+
+- Command: `npm run fluid:desktop-probe-isolation`.
+- Gate: `G-FG-49`.
+- Evidence snapshot:
+  `docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json`.
+- Bootstrap proof: `electron/main.cjs` applies `HARBORLINE_USER_DATA_DIR` before
+  `app.requestSingleInstanceLock`, and `electron/main.test.mjs` pins that order.
+- Runtime proof: the report keeps one packaged default-profile Ocean Impact Lab
+  instance alive, launches `scripts/fluid_render_probe.mjs` against the same
+  packaged executable with temporary userData, and requires nonblank varied
+  WebGPU pixels from the second instance while the first remains reachable.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1552,6 +1572,10 @@ Installed high-resolution target residual evidence:
     FG-47 visual watchdog proof, classify each reference comparison as
     midpoint-target, lower-is-better, or exact, and separate physical target
     error from tolerance-edge margin before accepting installed behavior.
+46. Desktop probe isolation: keep a normal default-profile Desktop app alive
+    while a second temporary-profile packaged probe renders, proving
+    single-instance lock behavior cannot hide black-screen or stale-window
+    failures from future calibration gates.
 
 ## Resolution Ladder
 

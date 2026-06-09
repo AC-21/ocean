@@ -1,0 +1,58 @@
+{
+  "defaultInstance": {
+    "aliveAfterProbe": true,
+    "framesAfterProbe": 293,
+    "framesBeforeProbe": 7,
+    "launchMode": "packaged-executable",
+    "renderer": "webgpu-grid-primary-v1",
+    "userData": "default",
+    "waterContext": "webgpu"
+  },
+  "electronBootstrap": {
+    "singleInstanceLockIndex": 1287,
+    "sourcePath": "electron/main.cjs",
+    "userDataOverrideBeforeSingleInstanceLock": true,
+    "userDataOverrideIndex": 1113
+  },
+  "launcher": {
+    "executablePath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "temporaryProbe": {
+    "exitCode": 0,
+    "report": {
+      "generatedAt": "2026-06-09T02:30:36.579Z",
+      "gate": "G-FG-03",
+      "launchMode": "packaged-executable",
+      "pass": true,
+      "pixelProbe": {
+        "averageLuma": 125.6692848658299,
+        "colorBuckets": 23,
+        "height": 1412,
+        "opaqueSamples": 2795,
+        "samples": 2795,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "telemetry": {
+        "frames": 55,
+        "grid": "512x288",
+        "renderer": "webgpu-grid-primary-v1",
+        "status": "rendered",
+        "tier": "high",
+        "waterContext": "webgpu"
+      },
+      "userData": "temporary"
+    },
+    "reportPath": "reports/fluid-desktop-probe-isolation-render-probe-latest.json",
+    "stderrTail": "",
+    "stdoutTail": "Fluid render probe written to reports/fluid-desktop-probe-isolation-render-probe-latest.json\n- renderer: webgpu-grid-primary-v1\n- context: webgpu\n- pixels: nonblank/varied, 23 color buckets",
+    "succeededWhileDefaultAlive": true
+  },
+  "failures": [],
+  "gate": "G-FG-49",
+  "generatedAt": "2026-06-09T02:30:36.733Z",
+  "pass": true
+}

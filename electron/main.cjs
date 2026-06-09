@@ -19,12 +19,13 @@ let storage;
 let mainWindow = null;
 let isQuitting = false;
 let pendingWindowRequest = false;
-const gotSingleInstanceLock = app.requestSingleInstanceLock();
 
 app.setName("Ocean Impact Lab");
 if (process.platform === "darwin") app.setActivationPolicy("regular");
 if (process.env.HARBORLINE_USER_DATA_DIR) app.setPath("userData", process.env.HARBORLINE_USER_DATA_DIR);
 if (process.platform === "win32") app.setAppUserModelId("com.harborline.game");
+
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
 if (!gotSingleInstanceLock) app.quit();
 
 function installStorageHandlers() {

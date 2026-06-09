@@ -56,6 +56,7 @@ and GitHub issue mapping.
 | FG-46 | Installed high-resolution reference residual budget gate | Done | G-FG-46 |
 | FG-47 | Installed high-resolution visual watchdog gate | Done | G-FG-47 |
 | FG-48 | Target-aware high-resolution residual budget gate | Done | G-FG-48 |
+| FG-49 | Desktop probe isolation gate | Done | G-FG-49 |
 
 ## Gates
 
@@ -110,6 +111,7 @@ and GitHub issue mapping.
 | G-FG-46 | FG-46 | `npm run fluid:installed-high-resolution-residual-budget`; `docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json` | the installed high-resolution reference packet reports normalized residuals and nearest-bound margins for drop, splash, float, sink, and damping comparisons while preserving live `1024 x 576` WebGPU, no-readback, pacing, and operator snapshot provenance |
 | G-FG-47 | FG-47 | `npm run fluid:installed-high-resolution-visual-watchdog`; `docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json` | the installed high-resolution Desktop app captures multiple idle and post-drop `1024 x 576` WebGPU canvas pixel probes over advancing water frames, rejecting black, flat, stale, fallback, or UI-only visual evidence while preserving FG-46 residual and no-readback provenance |
 | G-FG-48 | FG-48 | `npm run fluid:installed-high-resolution-target-residuals`; `docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json` | the installed high-resolution residual packet reclassifies each accepted comparison as `target-midpoint`, `lower-is-better`, or `exact`, computes target error separately from tolerance-edge margin, and consumes FG-46 residual plus FG-47 visual watchdog provenance before accepting live `1024 x 576` WebGPU behavior |
+| G-FG-49 | FG-49 | `npm run fluid:desktop-probe-isolation`; `docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json` | a normal packaged default-profile Desktop instance remains alive while a second packaged temporary-profile render probe starts with isolated userData, renders nonblank/varied WebGPU pixels, and proves Electron applies `HARBORLINE_USER_DATA_DIR` before `requestSingleInstanceLock` |
 
 ## Tasks
 
@@ -263,6 +265,9 @@ and GitHub issue mapping.
 | FG-48-T01 | FG-48 | Done | calibration | `fluidInstalledHighResolutionTargetResiduals.ts` consumes FG-46 and FG-47 evidence, classifies each comparison as `target-midpoint`, `lower-is-better`, or `exact`, and separates target error from tolerance-edge margin |
 | FG-48-T02 | FG-48 | Done | verification | `fluidInstalledHighResolutionTargetResiduals.report.ts` reads committed FG-46 residual-budget evidence and FG-47 visual-watchdog evidence, writes `reports/fluid-installed-high-resolution-target-residuals-latest.json`, and summarizes objective counts, worst target error, closest tolerance margin, and watch lists |
 | FG-48-T03 | FG-48 | Done | calibration | `npm run fluid:installed-high-resolution-target-residuals` passes with 10 classified comparisons across drop, splash, float, sink, and damping, live `1024 x 576` WebGPU source/visual provenance, lower-is-better zero targets, exact phase/window checks, and committed FG-48 evidence |
+| FG-49-T01 | FG-49 | Done | release | `electron/main.cjs` applies `HARBORLINE_USER_DATA_DIR` before `app.requestSingleInstanceLock`, and `electron/main.test.mjs` fails if temporary-profile diagnostics can collide with the default-profile Desktop lock again |
+| FG-49-T02 | FG-49 | Done | verification | `fluidDesktopProbeIsolation.report.ts` keeps a default-profile packaged Ocean Impact Lab instance alive, launches `scripts/fluid_render_probe.mjs` against the same packaged executable with temporary userData, and records the temporary probe report path, exit code, telemetry, and pixel proof |
+| FG-49-T03 | FG-49 | Done | release | `npm run fluid:desktop-probe-isolation` passes with default app WebGPU telemetry, temporary userData render evidence, source-order proof, and committed FG-49 evidence |
 
 ## GitHub Labels
 
@@ -327,6 +332,7 @@ and GitHub issue mapping.
 | FG-46 | https://github.com/AC-21/ocean/issues/49 |
 | FG-47 | https://github.com/AC-21/ocean/issues/50 |
 | FG-48 | https://github.com/AC-21/ocean/issues/51 |
+| FG-49 | https://github.com/AC-21/ocean/issues/53 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

@@ -49,7 +49,8 @@ export type FluidGridMilestoneId =
   | "FG-45"
   | "FG-46"
   | "FG-47"
-  | "FG-48";
+  | "FG-48"
+  | "FG-49";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -100,7 +101,8 @@ export type FluidGridGateId =
   | "G-FG-45"
   | "G-FG-46"
   | "G-FG-47"
-  | "G-FG-48";
+  | "G-FG-48"
+  | "G-FG-49";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -216,6 +218,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-46", title: "Installed high-resolution reference residual budget gate", gate: "G-FG-46" },
   { id: "FG-47", title: "Installed high-resolution visual watchdog gate", gate: "G-FG-47" },
   { id: "FG-48", title: "Target-aware high-resolution residual budget gate", gate: "G-FG-48" },
+  { id: "FG-49", title: "Desktop probe isolation gate", gate: "G-FG-49" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -559,6 +562,13 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-target-residuals and docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
     passBar:
       "the installed high-resolution residual packet reclassifies every accepted comparison as target-midpoint, lower-is-better, or exact, computes target error separately from tolerance-edge margin, consumes passing FG-46 residual and FG-47 visual watchdog provenance, and fails if any live 1024 x 576 WebGPU comparison is missing, misclassified, outside tolerance, too far from its physical target, or too close to a failing edge",
+  },
+  {
+    id: "G-FG-49",
+    blocks: "FG-49",
+    evidence: "npm run fluid:desktop-probe-isolation and docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json",
+    passBar:
+      "a normal packaged default-profile Desktop instance remains alive while a second packaged temporary-profile render probe starts with isolated userData, renders nonblank varied WebGPU pixels, and Electron source order applies HARBORLINE_USER_DATA_DIR before requestSingleInstanceLock so diagnostics cannot be bounced into a black or stale live app",
   },
 ];
 
@@ -1718,6 +1728,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close target-aware high-resolution residual gate",
     exitProof:
       "npm run fluid:installed-high-resolution-target-residuals passes with 10 classified comparisons across drop, splash, float, sink, and damping, live 1024 x 576 WebGPU visual/source provenance, lower-is-better zero targets, exact phase/window checks, and committed FG-48 evidence",
+  },
+  {
+    id: "FG-49-T01",
+    milestone: "FG-49",
+    status: "done",
+    title: "Pin Electron userData isolation before the single-instance lock",
+    exitProof:
+      "electron/main.cjs applies HARBORLINE_USER_DATA_DIR before app.requestSingleInstanceLock and electron/main.test.mjs fails if that bootstrap order regresses",
+  },
+  {
+    id: "FG-49-T02",
+    milestone: "FG-49",
+    status: "done",
+    title: "Prove temporary packaged render probes isolate from the live Desktop app",
+    exitProof:
+      "fluidDesktopProbeIsolation.report.ts keeps a default-profile packaged Ocean Impact Lab instance alive, then launches scripts/fluid_render_probe.mjs against the same packaged executable with temporary userData and requires nonblank varied WebGPU pixels",
+  },
+  {
+    id: "FG-49-T03",
+    milestone: "FG-49",
+    status: "done",
+    title: "Close Desktop probe isolation gate",
+    exitProof:
+      "npm run fluid:desktop-probe-isolation passes with default app WebGPU telemetry, temporary userData render evidence, source-order proof, and committed FG-49 evidence",
   },
 ];
 

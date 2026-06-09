@@ -21,6 +21,7 @@ await access(appBundlePath);
 await access(executablePath);
 const launcher = await ensureLauncher();
 const signing = await signingEvidence();
+await quitAppIfRunning();
 const renderProbe = await runRenderProbe();
 
 const report = createFluidDesktopLauncherReport({
@@ -113,6 +114,33 @@ async function runRenderProbe(): Promise<FluidDesktopLauncherRenderProbe> {
   return JSON.parse(await readFile(renderProbePath, "utf8")) as FluidDesktopLauncherRenderProbe;
 }
 
+async function quitAppIfRunning() {
+  await run("osascript", ["-e", `tell application "${appName}" to quit`], { allowFailure: true });
+  if (await waitForProcessExit(5000)) return;
+  await run("pkill", ["-TERM", "-f", executablePath], { allowFailure: true });
+  if (await waitForProcessExit(5000)) return;
+  throw new Error("Timed out waiting for stale Ocean Impact Lab process before Desktop launcher render probe");
+}
+
+async function waitForProcessExit(timeoutMs: number) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const pids = await processPids();
+    if (pids.length === 0) return true;
+    await delay(250);
+  }
+  return false;
+}
+
+async function processPids() {
+  const result = await run("pgrep", ["-f", executablePath], { allowFailure: true });
+  if (result.code !== 0) return [];
+  return result.output
+    .split("\n")
+    .map((line) => Number(line.trim()))
+    .filter((pid) => Number.isFinite(pid) && pid > 0);
+}
+
 async function run(
   command: string,
   args: string[],
@@ -137,4 +165,8 @@ async function run(
 
 function isNotFound(error: unknown): boolean {
   return typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "ENOENT";
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -54,6 +54,7 @@ const requiredFiles = [
   "docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
   "docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json",
   "docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
+  "docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -156,6 +157,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionTargetResiduals.ts",
   "src/fluid/fluidInstalledHighResolutionTargetResiduals.report.ts",
   "src/fluid/fluidInstalledHighResolutionTargetResiduals.test.ts",
+  "src/fluid/fluidDesktopProbeIsolation.ts",
+  "src/fluid/fluidDesktopProbeIsolation.report.ts",
+  "src/fluid/fluidDesktopProbeIsolation.test.ts",
   "src/fluid/fluidVisualPixelProbe.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
@@ -176,8 +180,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48", "FG-49"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48", "G-FG-49"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -290,6 +294,9 @@ const installedHighResolutionVisualWatchdogTest = files.get("src/fluid/fluidInst
 const installedHighResolutionTargetResiduals = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.ts") ?? "";
 const installedHighResolutionTargetResidualsReport = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.report.ts") ?? "";
 const installedHighResolutionTargetResidualsTest = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.test.ts") ?? "";
+const desktopProbeIsolation = files.get("src/fluid/fluidDesktopProbeIsolation.ts") ?? "";
+const desktopProbeIsolationReport = files.get("src/fluid/fluidDesktopProbeIsolation.report.ts") ?? "";
+const desktopProbeIsolationTest = files.get("src/fluid/fluidDesktopProbeIsolation.test.ts") ?? "";
 const visualPixelProbe = files.get("src/fluid/fluidVisualPixelProbe.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
@@ -355,6 +362,7 @@ const fg45Evidence = files.get("docs/evidence/FG-45-installed-high-resolution-op
 const fg46Evidence = files.get("docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ?? "";
 const fg47Evidence = files.get("docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json") ?? "";
 const fg48Evidence = files.get("docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ?? "";
+const fg49Evidence = files.get("docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3883,6 +3891,94 @@ if (
   !fg48Evidence.includes("\"live-ice-hydrostatic-draft-error\"")
 ) {
   errors.push("FG-48 evidence must record passing target-aware residuals with FG-46/FG-47 provenance, objective counts, live 1024 x 576 WebGPU proof, and target/tolerance ratios");
+}
+
+const electronUserDataOverrideIndex = electronMain.indexOf('app.setPath("userData", process.env.HARBORLINE_USER_DATA_DIR)');
+const electronSingleInstanceLockIndex = electronMain.indexOf("app.requestSingleInstanceLock()");
+if (
+  electronUserDataOverrideIndex < 0 ||
+  electronSingleInstanceLockIndex < 0 ||
+  electronUserDataOverrideIndex > electronSingleInstanceLockIndex
+) {
+  errors.push("electron/main.cjs must apply HARBORLINE_USER_DATA_DIR before app.requestSingleInstanceLock so temporary-profile probes do not collide with the live Desktop app");
+}
+
+if (
+  !packageJson.includes("\"fluid:desktop-probe-isolation\"") ||
+  !packageJson.includes("src/fluid/fluidDesktopProbeIsolation.report.ts")
+) {
+  errors.push("package.json must expose the FG-49 Desktop probe isolation command");
+}
+
+if (
+  !tracking.includes("FG-49-T03") ||
+  !tracking.includes("FG-49-desktop-probe-isolation-2026-06-09.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/53") ||
+  !tracking.includes("temporary-profile") ||
+  !tracking.includes("requestSingleInstanceLock")
+) {
+  errors.push("docs/TRACKING.md must record FG-49 Desktop probe isolation evidence, task proof, and issue mapping");
+}
+
+if (
+  !contract.includes("FG-49") ||
+  !contract.includes("G-FG-49") ||
+  !contract.includes("Desktop probe isolation gate") ||
+  !contract.includes("npm run fluid:desktop-probe-isolation") ||
+  !contract.includes("HARBORLINE_USER_DATA_DIR before requestSingleInstanceLock")
+) {
+  errors.push("fluidGridContract.ts must define the FG-49 Desktop probe isolation milestone, gate, and pass bar");
+}
+
+if (
+  !desktopProbeIsolation.includes("G-FG-49") ||
+  !desktopProbeIsolation.includes("succeededWhileDefaultAlive") ||
+  !desktopProbeIsolation.includes("temporary probe used") ||
+  !desktopProbeIsolation.includes("Electron must apply HARBORLINE_USER_DATA_DIR before requestSingleInstanceLock")
+) {
+  errors.push("fluidDesktopProbeIsolation.ts must define FG-49 source-order, live-default, temporary-userData, and nonblank WebGPU checks");
+}
+
+if (
+  !desktopProbeIsolationReport.includes("scripts/fluid_render_probe.mjs") ||
+  !desktopProbeIsolationReport.includes("HARBORLINE_USER_DATA_DIR") ||
+  !desktopProbeIsolationReport.includes("requestSingleInstanceLock") ||
+  !desktopProbeIsolationReport.includes("OCEAN_LAB_DESKTOP_PROBE_ISOLATION_RENDER_OUT") ||
+  !desktopProbeIsolationReport.includes("G-FG-49")
+) {
+  errors.push("fluidDesktopProbeIsolation.report.ts must keep a default app alive, launch a temporary render probe, and write FG-49 evidence");
+}
+
+if (
+  !desktopProbeIsolationTest.includes("Desktop probe isolation gate") ||
+  !desktopProbeIsolationTest.includes("bounced into default userData") ||
+  !desktopProbeIsolationTest.includes("temporary probe pixels were blank")
+) {
+  errors.push("fluidDesktopProbeIsolation.test.ts must cover FG-49 pass, bootstrap-order failure, default-userData collision, and black-screen rejection");
+}
+
+if (
+  !remap.includes("FG-49") ||
+  !remap.includes("Desktop probe isolation evidence") ||
+  !remap.includes("temporary userData") ||
+  !remap.includes("single-instance lock")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-49 Desktop probe isolation gate and evidence");
+}
+
+if (
+  !fg49Evidence.includes("\"gate\": \"G-FG-49\"") ||
+  !fg49Evidence.includes("\"pass\": true") ||
+  !fg49Evidence.includes("\"failures\": []") ||
+  !fg49Evidence.includes("\"userDataOverrideBeforeSingleInstanceLock\": true") ||
+  !fg49Evidence.includes("\"succeededWhileDefaultAlive\": true") ||
+  !fg49Evidence.includes("\"userData\": \"temporary\"") ||
+  !fg49Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg49Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg49Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg49Evidence.includes("\"variety\": \"varied\"")
+) {
+  errors.push("FG-49 evidence must record passing Desktop probe isolation with source-order proof, temporary userData, live default app continuity, and nonblank varied WebGPU pixels");
 }
 
 if (errors.length > 0) {
