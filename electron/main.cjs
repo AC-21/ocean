@@ -18,11 +18,14 @@ const envExperimentalFluidGrid = validExperimentalFluidGrid(process.env.OCEAN_LA
 let storage;
 let mainWindow = null;
 let isQuitting = false;
+let pendingWindowRequest = false;
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
 
 app.setName("Ocean Impact Lab");
 if (process.platform === "darwin") app.setActivationPolicy("regular");
 if (process.env.HARBORLINE_USER_DATA_DIR) app.setPath("userData", process.env.HARBORLINE_USER_DATA_DIR);
 if (process.platform === "win32") app.setAppUserModelId("com.harborline.game");
+if (!gotSingleInstanceLock) app.quit();
 
 function installStorageHandlers() {
   const handlers = {
@@ -54,6 +57,7 @@ function isTrustedRendererUrl(url) {
 }
 
 async function createMainWindow() {
+  pendingWindowRequest = false;
   if (mainWindow && !mainWindow.isDestroyed()) {
     revealMainWindow(mainWindow);
     return mainWindow;
@@ -81,7 +85,6 @@ async function createMainWindow() {
   const revealWindow = () => revealMainWindow(window);
   const revealFallbacks = [150, 600, 1200, 2400, 4000].map((delayMs) => {
     const timeout = setTimeout(revealWindow, delayMs);
-    timeout.unref?.();
     return timeout;
   });
   window.once("closed", () => {
@@ -98,6 +101,7 @@ async function createMainWindow() {
   window.webContents.on("will-navigate", (event, url) => {
     if (!isTrustedRendererUrl(url)) event.preventDefault();
   });
+  revealWindow();
 
   if (devServerUrl) {
     const url = new URL(devServerUrl);
@@ -123,6 +127,15 @@ function revealMainWindow(window) {
   window.moveTop();
   app.focus({ steal: true });
   window.focus();
+}
+
+function requestMainWindow() {
+  if (!gotSingleInstanceLock || isQuitting) return;
+  if (!app.isReady()) {
+    pendingWindowRequest = true;
+    return;
+  }
+  void createMainWindow();
 }
 
 function appendFluidTierQuery(searchParams, query) {
@@ -158,22 +171,33 @@ async function calibratedFluidCalibrationFromStorage() {
   }
 }
 
-app.whenReady().then(async () => {
-  app.setAppLogsPath(path.join(app.getPath("userData"), "logs"));
-  storage = createHarborlineStorage({ app });
-  Menu.setApplicationMenu(null);
-  installStorageHandlers();
-  await createMainWindow();
-
-  app.on("activate", () => {
-    void createMainWindow();
+if (gotSingleInstanceLock) {
+  app.on("second-instance", requestMainWindow);
+  app.on("open-file", (event) => {
+    event.preventDefault();
+    requestMainWindow();
   });
-});
+  app.on("open-url", (event) => {
+    event.preventDefault();
+    requestMainWindow();
+  });
 
-app.on("before-quit", () => {
-  isQuitting = true;
-});
+  app.whenReady().then(async () => {
+    app.setAppLogsPath(path.join(app.getPath("userData"), "logs"));
+    storage = createHarborlineStorage({ app });
+    Menu.setApplicationMenu(null);
+    installStorageHandlers();
+    await createMainWindow();
+    if (pendingWindowRequest || BrowserWindow.getAllWindows().length === 0) await createMainWindow();
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
+    app.on("activate", requestMainWindow);
+  });
+
+  app.on("before-quit", () => {
+    isQuitting = true;
+  });
+
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") app.quit();
+  });
+}
