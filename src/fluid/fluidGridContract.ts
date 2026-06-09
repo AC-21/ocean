@@ -46,7 +46,8 @@ export type FluidGridMilestoneId =
   | "FG-42"
   | "FG-43"
   | "FG-44"
-  | "FG-45";
+  | "FG-45"
+  | "FG-46";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -94,7 +95,8 @@ export type FluidGridGateId =
   | "G-FG-42"
   | "G-FG-43"
   | "G-FG-44"
-  | "G-FG-45";
+  | "G-FG-45"
+  | "G-FG-46";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -207,6 +209,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-43", title: "Installed high-resolution float/sink envelope gate", gate: "G-FG-43" },
   { id: "FG-44", title: "Installed high-resolution Desktop visibility gate", gate: "G-FG-44" },
   { id: "FG-45", title: "Installed high-resolution operator readout gate", gate: "G-FG-45" },
+  { id: "FG-46", title: "Installed high-resolution reference residual budget gate", gate: "G-FG-46" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -526,6 +529,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-operator-readout and docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json",
     passBar:
       "the installed high-resolution Desktop app lets an operator use the visible preset and Drop controls for float, sink, and waterlogging objects, and the visible Float Result, Float Timing, impact, splash, renderer, and pacing readouts match live 1024 x 576 WebGPU physics snapshots",
+  },
+  {
+    id: "G-FG-46",
+    blocks: "FG-46",
+    evidence:
+      "npm run fluid:installed-high-resolution-residual-budget and docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
+    passBar:
+      "the installed high-resolution reference packet reports normalized residuals and edge margins for drop, splash, float, sink, and damping comparisons while preserving live 1024 x 576 WebGPU, no-readback, pacing, and operator snapshot provenance",
   },
 ];
 
@@ -1613,6 +1624,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution operator readout gate",
     exitProof:
       "npm run fluid:installed-high-resolution-operator-readout passes with source FG-44 visible-screen proof, live 1024 x 576 WebGPU runtime, operator-driven float/sink/waterlogging readouts, smooth pacing, and committed FG-45 evidence",
+  },
+  {
+    id: "FG-46-T01",
+    milestone: "FG-46",
+    status: "done",
+    title: "Define installed high-resolution residual budget checks",
+    exitProof:
+      "fluidInstalledHighResolutionResidualBudget.ts consumes FG-42 and FG-45 evidence, computes normalized residuals plus nearest-bound margins, and rejects missing categories, tolerance-edge comparisons, UI-only readouts, fallback grids, and lost no-readback provenance",
+  },
+  {
+    id: "FG-46-T02",
+    milestone: "FG-46",
+    status: "done",
+    title: "Generate installed high-resolution residual budget evidence",
+    exitProof:
+      "fluidInstalledHighResolutionResidualBudget.report.ts reads committed FG-42 reference pacing and FG-45 operator readout evidence, writes reports/fluid-installed-high-resolution-residual-budget-latest.json, and summarizes worst residual plus closest margin",
+  },
+  {
+    id: "FG-46-T03",
+    milestone: "FG-46",
+    status: "done",
+    title: "Close installed high-resolution residual budget gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-residual-budget passes with 10 structured comparisons across drop, splash, float, sink, and damping, live 1024 x 576 WebGPU provenance, no-readback proof, and committed FG-46 evidence",
   },
 ];
 

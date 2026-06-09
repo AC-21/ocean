@@ -53,6 +53,7 @@ and GitHub issue mapping.
 | FG-43 | Installed high-resolution float/sink envelope gate | Done | G-FG-43 |
 | FG-44 | Installed high-resolution Desktop visibility gate | Done | G-FG-44 |
 | FG-45 | Installed high-resolution operator readout gate | Done | G-FG-45 |
+| FG-46 | Installed high-resolution reference residual budget gate | Done | G-FG-46 |
 
 ## Gates
 
@@ -104,6 +105,7 @@ and GitHub issue mapping.
 | G-FG-43 | FG-43 | `npm run fluid:installed-high-resolution-float-sink`; `docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json` | the real installed Desktop app uses the default high-resolution profile to exercise every object preset at live `1024 x 576`, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, and a nonblank/varied high-resolution viewport screenshot |
 | G-FG-44 | FG-44 | `npm run fluid:installed-high-resolution-desktop-visibility`; `docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json` | the normal macOS Desktop launch path opens the installed app with the FG-43 high-resolution profile, exposes a frontmost Ocean Impact Lab window, and captures nonblank/varied ocean viewport pixels from the user-visible screen |
 | G-FG-45 | FG-45 | `npm run fluid:installed-high-resolution-operator-readout`; `docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json` | the installed high-resolution Desktop app lets an operator use the visible preset and Drop controls for float, sink, and waterlogging objects, and the visible Float Result, Float Timing, impact, splash, renderer, and pacing readouts match live `1024 x 576` WebGPU physics snapshots |
+| G-FG-46 | FG-46 | `npm run fluid:installed-high-resolution-residual-budget`; `docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json` | the installed high-resolution reference packet reports normalized residuals and nearest-bound margins for drop, splash, float, sink, and damping comparisons while preserving live `1024 x 576` WebGPU, no-readback, pacing, and operator snapshot provenance |
 
 ## Tasks
 
@@ -248,6 +250,9 @@ and GitHub issue mapping.
 | FG-45-T01 | FG-45 | Done | release | `fluidInstalledHighResolutionOperatorReadout.ts` requires fresh FG-44 visibility evidence, live `1024 x 576` WebGPU runtime, visible preset and Drop clicks, synchronized Float Result, Float Timing, impact, splash, renderer, and no-readback telemetry for float, sink, and waterlogging outcomes |
 | FG-45-T02 | FG-45 | Done | verification | `fluidInstalledHighResolutionOperatorReadout.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier, grid, or userData env overrides, clicks the actual preset buttons and Drop control, and scrapes the visible readout panels against live physics snapshots |
 | FG-45-T03 | FG-45 | Done | release | `npm run fluid:installed-high-resolution-operator-readout` passes with source FG-44 visible-screen proof, live `1024 x 576` WebGPU runtime, operator-driven foam `Floating for 3.3 s`, concrete `Sinking now`, leaky drum predicted `3.1 hr`, max p95 `9.70 ms`, max p99 `10.30 ms`, zero dropped/duplicate frame ratios, and committed FG-45 evidence |
+| FG-46-T01 | FG-46 | Done | calibration | `fluidInstalledHighResolutionResidualBudget.ts` consumes FG-42 and FG-45 evidence, computes normalized residuals plus nearest-bound margins, and rejects missing categories, tolerance-edge comparisons, UI-only readouts, fallback grids, and lost no-readback provenance |
+| FG-46-T02 | FG-46 | Done | verification | `fluidInstalledHighResolutionResidualBudget.report.ts` reads committed FG-42 reference pacing and FG-45 operator readout evidence, writes `reports/fluid-installed-high-resolution-residual-budget-latest.json`, and summarizes worst residual plus closest margin |
+| FG-46-T03 | FG-46 | Done | calibration | `npm run fluid:installed-high-resolution-residual-budget` passes with 10 structured comparisons across drop, splash, float, sink, and damping, live `1024 x 576` WebGPU provenance, no-readback proof, closest margin above the gate threshold, and committed FG-46 evidence |
 
 ## GitHub Labels
 
@@ -309,6 +314,7 @@ and GitHub issue mapping.
 | FG-43 | https://github.com/AC-21/ocean/issues/46 |
 | FG-44 | https://github.com/AC-21/ocean/issues/47 |
 | FG-45 | https://github.com/AC-21/ocean/issues/48 |
+| FG-46 | https://github.com/AC-21/ocean/issues/49 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

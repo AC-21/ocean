@@ -51,6 +51,7 @@ const requiredFiles = [
   "docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
   "docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json",
   "docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json",
+  "docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -144,6 +145,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionOperatorReadout.ts",
   "src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts",
   "src/fluid/fluidInstalledHighResolutionOperatorReadout.test.ts",
+  "src/fluid/fluidInstalledHighResolutionResidualBudget.ts",
+  "src/fluid/fluidInstalledHighResolutionResidualBudget.report.ts",
+  "src/fluid/fluidInstalledHighResolutionResidualBudget.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -163,8 +167,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -268,6 +272,9 @@ const installedHighResolutionDesktopVisibilityTest = files.get("src/fluid/fluidI
 const installedHighResolutionOperatorReadout = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.ts") ?? "";
 const installedHighResolutionOperatorReadoutReport = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts") ?? "";
 const installedHighResolutionOperatorReadoutTest = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.test.ts") ?? "";
+const installedHighResolutionResidualBudget = files.get("src/fluid/fluidInstalledHighResolutionResidualBudget.ts") ?? "";
+const installedHighResolutionResidualBudgetReport = files.get("src/fluid/fluidInstalledHighResolutionResidualBudget.report.ts") ?? "";
+const installedHighResolutionResidualBudgetTest = files.get("src/fluid/fluidInstalledHighResolutionResidualBudget.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -329,6 +336,7 @@ const fg42Evidence = files.get("docs/evidence/FG-42-installed-high-resolution-re
 const fg43Evidence = files.get("docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json") ?? "";
 const fg44Evidence = files.get("docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json") ?? "";
 const fg45Evidence = files.get("docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ?? "";
+const fg46Evidence = files.get("docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3570,6 +3578,96 @@ if (
   !fg45Evidence.includes("\"particlesNoFullGridReadback\": true")
 ) {
   errors.push("FG-45 evidence must record passing installed high-resolution operator readouts driven through visible controls with synced UI text, live 1024 x 576 WebGPU snapshots, pacing, and no-readback proof");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-residual-budget\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionResidualBudget.report.ts")
+) {
+  errors.push("package.json must expose the FG-46 installed high-resolution residual budget command");
+}
+
+if (
+  !tracking.includes("FG-46-T03") ||
+  !tracking.includes("FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/49") ||
+  !tracking.includes("nearest-bound margins")
+) {
+  errors.push("docs/TRACKING.md must record FG-46 installed high-resolution residual budget evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-46") ||
+  !contract.includes("G-FG-46") ||
+  !contract.includes("Installed high-resolution reference residual budget gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-residual-budget") ||
+  !contract.includes("normalized residuals") ||
+  !contract.includes("operator snapshot provenance")
+) {
+  errors.push("fluidGridContract.ts must define the FG-46 installed high-resolution residual budget milestone, gate, and provenance proof");
+}
+
+if (
+  !installedHighResolutionResidualBudget.includes("G-FG-46") ||
+  !installedHighResolutionResidualBudget.includes("maxNormalizedResidual") ||
+  !installedHighResolutionResidualBudget.includes("minContinuousMarginRatio") ||
+  !installedHighResolutionResidualBudget.includes("UI-only evidence is not accepted") ||
+  !installedHighResolutionResidualBudget.includes("too close to tolerance edge") ||
+  !installedHighResolutionResidualBudget.includes("core reference used full-grid readback")
+) {
+  errors.push("fluidInstalledHighResolutionResidualBudget.ts must define FG-46 residual, margin, UI-only, and no-readback checks");
+}
+
+if (
+  !installedHighResolutionResidualBudgetReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_RESIDUAL_BUDGET_OUT") ||
+  !installedHighResolutionResidualBudgetReport.includes("FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ||
+  !installedHighResolutionResidualBudgetReport.includes("FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ||
+  !installedHighResolutionResidualBudgetReport.includes("worst normalized") ||
+  !installedHighResolutionResidualBudgetReport.includes("G-FG-46")
+) {
+  errors.push("fluidInstalledHighResolutionResidualBudget.report.ts must consume FG-42/FG-45 evidence and write the FG-46 residual budget report");
+}
+
+if (
+  !installedHighResolutionResidualBudgetTest.includes("installed high-resolution residual budget gate") ||
+  !installedHighResolutionResidualBudgetTest.includes("missing reference categories") ||
+  !installedHighResolutionResidualBudgetTest.includes("too close to the tolerance edge") ||
+  !installedHighResolutionResidualBudgetTest.includes("UI-only readouts") ||
+  !installedHighResolutionResidualBudgetTest.includes("missing no-readback provenance")
+) {
+  errors.push("fluidInstalledHighResolutionResidualBudget.test.ts must cover FG-46 pass and residual/category/UI-only/no-readback failure cases");
+}
+
+if (
+  !remap.includes("FG-46") ||
+  !remap.includes("Installed high-resolution residual budget evidence") ||
+  !remap.includes("normalized residual") ||
+  !remap.includes("nearest-bound margin") ||
+  !remap.includes("tolerance edge") ||
+  !remap.includes("watch-list comparison ids")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-46 residual budget gate and evidence");
+}
+
+if (
+  !fg46Evidence.includes("\"gate\": \"G-FG-46\"") ||
+  !fg46Evidence.includes("\"pass\": true") ||
+  !fg46Evidence.includes("\"failures\": []") ||
+  !fg46Evidence.includes("FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ||
+  !fg46Evidence.includes("FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ||
+  !fg46Evidence.includes("\"coreGate\": \"G-FG-40\"") ||
+  !fg46Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg46Evidence.includes("\"noFullGridReadbackPerFrame\": true") ||
+  !fg46Evidence.includes("\"comparisonCount\": 10") ||
+  !fg46Evidence.includes("\"exactComparisonCount\": 2") ||
+  !fg46Evidence.includes("\"normalizedResidual\"") ||
+  !fg46Evidence.includes("\"marginRatio\"") ||
+  !fg46Evidence.includes("\"watchComparisonIds\"") ||
+  !fg46Evidence.includes("\"live-ice-hydrostatic-draft-error\"") ||
+  !fg46Evidence.includes("\"closestMarginRatio\"") ||
+  !fg46Evidence.includes("\"worstNormalizedResidual\"")
+) {
+  errors.push("FG-46 evidence must record passing installed high-resolution residual budgets with FG-42/FG-45 provenance, 10 comparisons, margins, watch list, and no-readback proof");
 }
 
 if (errors.length > 0) {

@@ -1321,6 +1321,29 @@ Installed high-resolution operator readout evidence:
   frame ratio, zero duplicate-water-frame ratio, active pressure/particles/
   coupling, and pressure plus particle no-full-grid-readback flags.
 
+FG-46 turns the accepted high-resolution reference outcomes into a residual
+budget instead of a binary pass/fail. The gate consumes FG-42 installed
+reference pacing plus FG-45 operator evidence, then computes a normalized
+residual and nearest-bound margin for each structured FG-40 comparison. This
+keeps the realism work honest: a value can still be inside the accepted band
+and fail if it hugs the tolerance edge, and visible readout text cannot stand
+in for physics snapshots, sample provenance, or no-full-grid-readback proof.
+
+Installed high-resolution residual budget evidence:
+
+- Command: `npm run fluid:installed-high-resolution-residual-budget`.
+- Gate: `G-FG-46`.
+- Evidence snapshot:
+  `docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json`.
+- Source proof: the gate requires passing `G-FG-42` and `G-FG-45` reports,
+  live `1024 x 576` WebGPU runtime provenance, structured reference
+  comparisons for drop, splash, float, sink, and damping, and pressure/particle
+  no-readback telemetry.
+- Residual proof: the report records all 10 structured comparison residuals,
+  the closest continuous margin ratio, the worst normalized residual, exact
+  boolean comparison count, and watch-list comparison ids for values that are
+  still passing but close enough to deserve attention in the next physics pass.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1473,6 +1496,11 @@ Installed high-resolution operator readout evidence:
     Drop controls in the installed Desktop app, then verify the visible float,
     sink, waterlogging, impact, splash, renderer, and timing readouts against
     live `1024 x 576` WebGPU physics snapshots.
+43. Installed high-resolution residual budget: consume the installed
+    high-resolution reference and operator evidence, compute normalized
+    residuals plus nearest-bound margins for every drop, splash, float, sink,
+    and damping comparison, and fail before accepted behavior drifts too close
+    to a tolerance edge.
 
 ## Resolution Ladder
 

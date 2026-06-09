@@ -1,0 +1,228 @@
+{
+  "comparisons": [
+    {
+      "actual": 12.298737452617226,
+      "category": "drop",
+      "expected": {
+        "max": 12.526228482667877,
+        "min": 11.023081064747732
+      },
+      "id": "live-drop-speed-reference",
+      "pass": true,
+      "unit": "m/s",
+      "halfWidth": 0.7515737089600725,
+      "marginRatio": 0.3026862533089699,
+      "nearestBoundMargin": 0.22749103005065052,
+      "normalizedResidual": 0.6973137466910289,
+      "risk": "ok",
+      "targetMidpoint": 11.774654773707805
+    },
+    {
+      "actual": 2.1240260304642358,
+      "category": "splash",
+      "expected": {
+        "max": 3.5785827327780475,
+        "min": 0.823685384079011
+      },
+      "id": "live-splash-height-reference",
+      "pass": true,
+      "unit": "m",
+      "halfWidth": 1.3774486743495182,
+      "marginRatio": 0.9440211244163368,
+      "nearestBoundMargin": 1.3003406463852247,
+      "normalizedResidual": 0.05597887558366321,
+      "risk": "ok",
+      "targetMidpoint": 2.2011340584285293
+    },
+    {
+      "actual": 0.8946341463414634,
+      "category": "float",
+      "expected": {
+        "max": 0.9296341463414635,
+        "min": 0.8596341463414634
+      },
+      "id": "live-ice-equilibrium-submerged-fraction-reference",
+      "pass": true,
+      "unit": "fraction",
+      "halfWidth": 0.03500000000000003,
+      "marginRatio": 1,
+      "nearestBoundMargin": 0.03500000000000003,
+      "normalizedResidual": 0,
+      "risk": "ok",
+      "targetMidpoint": 0.8946341463414634
+    },
+    {
+      "actual": 0.0050524263800163505,
+      "category": "float",
+      "expected": {
+        "max": 0.055,
+        "min": 0
+      },
+      "id": "live-ice-hydrostatic-draft-error",
+      "pass": true,
+      "unit": "m",
+      "halfWidth": 0.0275,
+      "marginRatio": 0.1837245956369582,
+      "nearestBoundMargin": 0.0050524263800163505,
+      "normalizedResidual": 0.8162754043630418,
+      "risk": "ok",
+      "targetMidpoint": 0.0275
+    },
+    {
+      "actual": 0.012821913358529786,
+      "category": "damping",
+      "expected": {
+        "max": 0.055,
+        "min": 0
+      },
+      "id": "live-foam-settled-draft-error",
+      "pass": true,
+      "unit": "m",
+      "halfWidth": 0.0275,
+      "marginRatio": 0.4662513948556286,
+      "nearestBoundMargin": 0.012821913358529786,
+      "normalizedResidual": 0.5337486051443714,
+      "risk": "ok",
+      "targetMidpoint": 0.0275
+    },
+    {
+      "actual": 0.05498412049621974,
+      "category": "damping",
+      "expected": {
+        "max": 0.08,
+        "min": 0
+      },
+      "id": "live-foam-settled-buoyancy-error",
+      "pass": true,
+      "unit": "ratio",
+      "halfWidth": 0.04,
+      "marginRatio": 0.6253969875945065,
+      "nearestBoundMargin": 0.02501587950378026,
+      "normalizedResidual": 0.37460301240549354,
+      "risk": "ok",
+      "targetMidpoint": 0.04
+    },
+    {
+      "actual": 1,
+      "category": "damping",
+      "expected": {
+        "max": 1,
+        "min": 1
+      },
+      "id": "live-foam-equilibrium-window",
+      "pass": true,
+      "unit": "boolean",
+      "halfWidth": 0,
+      "marginRatio": 1,
+      "nearestBoundMargin": 0,
+      "normalizedResidual": 0,
+      "risk": "exact",
+      "targetMidpoint": 1
+    },
+    {
+      "actual": 3.3723442757055833,
+      "category": "sink",
+      "expected": {
+        "max": 8,
+        "min": 1
+      },
+      "id": "live-concrete-terminal-speed-reference",
+      "pass": true,
+      "unit": "m/s",
+      "halfWidth": 3.5,
+      "marginRatio": 0.6778126502015952,
+      "nearestBoundMargin": 2.3723442757055833,
+      "normalizedResidual": 0.3221873497984048,
+      "risk": "ok",
+      "targetMidpoint": 4.5
+    },
+    {
+      "actual": 1,
+      "category": "sink",
+      "expected": {
+        "max": 1,
+        "min": 1
+      },
+      "id": "live-concrete-sink-phase",
+      "pass": true,
+      "unit": "boolean",
+      "halfWidth": 0,
+      "marginRatio": 1,
+      "nearestBoundMargin": 0,
+      "normalizedResidual": 0,
+      "risk": "exact",
+      "targetMidpoint": 1
+    },
+    {
+      "actual": 0.2232846141029004,
+      "category": "sink",
+      "expected": {
+        "max": 0.55,
+        "min": 0
+      },
+      "id": "live-leaky-drum-sink-time-ratio-reference",
+      "pass": true,
+      "unit": "ratio",
+      "halfWidth": 0.275,
+      "marginRatio": 0.8119440512832742,
+      "nearestBoundMargin": 0.2232846141029004,
+      "normalizedResidual": 0.18805594871672587,
+      "risk": "ok",
+      "targetMidpoint": 0.275
+    }
+  ],
+  "failures": [],
+  "gate": "G-FG-46",
+  "generatedAt": "2026-06-09T01:19:50.163Z",
+  "operatorReadout": {
+    "gate": "G-FG-45",
+    "liveGrid": "1024x576",
+    "outcomeClasses": [
+      "floats-indefinitely",
+      "sinks-immediately",
+      "waterlogs-then-sinks"
+    ],
+    "pass": true,
+    "scenarioCount": 3,
+    "sourcePath": "docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json"
+  },
+  "pass": true,
+  "sourceReference": {
+    "categories": [
+      "damping",
+      "drop",
+      "float",
+      "sink",
+      "splash"
+    ],
+    "coreGate": "G-FG-40",
+    "corePass": true,
+    "gate": "G-FG-42",
+    "liveGrid": "1024x576",
+    "noFullGridReadbackPerFrame": true,
+    "pass": true,
+    "referenceCaseCount": 5,
+    "referenceComparisonCount": 10,
+    "sourcePath": "docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json"
+  },
+  "summary": {
+    "categories": [
+      "damping",
+      "drop",
+      "float",
+      "sink",
+      "splash"
+    ],
+    "closestMarginRatio": 0.1837245956369582,
+    "comparisonCount": 10,
+    "exactComparisonCount": 2,
+    "watchComparisonIds": [],
+    "worstNormalizedResidual": 0.8162754043630418
+  },
+  "thresholds": {
+    "maxNormalizedResidual": 0.95,
+    "minContinuousMarginRatio": 0.05,
+    "watchMarginRatio": 0.1,
+    "watchNormalizedResidual": 0.85
+  }
+}
