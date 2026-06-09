@@ -1,0 +1,285 @@
+{
+  "failures": [],
+  "gate": "G-FG-47",
+  "generatedAt": "2026-06-09T01:33:56.982Z",
+  "installedProfile": {
+    "pass": true,
+    "runtimeGrid": {
+      "capabilityGrid": "768x432",
+      "cellsX": 1024,
+      "cellsY": 576,
+      "liveGrid": "1024x576",
+      "sourceGate": "G-FG-40",
+      "sourceGeneratedAt": "2026-06-08T22:31:40.928Z"
+    },
+    "schema": "ocean-fluid-calibration-profile-v1",
+    "selectedTier": "ultra",
+    "sourceGate": "G-FG-23"
+  },
+  "launchEnv": {
+    "envCalibratedTierPresent": false,
+    "envExperimentalGridPresent": false,
+    "envRequestedTierPresent": false,
+    "envUserDataOverridePresent": false
+  },
+  "launcher": {
+    "executablePath": "/Users/sasha/Desktop/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "resolvesToInstalledBundle": true,
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "pass": true,
+  "runtime": {
+    "capabilityGrid": {
+      "cellsX": 768,
+      "cellsY": 432
+    },
+    "liveGrid": "1024x576",
+    "renderer": "webgpu-grid-primary-v1",
+    "runtimeGridOverride": {
+      "cellsX": 1024,
+      "cellsY": 576
+    },
+    "selectedTier": "ultra",
+    "selection": {
+      "calibratedTier": "ultra",
+      "mode": "calibrated-auto",
+      "preferredTier": "ultra",
+      "reason": "local calibration selected tier",
+      "requestedTier": "auto"
+    },
+    "tier": "ultra",
+    "waterContext": "webgpu",
+    "waterFrames": 470
+  },
+  "samples": [
+    {
+      "capturedAtMs": 929221840,
+      "id": "idle-1",
+      "phase": "idle",
+      "pixelProbe": {
+        "averageLuma": 124.26511749359392,
+        "colorBuckets": 27,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/idle-1.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": false,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 30
+      }
+    },
+    {
+      "capturedAtMs": 929222518,
+      "id": "idle-2",
+      "phase": "idle",
+      "pixelProbe": {
+        "averageLuma": 124.09680992313035,
+        "colorBuckets": 27,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/idle-2.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": false,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 102
+      }
+    },
+    {
+      "capturedAtMs": 929223202,
+      "id": "idle-3",
+      "phase": "idle",
+      "pixelProbe": {
+        "averageLuma": 123.88704435126891,
+        "colorBuckets": 25,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/idle-3.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": false,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 174
+      }
+    },
+    {
+      "capturedAtMs": 929224132,
+      "id": "post-drop-1",
+      "phase": "post-drop",
+      "pixelProbe": {
+        "averageLuma": 124.1304562310736,
+        "colorBuckets": 25,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/post-drop-1.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": false,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 275
+      }
+    },
+    {
+      "capturedAtMs": 929225019,
+      "id": "post-drop-2",
+      "phase": "post-drop",
+      "pixelProbe": {
+        "averageLuma": 126.0033378989048,
+        "colorBuckets": 37,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/post-drop-2.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": true,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 373
+      }
+    },
+    {
+      "capturedAtMs": 929225902,
+      "id": "post-drop-3",
+      "phase": "post-drop",
+      "pixelProbe": {
+        "averageLuma": 123.99583643139937,
+        "colorBuckets": 26,
+        "height": 1412,
+        "opaqueSamples": 4293,
+        "samples": 4293,
+        "status": "nonblank",
+        "variety": "varied",
+        "width": 1364
+      },
+      "screenshotPath": "reports/fluid-installed-high-resolution-visual-watchdog/post-drop-3.png",
+      "telemetry": {
+        "couplingActive": true,
+        "droppedDebtS": 0,
+        "liveGrid": "1024x576",
+        "particlesActive": true,
+        "particlesNoFullGridReadback": true,
+        "pressureActive": true,
+        "pressureNoFullGridReadback": true,
+        "renderMode": "webgpu",
+        "renderer": "webgpu-grid-primary-v1",
+        "runtimeGridOverride": "1024x576",
+        "tier": "ultra",
+        "waterContext": "webgpu",
+        "waterFrame": 470
+      }
+    }
+  ],
+  "sourceResidualBudget": {
+    "closestMarginRatio": 0.1837245956369582,
+    "comparisonCount": 10,
+    "failures": [],
+    "gate": "G-FG-46",
+    "pass": true,
+    "sourcePath": "docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
+    "watchComparisonIds": [],
+    "worstNormalizedResidual": 0.8162754043630418
+  },
+  "storage": {
+    "defaultStorage": true,
+    "fileName": "fluid-calibration.v1.json",
+    "persistedRawBytes": 2581,
+    "profileHadRuntimeGrid": true,
+    "readByMainProcess": true,
+    "storageBasePath": "/Users/sasha/Library/Application Support/Ocean Impact Lab/harborline-game",
+    "verificationReadMatched": true
+  },
+  "summary": {
+    "blankSampleIds": [],
+    "closestSourceMarginRatio": 0.1837245956369582,
+    "flatSampleIds": [],
+    "maxAverageLuma": 126.0033378989048,
+    "minAverageLuma": 123.88704435126891,
+    "minColorBuckets": 25,
+    "phases": [
+      "idle",
+      "post-drop"
+    ],
+    "postDropActivePhysicsSeen": true,
+    "sampleCount": 6,
+    "uniqueWaterFrames": 6,
+    "waterFrameDelta": 440
+  },
+  "thresholds": {
+    "minAverageLuma": 35,
+    "minColorBuckets": 18,
+    "minSampleCount": 6,
+    "minUniqueWaterFrames": 4,
+    "minWaterFrameDelta": 24
+  }
+}

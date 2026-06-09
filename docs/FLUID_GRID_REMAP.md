@@ -1344,6 +1344,26 @@ Installed high-resolution residual budget evidence:
   boolean comparison count, and watch-list comparison ids for values that are
   still passing but close enough to deserve attention in the next physics pass.
 
+FG-47 makes high-resolution black-frame detection a burst watchdog instead of a
+single screenshot anecdote. The gate starts from passing FG-46 residual
+evidence, installs the default high-resolution profile, launches the real
+Desktop app, captures idle and post-drop `1024 x 576` WebGPU canvas frames, and
+requires the water-frame counter plus pixel probes to move together.
+
+Installed high-resolution visual watchdog evidence:
+
+- Command: `npm run fluid:installed-high-resolution-visual-watchdog`.
+- Gate: `G-FG-47`.
+- Evidence snapshot:
+  `docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json`.
+- Source proof: the watchdog consumes `G-FG-46`, requiring 10 structured
+  residual comparisons, live `1024 x 576` reference/operator provenance, and
+  no-full-grid-readback flags before visual samples can count.
+- Visual proof: the report captures multiple idle and post-drop canvas
+  screenshots under the installed Desktop app, records average luma, color
+  bucket variety, dimensions, water-frame ids, renderer/context/grid telemetry,
+  and rejects black, flat, stale, fallback, or UI-only visual evidence.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1501,6 +1521,10 @@ Installed high-resolution residual budget evidence:
     residuals plus nearest-bound margins for every drop, splash, float, sink,
     and damping comparison, and fail before accepted behavior drifts too close
     to a tolerance edge.
+44. Installed high-resolution visual watchdog: sample multiple idle and
+    post-drop Desktop canvas frames at live `1024 x 576`, require advancing
+    WebGPU water-frame telemetry plus nonblank varied pixels, and reject black,
+    flat, stale, fallback, or UI-only visual proof.
 
 ## Resolution Ladder
 

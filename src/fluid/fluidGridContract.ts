@@ -47,7 +47,8 @@ export type FluidGridMilestoneId =
   | "FG-43"
   | "FG-44"
   | "FG-45"
-  | "FG-46";
+  | "FG-46"
+  | "FG-47";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -96,7 +97,8 @@ export type FluidGridGateId =
   | "G-FG-43"
   | "G-FG-44"
   | "G-FG-45"
-  | "G-FG-46";
+  | "G-FG-46"
+  | "G-FG-47";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -210,6 +212,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-44", title: "Installed high-resolution Desktop visibility gate", gate: "G-FG-44" },
   { id: "FG-45", title: "Installed high-resolution operator readout gate", gate: "G-FG-45" },
   { id: "FG-46", title: "Installed high-resolution reference residual budget gate", gate: "G-FG-46" },
+  { id: "FG-47", title: "Installed high-resolution visual watchdog gate", gate: "G-FG-47" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -537,6 +540,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-residual-budget and docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
     passBar:
       "the installed high-resolution reference packet reports normalized residuals and edge margins for drop, splash, float, sink, and damping comparisons while preserving live 1024 x 576 WebGPU, no-readback, pacing, and operator snapshot provenance",
+  },
+  {
+    id: "G-FG-47",
+    blocks: "FG-47",
+    evidence:
+      "npm run fluid:installed-high-resolution-visual-watchdog and docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json",
+    passBar:
+      "the installed high-resolution Desktop app captures multiple idle and post-drop 1024 x 576 WebGPU canvas pixel probes over advancing water frames, rejecting black, flat, stale, fallback, or UI-only visual evidence while preserving FG-46 residual and no-readback provenance",
   },
 ];
 
@@ -1648,6 +1659,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution residual budget gate",
     exitProof:
       "npm run fluid:installed-high-resolution-residual-budget passes with 10 structured comparisons across drop, splash, float, sink, and damping, live 1024 x 576 WebGPU provenance, no-readback proof, and committed FG-46 evidence",
+  },
+  {
+    id: "FG-47-T01",
+    milestone: "FG-47",
+    status: "done",
+    title: "Define installed high-resolution visual watchdog checks",
+    exitProof:
+      "fluidInstalledHighResolutionVisualWatchdog.ts consumes FG-46 evidence and rejects blank, flat, stale, fallback, readback, and UI-only visual samples across idle and post-drop high-resolution WebGPU frames",
+  },
+  {
+    id: "FG-47-T02",
+    milestone: "FG-47",
+    status: "done",
+    title: "Capture watchdog samples from the installed high-resolution app",
+    exitProof:
+      "fluidInstalledHighResolutionVisualWatchdog.report.ts installs the default high-resolution profile, launches /Users/sasha/Desktop/Ocean Impact Lab.app, captures idle and post-drop canvas screenshots, and records pixel probes with advancing water-frame telemetry",
+  },
+  {
+    id: "FG-47-T03",
+    milestone: "FG-47",
+    status: "done",
+    title: "Close installed high-resolution visual watchdog gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-visual-watchdog passes with multiple nonblank varied 1024 x 576 WebGPU samples, advancing water frames, post-drop active physics telemetry, no-readback proof, and committed FG-47 evidence",
   },
 ];
 

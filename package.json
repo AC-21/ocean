@@ -72,6 +72,7 @@
     "fluid:installed-high-resolution-desktop-visibility": "npm run fluid:installed-high-resolution-float-sink && vite-node src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts",
     "fluid:installed-high-resolution-operator-readout": "npm run fluid:desktop-launcher && vite-node src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts",
     "fluid:installed-high-resolution-residual-budget": "vite-node src/fluid/fluidInstalledHighResolutionResidualBudget.report.ts",
+    "fluid:installed-high-resolution-visual-watchdog": "npm run fluid:desktop-launcher && vite-node src/fluid/fluidInstalledHighResolutionVisualWatchdog.report.ts",
     "fluid:tracking": "node scripts/fluid_tracking_check.mjs",
     "balance:snapshot": "node scripts/balance_snapshot.mjs",
     "ocean:benchmark": "node scripts/ocean_benchmark.mjs",
