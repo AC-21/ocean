@@ -58,6 +58,7 @@ and GitHub issue mapping.
 | FG-48 | Target-aware high-resolution residual budget gate | Done | G-FG-48 |
 | FG-49 | Desktop probe isolation gate | Done | G-FG-49 |
 | FG-50 | High-resolution calibration frontier gate | Done | G-FG-50 |
+| FG-51 | High-resolution foam settled-window calibration gate | Done | G-FG-51 |
 
 ## Gates
 
@@ -114,6 +115,7 @@ and GitHub issue mapping.
 | G-FG-48 | FG-48 | `npm run fluid:installed-high-resolution-target-residuals`; `docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json` | the installed high-resolution residual packet reclassifies each accepted comparison as `target-midpoint`, `lower-is-better`, or `exact`, computes target error separately from tolerance-edge margin, and consumes FG-46 residual plus FG-47 visual watchdog provenance before accepting live `1024 x 576` WebGPU behavior |
 | G-FG-49 | FG-49 | `npm run fluid:desktop-probe-isolation`; `docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json` | a normal packaged default-profile Desktop instance remains alive while a second packaged temporary-profile render probe starts with isolated userData, renders nonblank/varied WebGPU pixels, and proves Electron applies `HARBORLINE_USER_DATA_DIR` before `requestSingleInstanceLock` |
 | G-FG-50 | FG-50 | `npm run fluid:high-resolution-calibration-frontier`; `docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json` | FG-48 target residuals are ranked into a no-regression calibration frontier that keeps live `1024 x 576` WebGPU provenance, preserves accepted bands, marks foam settled buoyancy as a physics tuning candidate, and marks concrete drop speed as a reference-target review before any blind drag tuning |
+| G-FG-51 | FG-51 | `npm run fluid:high-resolution-foam-settling-calibration`; `docs/evidence/FG-51-high-resolution-foam-settling-calibration-2026-06-09.json` | a packaged live `1024 x 576` WebGPU foam drop records the first tolerance crossing and a later `2.4 s` settled-window sample, proves the settled sample lowers the foam buoyancy residual below the frontier target while preserving FG-48/FG-50 provenance, and rejects fallback, readback, or cosmetic sampling |
 
 ## Tasks
 
@@ -273,6 +275,9 @@ and GitHub issue mapping.
 | FG-50-T01 | FG-50 | Done | calibration | `fluidHighResolutionCalibrationFrontier.ts` consumes FG-48 evidence, ranks `targetErrorRatio` values, preserves tolerance-margin no-regression guards, and identifies near-frontier comparison ids |
 | FG-50-T02 | FG-50 | Done | calibration | `fluidHighResolutionCalibrationFrontier.ts` classifies `live-foam-settled-buoyancy-error` as a `physics-tuning-candidate` and `live-drop-speed-reference` as a `reference-target-review` before any free-fall drag tuning |
 | FG-50-T03 | FG-50 | Done | verification | `npm run fluid:high-resolution-calibration-frontier` passes with committed FG-50 evidence, FG-48/G-FG-47 provenance, no-regression guards, and the next calibration action list |
+| FG-51-T01 | FG-51 | Done | calibration | `fluidHighResolutionFoamSettlingCalibration.report.ts` launches the packaged app at live `1024 x 576` WebGPU, drives the foam reference drop, and records first-within-tolerance plus settled-window samples from the live scenario controls |
+| FG-51-T02 | FG-51 | Done | calibration | `fluidHighResolutionFoamSettlingCalibration.ts` consumes FG-50 and FG-48 evidence, requires foam to remain the `physics-tuning-candidate`, and rejects samples that do not improve the buoyancy residual below the settled target threshold |
+| FG-51-T03 | FG-51 | Done | verification | `npm run fluid:high-resolution-foam-settling-calibration` passes with committed FG-51 evidence, live `1024 x 576` WebGPU telemetry, no full-grid readback, preserved FG-48/FG-50 provenance, and no fallback/cosmetic sampling |
 
 ## GitHub Labels
 
@@ -339,6 +344,7 @@ and GitHub issue mapping.
 | FG-48 | https://github.com/AC-21/ocean/issues/51 |
 | FG-49 | https://github.com/AC-21/ocean/issues/53 |
 | FG-50 | https://github.com/AC-21/ocean/issues/54 |
+| FG-51 | https://github.com/AC-21/ocean/issues/55 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

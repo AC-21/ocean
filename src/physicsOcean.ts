@@ -940,7 +940,7 @@ function hydrostaticGeometryForSubmergence(spec: ObjectSpec, submergedDepthM: nu
 
 function hydrostaticGeometryForState(spec: ObjectSpec, centerYM: number, surfaceYM: number, angleRad: number): HydrostaticGeometry {
   const height = objectHeightM(spec);
-  if (Math.abs(normalizeAngle(angleRad)) < 0.000001) {
+  if (Math.abs(normalizeAngle(angleRad)) < 0.01) {
     return hydrostaticGeometryForSubmergence(spec, submergedDepthFor(spec, centerYM, surfaceYM));
   }
 
@@ -1031,7 +1031,7 @@ export function diagnosticsFor(state: SimulationState, spec: ObjectSpec, setting
   const relativeVy = hydrodynamicDrag.relativeVyMps;
   const reynoldsNumber = hydrodynamicDrag.reynoldsNumber;
   const effectiveDragCoefficient = hydrodynamicDrag.coefficient;
-  const baseDragN = hydrodynamicDrag.forceYN + heaveDampingForceN(wettedDisplaced, wettedSubmergedFraction, relativeVy, settings);
+  const baseDragN = hydrodynamicDrag.forceYN + heaveDampingForceN(spec, wettedDisplaced, wettedSubmergedFraction, relativeVy, settings);
   const wakeHydrodynamics = wakeHydrodynamicsFor(
     spec,
     settings,
@@ -1292,7 +1292,7 @@ export function stepSimulation(
   );
   const relativeVy = hydrodynamicDrag.relativeVyMps;
   const reynoldsNumber = hydrodynamicDrag.reynoldsNumber;
-  const baseDragN = hydrodynamicDrag.forceYN + heaveDampingForceN(wettedDisplaced, wettedSubmergedFraction, relativeVy, settings);
+  const baseDragN = hydrodynamicDrag.forceYN + heaveDampingForceN(spec, wettedDisplaced, wettedSubmergedFraction, relativeVy, settings);
   const wakeHydrodynamics = wakeHydrodynamicsFor(
     spec,
     settings,
@@ -1491,9 +1491,11 @@ export function stepSimulation(
     next.phase = "falling";
   }
 
-  const staticBuoyancyError = Math.abs(nextDiagnostics.buoyancyN + nextDiagnostics.surfaceTensionForceN - nextDiagnostics.weightN) / Math.max(1, nextDiagnostics.weightN);
-  const angularSettled = Math.abs(next.object.angularVelocityRadps) < 0.035 && Math.abs(nextDiagnostics.angleToSurfaceRad) < 0.085;
-  if (nextDiagnostics.submergedFraction > 0.001 && nextDiagnostics.submergedFraction < 0.995 && Math.abs(next.object.vyMps) < 0.035 && staticBuoyancyError < 0.035 && angularSettled) {
+  next = applyLightSurfaceFloaterSettlingCorrection(next, spec, settings, nextDiagnostics, dt);
+  const settledDiagnostics = diagnosticsFor(next, spec, settings);
+  const staticBuoyancyError = Math.abs(settledDiagnostics.buoyancyN + settledDiagnostics.surfaceTensionForceN - settledDiagnostics.weightN) / Math.max(1, settledDiagnostics.weightN);
+  const angularSettled = Math.abs(next.object.angularVelocityRadps) < 0.035 && Math.abs(settledDiagnostics.angleToSurfaceRad) < 0.085;
+  if (settledDiagnostics.submergedFraction > 0.001 && settledDiagnostics.submergedFraction < 0.995 && Math.abs(next.object.vyMps) < 0.035 && staticBuoyancyError < 0.045 && angularSettled) {
     next.settledWindowS += dt;
     if (next.settledAtS === null && next.settledWindowS > 2.4) {
       next.settledAtS = next.timeS - next.settledWindowS;
@@ -1508,6 +1510,45 @@ export function stepSimulation(
   }
 
   return updateParticlesAndHistory(next, spec, settings, dt);
+}
+
+function applyLightSurfaceFloaterSettlingCorrection(
+  state: SimulationState,
+  spec: ObjectSpec,
+  settings: OceanSettings,
+  diagnostics: StepDiagnostics,
+  dt: number
+): SimulationState {
+  if (state.phase !== "floating" || state.impact === null || diagnostics.submergedFraction <= 0.001 || diagnostics.submergedFraction >= 0.995) {
+    return state;
+  }
+  const densityRatio = currentDryDensityRatioFor(spec, settings);
+  const lowDensityBias = clamp((0.22 - densityRatio) / 0.22, 0, 1);
+  const shallowDraftBias = clamp((0.18 - diagnostics.submergedFraction) / 0.18, 0, 1);
+  if (lowDensityBias <= 0 || shallowDraftBias <= 0) return state;
+  const verticalSpeedGate = clamp(1 - Math.abs(state.object.vyMps) / 0.2, 0, 1);
+  const angularSpeedGate = clamp(1 - Math.abs(state.object.angularVelocityRadps) / 0.36, 0, 1);
+  const activation = lowDensityBias * shallowDraftBias * verticalSpeedGate * angularSpeedGate;
+  if (activation <= 0) return state;
+  const heightM = objectHeightM(spec);
+  const targetSubmergedDepthM = clamp(densityRatio * heightM, 0, heightM);
+  const targetCenterYM = diagnostics.surfaceYM + heightM / 2 - targetSubmergedDepthM;
+  const targetAngleRad = diagnostics.waveSlopeRad;
+  const centerErrorM = state.object.centerYM - targetCenterYM;
+  const angleErrorRad = normalizeAngle(state.object.angleRad - targetAngleRad);
+  const alpha = 1 - Math.exp(-dt * (1.6 + activation * 5.4));
+  if (alpha <= 0) return state;
+
+  return {
+    ...state,
+    object: {
+      ...state.object,
+      angleRad: normalizeAngle(state.object.angleRad - angleErrorRad * alpha * 0.42),
+      angularVelocityRadps: state.object.angularVelocityRadps * (1 - alpha * 0.86),
+      centerYM: state.object.centerYM - centerErrorM * alpha * 0.5,
+      vyMps: state.object.vyMps * (1 - alpha * 0.82),
+    },
+  };
 }
 
 export function predictFloatOutcome(spec: ObjectSpec, settings: OceanSettings): FloatPrediction {
@@ -2678,10 +2719,18 @@ function hydrodynamicLoadMomentFor(
   return leverXM * forceYN - leverYM * forceXN;
 }
 
-function heaveDampingForceN(displacedVolumeM3: number, submergedFraction: number, relativeVyMps: number, settings: OceanSettings): number {
+function heaveDampingForceN(
+  spec: ObjectSpec,
+  displacedVolumeM3: number,
+  submergedFraction: number,
+  relativeVyMps: number,
+  settings: OceanSettings
+): number {
   if (displacedVolumeM3 <= 0 || submergedFraction <= 0) return 0;
   const entrainedMassKg = settings.waterDensityKgM3 * displacedVolumeM3;
-  const dampingPerSecond = 1.8 + 5.2 * clamp(submergedFraction, 0, 1);
+  const dampingPerSecond =
+    (1.8 + 5.2 * clamp(submergedFraction, 0, 1)) *
+    lightSurfaceFloaterDampingMultiplierFor(spec, settings, submergedFraction, 8);
   return -entrainedMassKg * dampingPerSecond * relativeVyMps;
 }
 
@@ -3002,7 +3051,7 @@ function heaveRadiationHydrodynamicsFor(
 
   const naturalAngularFrequencyRadps = Math.sqrt(hydrostaticStiffnessNpm / effectiveHeaveMassKg);
   const naturalPeriodS = tau / Math.max(0.001, naturalAngularFrequencyRadps);
-  const dampingRatio = heaveRadiationDampingRatioFor(spec, submergedFraction);
+  const dampingRatio = heaveRadiationDampingRatioFor(spec, settings, submergedFraction);
   const dampingNsPerM = 2 * dampingRatio * Math.sqrt(hydrostaticStiffnessNpm * effectiveHeaveMassKg);
   const forceCapN = Math.max(massKg * settings.gravity * 8, hydrostaticStiffnessNpm * characteristicLengthM(spec) * 2.4);
   return {
@@ -3015,7 +3064,7 @@ function heaveRadiationHydrodynamicsFor(
   };
 }
 
-function heaveRadiationDampingRatioFor(spec: ObjectSpec, submergedFraction: number): number {
+function heaveRadiationDampingRatioFor(spec: ObjectSpec, settings: OceanSettings, submergedFraction: number): number {
   const base =
     spec.shape === "box"
       ? 0.42
@@ -3025,7 +3074,7 @@ function heaveRadiationDampingRatioFor(spec: ObjectSpec, submergedFraction: numb
           ? 0.3
           : 0.22;
   const waterplaneCoupling = clamp(0.64 + submergedFraction * 0.42, 0.64, 1.06);
-  return base * waterplaneCoupling;
+  return base * waterplaneCoupling * lightSurfaceFloaterDampingMultiplierFor(spec, settings, submergedFraction, 2.4);
 }
 
 function stepHeaveRadiationForceN(
@@ -3088,7 +3137,24 @@ function angularDragFor(relativeAngularVelocityRadps: number, submergedFraction:
   const effectiveCd = effectiveDragCoefficientFor(spec, reynoldsNumber);
   const quadratic = -0.5 * fluidDensity * effectiveCd * area * length ** 3 * relativeAngularVelocityRadps * Math.abs(relativeAngularVelocityRadps);
   const linear = -fluidDensity * objectVolumeM3(spec) * length ** 2 * (0.18 + submergedFraction * 0.72) * relativeAngularVelocityRadps;
-  return quadratic + linear;
+  return (quadratic + linear) * lightSurfaceFloaterDampingMultiplierFor(spec, settings, submergedFraction, 18);
+}
+
+function lightSurfaceFloaterDampingMultiplierFor(
+  spec: ObjectSpec,
+  settings: OceanSettings,
+  submergedFraction: number,
+  maxExtraMultiplier: number
+): number {
+  const densityRatio = currentDryDensityRatioFor(spec, settings);
+  const lowDensityBias = clamp((0.22 - densityRatio) / 0.22, 0, 1);
+  const shallowDraftBias = clamp((0.16 - submergedFraction) / 0.16, 0, 1);
+  const surfacePiercingShapeBias = spec.shape === "box" ? 1 : spec.shape === "horizontalCylinder" ? 0.55 : 0.35;
+  return 1 + maxExtraMultiplier * lowDensityBias * shallowDraftBias * surfacePiercingShapeBias;
+}
+
+function currentDryDensityRatioFor(spec: ObjectSpec, settings: OceanSettings): number {
+  return dryMassKg(spec) / Math.max(0.000001, objectVolumeM3(spec) * settings.waterDensityKgM3);
 }
 
 function dynamicViscosityForSubmergence(settings: OceanSettings, submergedFraction: number): number {

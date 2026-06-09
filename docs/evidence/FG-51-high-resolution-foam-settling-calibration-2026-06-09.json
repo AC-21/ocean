@@ -1,0 +1,92 @@
+{
+  "failures": [],
+  "gate": "G-FG-51",
+  "generatedAt": "2026-06-09T03:55:26.168Z",
+  "improvement": {
+    "buoyancyImprovementRatioFromFirst": 0,
+    "buoyancyImprovementRatioFromSourceResidual": 0.22479540202885495,
+    "firstBuoyancyErrorRatio": 0.03392688737223966,
+    "settledBuoyancyErrorRatio": 0.04262394302406902,
+    "settledTargetErrorRatio": 0.5327992878008627,
+    "sourceFoamBuoyancyErrorRatio": 0.05498412049621974,
+    "sourceFoamTargetErrorRatio": 0.6873015062027468
+  },
+  "live": {
+    "consoleErrors": [],
+    "firstWithinTolerance": {
+      "angularSpeedRadps": 0.13150589970718912,
+      "buoyancyErrorRatio": 0.03392688737223966,
+      "draftErrorM": 0.006008814762187162,
+      "liveGrid": "1024x576",
+      "phase": "floating",
+      "pressureActive": true,
+      "pressureNoFullGridReadback": true,
+      "renderer": "webgpu-grid-primary-v1",
+      "sampleKind": "first-within-tolerance",
+      "settledAtS": null,
+      "settledWindowS": null,
+      "timeS": 1.0083333333333322,
+      "verticalSpeedMps": 0.10888097268963978,
+      "waterContext": "webgpu",
+      "waterFrames": 84,
+      "withinTolerance": true
+    },
+    "launchMode": "packaged-app",
+    "pageErrors": [],
+    "runtime": {
+      "capabilityGrid": "768x432",
+      "liveGrid": "1024x576",
+      "preferredTier": "ultra",
+      "renderer": "webgpu-grid-primary-v1",
+      "runtimeGridOverride": "1024x576",
+      "selectedTier": "ultra",
+      "waterContext": "webgpu",
+      "waterFrames": 2920
+    },
+    "settledWindow": {
+      "angularSpeedRadps": 0.000015533730763308652,
+      "buoyancyErrorRatio": 0.04262394302406902,
+      "draftErrorM": -0.0014471348460086061,
+      "liveGrid": "1024x576",
+      "phase": "floating",
+      "pressureActive": true,
+      "pressureNoFullGridReadback": true,
+      "renderer": "webgpu-grid-primary-v1",
+      "sampleKind": "settled-window",
+      "settledAtS": 44.54166666666465,
+      "settledWindowS": 2.5249999999999844,
+      "timeS": 47.06666666666464,
+      "verticalSpeedMps": 0.003197544037763817,
+      "waterContext": "webgpu",
+      "waterFrames": 2920,
+      "withinTolerance": true
+    }
+  },
+  "pass": true,
+  "sourceFrontier": {
+    "actionKind": "physics-tuning-candidate",
+    "gate": "G-FG-50",
+    "pass": true,
+    "sourceGate": "G-FG-48",
+    "sourceVisualGate": "G-FG-47",
+    "sourceVisualLiveGrid": "1024x576"
+  },
+  "sourceTargetResiduals": {
+    "acceptedBandsPreserved": true,
+    "comparisonCount": 10,
+    "gate": "G-FG-48",
+    "pass": true,
+    "sourceVisualGate": "G-FG-47",
+    "sourceVisualLiveGrid": "1024x576"
+  },
+  "thresholds": {
+    "maxSettledAngularSpeedRadps": 0.05,
+    "maxSettledBuoyancyErrorRatio": 0.045,
+    "maxSettledDraftErrorM": 0.04,
+    "maxSettledTargetErrorRatio": 0.6,
+    "maxSettledVerticalSpeedMps": 0.05,
+    "minBuoyancyImprovementRatio": 0,
+    "minSettledWindowS": 2.4,
+    "minSourceResidualImprovementRatio": 0.18
+  }
+}

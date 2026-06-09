@@ -1428,6 +1428,26 @@ High-resolution calibration frontier evidence:
   `physics-tuning-candidate`, while `live-drop-speed-reference` is classified
   as a `reference-target-review` before any blind free-fall drag tuning.
 
+FG-51 converts the foam frontier item into a stricter live settling calibration.
+The earlier reference path accepted the first `withinTolerance` sample, which
+can happen before the physics state has held the stable settled window. The new
+gate drives the packaged high-resolution WebGPU foam drop and records both the
+first tolerance crossing and the later `settledAtS` window so the calibration
+target is a sustained hydrostatic state rather than a transient pass.
+
+High-resolution foam settled-window calibration evidence:
+
+- Command: `npm run fluid:high-resolution-foam-settling-calibration`.
+- Gate: `G-FG-51`.
+- Evidence snapshot:
+  `docs/evidence/FG-51-high-resolution-foam-settling-calibration-2026-06-09.json`.
+- Live proof: the report launches the packaged app at live `1024 x 576`
+  WebGPU with ultra capability selection, captures the first foam tolerance
+  crossing, then waits for a `2.4 s` settled window with no pressure readback.
+- Calibration proof: the settled sample must reduce the foam buoyancy residual
+  below the FG-50 frontier target while preserving passing FG-48 target
+  residual provenance and rejecting fallback or cosmetic sampling.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1601,6 +1621,11 @@ High-resolution calibration frontier evidence:
     loosening accepted bands, split physics tuning candidates from source/target
     review items, and make foam buoyancy the next tuning target while concrete
     free-fall target semantics are reviewed.
+48. High-resolution foam settled-window calibration: replay the packaged
+    `1024 x 576` foam drop, compare first tolerance crossing against sustained
+    `settledAtS` evidence, and accept the damping calibration only when the
+    settled buoyancy residual improves below the frontier target without
+    fallback or readback.
 
 ## Resolution Ladder
 

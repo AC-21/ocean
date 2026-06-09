@@ -51,7 +51,8 @@ export type FluidGridMilestoneId =
   | "FG-47"
   | "FG-48"
   | "FG-49"
-  | "FG-50";
+  | "FG-50"
+  | "FG-51";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -104,7 +105,8 @@ export type FluidGridGateId =
   | "G-FG-47"
   | "G-FG-48"
   | "G-FG-49"
-  | "G-FG-50";
+  | "G-FG-50"
+  | "G-FG-51";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -222,6 +224,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-48", title: "Target-aware high-resolution residual budget gate", gate: "G-FG-48" },
   { id: "FG-49", title: "Desktop probe isolation gate", gate: "G-FG-49" },
   { id: "FG-50", title: "High-resolution calibration frontier gate", gate: "G-FG-50" },
+  { id: "FG-51", title: "High-resolution foam settled-window calibration gate", gate: "G-FG-51" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -580,6 +583,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:high-resolution-calibration-frontier and docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json",
     passBar:
       "the FG-48 target-residual packet is ranked into a no-regression calibration frontier that preserves accepted drop, splash, float, sink, and damping bands, keeps live 1024 x 576 WebGPU visual provenance, classifies foam settled buoyancy as a physics tuning candidate, and classifies concrete drop speed as a reference-target review before any blind drag tuning",
+  },
+  {
+    id: "G-FG-51",
+    blocks: "FG-51",
+    evidence:
+      "npm run fluid:high-resolution-foam-settling-calibration and docs/evidence/FG-51-high-resolution-foam-settling-calibration-2026-06-09.json",
+    passBar:
+      "a packaged live 1024 x 576 WebGPU foam drop captures the first tolerance crossing and a later 2.4 s settled-window sample, proves the settled sample lowers the foam buoyancy residual below the frontier target while preserving FG-48/FG-50 accepted-band provenance, and rejects fallback, readback, or cosmetic sampling",
   },
 ];
 
@@ -1787,6 +1798,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close high-resolution calibration frontier gate",
     exitProof:
       "npm run fluid:high-resolution-calibration-frontier passes with committed FG-50 evidence, FG-48/G-FG-47 provenance, no-regression guards, and the next calibration action list",
+  },
+  {
+    id: "FG-51-T01",
+    milestone: "FG-51",
+    status: "done",
+    title: "Measure foam first tolerance crossing versus settled-window state",
+    exitProof:
+      "fluidHighResolutionFoamSettlingCalibration.report.ts launches the packaged app at live 1024 x 576 WebGPU, drives the foam reference drop, and records both first-within-tolerance and settled-window samples",
+  },
+  {
+    id: "FG-51-T02",
+    milestone: "FG-51",
+    status: "done",
+    title: "Gate foam settling against the calibration frontier",
+    exitProof:
+      "fluidHighResolutionFoamSettlingCalibration.ts consumes FG-50 and FG-48 evidence, requires foam to remain the physics-tuning candidate, and rejects samples that do not improve the buoyancy residual below the settled target threshold",
+  },
+  {
+    id: "FG-51-T03",
+    milestone: "FG-51",
+    status: "done",
+    title: "Close high-resolution foam settled-window calibration gate",
+    exitProof:
+      "npm run fluid:high-resolution-foam-settling-calibration passes with committed FG-51 evidence, live 1024 x 576 WebGPU telemetry, no full-grid readback, and preserved FG-48/FG-50 provenance",
   },
 ];
 

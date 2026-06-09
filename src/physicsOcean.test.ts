@@ -71,6 +71,23 @@ describe("physics ocean model", () => {
     expect(Math.abs(heeled - upright) / totalVolume).toBeGreaterThan(0.04);
   });
 
+  it("uses exact upright hydrostatics for tiny foam heel angles", () => {
+    const foam = cloneObjectSpec(objectPresets.find((preset) => preset.id === "foam-rescue-block") ?? objectPresets[0]);
+    const height = foam.dimensions.height ?? 1;
+    const equilibriumFraction = foam.densityKgM3 / calmTank.waterDensityKgM3;
+    const upright = createSimulation(foam, 1, 0);
+    upright.phase = "floating";
+    upright.object.centerYM = height / 2 - equilibriumFraction * height;
+    const tinyHeel = createSimulation(foam, 1, 0.004);
+    tinyHeel.phase = "floating";
+    tinyHeel.object.centerYM = upright.object.centerYM;
+    const uprightDiagnostics = diagnosticsFor(upright, foam, calmTank);
+    const tinyHeelDiagnostics = diagnosticsFor(tinyHeel, foam, calmTank);
+
+    expect(tinyHeelDiagnostics.submergedFraction).toBeCloseTo(uprightDiagnostics.submergedFraction, 5);
+    expect(tinyHeelDiagnostics.buoyancyN).toBeCloseTo(uprightDiagnostics.buoyancyN, 5);
+  });
+
   it("reports the orientation-aware displaced volume in diagnostics", () => {
     const foam = cloneObjectSpec(objectPresets.find((preset) => preset.id === "foam-rescue-block") ?? objectPresets[0]);
     const height = foam.dimensions.height ?? 1;
@@ -829,6 +846,37 @@ describe("physics ocean model", () => {
     expect(diagnostics.heaveNaturalPeriodS).toBeCloseTo(expectedPeriod, 4);
   });
 
+  it("adds extra heave and roll damping for shallow low-density floaters", () => {
+    const foam = cloneObjectSpec(objectPresets.find((preset) => preset.id === "foam-rescue-block") ?? objectPresets[0]);
+    const ice = cloneObjectSpec(objectPresets.find((preset) => preset.id === "ice-block") ?? objectPresets[0]);
+    const foamHeight = foam.dimensions.height ?? 1;
+    const iceHeight = ice.dimensions.height ?? 1;
+    const foamEquilibriumFraction = foam.densityKgM3 / calmTank.waterDensityKgM3;
+    const iceEquilibriumFraction = ice.densityKgM3 / calmTank.waterDensityKgM3;
+    const foamState = createSimulation(foam, 1, 0);
+    foamState.phase = "floating";
+    foamState.object.centerYM = foamHeight / 2 - foamEquilibriumFraction * foamHeight;
+    foamState.object.angularVelocityRadps = 0.18;
+    const iceState = createSimulation(ice, 1, 0);
+    iceState.phase = "floating";
+    iceState.object.centerYM = iceHeight / 2 - iceEquilibriumFraction * iceHeight;
+    iceState.object.angularVelocityRadps = 0.18;
+    const foamDiagnostics = diagnosticsFor(foamState, foam, calmTank);
+    const iceDiagnostics = diagnosticsFor(iceState, ice, calmTank);
+    const foamEffectiveHeaveMass = foamDiagnostics.massKg + foamDiagnostics.addedMassKg;
+    const iceEffectiveHeaveMass = iceDiagnostics.massKg + iceDiagnostics.addedMassKg;
+    const foamDampingRatio =
+      foamDiagnostics.heaveRadiationDampingNsPerM /
+      (2 * Math.sqrt(foamDiagnostics.hydrostaticStiffnessNpm * foamEffectiveHeaveMass));
+    const iceDampingRatio =
+      iceDiagnostics.heaveRadiationDampingNsPerM /
+      (2 * Math.sqrt(iceDiagnostics.hydrostaticStiffnessNpm * iceEffectiveHeaveMass));
+
+    expect(foamDampingRatio).toBeGreaterThan(0.58);
+    expect(iceDampingRatio).toBeLessThan(0.55);
+    expect(Math.abs(foamDiagnostics.angularDragNm)).toBeGreaterThan(6);
+  });
+
   it("builds radiation memory that opposes vertical heave velocity", () => {
     const foam = cloneObjectSpec(objectPresets.find((preset) => preset.id === "foam-rescue-block") ?? objectPresets[0]);
     const height = foam.dimensions.height ?? 1;
@@ -987,6 +1035,28 @@ describe("physics ocean model", () => {
     expect(deviation.withinTolerance).toBe(true);
     expect(Math.abs(deviation.draftErrorM ?? Infinity)).toBeLessThan(0.055);
     expect(deviation.buoyancyErrorRatio).toBeLessThan(0.08);
+  });
+
+  it("holds a dropped foam block inside the stricter settled window", () => {
+    const foam = cloneObjectSpec(objectPresets.find((preset) => preset.id === "foam-rescue-block") ?? objectPresets[0]);
+    let state = startDrop(createSimulation(foam, 1.35, 0.18));
+    let deviation = equilibriumDeviationFor(state, foam, calmTank);
+    for (let index = 0; index < 3200; index += 1) {
+      state = stepSimulation(state, foam, calmTank, 0.01);
+      if (index % 20 === 0 || state.settledAtS !== null) {
+        deviation = equilibriumDeviationFor(state, foam, calmTank);
+      }
+      if (state.settledAtS !== null) break;
+    }
+
+    expect(state.impact).not.toBeNull();
+    expect(state.settledAtS).not.toBeNull();
+    expect(state.timeS - (state.settledAtS ?? state.timeS)).toBeGreaterThan(2.39);
+    expect(deviation.withinTolerance).toBe(true);
+    expect(Math.abs(deviation.draftErrorM ?? Infinity)).toBeLessThan(0.04);
+    expect(deviation.buoyancyErrorRatio).toBeLessThan(0.035);
+    expect(deviation.verticalSpeedMps).toBeLessThan(0.05);
+    expect(deviation.angularSpeedRadps).toBeLessThan(0.05);
   });
 
   it("increases projected vertical area when a box enters water at an angle", () => {

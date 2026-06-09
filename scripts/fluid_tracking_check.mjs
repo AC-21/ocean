@@ -56,6 +56,7 @@ const requiredFiles = [
   "docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
   "docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json",
   "docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json",
+  "docs/evidence/FG-51-high-resolution-foam-settling-calibration-2026-06-09.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -164,6 +165,9 @@ const requiredFiles = [
   "src/fluid/fluidHighResolutionCalibrationFrontier.ts",
   "src/fluid/fluidHighResolutionCalibrationFrontier.report.ts",
   "src/fluid/fluidHighResolutionCalibrationFrontier.test.ts",
+  "src/fluid/fluidHighResolutionFoamSettlingCalibration.ts",
+  "src/fluid/fluidHighResolutionFoamSettlingCalibration.report.ts",
+  "src/fluid/fluidHighResolutionFoamSettlingCalibration.test.ts",
   "src/fluid/fluidVisualPixelProbe.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
@@ -184,8 +188,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48", "FG-49", "FG-50"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48", "G-FG-49", "G-FG-50"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48", "FG-49", "FG-50", "FG-51"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48", "G-FG-49", "G-FG-50", "G-FG-51"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -304,6 +308,9 @@ const desktopProbeIsolationTest = files.get("src/fluid/fluidDesktopProbeIsolatio
 const highResolutionCalibrationFrontier = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.ts") ?? "";
 const highResolutionCalibrationFrontierReport = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.report.ts") ?? "";
 const highResolutionCalibrationFrontierTest = files.get("src/fluid/fluidHighResolutionCalibrationFrontier.test.ts") ?? "";
+const highResolutionFoamSettlingCalibration = files.get("src/fluid/fluidHighResolutionFoamSettlingCalibration.ts") ?? "";
+const highResolutionFoamSettlingCalibrationReport = files.get("src/fluid/fluidHighResolutionFoamSettlingCalibration.report.ts") ?? "";
+const highResolutionFoamSettlingCalibrationTest = files.get("src/fluid/fluidHighResolutionFoamSettlingCalibration.test.ts") ?? "";
 const visualPixelProbe = files.get("src/fluid/fluidVisualPixelProbe.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
@@ -371,6 +378,7 @@ const fg47Evidence = files.get("docs/evidence/FG-47-installed-high-resolution-vi
 const fg48Evidence = files.get("docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ?? "";
 const fg49Evidence = files.get("docs/evidence/FG-49-desktop-probe-isolation-2026-06-09.json") ?? "";
 const fg50Evidence = files.get("docs/evidence/FG-50-high-resolution-calibration-frontier-2026-06-09.json") ?? "";
+const fg51Evidence = files.get("docs/evidence/FG-51-high-resolution-foam-settling-calibration-2026-06-09.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -4068,6 +4076,97 @@ if (
   !fg50Evidence.includes("\"reference-target-review\"")
 ) {
   errors.push("FG-50 evidence must record passing calibration frontier classification with FG-48/FG-47 provenance, foam tuning, and drop target review");
+}
+
+if (
+  !packageJson.includes("\"fluid:high-resolution-foam-settling-calibration\"") ||
+  !packageJson.includes("src/fluid/fluidHighResolutionFoamSettlingCalibration.report.ts")
+) {
+  errors.push("package.json must expose the FG-51 high-resolution foam settling calibration command");
+}
+
+if (
+  !tracking.includes("FG-51-T03") ||
+  !tracking.includes("FG-51-high-resolution-foam-settling-calibration-2026-06-09.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/55") ||
+  !tracking.includes("first-within-tolerance") ||
+  !tracking.includes("settled-window")
+) {
+  errors.push("docs/TRACKING.md must record FG-51 foam settled-window evidence, task proof, and issue mapping");
+}
+
+if (
+  !contract.includes("FG-51") ||
+  !contract.includes("G-FG-51") ||
+  !contract.includes("High-resolution foam settled-window calibration gate") ||
+  !contract.includes("npm run fluid:high-resolution-foam-settling-calibration") ||
+  !contract.includes("first tolerance crossing") ||
+  !contract.includes("2.4 s settled-window sample")
+) {
+  errors.push("fluidGridContract.ts must define the FG-51 foam settled-window milestone, gate, and pass bar");
+}
+
+if (
+  !highResolutionFoamSettlingCalibration.includes("G-FG-51") ||
+  !highResolutionFoamSettlingCalibration.includes("first-within-tolerance") ||
+  !highResolutionFoamSettlingCalibration.includes("settled-window") ||
+  !highResolutionFoamSettlingCalibration.includes("minSourceResidualImprovementRatio") ||
+  !highResolutionFoamSettlingCalibration.includes("physics-tuning-candidate") ||
+  !highResolutionFoamSettlingCalibration.includes("pressure path used full-grid readback")
+) {
+  errors.push("fluidHighResolutionFoamSettlingCalibration.ts must define FG-51 first-vs-settled foam calibration, provenance, improvement, and readback checks");
+}
+
+if (
+  !highResolutionFoamSettlingCalibrationReport.includes("OCEAN_LAB_HIGH_RESOLUTION_FOAM_SETTLING_OUT") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("FG-50-high-resolution-calibration-frontier-2026-06-09.json") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("OCEAN_LAB_EXPERIMENTAL_FLUID_GRID") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("1024x576") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("settledAtS") ||
+  !highResolutionFoamSettlingCalibrationReport.includes("G-FG-51")
+) {
+  errors.push("fluidHighResolutionFoamSettlingCalibration.report.ts must launch high-resolution packaged foam settling and write FG-51 evidence");
+}
+
+if (
+  !highResolutionFoamSettlingCalibrationTest.includes("high-resolution foam settling calibration gate") ||
+  !highResolutionFoamSettlingCalibrationTest.includes("already settled") ||
+  !highResolutionFoamSettlingCalibrationTest.includes("cosmetic sampling") ||
+  !highResolutionFoamSettlingCalibrationTest.includes("fallback renderer") ||
+  !highResolutionFoamSettlingCalibrationTest.includes("weak FG-50/FG-48 provenance")
+) {
+  errors.push("fluidHighResolutionFoamSettlingCalibration.test.ts must cover FG-51 pass, provenance, first sample, settled-window, non-improvement, and fallback failures");
+}
+
+if (
+  !remap.includes("FG-51") ||
+  !remap.includes("High-resolution foam settled-window calibration evidence") ||
+  !remap.includes("first tolerance crossing") ||
+  !remap.includes("settledAtS") ||
+  !remap.includes("cosmetic sampling")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-51 foam settled-window calibration gate");
+}
+
+if (
+  !fg51Evidence.includes("\"gate\": \"G-FG-51\"") ||
+  !fg51Evidence.includes("\"pass\": true") ||
+  !fg51Evidence.includes("\"failures\": []") ||
+  !fg51Evidence.includes("\"gate\": \"G-FG-50\"") ||
+  !fg51Evidence.includes("\"sourceGate\": \"G-FG-48\"") ||
+  !fg51Evidence.includes("\"sourceVisualGate\": \"G-FG-47\"") ||
+  !fg51Evidence.includes("\"sourceVisualLiveGrid\": \"1024x576\"") ||
+  !fg51Evidence.includes("\"sampleKind\": \"first-within-tolerance\"") ||
+  !fg51Evidence.includes("\"sampleKind\": \"settled-window\"") ||
+  !fg51Evidence.includes("\"settledAtS\"") ||
+  !fg51Evidence.includes("\"runtimeGridOverride\": \"1024x576\"") ||
+  !fg51Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg51Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg51Evidence.includes("\"buoyancyImprovementRatioFromFirst\"") ||
+  !fg51Evidence.includes("\"buoyancyImprovementRatioFromSourceResidual\"")
+) {
+  errors.push("FG-51 evidence must record passing high-resolution foam first-vs-settled calibration with FG-50/FG-48 provenance, live WebGPU telemetry, and improvement ratios");
 }
 
 if (errors.length > 0) {
