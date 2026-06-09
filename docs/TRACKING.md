@@ -51,6 +51,7 @@ and GitHub issue mapping.
 | FG-41 | Persisted high-resolution runtime-grid calibration gate | Done | G-FG-41 |
 | FG-42 | Installed high-resolution reference pacing gate | Done | G-FG-42 |
 | FG-43 | Installed high-resolution float/sink envelope gate | Done | G-FG-43 |
+| FG-44 | Installed high-resolution Desktop visibility gate | Done | G-FG-44 |
 
 ## Gates
 
@@ -100,6 +101,7 @@ and GitHub issue mapping.
 | G-FG-41 | FG-41 | `npm run fluid:high-resolution-calibration`; `docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json` | a persisted local calibration profile derived from passing FG-40 evidence launches the packaged app at live `1024 x 576` without `OCEAN_LAB_EXPERIMENTAL_FLUID_GRID` while capability selection remains capped at ultra `768 x 432` |
 | G-FG-42 | FG-42 | `npm run fluid:installed-high-resolution-reference-pacing`; `docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json` | the real installed Desktop app uses the default `fluid-calibration.v1.json` profile with a persisted FG-40 runtime grid, no fluid-tier, grid, or userData environment overrides, replays reference outcomes, and sustains smooth live `1024 x 576` WebGPU pacing |
 | G-FG-43 | FG-43 | `npm run fluid:installed-high-resolution-float-sink`; `docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json` | the real installed Desktop app uses the default high-resolution profile to exercise every object preset at live `1024 x 576`, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, and a nonblank/varied high-resolution viewport screenshot |
+| G-FG-44 | FG-44 | `npm run fluid:installed-high-resolution-desktop-visibility`; `docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json` | the normal macOS Desktop launch path opens the installed app with the FG-43 high-resolution profile, exposes a frontmost Ocean Impact Lab window, and captures nonblank/varied ocean viewport pixels from the user-visible screen |
 
 ## Tasks
 
@@ -238,6 +240,9 @@ and GitHub issue mapping.
 | FG-43-T01 | FG-43 | Done | calibration | `fluidInstalledHighResolutionFloatSinkEnvelope.ts` requires every object preset, all three prediction outcomes, default high-resolution storage, calibrated-auto ultra runtime, live `1024 x 576` WebGPU samples, active pressure/particles/coupling, no full-grid readback, and nonblack viewport pixels |
 | FG-43-T02 | FG-43 | Done | verification | `fluidInstalledHighResolutionFloatSinkEnvelope.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier, grid, or userData env overrides, captures the high-resolution WebGPU canvas, and records float/sink prediction plus live phase evidence for foam, pine, ice, drum, hardwood, concrete, steel, and aluminum presets |
 | FG-43-T03 | FG-43 | Done | performance | `npm run fluid:installed-high-resolution-float-sink` passes with eight presets, stable floaters, immediate sinkers, accelerated waterlogging threshold proof, high-resolution viewport luma `124.27` with `27` color buckets, max p95 `9.20 ms`, max p99 `9.40 ms`, worst dropped-frame ratio `0.0011`, and committed FG-43 evidence |
+| FG-44-T01 | FG-44 | Done | release | `fluidInstalledHighResolutionDesktopVisibility.ts` requires passing FG-43 high-resolution evidence, default runtime-grid storage, the installed Desktop bundle process, a visible frontmost window, and nonblank/varied ocean viewport pixels |
+| FG-44-T02 | FG-44 | Done | verification | `fluidInstalledHighResolutionDesktopVisibility.report.ts` opens `/Users/sasha/Desktop/Ocean Impact Lab.app` through macOS `open`, foregrounds it, screenshots the visible display, crops the ocean viewport, and ties the proof to fresh FG-43 source evidence |
+| FG-44-T03 | FG-44 | Done | release | `npm run fluid:installed-high-resolution-desktop-visibility` passes with a normal visible Desktop launch, source FG-43 live `1024 x 576` evidence, and committed nonblack high-resolution viewport evidence |
 
 ## GitHub Labels
 
@@ -297,6 +302,7 @@ and GitHub issue mapping.
 | FG-41 | https://github.com/AC-21/ocean/issues/44 |
 | FG-42 | https://github.com/AC-21/ocean/issues/45 |
 | FG-43 | https://github.com/AC-21/ocean/issues/46 |
+| FG-44 | https://github.com/AC-21/ocean/issues/47 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

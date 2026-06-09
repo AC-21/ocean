@@ -44,7 +44,8 @@ export type FluidGridMilestoneId =
   | "FG-40"
   | "FG-41"
   | "FG-42"
-  | "FG-43";
+  | "FG-43"
+  | "FG-44";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -90,7 +91,8 @@ export type FluidGridGateId =
   | "G-FG-40"
   | "G-FG-41"
   | "G-FG-42"
-  | "G-FG-43";
+  | "G-FG-43"
+  | "G-FG-44";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -201,6 +203,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-41", title: "Persisted high-resolution runtime-grid calibration gate", gate: "G-FG-41" },
   { id: "FG-42", title: "Installed high-resolution reference pacing gate", gate: "G-FG-42" },
   { id: "FG-43", title: "Installed high-resolution float/sink envelope gate", gate: "G-FG-43" },
+  { id: "FG-44", title: "Installed high-resolution Desktop visibility gate", gate: "G-FG-44" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -504,6 +507,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-float-sink and docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
     passBar:
       "the real installed Desktop app uses the default high-resolution calibration profile to exercise every object preset at live 1024 x 576, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, active coupling telemetry, no full-grid readback, and nonblank high-resolution viewport pixels",
+  },
+  {
+    id: "G-FG-44",
+    blocks: "FG-44",
+    evidence:
+      "npm run fluid:installed-high-resolution-desktop-visibility and docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json",
+    passBar:
+      "the normal macOS Desktop launch path opens the installed app with the FG-43 high-resolution profile, exposes a frontmost Ocean Impact Lab window, and captures nonblank varied ocean viewport pixels from the user-visible screen",
   },
 ];
 
@@ -1543,6 +1554,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution float/sink envelope gate",
     exitProof:
       "npm run fluid:installed-high-resolution-float-sink passes with eight presets, stable floaters, immediate sinkers, accelerated waterlogging threshold proof, nonblank high-resolution viewport pixels, max p99 frame time under 10 ms, and committed FG-43 evidence",
+  },
+  {
+    id: "FG-44-T01",
+    milestone: "FG-44",
+    status: "done",
+    title: "Define installed high-resolution Desktop visibility checks",
+    exitProof:
+      "fluidInstalledHighResolutionDesktopVisibility.ts requires passing FG-43 high-resolution evidence, default runtime-grid storage, the installed Desktop bundle process, a visible frontmost window, and nonblank varied ocean viewport pixels",
+  },
+  {
+    id: "FG-44-T02",
+    milestone: "FG-44",
+    status: "done",
+    title: "Capture the normal macOS Desktop high-resolution viewport",
+    exitProof:
+      "fluidInstalledHighResolutionDesktopVisibility.report.ts opens /Users/sasha/Desktop/Ocean Impact Lab.app through macOS open, foregrounds it, screenshots the visible display, crops the ocean viewport, and ties the proof to fresh FG-43 source evidence",
+  },
+  {
+    id: "FG-44-T03",
+    milestone: "FG-44",
+    status: "done",
+    title: "Close installed high-resolution Desktop visibility gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-desktop-visibility passes with a normal visible Desktop launch, source FG-43 live 1024 x 576 evidence, and committed nonblack high-resolution viewport evidence",
   },
 ];
 

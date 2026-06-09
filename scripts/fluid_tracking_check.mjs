@@ -49,6 +49,7 @@ const requiredFiles = [
   "docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json",
   "docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
   "docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
+  "docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -136,6 +137,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.ts",
   "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.report.ts",
   "src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.test.ts",
+  "src/fluid/fluidInstalledHighResolutionDesktopVisibility.ts",
+  "src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts",
+  "src/fluid/fluidInstalledHighResolutionDesktopVisibility.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -155,8 +159,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -254,6 +258,9 @@ const installedHighResolutionReferencePacingTest = files.get("src/fluid/fluidIns
 const installedHighResolutionFloatSinkEnvelope = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.ts") ?? "";
 const installedHighResolutionFloatSinkEnvelopeReport = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.report.ts") ?? "";
 const installedHighResolutionFloatSinkEnvelopeTest = files.get("src/fluid/fluidInstalledHighResolutionFloatSinkEnvelope.test.ts") ?? "";
+const installedHighResolutionDesktopVisibility = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.ts") ?? "";
+const installedHighResolutionDesktopVisibilityReport = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts") ?? "";
+const installedHighResolutionDesktopVisibilityTest = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -313,6 +320,7 @@ const fg40Evidence = files.get("docs/evidence/FG-40-experimental-reference-outco
 const fg41Evidence = files.get("docs/evidence/FG-41-high-resolution-calibration-2026-06-08.json") ?? "";
 const fg42Evidence = files.get("docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ?? "";
 const fg43Evidence = files.get("docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json") ?? "";
+const fg44Evidence = files.get("docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3362,6 +3370,95 @@ if (
   !fg43Evidence.includes("\"averageLuma\": 124.26511749359392")
 ) {
   errors.push("FG-43 evidence must record a passing installed high-resolution float/sink envelope with live 1024 x 576 WebGPU telemetry, visual pixels, all presets, and no-readback proof");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-desktop-visibility\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts")
+) {
+  errors.push("package.json must expose the FG-44 installed high-resolution Desktop visibility command");
+}
+
+if (
+  !tracking.includes("FG-44-T03") ||
+  !tracking.includes("FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/47") ||
+  !tracking.includes("normal macOS Desktop launch path")
+) {
+  errors.push("docs/TRACKING.md must record FG-44 normal macOS Desktop visibility evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-44") ||
+  !contract.includes("G-FG-44") ||
+  !contract.includes("Installed high-resolution Desktop visibility gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-desktop-visibility") ||
+  !contract.includes("frontmost Ocean Impact Lab window") ||
+  !contract.includes("nonblank varied ocean viewport")
+) {
+  errors.push("fluidGridContract.ts must define the FG-44 installed high-resolution Desktop visibility milestone, gate, and visible-screen proof");
+}
+
+if (
+  !installedHighResolutionDesktopVisibility.includes("G-FG-44") ||
+  !installedHighResolutionDesktopVisibility.includes("high-resolution evidence gate was") ||
+  !installedHighResolutionDesktopVisibility.includes("high-resolution evidence live grid was") ||
+  !installedHighResolutionDesktopVisibility.includes("profileHadRuntimeGrid") ||
+  !installedHighResolutionDesktopVisibility.includes("readByMainProcess") ||
+  !installedHighResolutionDesktopVisibility.includes("frontmost") ||
+  !installedHighResolutionDesktopVisibility.includes("screen may appear black")
+) {
+  errors.push("fluidInstalledHighResolutionDesktopVisibility.ts must define FG-44 source, storage, installed-process, frontmost-window, and black-screen checks");
+}
+
+if (
+  !installedHighResolutionDesktopVisibilityReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_DESKTOP_VISIBILITY_OUT") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_DESKTOP_VISIBILITY_SCREENSHOT") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("reports/fluid-installed-high-resolution-float-sink-envelope-latest.json") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("runCommand(\"open\"") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("screencapture") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("oceanViewportCrop") ||
+  !installedHighResolutionDesktopVisibilityReport.includes("G-FG-44")
+) {
+  errors.push("fluidInstalledHighResolutionDesktopVisibility.report.ts must open the installed Desktop app, screenshot the visible screen, crop the ocean viewport, and validate FG-44");
+}
+
+if (
+  !installedHighResolutionDesktopVisibilityTest.includes("installed high-resolution Desktop visibility gate") ||
+  !installedHighResolutionDesktopVisibilityTest.includes("1024x576") ||
+  !installedHighResolutionDesktopVisibilityTest.includes("black high-resolution Desktop viewport") ||
+  !installedHighResolutionDesktopVisibilityTest.includes("wrong-bundle")
+) {
+  errors.push("fluidInstalledHighResolutionDesktopVisibility.test.ts must cover FG-44 pass, source-grid, black-viewport, and wrong-bundle failure cases");
+}
+
+if (
+  !remap.includes("FG-44") ||
+  !remap.includes("Installed high-resolution Desktop visibility evidence") ||
+  !remap.includes("normal macOS Desktop") ||
+  !remap.includes("black-screen") ||
+  !remap.includes("Installed high-resolution Desktop visibility: open the installed Desktop app")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-44 normal macOS Desktop visibility gate and black-screen guard");
+}
+
+if (
+  !fg44Evidence.includes("\"gate\": \"G-FG-44\"") ||
+  !fg44Evidence.includes("\"pass\": true") ||
+  !fg44Evidence.includes("\"failures\": []") ||
+  !fg44Evidence.includes("\"gate\": \"G-FG-43\"") ||
+  !fg44Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg44Evidence.includes("\"status\": \"nonblank\"") ||
+  !fg44Evidence.includes("\"variety\": \"varied\"") ||
+  !fg44Evidence.includes("\"path\": \"/Users/sasha/Desktop/Ocean Impact Lab.app\"") ||
+  !fg44Evidence.includes("\"installedBundleProcess\": true") ||
+  !fg44Evidence.includes("\"frontmost\": true") ||
+  !fg44Evidence.includes("\"visible\": true") ||
+  !fg44Evidence.includes("\"screenshotPath\": \"reports/fluid-installed-high-resolution-desktop-visibility-latest.png\"") ||
+  !fg44Evidence.includes("\"averageLuma\"") ||
+  !fg44Evidence.includes("\"colorBuckets\"")
+) {
+  errors.push("FG-44 evidence must record a passing normal macOS Desktop launch with FG-43 source proof, installed process/window visibility, and nonblank high-resolution viewport pixels");
 }
 
 if (errors.length > 0) {

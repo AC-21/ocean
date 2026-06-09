@@ -1,0 +1,65 @@
+{
+  "highResolutionEvidence": {
+    "gate": "G-FG-43",
+    "liveGrid": "1024x576",
+    "pass": true,
+    "renderer": "webgpu-grid-primary-v1",
+    "sourcePath": "reports/fluid-installed-high-resolution-float-sink-envelope-latest.json",
+    "visual": {
+      "averageLuma": 124.26511749359392,
+      "colorBuckets": 27,
+      "height": 1412,
+      "opaqueSamples": 4293,
+      "samples": 4293,
+      "status": "nonblank",
+      "variety": "varied",
+      "width": 1364
+    },
+    "waterContext": "webgpu"
+  },
+  "launcher": {
+    "path": "/Users/sasha/Desktop/Ocean Impact Lab.app",
+    "resolvesToInstalledBundle": true,
+    "targetPath": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app"
+  },
+  "process": {
+    "command": "/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app/Contents/MacOS/Ocean Impact Lab",
+    "installedBundleProcess": true,
+    "pid": 55139
+  },
+  "storage": {
+    "defaultStorage": true,
+    "profileHadRuntimeGrid": true,
+    "readByMainProcess": true
+  },
+  "viewportProbe": {
+    "crop": {
+      "height": 468,
+      "width": 612,
+      "x": 578,
+      "y": 271
+    },
+    "pixelProbe": {
+      "averageLuma": 217.21741948051758,
+      "colorBuckets": 25,
+      "status": "nonblank",
+      "variety": "varied"
+    },
+    "screenshotPath": "reports/fluid-installed-high-resolution-desktop-visibility-latest.png"
+  },
+  "window": {
+    "frontmost": true,
+    "height": 900,
+    "onScreen": true,
+    "title": "Ocean Impact Lab",
+    "visible": true,
+    "width": 1360,
+    "windowCount": 1,
+    "x": 184,
+    "y": 109
+  },
+  "failures": [],
+  "gate": "G-FG-44",
+  "generatedAt": "2026-06-09T00:03:54.064Z",
+  "pass": true
+}

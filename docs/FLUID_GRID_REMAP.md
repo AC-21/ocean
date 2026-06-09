@@ -1249,6 +1249,41 @@ Installed high-resolution float/sink envelope evidence:
   duplicate-water-frame ratio `0.0028` while preserving active pressure,
   particles, coupling, and no-full-grid-readback telemetry.
 
+FG-44 closes the user-visible black-screen gap for the normal macOS Desktop
+launch path. FG-43 proved that an automated renderer capture was nonblank at
+`1024 x 576`, but FG-44 opens `/Users/sasha/Desktop/Ocean Impact Lab.app`
+through macOS `open`, foregrounds the installed app, screenshots the actual
+display, crops the ocean viewport, and rejects the run if the high-resolution
+viewport looks blank, flat, hidden, off-screen, or sourced from the wrong bundle.
+
+Installed high-resolution Desktop visibility evidence:
+
+- Command: `npm run fluid:installed-high-resolution-desktop-visibility`.
+- Gate: `G-FG-44`.
+- Evidence snapshot:
+  `docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json`.
+- Source proof: the gate consumes fresh FG-43 evidence from
+  `reports/fluid-installed-high-resolution-float-sink-envelope-latest.json`,
+  requiring a passing `G-FG-43` report with live `1024 x 576`
+  `webgpu-grid-primary-v1` / `webgpu` telemetry, default high-resolution
+  storage, `runtimeGrid` persistence, main-process reads, and a nonblank varied
+  source canvas.
+- Desktop proof: the launcher at `/Users/sasha/Desktop/Ocean Impact Lab.app`
+  must resolve to the installed bundle, the process command must come from the
+  installed bundle, and the visible window must be frontmost, on-screen, titled
+  `Ocean Impact Lab`, and at least `1000 x 700`. Latest proof resolved the
+  launcher to
+  `/Users/sasha/Applications/Ocean Impact Lab Builds/Ocean Impact Lab-darwin-arm64/Ocean Impact Lab.app`,
+  found the installed bundle process, and captured one frontmost on-screen
+  `1360 x 900` app window.
+- Black-screen proof: the report captures
+  `reports/fluid-installed-high-resolution-desktop-visibility-latest.png`,
+  crops the user-visible ocean viewport, and requires nonblank varied pixels,
+  average luma above the black-screen threshold, and enough color buckets to
+  reject a flat or black high-resolution screen. Latest proof cropped a
+  `612 x 468` viewport at screen position `578, 271` and measured
+  `nonblank` / `varied` pixels, average luma `217.22`, and `25` color buckets.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1393,6 +1428,10 @@ Installed high-resolution float/sink envelope evidence:
     through the installed default high-resolution profile, proving stable
     floaters, immediate sinkers, waterlogging predictions, visible nonblack
     canvas pixels, and smooth WebGPU pacing.
+41. Installed high-resolution Desktop visibility: open the installed Desktop app
+    through the normal macOS launch path, foreground the real app window, and
+    crop the visible ocean viewport so high-resolution black-screen regressions
+    cannot pass hidden renderer automation.
 
 ## Resolution Ladder
 
