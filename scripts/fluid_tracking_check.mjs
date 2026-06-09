@@ -53,6 +53,7 @@ const requiredFiles = [
   "docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json",
   "docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json",
   "docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json",
+  "docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -152,6 +153,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionVisualWatchdog.ts",
   "src/fluid/fluidInstalledHighResolutionVisualWatchdog.report.ts",
   "src/fluid/fluidInstalledHighResolutionVisualWatchdog.test.ts",
+  "src/fluid/fluidInstalledHighResolutionTargetResiduals.ts",
+  "src/fluid/fluidInstalledHighResolutionTargetResiduals.report.ts",
+  "src/fluid/fluidInstalledHighResolutionTargetResiduals.test.ts",
   "src/fluid/fluidVisualPixelProbe.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
@@ -172,8 +176,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45", "FG-46", "FG-47", "FG-48"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45", "G-FG-46", "G-FG-47", "G-FG-48"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -283,6 +287,9 @@ const installedHighResolutionResidualBudgetTest = files.get("src/fluid/fluidInst
 const installedHighResolutionVisualWatchdog = files.get("src/fluid/fluidInstalledHighResolutionVisualWatchdog.ts") ?? "";
 const installedHighResolutionVisualWatchdogReport = files.get("src/fluid/fluidInstalledHighResolutionVisualWatchdog.report.ts") ?? "";
 const installedHighResolutionVisualWatchdogTest = files.get("src/fluid/fluidInstalledHighResolutionVisualWatchdog.test.ts") ?? "";
+const installedHighResolutionTargetResiduals = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.ts") ?? "";
+const installedHighResolutionTargetResidualsReport = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.report.ts") ?? "";
+const installedHighResolutionTargetResidualsTest = files.get("src/fluid/fluidInstalledHighResolutionTargetResiduals.test.ts") ?? "";
 const visualPixelProbe = files.get("src/fluid/fluidVisualPixelProbe.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
@@ -347,6 +354,7 @@ const fg44Evidence = files.get("docs/evidence/FG-44-installed-high-resolution-de
 const fg45Evidence = files.get("docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ?? "";
 const fg46Evidence = files.get("docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ?? "";
 const fg47Evidence = files.get("docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json") ?? "";
+const fg48Evidence = files.get("docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -3781,6 +3789,100 @@ if (
   !fg47Evidence.includes("\"particlesNoFullGridReadback\": true")
 ) {
   errors.push("FG-47 evidence must record passing installed high-resolution visual watchdog samples with FG-46 provenance, live 1024 x 576 WebGPU pixels, advancing frames, and no-readback proof");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-target-residuals\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionTargetResiduals.report.ts")
+) {
+  errors.push("package.json must expose the FG-48 installed high-resolution target residuals command");
+}
+
+if (
+  !tracking.includes("FG-48-T03") ||
+  !tracking.includes("FG-48-installed-high-resolution-target-residuals-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/51") ||
+  !tracking.includes("lower-is-better") ||
+  !tracking.includes("target-midpoint") ||
+  !tracking.includes("exact")
+) {
+  errors.push("docs/TRACKING.md must record FG-48 target-aware residual evidence, objective modes, and issue mapping");
+}
+
+if (
+  !contract.includes("FG-48") ||
+  !contract.includes("G-FG-48") ||
+  !contract.includes("Target-aware high-resolution residual budget gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-target-residuals") ||
+  !contract.includes("target-midpoint") ||
+  !contract.includes("lower-is-better") ||
+  !contract.includes("too far from its physical target")
+) {
+  errors.push("fluidGridContract.ts must define the FG-48 target-aware residual milestone, gate, and objective semantics");
+}
+
+if (
+  !installedHighResolutionTargetResiduals.includes("G-FG-48") ||
+  !installedHighResolutionTargetResiduals.includes("target-midpoint") ||
+  !installedHighResolutionTargetResiduals.includes("lower-is-better") ||
+  !installedHighResolutionTargetResiduals.includes("exact") ||
+  !installedHighResolutionTargetResiduals.includes("targetErrorRatio") ||
+  !installedHighResolutionTargetResiduals.includes("toleranceMarginRatio") ||
+  !installedHighResolutionTargetResiduals.includes("live-ice-hydrostatic-draft-error") ||
+  !installedHighResolutionTargetResiduals.includes("source visual watchdog never observed post-drop active physics")
+) {
+  errors.push("fluidInstalledHighResolutionTargetResiduals.ts must define FG-48 target-aware objective modes, target/tolerance ratios, and FG-47 source watchdog checks");
+}
+
+if (
+  !installedHighResolutionTargetResidualsReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_TARGET_RESIDUALS_OUT") ||
+  !installedHighResolutionTargetResidualsReport.includes("FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ||
+  !installedHighResolutionTargetResidualsReport.includes("FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json") ||
+  !installedHighResolutionTargetResidualsReport.includes("objective counts") ||
+  !installedHighResolutionTargetResidualsReport.includes("G-FG-48")
+) {
+  errors.push("fluidInstalledHighResolutionTargetResiduals.report.ts must consume FG-46/FG-47 evidence and write the FG-48 target residual report");
+}
+
+if (
+  !installedHighResolutionTargetResidualsTest.includes("installed high-resolution target residuals gate") ||
+  !installedHighResolutionTargetResidualsTest.includes("without an explicit target objective") ||
+  !installedHighResolutionTargetResidualsTest.includes("lower-is-better metrics near the upper tolerance edge") ||
+  !installedHighResolutionTargetResidualsTest.includes("midpoint-target metrics") ||
+  !installedHighResolutionTargetResidualsTest.includes("weak source visual watchdog evidence")
+) {
+  errors.push("fluidInstalledHighResolutionTargetResiduals.test.ts must cover FG-48 pass, unknown objective, lower-is-better, midpoint, exact, and watchdog failure cases");
+}
+
+if (
+  !remap.includes("FG-48") ||
+  !remap.includes("Installed high-resolution target residual evidence") ||
+  !remap.includes("target-midpoint") ||
+  !remap.includes("lower-is-better") ||
+  !remap.includes("targetErrorRatio") ||
+  !remap.includes("toleranceMarginRatio")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-48 target-aware residual gate and evidence");
+}
+
+if (
+  !fg48Evidence.includes("\"gate\": \"G-FG-48\"") ||
+  !fg48Evidence.includes("\"pass\": true") ||
+  !fg48Evidence.includes("\"failures\": []") ||
+  !fg48Evidence.includes("FG-46-installed-high-resolution-residual-budget-2026-06-08.json") ||
+  !fg48Evidence.includes("FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json") ||
+  !fg48Evidence.includes("\"gate\": \"G-FG-46\"") ||
+  !fg48Evidence.includes("\"gate\": \"G-FG-47\"") ||
+  !fg48Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg48Evidence.includes("\"comparisonCount\": 10") ||
+  !fg48Evidence.includes("\"target-midpoint\": 4") ||
+  !fg48Evidence.includes("\"lower-is-better\": 4") ||
+  !fg48Evidence.includes("\"exact\": 2") ||
+  !fg48Evidence.includes("\"targetErrorRatio\"") ||
+  !fg48Evidence.includes("\"toleranceMarginRatio\"") ||
+  !fg48Evidence.includes("\"live-ice-hydrostatic-draft-error\"")
+) {
+  errors.push("FG-48 evidence must record passing target-aware residuals with FG-46/FG-47 provenance, objective counts, live 1024 x 576 WebGPU proof, and target/tolerance ratios");
 }
 
 if (errors.length > 0) {

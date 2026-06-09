@@ -48,7 +48,8 @@ export type FluidGridMilestoneId =
   | "FG-44"
   | "FG-45"
   | "FG-46"
-  | "FG-47";
+  | "FG-47"
+  | "FG-48";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -98,7 +99,8 @@ export type FluidGridGateId =
   | "G-FG-44"
   | "G-FG-45"
   | "G-FG-46"
-  | "G-FG-47";
+  | "G-FG-47"
+  | "G-FG-48";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -213,6 +215,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-45", title: "Installed high-resolution operator readout gate", gate: "G-FG-45" },
   { id: "FG-46", title: "Installed high-resolution reference residual budget gate", gate: "G-FG-46" },
   { id: "FG-47", title: "Installed high-resolution visual watchdog gate", gate: "G-FG-47" },
+  { id: "FG-48", title: "Target-aware high-resolution residual budget gate", gate: "G-FG-48" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -548,6 +551,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-visual-watchdog and docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json",
     passBar:
       "the installed high-resolution Desktop app captures multiple idle and post-drop 1024 x 576 WebGPU canvas pixel probes over advancing water frames, rejecting black, flat, stale, fallback, or UI-only visual evidence while preserving FG-46 residual and no-readback provenance",
+  },
+  {
+    id: "G-FG-48",
+    blocks: "FG-48",
+    evidence:
+      "npm run fluid:installed-high-resolution-target-residuals and docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json",
+    passBar:
+      "the installed high-resolution residual packet reclassifies every accepted comparison as target-midpoint, lower-is-better, or exact, computes target error separately from tolerance-edge margin, consumes passing FG-46 residual and FG-47 visual watchdog provenance, and fails if any live 1024 x 576 WebGPU comparison is missing, misclassified, outside tolerance, too far from its physical target, or too close to a failing edge",
   },
 ];
 
@@ -1683,6 +1694,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution visual watchdog gate",
     exitProof:
       "npm run fluid:installed-high-resolution-visual-watchdog passes with multiple nonblank varied 1024 x 576 WebGPU samples, advancing water frames, post-drop active physics telemetry, no-readback proof, and committed FG-47 evidence",
+  },
+  {
+    id: "FG-48-T01",
+    milestone: "FG-48",
+    status: "done",
+    title: "Define target-aware high-resolution residual objectives",
+    exitProof:
+      "fluidInstalledHighResolutionTargetResiduals.ts consumes FG-46 and FG-47 evidence, classifies comparisons as target-midpoint, lower-is-better, or exact, and computes targetErrorRatio plus toleranceMarginRatio so zero-target error metrics are not misread as midpoint misses",
+  },
+  {
+    id: "FG-48-T02",
+    milestone: "FG-48",
+    status: "done",
+    title: "Generate target-aware residual evidence",
+    exitProof:
+      "fluidInstalledHighResolutionTargetResiduals.report.ts reads committed FG-46 residual-budget evidence and FG-47 visual-watchdog evidence, writes reports/fluid-installed-high-resolution-target-residuals-latest.json, and summarizes objective counts, worst target error, closest tolerance margin, and watch lists",
+  },
+  {
+    id: "FG-48-T03",
+    milestone: "FG-48",
+    status: "done",
+    title: "Close target-aware high-resolution residual gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-target-residuals passes with 10 classified comparisons across drop, splash, float, sink, and damping, live 1024 x 576 WebGPU visual/source provenance, lower-is-better zero targets, exact phase/window checks, and committed FG-48 evidence",
   },
 ];
 

@@ -55,6 +55,7 @@ and GitHub issue mapping.
 | FG-45 | Installed high-resolution operator readout gate | Done | G-FG-45 |
 | FG-46 | Installed high-resolution reference residual budget gate | Done | G-FG-46 |
 | FG-47 | Installed high-resolution visual watchdog gate | Done | G-FG-47 |
+| FG-48 | Target-aware high-resolution residual budget gate | Done | G-FG-48 |
 
 ## Gates
 
@@ -108,6 +109,7 @@ and GitHub issue mapping.
 | G-FG-45 | FG-45 | `npm run fluid:installed-high-resolution-operator-readout`; `docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json` | the installed high-resolution Desktop app lets an operator use the visible preset and Drop controls for float, sink, and waterlogging objects, and the visible Float Result, Float Timing, impact, splash, renderer, and pacing readouts match live `1024 x 576` WebGPU physics snapshots |
 | G-FG-46 | FG-46 | `npm run fluid:installed-high-resolution-residual-budget`; `docs/evidence/FG-46-installed-high-resolution-residual-budget-2026-06-08.json` | the installed high-resolution reference packet reports normalized residuals and nearest-bound margins for drop, splash, float, sink, and damping comparisons while preserving live `1024 x 576` WebGPU, no-readback, pacing, and operator snapshot provenance |
 | G-FG-47 | FG-47 | `npm run fluid:installed-high-resolution-visual-watchdog`; `docs/evidence/FG-47-installed-high-resolution-visual-watchdog-2026-06-08.json` | the installed high-resolution Desktop app captures multiple idle and post-drop `1024 x 576` WebGPU canvas pixel probes over advancing water frames, rejecting black, flat, stale, fallback, or UI-only visual evidence while preserving FG-46 residual and no-readback provenance |
+| G-FG-48 | FG-48 | `npm run fluid:installed-high-resolution-target-residuals`; `docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json` | the installed high-resolution residual packet reclassifies each accepted comparison as `target-midpoint`, `lower-is-better`, or `exact`, computes target error separately from tolerance-edge margin, and consumes FG-46 residual plus FG-47 visual watchdog provenance before accepting live `1024 x 576` WebGPU behavior |
 
 ## Tasks
 
@@ -258,6 +260,9 @@ and GitHub issue mapping.
 | FG-47-T01 | FG-47 | Done | release | `fluidInstalledHighResolutionVisualWatchdog.ts` consumes FG-46 evidence and rejects blank, flat, stale, fallback, readback, and UI-only visual samples across idle and post-drop high-resolution WebGPU frames |
 | FG-47-T02 | FG-47 | Done | verification | `fluidInstalledHighResolutionVisualWatchdog.report.ts` installs the default high-resolution profile, launches `/Users/sasha/Desktop/Ocean Impact Lab.app`, captures idle and post-drop canvas screenshots, and records pixel probes with advancing water-frame telemetry |
 | FG-47-T03 | FG-47 | Done | release | `npm run fluid:installed-high-resolution-visual-watchdog` passes with multiple nonblank varied `1024 x 576` WebGPU samples, advancing water frames, post-drop active physics telemetry, no-readback proof, and committed FG-47 evidence |
+| FG-48-T01 | FG-48 | Done | calibration | `fluidInstalledHighResolutionTargetResiduals.ts` consumes FG-46 and FG-47 evidence, classifies each comparison as `target-midpoint`, `lower-is-better`, or `exact`, and separates target error from tolerance-edge margin |
+| FG-48-T02 | FG-48 | Done | verification | `fluidInstalledHighResolutionTargetResiduals.report.ts` reads committed FG-46 residual-budget evidence and FG-47 visual-watchdog evidence, writes `reports/fluid-installed-high-resolution-target-residuals-latest.json`, and summarizes objective counts, worst target error, closest tolerance margin, and watch lists |
+| FG-48-T03 | FG-48 | Done | calibration | `npm run fluid:installed-high-resolution-target-residuals` passes with 10 classified comparisons across drop, splash, float, sink, and damping, live `1024 x 576` WebGPU source/visual provenance, lower-is-better zero targets, exact phase/window checks, and committed FG-48 evidence |
 
 ## GitHub Labels
 
@@ -321,6 +326,7 @@ and GitHub issue mapping.
 | FG-45 | https://github.com/AC-21/ocean/issues/48 |
 | FG-46 | https://github.com/AC-21/ocean/issues/49 |
 | FG-47 | https://github.com/AC-21/ocean/issues/50 |
+| FG-48 | https://github.com/AC-21/ocean/issues/51 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

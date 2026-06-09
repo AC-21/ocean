@@ -1364,6 +1364,29 @@ Installed high-resolution visual watchdog evidence:
   bucket variety, dimensions, water-frame ids, renderer/context/grid telemetry,
   and rejects black, flat, stale, fallback, or UI-only visual evidence.
 
+FG-48 corrects the residual interpretation layer. FG-46 intentionally recorded
+midpoint residuals and nearest-bound margins for every comparison, but that can
+make a small error metric look suspicious because an error band such as
+`0..0.055 m` has its physical target at zero, not at the midpoint. The target
+residual gate keeps the accepted bands intact while adding objective semantics:
+physical ranges target the midpoint, error metrics are lower-is-better, and
+boolean phase/window checks are exact.
+
+Installed high-resolution target residual evidence:
+
+- Command: `npm run fluid:installed-high-resolution-target-residuals`.
+- Gate: `G-FG-48`.
+- Evidence snapshot:
+  `docs/evidence/FG-48-installed-high-resolution-target-residuals-2026-06-08.json`.
+- Source proof: the gate consumes passing `G-FG-46` residual evidence and
+  passing `G-FG-47` visual watchdog evidence, requiring live `1024 x 576`
+  WebGPU provenance, nonblank varied visual samples, advancing water frames,
+  post-drop active physics, and no-full-grid-readback continuity.
+- Target proof: all 10 comparisons are classified as `target-midpoint`,
+  `lower-is-better`, or `exact`; the report records `targetErrorRatio` and
+  `toleranceMarginRatio` separately, so small hydrostatic/draft/buoyancy errors
+  are judged against zero while broad physical ranges retain midpoint targets.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1525,6 +1548,10 @@ Installed high-resolution visual watchdog evidence:
     post-drop Desktop canvas frames at live `1024 x 576`, require advancing
     WebGPU water-frame telemetry plus nonblank varied pixels, and reject black,
     flat, stale, fallback, or UI-only visual proof.
+45. Target-aware high-resolution residual budget: consume FG-46 residuals and
+    FG-47 visual watchdog proof, classify each reference comparison as
+    midpoint-target, lower-is-better, or exact, and separate physical target
+    error from tolerance-edge margin before accepting installed behavior.
 
 ## Resolution Ladder
 
