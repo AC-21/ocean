@@ -52,6 +52,7 @@ and GitHub issue mapping.
 | FG-42 | Installed high-resolution reference pacing gate | Done | G-FG-42 |
 | FG-43 | Installed high-resolution float/sink envelope gate | Done | G-FG-43 |
 | FG-44 | Installed high-resolution Desktop visibility gate | Done | G-FG-44 |
+| FG-45 | Installed high-resolution operator readout gate | Done | G-FG-45 |
 
 ## Gates
 
@@ -102,6 +103,7 @@ and GitHub issue mapping.
 | G-FG-42 | FG-42 | `npm run fluid:installed-high-resolution-reference-pacing`; `docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json` | the real installed Desktop app uses the default `fluid-calibration.v1.json` profile with a persisted FG-40 runtime grid, no fluid-tier, grid, or userData environment overrides, replays reference outcomes, and sustains smooth live `1024 x 576` WebGPU pacing |
 | G-FG-43 | FG-43 | `npm run fluid:installed-high-resolution-float-sink`; `docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json` | the real installed Desktop app uses the default high-resolution profile to exercise every object preset at live `1024 x 576`, proving stable floaters, immediate sinkers, waterlogging-then-sink predictions, smooth WebGPU pacing, and a nonblank/varied high-resolution viewport screenshot |
 | G-FG-44 | FG-44 | `npm run fluid:installed-high-resolution-desktop-visibility`; `docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json` | the normal macOS Desktop launch path opens the installed app with the FG-43 high-resolution profile, exposes a frontmost Ocean Impact Lab window, and captures nonblank/varied ocean viewport pixels from the user-visible screen |
+| G-FG-45 | FG-45 | `npm run fluid:installed-high-resolution-operator-readout`; `docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json` | the installed high-resolution Desktop app lets an operator use the visible preset and Drop controls for float, sink, and waterlogging objects, and the visible Float Result, Float Timing, impact, splash, renderer, and pacing readouts match live `1024 x 576` WebGPU physics snapshots |
 
 ## Tasks
 
@@ -243,6 +245,9 @@ and GitHub issue mapping.
 | FG-44-T01 | FG-44 | Done | release | `fluidInstalledHighResolutionDesktopVisibility.ts` requires passing FG-43 high-resolution evidence, default runtime-grid storage, the installed Desktop bundle process, a visible frontmost window, and nonblank/varied ocean viewport pixels |
 | FG-44-T02 | FG-44 | Done | verification | `fluidInstalledHighResolutionDesktopVisibility.report.ts` opens `/Users/sasha/Desktop/Ocean Impact Lab.app` through macOS `open`, foregrounds it, screenshots the visible display, crops the ocean viewport, and ties the proof to fresh FG-43 source evidence |
 | FG-44-T03 | FG-44 | Done | release | `npm run fluid:installed-high-resolution-desktop-visibility` passes with a normal visible Desktop launch, source FG-43 live `1024 x 576` evidence, and committed nonblack high-resolution viewport evidence |
+| FG-45-T01 | FG-45 | Done | release | `fluidInstalledHighResolutionOperatorReadout.ts` requires fresh FG-44 visibility evidence, live `1024 x 576` WebGPU runtime, visible preset and Drop clicks, synchronized Float Result, Float Timing, impact, splash, renderer, and no-readback telemetry for float, sink, and waterlogging outcomes |
+| FG-45-T02 | FG-45 | Done | verification | `fluidInstalledHighResolutionOperatorReadout.report.ts` launches `/Users/sasha/Desktop/Ocean Impact Lab.app` without fluid-tier, grid, or userData env overrides, clicks the actual preset buttons and Drop control, and scrapes the visible readout panels against live physics snapshots |
+| FG-45-T03 | FG-45 | Done | release | `npm run fluid:installed-high-resolution-operator-readout` passes with source FG-44 visible-screen proof, live `1024 x 576` WebGPU runtime, operator-driven foam `Floating for 3.3 s`, concrete `Sinking now`, leaky drum predicted `3.1 hr`, max p95 `9.70 ms`, max p99 `10.30 ms`, zero dropped/duplicate frame ratios, and committed FG-45 evidence |
 
 ## GitHub Labels
 
@@ -303,6 +308,7 @@ and GitHub issue mapping.
 | FG-42 | https://github.com/AC-21/ocean/issues/45 |
 | FG-43 | https://github.com/AC-21/ocean/issues/46 |
 | FG-44 | https://github.com/AC-21/ocean/issues/47 |
+| FG-45 | https://github.com/AC-21/ocean/issues/48 |
 | SEC-00 | https://github.com/AC-21/ocean/issues/9 |
 
 ## Remote Status

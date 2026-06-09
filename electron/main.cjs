@@ -20,6 +20,7 @@ let mainWindow = null;
 let isQuitting = false;
 
 app.setName("Ocean Impact Lab");
+if (process.platform === "darwin") app.setActivationPolicy("regular");
 if (process.env.HARBORLINE_USER_DATA_DIR) app.setPath("userData", process.env.HARBORLINE_USER_DATA_DIR);
 if (process.platform === "win32") app.setAppUserModelId("com.harborline.game");
 
@@ -64,7 +65,7 @@ async function createMainWindow() {
     minHeight: 720,
     minWidth: 1040,
     icon: appIconPath,
-    show: true,
+    show: false,
     title: "Ocean Impact Lab",
     webPreferences: {
       contextIsolation: true,
@@ -77,16 +78,14 @@ async function createMainWindow() {
   });
   mainWindow = window;
 
-  const revealWindow = createMainWindowRevealer(window);
-  const revealFallback = setTimeout(revealWindow, 1200);
-  revealFallback.unref?.();
-  window.on("close", (event) => {
-    if (process.platform !== "darwin" || isQuitting) return;
-    event.preventDefault();
-    window.hide();
+  const revealWindow = () => revealMainWindow(window);
+  const revealFallbacks = [150, 600, 1200, 2400, 4000].map((delayMs) => {
+    const timeout = setTimeout(revealWindow, delayMs);
+    timeout.unref?.();
+    return timeout;
   });
   window.once("closed", () => {
-    clearTimeout(revealFallback);
+    for (const timeout of revealFallbacks) clearTimeout(timeout);
     if (mainWindow === window) mainWindow = null;
   });
   window.once("ready-to-show", revealWindow);
@@ -114,21 +113,16 @@ async function createMainWindow() {
   return window;
 }
 
-function createMainWindowRevealer(window) {
-  let revealed = false;
-  return () => {
-    if (revealed || window.isDestroyed()) return;
-    revealed = true;
-    revealMainWindow(window);
-  };
-}
-
 function revealMainWindow(window) {
   if (window.isDestroyed()) return;
+  if (process.platform === "darwin") app.setActivationPolicy("regular");
   if (window.isMinimized()) window.restore();
+  window.center();
   if (!window.isVisible()) window.show();
-  window.focus();
+  window.setSkipTaskbar(false);
+  window.moveTop();
   app.focus({ steal: true });
+  window.focus();
 }
 
 function appendFluidTierQuery(searchParams, query) {

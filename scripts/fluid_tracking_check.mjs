@@ -50,6 +50,7 @@ const requiredFiles = [
   "docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json",
   "docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json",
   "docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json",
+  "docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json",
   "data/fluid-reference-cases.json",
   ".github/ISSUE_TEMPLATE/fluid_grid_task.yml",
   ".github/ISSUE_TEMPLATE/fluid_grid_gate.yml",
@@ -140,6 +141,9 @@ const requiredFiles = [
   "src/fluid/fluidInstalledHighResolutionDesktopVisibility.ts",
   "src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts",
   "src/fluid/fluidInstalledHighResolutionDesktopVisibility.test.ts",
+  "src/fluid/fluidInstalledHighResolutionOperatorReadout.ts",
+  "src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts",
+  "src/fluid/fluidInstalledHighResolutionOperatorReadout.test.ts",
   "src/fluid/fluidUltraRenderer.ts",
   "src/fluid/fluidUltraRenderer.report.ts",
   "src/fluid/fluidUltraRenderer.test.ts",
@@ -159,8 +163,8 @@ const requiredFiles = [
   "src/vite-env.d.ts",
 ];
 
-const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44"];
-const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44"];
+const milestoneIds = ["FG-00", "FG-01", "FG-02", "FG-03", "FG-04", "FG-05", "FG-06", "FG-07", "FG-08", "FG-09", "FG-10", "FG-11", "FG-12", "FG-13", "FG-14", "FG-15", "FG-16", "FG-17", "FG-18", "FG-19", "FG-20", "FG-21", "FG-22", "FG-23", "FG-24", "FG-25", "FG-26", "FG-27", "FG-28", "FG-29", "FG-30", "FG-31", "FG-32", "FG-33", "FG-34", "FG-35", "FG-36", "FG-37", "FG-38", "FG-39", "FG-40", "FG-41", "FG-42", "FG-43", "FG-44", "FG-45"];
+const gateIds = ["G-FG-00", "G-FG-01", "G-FG-02", "G-FG-03", "G-FG-04", "G-FG-05", "G-FG-06", "G-FG-07", "G-FG-08", "G-FG-09", "G-FG-10", "G-FG-11", "G-FG-12", "G-FG-13", "G-FG-14", "G-FG-15", "G-FG-16", "G-FG-17", "G-FG-18", "G-FG-19", "G-FG-20", "G-FG-21", "G-FG-22", "G-FG-23", "G-FG-24", "G-FG-25", "G-FG-26", "G-FG-27", "G-FG-28", "G-FG-29", "G-FG-30", "G-FG-31", "G-FG-32", "G-FG-33", "G-FG-34", "G-FG-35", "G-FG-36", "G-FG-37", "G-FG-38", "G-FG-39", "G-FG-40", "G-FG-41", "G-FG-42", "G-FG-43", "G-FG-44", "G-FG-45"];
 
 function readRequired(filePath) {
   const absolutePath = path.join(root, filePath);
@@ -261,6 +265,9 @@ const installedHighResolutionFloatSinkEnvelopeTest = files.get("src/fluid/fluidI
 const installedHighResolutionDesktopVisibility = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.ts") ?? "";
 const installedHighResolutionDesktopVisibilityReport = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.report.ts") ?? "";
 const installedHighResolutionDesktopVisibilityTest = files.get("src/fluid/fluidInstalledHighResolutionDesktopVisibility.test.ts") ?? "";
+const installedHighResolutionOperatorReadout = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.ts") ?? "";
+const installedHighResolutionOperatorReadoutReport = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts") ?? "";
+const installedHighResolutionOperatorReadoutTest = files.get("src/fluid/fluidInstalledHighResolutionOperatorReadout.test.ts") ?? "";
 const ultraRenderer = files.get("src/fluid/fluidUltraRenderer.ts") ?? "";
 const ultraRendererReport = files.get("src/fluid/fluidUltraRenderer.report.ts") ?? "";
 const ultraRendererTest = files.get("src/fluid/fluidUltraRenderer.test.ts") ?? "";
@@ -321,6 +328,7 @@ const fg41Evidence = files.get("docs/evidence/FG-41-high-resolution-calibration-
 const fg42Evidence = files.get("docs/evidence/FG-42-installed-high-resolution-reference-pacing-2026-06-08.json") ?? "";
 const fg43Evidence = files.get("docs/evidence/FG-43-installed-high-resolution-float-sink-envelope-2026-06-08.json") ?? "";
 const fg44Evidence = files.get("docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json") ?? "";
+const fg45Evidence = files.get("docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ?? "";
 const taskTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_task.yml") ?? "";
 const gateTemplate = files.get(".github/ISSUE_TEMPLATE/fluid_grid_gate.yml") ?? "";
 
@@ -2373,12 +2381,15 @@ if (
 }
 
 if (
-  !electronMain.includes("createMainWindowRevealer") ||
-  !electronMain.includes("show: true") ||
+  !electronMain.includes("show: false") ||
+  !electronMain.includes("setActivationPolicy(\"regular\")") ||
+  !electronMain.includes("revealMainWindow") ||
+  !electronMain.includes("window.center()") ||
+  !electronMain.includes("window.moveTop()") ||
   !electronMain.includes("did-finish-load") ||
   !electronMain.includes("did-fail-load") ||
   !electronMain.includes("app.focus({ steal: true })") ||
-  !electronMain.includes("revealFallback")
+  !electronMain.includes("revealFallbacks")
 ) {
   errors.push("electron/main.cjs must reveal the Desktop BrowserWindow outside the Playwright hidden-renderer path");
 }
@@ -3459,6 +3470,106 @@ if (
   !fg44Evidence.includes("\"colorBuckets\"")
 ) {
   errors.push("FG-44 evidence must record a passing normal macOS Desktop launch with FG-43 source proof, installed process/window visibility, and nonblank high-resolution viewport pixels");
+}
+
+if (
+  !packageJson.includes("\"fluid:installed-high-resolution-operator-readout\"") ||
+  !packageJson.includes("src/fluid/fluidInstalledHighResolutionOperatorReadout.report.ts")
+) {
+  errors.push("package.json must expose the FG-45 installed high-resolution operator readout command");
+}
+
+if (
+  !tracking.includes("FG-45-T03") ||
+  !tracking.includes("FG-45-installed-high-resolution-operator-readout-2026-06-08.json") ||
+  !tracking.includes("https://github.com/AC-21/ocean/issues/48") ||
+  !tracking.includes("visible preset and Drop controls")
+) {
+  errors.push("docs/TRACKING.md must record FG-45 installed high-resolution operator readout evidence and issue mapping");
+}
+
+if (
+  !contract.includes("FG-45") ||
+  !contract.includes("G-FG-45") ||
+  !contract.includes("Installed high-resolution operator readout gate") ||
+  !contract.includes("npm run fluid:installed-high-resolution-operator-readout") ||
+  !contract.includes("visible preset and Drop controls") ||
+  !contract.includes("Float Result, Float Timing, impact, splash")
+) {
+  errors.push("fluidGridContract.ts must define the FG-45 installed high-resolution operator readout milestone, gate, and visible readout proof");
+}
+
+if (
+  !installedHighResolutionOperatorReadout.includes("G-FG-45") ||
+  !installedHighResolutionOperatorReadout.includes("operator-foam-float-readout") ||
+  !installedHighResolutionOperatorReadout.includes("operator-concrete-sink-readout") ||
+  !installedHighResolutionOperatorReadout.includes("operator-leaky-drum-waterlogging-readout") ||
+  !installedHighResolutionOperatorReadout.includes("clickedDrop") ||
+  !installedHighResolutionOperatorReadout.includes("visible Float Result was empty") ||
+  !installedHighResolutionOperatorReadout.includes("operator samples used canvas grids") ||
+  !installedHighResolutionOperatorReadout.includes("particle path used full-grid readback")
+) {
+  errors.push("fluidInstalledHighResolutionOperatorReadout.ts must define FG-45 visible control, readout, outcome, WebGPU, pacing, and no-readback checks");
+}
+
+if (
+  !installedHighResolutionOperatorReadoutReport.includes("OCEAN_LAB_INSTALLED_HIGH_RESOLUTION_OPERATOR_READOUT_OUT") ||
+  !installedHighResolutionOperatorReadoutReport.includes("docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json") ||
+  !installedHighResolutionOperatorReadoutReport.includes("getByRole(\"button\", { exact: true, name: scenario.presetName })") ||
+  !installedHighResolutionOperatorReadoutReport.includes("getByRole(\"button\", { exact: true, name: \"Drop\" })") ||
+  !installedHighResolutionOperatorReadoutReport.includes("readOperatorReadouts") ||
+  !installedHighResolutionOperatorReadoutReport.includes("collectOperatorSamples") ||
+  !installedHighResolutionOperatorReadoutReport.includes("G-FG-45")
+) {
+  errors.push("fluidInstalledHighResolutionOperatorReadout.report.ts must consume FG-44 evidence, click visible operator controls, collect samples, and scrape readouts");
+}
+
+if (
+  !installedHighResolutionOperatorReadoutTest.includes("installed high-resolution operator readout gate") ||
+  !installedHighResolutionOperatorReadoutTest.includes("visible controls and readouts") ||
+  !installedHighResolutionOperatorReadoutTest.includes("API-only scenario") ||
+  !installedHighResolutionOperatorReadoutTest.includes("stale operator readouts") ||
+  !installedHighResolutionOperatorReadoutTest.includes("Canvas fallback")
+) {
+  errors.push("fluidInstalledHighResolutionOperatorReadout.test.ts must cover FG-45 pass and operator/readout/fallback failure cases");
+}
+
+if (
+  !remap.includes("FG-45") ||
+  !remap.includes("Installed high-resolution operator readout evidence") ||
+  !remap.includes("operator-facing loop") ||
+  !remap.includes("visible `Drop`") ||
+  !remap.includes("what happened and how long") ||
+  !remap.includes("Installed high-resolution operator readouts")
+) {
+  errors.push("docs/FLUID_GRID_REMAP.md must summarize the FG-45 operator-facing readout gate and evidence");
+}
+
+if (
+  !fg45Evidence.includes("\"gate\": \"G-FG-45\"") ||
+  !fg45Evidence.includes("\"pass\": true") ||
+  !fg45Evidence.includes("\"failures\": []") ||
+  !fg45Evidence.includes("\"gate\": \"G-FG-44\"") ||
+  !fg45Evidence.includes("\"liveGrid\": \"1024x576\"") ||
+  !fg45Evidence.includes("\"renderer\": \"webgpu-grid-primary-v1\"") ||
+  !fg45Evidence.includes("\"waterContext\": \"webgpu\"") ||
+  !fg45Evidence.includes("\"scenarioCount\": 3") ||
+  !fg45Evidence.includes("\"operator-foam-float-readout\"") ||
+  !fg45Evidence.includes("\"operator-concrete-sink-readout\"") ||
+  !fg45Evidence.includes("\"operator-leaky-drum-waterlogging-readout\"") ||
+  !fg45Evidence.includes("\"clickedPreset\": true") ||
+  !fg45Evidence.includes("\"clickedDrop\": true") ||
+  !fg45Evidence.includes("\"floats-indefinitely\"") ||
+  !fg45Evidence.includes("\"sinks-immediately\"") ||
+  !fg45Evidence.includes("\"waterlogs-then-sinks\"") ||
+  !fg45Evidence.includes("\"floatResult\"") ||
+  !fg45Evidence.includes("\"predictedSink\"") ||
+  !fg45Evidence.includes("\"splash\"") ||
+  !fg45Evidence.includes("\"canvasGrid\": \"1024x576\"") ||
+  !fg45Evidence.includes("\"pressureNoFullGridReadback\": true") ||
+  !fg45Evidence.includes("\"particlesNoFullGridReadback\": true")
+) {
+  errors.push("FG-45 evidence must record passing installed high-resolution operator readouts driven through visible controls with synced UI text, live 1024 x 576 WebGPU snapshots, pacing, and no-readback proof");
 }
 
 if (errors.length > 0) {

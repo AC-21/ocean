@@ -1284,6 +1284,43 @@ Installed high-resolution Desktop visibility evidence:
   `612 x 468` viewport at screen position `578, 271` and measured
   `nonblank` / `varied` pixels, average luma `217.22`, and `25` color buckets.
 
+FG-45 moves the high-resolution proof from renderer automation into the
+operator-facing loop. The gate starts from fresh FG-44 visible-screen evidence,
+launches the installed Desktop app without fluid-tier, grid, or userData
+environment overrides, clicks the actual preset buttons and visible `Drop`
+control, and then scrapes the UI readout panels instead of trusting only the
+scenario API.
+
+Installed high-resolution operator readout evidence:
+
+- Command: `npm run fluid:installed-high-resolution-operator-readout`.
+- Gate: `G-FG-45`.
+- Evidence snapshot:
+  `docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json`.
+- Source proof: the gate consumes FG-44 visible Desktop evidence, requiring a
+  passing `G-FG-44` report, a live `1024 x 576` source grid, visible/frontmost
+  Desktop window proof, and nonblank varied viewport pixels before operator
+  readouts can be trusted.
+- Operator proof: the report clicks the visible `Closed-cell foam block`,
+  `Concrete cube`, and `Leaky sealed steel drum` preset controls plus the
+  visible `Drop` button, covering `floats-indefinitely`,
+  `sinks-immediately`, and `waterlogs-then-sinks` outcome classes. Latest
+  proof recorded foam as `Floating for 3.3 s` with predicted sink
+  `Indefinite`, concrete as `Sinking now` with predicted sink `Immediate`, and
+  leaky drum as `Floating for 3.0 s` with predicted sink `3.1 hr`.
+- Readout proof: the visible `Float Result`, `Float Timing`, `Impact`,
+  `Splash`, `Renderer`, and `Grid` readouts must agree with live physics
+  snapshots while the renderer remains `webgpu-grid-primary-v1` / `webgpu` at
+  live `1024 x 576`. Latest visible readouts recorded impact/splash pairs of
+  `11.25 m/s` / `1.82 m`, `12.56 m/s` / `2.22 m`, and `12.38 m/s` / `2.14 m`.
+- Pacing proof: each operator-driven scenario records display-pacing samples,
+  active pressure, particle, and coupling telemetry, and pressure plus particle
+  no-full-grid-readback flags so the UI can answer "what happened and how long
+  will it float?" without hiding a choppy or CPU fallback path. Latest proof
+  covered `3` scenarios, max p95 `9.70 ms`, max p99 `10.30 ms`, zero dropped
+  frame ratio, zero duplicate-water-frame ratio, active pressure/particles/
+  coupling, and pressure plus particle no-full-grid-readback flags.
+
 ## Solver Stages
 
 1. Capability gate: detect WebGPU, report adapter/device limits, and choose a
@@ -1432,6 +1469,10 @@ Installed high-resolution Desktop visibility evidence:
     through the normal macOS launch path, foreground the real app window, and
     crop the visible ocean viewport so high-resolution black-screen regressions
     cannot pass hidden renderer automation.
+42. Installed high-resolution operator readouts: drive the visible preset and
+    Drop controls in the installed Desktop app, then verify the visible float,
+    sink, waterlogging, impact, splash, renderer, and timing readouts against
+    live `1024 x 576` WebGPU physics snapshots.
 
 ## Resolution Ladder
 

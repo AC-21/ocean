@@ -60,6 +60,7 @@ const launcherTargetPath = await desktopLauncherTargetPath();
 await quitAppIfRunning();
 await runCommand("open", [launcherPath]);
 await waitForInstalledProcess();
+await activateApp().catch(() => undefined);
 await waitForWindow();
 await activateApp();
 await waitForFrontmostWindow();
@@ -119,12 +120,20 @@ assert.deepEqual(report.failures, [], `FG-44 failures:\n${report.failures.join("
 
 async function quitAppIfRunning() {
   await runCommand("osascript", ["-e", `tell application "${appName}" to quit`]).catch(() => undefined);
-  const deadline = Date.now() + 5000;
+  if (await waitForProcessExit(5000)) return;
+  await runCommand("pkill", ["-TERM", "-f", `${expectedInstalledBundle}/Contents/MacOS/${appName}`]).catch(() => undefined);
+  if (await waitForProcessExit(5000)) return;
+  throw new Error("Timed out waiting for stale installed Ocean Impact Lab process to exit");
+}
+
+async function waitForProcessExit(timeout: number) {
+  const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
     const process = await installedProcessInfo().catch(() => null);
-    if (!process) return;
+    if (!process) return true;
     await delay(250);
   }
+  return false;
 }
 
 async function waitForInstalledProcess() {
@@ -139,9 +148,15 @@ async function waitForInstalledProcess() {
 
 async function waitForWindow() {
   const deadline = Date.now() + timeoutMs;
+  let nextOpenRetry = Date.now() + 2000;
   while (Date.now() < deadline) {
+    await activateApp().catch(() => undefined);
     const state = await readWindowState().catch(() => null);
     if (state && state.visible && state.windowCount >= 1 && state.onScreen) return state;
+    if (Date.now() >= nextOpenRetry) {
+      await runCommand("open", [launcherPath]).catch(() => undefined);
+      nextOpenRetry = Date.now() + 3000;
+    }
     await delay(250);
   }
   throw new Error("Timed out waiting for visible Ocean Impact Lab window");

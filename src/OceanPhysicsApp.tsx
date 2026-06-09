@@ -785,7 +785,7 @@ export default function OceanPhysicsApp() {
             <Metric label="Bottom impulse" value={`${snapshot.lastSeabedNormalImpulseNs.toFixed(1)} N s`} />
             <Metric label="Bottom scrape" value={`${snapshot.lastSeabedFrictionImpulseNs.toFixed(1)} N s`} />
             <Metric label="Bottom pen" value={`${snapshot.lastSeabedPenetrationM.toFixed(3)} m`} />
-            <Metric label="Predicted sink" value={formatDuration(prediction.secondsUntilSink)} />
+            <Metric label="Predicted sink" value={formatSinkPrediction(prediction.secondsUntilSink)} />
             <Metric label="Static draft" value={prediction.initialEquilibrium ? `${prediction.initialEquilibrium.submergedDepthM.toFixed(2)} m` : "-"} />
             <Metric label="Static heel" value={prediction.initialEquilibrium ? `${radiansToDegrees(prediction.initialEquilibrium.angleRad).toFixed(1)} deg` : "-"} />
             <Metric
@@ -1663,12 +1663,19 @@ function stabilityLabel(stability: "negative" | "neutral" | "positive") {
   return "Neutral";
 }
 
-function floatResultText(state: SimulationState, predictedSinkS: number | null) {
+export function floatResultText(state: SimulationState, predictedSinkS: number | null) {
   if (state.sankAtS !== null) return `Sank after ${formatDuration(state.sankAtS)}`;
   if (state.settledAtS !== null) return `Settled after ${formatDuration(state.settledAtS)}`;
+  if (state.phase === "sinking") return "Sinking now";
   if (state.impact && state.phase === "floating") return `Floating for ${formatDuration(state.timeS - state.impact.atS)}`;
+  if (predictedSinkS !== null && predictedSinkS <= 0.1) return "Sinks immediately";
   if (predictedSinkS !== null && predictedSinkS > 0) return `Predicted ${formatDuration(predictedSinkS)}`;
   return "Indefinite if intact";
+}
+
+export function formatSinkPrediction(seconds: number | null) {
+  if (seconds !== null && seconds <= 0.1) return "Immediate";
+  return formatDuration(seconds);
 }
 
 function degreesToRadians(degrees: number) {

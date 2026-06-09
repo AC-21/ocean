@@ -45,7 +45,8 @@ export type FluidGridMilestoneId =
   | "FG-41"
   | "FG-42"
   | "FG-43"
-  | "FG-44";
+  | "FG-44"
+  | "FG-45";
 
 export type FluidGridGateId =
   | "G-FG-00"
@@ -92,7 +93,8 @@ export type FluidGridGateId =
   | "G-FG-41"
   | "G-FG-42"
   | "G-FG-43"
-  | "G-FG-44";
+  | "G-FG-44"
+  | "G-FG-45";
 
 export type FluidGridTierId = "low" | "standard" | "high" | "ultra";
 
@@ -204,6 +206,7 @@ export const fluidGridMilestones: FluidGridMilestone[] = [
   { id: "FG-42", title: "Installed high-resolution reference pacing gate", gate: "G-FG-42" },
   { id: "FG-43", title: "Installed high-resolution float/sink envelope gate", gate: "G-FG-43" },
   { id: "FG-44", title: "Installed high-resolution Desktop visibility gate", gate: "G-FG-44" },
+  { id: "FG-45", title: "Installed high-resolution operator readout gate", gate: "G-FG-45" },
 ];
 
 export const fluidGridGates: FluidGridGate[] = [
@@ -515,6 +518,14 @@ export const fluidGridGates: FluidGridGate[] = [
       "npm run fluid:installed-high-resolution-desktop-visibility and docs/evidence/FG-44-installed-high-resolution-desktop-visibility-2026-06-08.json",
     passBar:
       "the normal macOS Desktop launch path opens the installed app with the FG-43 high-resolution profile, exposes a frontmost Ocean Impact Lab window, and captures nonblank varied ocean viewport pixels from the user-visible screen",
+  },
+  {
+    id: "G-FG-45",
+    blocks: "FG-45",
+    evidence:
+      "npm run fluid:installed-high-resolution-operator-readout and docs/evidence/FG-45-installed-high-resolution-operator-readout-2026-06-08.json",
+    passBar:
+      "the installed high-resolution Desktop app lets an operator use the visible preset and Drop controls for float, sink, and waterlogging objects, and the visible Float Result, Float Timing, impact, splash, renderer, and pacing readouts match live 1024 x 576 WebGPU physics snapshots",
   },
 ];
 
@@ -1578,6 +1589,30 @@ export const fluidGridTasks: FluidGridTask[] = [
     title: "Close installed high-resolution Desktop visibility gate",
     exitProof:
       "npm run fluid:installed-high-resolution-desktop-visibility passes with a normal visible Desktop launch, source FG-43 live 1024 x 576 evidence, and committed nonblack high-resolution viewport evidence",
+  },
+  {
+    id: "FG-45-T01",
+    milestone: "FG-45",
+    status: "done",
+    title: "Define installed high-resolution operator readout checks",
+    exitProof:
+      "fluidInstalledHighResolutionOperatorReadout.ts requires fresh FG-44 visibility evidence, live 1024 x 576 WebGPU runtime, visible preset and Drop clicks, synchronized Float Result, Float Timing, impact, splash, renderer, and no-readback telemetry for float, sink, and waterlogging outcomes",
+  },
+  {
+    id: "FG-45-T02",
+    milestone: "FG-45",
+    status: "done",
+    title: "Drive operator controls in the installed high-resolution app",
+    exitProof:
+      "fluidInstalledHighResolutionOperatorReadout.report.ts launches /Users/sasha/Desktop/Ocean Impact Lab.app without fluid-tier, grid, or userData env overrides, clicks the actual preset buttons and Drop control, and scrapes the visible readout panels against live physics snapshots",
+  },
+  {
+    id: "FG-45-T03",
+    milestone: "FG-45",
+    status: "done",
+    title: "Close installed high-resolution operator readout gate",
+    exitProof:
+      "npm run fluid:installed-high-resolution-operator-readout passes with source FG-44 visible-screen proof, live 1024 x 576 WebGPU runtime, operator-driven float/sink/waterlogging readouts, smooth pacing, and committed FG-45 evidence",
   },
 ];
 

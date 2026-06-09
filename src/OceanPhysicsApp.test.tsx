@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   experimentalFluidGridDimensionsFromSearch,
+  floatResultText,
+  formatSinkPrediction,
   oceanPhysicsLiveSnapshotFor,
   oceanPhysicsMotionSnapshotFor,
   preferredFluidTierFromSearch,
@@ -93,6 +95,18 @@ describe("ocean physics live snapshot", () => {
     expect(snapshot.impact?.splashHeightM).toBeGreaterThan(0);
     expect(snapshot.liveFloatDurationS).toBeGreaterThanOrEqual(0);
     expect(snapshot.phase).not.toBe("ready");
+  });
+
+  it("formats immediate sinkers as sinking instead of indefinite", () => {
+    const concrete = cloneObjectSpec(requiredPreset("concrete-cube"));
+    let state = startDrop(createSimulation(concrete, 8, 0));
+    for (let index = 0; index < 520 && state.phase !== "sinking"; index += 1) {
+      state = stepSimulation(state, concrete, calmSettings, 1 / 120);
+    }
+
+    expect(state.phase).toBe("sinking");
+    expect(floatResultText(state, 0)).toBe("Sinking now");
+    expect(formatSinkPrediction(0)).toBe("Immediate");
   });
 
   it("patches fast motion fields while keeping cached prediction diagnostics", () => {
